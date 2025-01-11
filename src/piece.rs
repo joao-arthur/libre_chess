@@ -67,18 +67,54 @@ mod test {
 
     #[test]
     fn test_from_str_some() {
-        assert_eq!(Piece::from_str("♖"), Some(Piece { piece: PieceType::Rook, color: PieceColor::White }));
-        assert_eq!(Piece::from_str("♘"), Some(Piece { piece: PieceType::Knight, color: PieceColor::White }));
-        assert_eq!(Piece::from_str("♗"), Some(Piece { piece: PieceType::Bishop, color: PieceColor::White }));
-        assert_eq!(Piece::from_str("♕"), Some(Piece { piece: PieceType::Queen, color: PieceColor::White }));
-        assert_eq!(Piece::from_str("♔"), Some(Piece { piece: PieceType::King, color: PieceColor::White }));
-        assert_eq!(Piece::from_str("♙"), Some(Piece { piece: PieceType::Pawn, color: PieceColor::White }));
-        assert_eq!(Piece::from_str("♜"), Some(Piece { piece: PieceType::Rook, color: PieceColor::Black }));
-        assert_eq!(Piece::from_str("♞"), Some(Piece { piece: PieceType::Knight, color: PieceColor::Black }));
-        assert_eq!(Piece::from_str("♝"), Some(Piece { piece: PieceType::Bishop, color: PieceColor::Black }));
-        assert_eq!(Piece::from_str("♛"), Some(Piece { piece: PieceType::Queen, color: PieceColor::Black }));
-        assert_eq!(Piece::from_str("♚"), Some(Piece { piece: PieceType::King, color: PieceColor::Black }));
-        assert_eq!(Piece::from_str("♟"), Some(Piece { piece: PieceType::Pawn, color: PieceColor::Black }));
+        assert_eq!(
+            Piece::from_str("♖"),
+            Some(Piece { piece: PieceType::Rook, color: PieceColor::White })
+        );
+        assert_eq!(
+            Piece::from_str("♘"),
+            Some(Piece { piece: PieceType::Knight, color: PieceColor::White })
+        );
+        assert_eq!(
+            Piece::from_str("♗"),
+            Some(Piece { piece: PieceType::Bishop, color: PieceColor::White })
+        );
+        assert_eq!(
+            Piece::from_str("♕"),
+            Some(Piece { piece: PieceType::Queen, color: PieceColor::White })
+        );
+        assert_eq!(
+            Piece::from_str("♔"),
+            Some(Piece { piece: PieceType::King, color: PieceColor::White })
+        );
+        assert_eq!(
+            Piece::from_str("♙"),
+            Some(Piece { piece: PieceType::Pawn, color: PieceColor::White })
+        );
+        assert_eq!(
+            Piece::from_str("♜"),
+            Some(Piece { piece: PieceType::Rook, color: PieceColor::Black })
+        );
+        assert_eq!(
+            Piece::from_str("♞"),
+            Some(Piece { piece: PieceType::Knight, color: PieceColor::Black })
+        );
+        assert_eq!(
+            Piece::from_str("♝"),
+            Some(Piece { piece: PieceType::Bishop, color: PieceColor::Black })
+        );
+        assert_eq!(
+            Piece::from_str("♛"),
+            Some(Piece { piece: PieceType::Queen, color: PieceColor::Black })
+        );
+        assert_eq!(
+            Piece::from_str("♚"),
+            Some(Piece { piece: PieceType::King, color: PieceColor::Black })
+        );
+        assert_eq!(
+            Piece::from_str("♟"),
+            Some(Piece { piece: PieceType::Pawn, color: PieceColor::Black })
+        );
     }
 
     #[test]
