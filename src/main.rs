@@ -1,0 +1,3 @@
+mod piece;
+
+fn main() {}
