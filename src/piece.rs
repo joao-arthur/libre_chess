@@ -1,4 +1,4 @@
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub enum PieceType {
     Rook,
     Knight,
@@ -8,13 +8,13 @@ pub enum PieceType {
     Pawn,
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub enum PieceColor {
     White,
     Black,
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct Piece {
     pub piece: PieceType,
     pub color: PieceColor,
@@ -62,7 +62,7 @@ impl Piece {
 }
 
 #[cfg(test)]
-mod test_piece {
+mod test {
     use super::*;
 
     #[test]
