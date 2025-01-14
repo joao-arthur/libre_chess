@@ -61,7 +61,6 @@ impl Piece {
     }
 }
 
-
 #[cfg(test)]
 mod test {
     use super::*;

@@ -2,7 +2,6 @@ use std::fmt;
 
 use crate::piece::Piece;
 
-
 #[derive(Debug, PartialEq, Clone, Copy)]
 pub enum BoardX {
     A,
@@ -29,7 +28,7 @@ impl BoardX {
             _ => None,
         }
     }
-    
+
     pub fn to_idx(&self) -> u8 {
         match self {
             BoardX::A => 0,
@@ -42,7 +41,7 @@ impl BoardX {
             BoardX::H => 7,
         }
     }
-    
+
     fn of_str(s: &str) -> Option<BoardX> {
         match s {
             "A" => Some(BoardX::A),
@@ -56,7 +55,7 @@ impl BoardX {
             _ => None,
         }
     }
-    
+
     fn to_str(&self) -> &'static str {
         match self {
             BoardX::A => "A",
@@ -97,7 +96,7 @@ impl BoardY {
             _ => None,
         }
     }
-    
+
     pub fn to_idx(&self) -> u8 {
         match self {
             BoardY::_1 => 7,
@@ -110,7 +109,7 @@ impl BoardY {
             BoardY::_8 => 0,
         }
     }
-    
+
     fn of_str(s: &str) -> Option<BoardY> {
         match s {
             "1" => Some(BoardY::_1),
@@ -124,7 +123,7 @@ impl BoardY {
             _ => None,
         }
     }
-    
+
     fn to_str(&self) -> &'static str {
         match self {
             BoardY::_1 => "1",
@@ -146,7 +145,7 @@ pub struct BoardPos {
 }
 
 impl BoardPos {
-    pub fn of_idx(x: u8,  y: u8) -> Option<BoardPos> {
+    pub fn of_idx(x: u8, y: u8) -> Option<BoardPos> {
         let x = BoardX::of_idx(x)?;
         let y = BoardY::of_idx(y)?;
         Some(BoardPos { x, y })
@@ -165,7 +164,6 @@ impl BoardPos {
 }
 
 pub type Board = [[Option<Piece>; 8]; 8];
-
 
 #[derive(Debug, PartialEq)]
 pub struct InvalidCharacterErr;
@@ -219,7 +217,8 @@ pub fn of_str(rows: [&str; 8]) -> Result<Board, FromStringErr> {
     let mut res: [[Option<Piece>; 8]; 8] = [[None; 8]; 8];
     for row in 0..8 {
         for col in 0..8 {
-            res[row as usize][col as usize] = Piece::of_str(&rows[row as usize].chars().nth(col).unwrap().to_string());
+            res[row as usize][col as usize] =
+                Piece::of_str(&rows[row as usize].chars().nth(col).unwrap().to_string());
         }
     }
     Ok(res)
@@ -386,7 +385,6 @@ mod test {
         assert_eq!(BoardPos::of_idx(9, 9), None);
     }
 
-
     #[test]
     fn test_board_pos_of_str_some() {
         assert_eq!(BoardPos::of_str("A1"), Some(BoardPos { x: BoardX::A, y: BoardY::_1 }));
@@ -533,5 +531,4 @@ mod test {
                 + "♖♘♗♕♔♗♘♖\n"
         );
     }
-
 }
