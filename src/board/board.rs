@@ -1,56 +1,82 @@
-use crate::piece::Piece;
+use std::fmt;
 
-use super::board_pos::BoardPos;
+use crate::piece::{self, Piece};
+
+use super::{board_pos::BoardPos, board_x, board_y};
 
 pub type Board = [[Option<Piece>; 8]; 8];
 
+#[derive(Debug, PartialEq)]
+pub struct InvalidCharacterErr;
+
+impl fmt::Display for InvalidCharacterErr {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "Only [0-9] characters and spaces are allowed!")
+    }
+}
+
+#[derive(Debug, PartialEq)]
+pub struct InvalidLengthErr;
+
+impl fmt::Display for InvalidLengthErr {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "Every line must be 8 characters long")
+    }
+}
+
+#[derive(Debug, PartialEq)]
+pub enum FromStringErr {
+    InvalidCharacter(InvalidCharacterErr),
+    InvalidLength(InvalidLengthErr),
+}
+
+pub fn from_str(rows: [&str; 8]) -> Result<Board, FromStringErr> {
+    if !rows
+        .join("")
+        .replace("♖", "")
+        .replace("♘", "")
+        .replace("♗", "")
+        .replace("♕", "")
+        .replace("♔", "")
+        .replace("♙", "")
+        .replace("♜", "")
+        .replace("♞", "")
+        .replace("♝", "")
+        .replace("♛", "")
+        .replace("♚", "")
+        .replace("♟", "")
+        .replace(" ", "")
+        .is_empty()
+    {
+        return Err(FromStringErr::InvalidCharacter(InvalidCharacterErr));
+    }
+    for line in rows {
+        if line.chars().count() != 8 {
+            return Err(FromStringErr::InvalidLength(InvalidLengthErr));
+        }
+    }
+    let mut res: [[Option<Piece>; 8]; 8] = [[None; 8]; 8];
+    for row in 0..8 {
+        for col in 0..8 {
+            res[row as usize][col as usize] =
+                piece::of_str(&rows[row as usize].chars().nth(col).unwrap().to_string());
+        }
+    }
+    Ok(res)
+}
+
 fn get_default_board() -> Board {
-    [
-        [
-            Piece::from_str("♜"),
-            Piece::from_str("♞"),
-            Piece::from_str("♝"),
-            Piece::from_str("♛"),
-            Piece::from_str("♚"),
-            Piece::from_str("♝"),
-            Piece::from_str("♞"),
-            Piece::from_str("♜"),
-        ],
-        [
-            Piece::from_str("♟"),
-            Piece::from_str("♟"),
-            Piece::from_str("♟"),
-            Piece::from_str("♟"),
-            Piece::from_str("♟"),
-            Piece::from_str("♟"),
-            Piece::from_str("♟"),
-            Piece::from_str("♟"),
-        ],
-        [None, None, None, None, None, None, None, None],
-        [None, None, None, None, None, None, None, None],
-        [None, None, None, None, None, None, None, None],
-        [None, None, None, None, None, None, None, None],
-        [
-            Piece::from_str("♙"),
-            Piece::from_str("♙"),
-            Piece::from_str("♙"),
-            Piece::from_str("♙"),
-            Piece::from_str("♙"),
-            Piece::from_str("♙"),
-            Piece::from_str("♙"),
-            Piece::from_str("♙"),
-        ],
-        [
-            Piece::from_str("♖"),
-            Piece::from_str("♘"),
-            Piece::from_str("♗"),
-            Piece::from_str("♕"),
-            Piece::from_str("♔"),
-            Piece::from_str("♗"),
-            Piece::from_str("♘"),
-            Piece::from_str("♖"),
-        ],
-    ]
+    from_str([
+        "♜♞♝♛♚♝♞♜",
+        "♟♟♟♟♟♟♟♟",
+        "        ",
+        "        ",
+        "        ",
+        "        ",
+        "♙♙♙♙♙♙♙♙",
+        "♖♘♗♕♔♗♘♖",
+    ])
+    .unwrap()
 }
 
 fn board_to_string(board: &Board) -> String {
@@ -58,7 +84,7 @@ fn board_to_string(board: &Board) -> String {
     for row in board {
         for col in row {
             match col {
-                Some(val) => res.push_str(val.to_str()),
+                Some(p) => res.push_str(piece::to_str(&p)),
                 None => res.push_str(" "),
             }
         }
@@ -68,17 +94,17 @@ fn board_to_string(board: &Board) -> String {
 }
 
 fn get_board_piece(board: &Board, board_pos: &BoardPos) -> Option<Piece> {
-    let x = board_pos.x.to_idx();
-    let y = board_pos.y.to_idx();
-
+    let x = board_x::to_idx(&board_pos.x);
+    let y = board_y::to_idx(&board_pos.y);
     let x_idx: usize = (x).into();
     let y_idx: usize = (7 - y).into();
-
     board[y_idx][x_idx].clone()
 }
 
 #[cfg(test)]
 mod test {
+    use crate::board::board_pos;
+
     use super::*;
 
     #[test]
@@ -102,21 +128,83 @@ mod test {
     #[test]
     fn test_get_board_position() {
         let brd = get_default_board();
-        assert_eq!(get_board_piece(&brd, &BoardPos::from_str("A8").unwrap()), Piece::from_str("♜"));
-        assert_eq!(get_board_piece(&brd, &BoardPos::from_str("B8").unwrap()), Piece::from_str("♞"));
-        assert_eq!(get_board_piece(&brd, &BoardPos::from_str("C8").unwrap()), Piece::from_str("♝"));
-        assert_eq!(get_board_piece(&brd, &BoardPos::from_str("D8").unwrap()), Piece::from_str("♛"));
-        assert_eq!(get_board_piece(&brd, &BoardPos::from_str("E8").unwrap()), Piece::from_str("♚"));
-        assert_eq!(get_board_piece(&brd, &BoardPos::from_str("F8").unwrap()), Piece::from_str("♝"));
-        assert_eq!(get_board_piece(&brd, &BoardPos::from_str("G8").unwrap()), Piece::from_str("♞"));
-        assert_eq!(get_board_piece(&brd, &BoardPos::from_str("H8").unwrap()), Piece::from_str("♜"));
-        assert_eq!(get_board_piece(&brd, &BoardPos::from_str("H8").unwrap()), Piece::from_str("♜"));
-        assert_eq!(get_board_piece(&brd, &BoardPos::from_str("H7").unwrap()), Piece::from_str("♟"));
-        assert_eq!(get_board_piece(&brd, &BoardPos::from_str("H6").unwrap()), Piece::from_str(" "));
-        assert_eq!(get_board_piece(&brd, &BoardPos::from_str("H5").unwrap()), Piece::from_str(" "));
-        assert_eq!(get_board_piece(&brd, &BoardPos::from_str("H4").unwrap()), Piece::from_str(" "));
-        assert_eq!(get_board_piece(&brd, &BoardPos::from_str("H3").unwrap()), Piece::from_str(" "));
-        assert_eq!(get_board_piece(&brd, &BoardPos::from_str("H2").unwrap()), Piece::from_str("♙"));
-        assert_eq!(get_board_piece(&brd, &BoardPos::from_str("H1").unwrap()), Piece::from_str("♖"));
+        assert_eq!(get_board_piece(&brd, &board_pos::from_str("A8").unwrap()), piece::of_str("♜"));
+        assert_eq!(get_board_piece(&brd, &board_pos::from_str("B8").unwrap()), piece::of_str("♞"));
+        assert_eq!(get_board_piece(&brd, &board_pos::from_str("C8").unwrap()), piece::of_str("♝"));
+        assert_eq!(get_board_piece(&brd, &board_pos::from_str("D8").unwrap()), piece::of_str("♛"));
+        assert_eq!(get_board_piece(&brd, &board_pos::from_str("E8").unwrap()), piece::of_str("♚"));
+        assert_eq!(get_board_piece(&brd, &board_pos::from_str("F8").unwrap()), piece::of_str("♝"));
+        assert_eq!(get_board_piece(&brd, &board_pos::from_str("G8").unwrap()), piece::of_str("♞"));
+        assert_eq!(get_board_piece(&brd, &board_pos::from_str("H8").unwrap()), piece::of_str("♜"));
+        assert_eq!(get_board_piece(&brd, &board_pos::from_str("H8").unwrap()), piece::of_str("♜"));
+        assert_eq!(get_board_piece(&brd, &board_pos::from_str("H7").unwrap()), piece::of_str("♟"));
+        assert_eq!(get_board_piece(&brd, &board_pos::from_str("H6").unwrap()), piece::of_str(" "));
+        assert_eq!(get_board_piece(&brd, &board_pos::from_str("H5").unwrap()), piece::of_str(" "));
+        assert_eq!(get_board_piece(&brd, &board_pos::from_str("H4").unwrap()), piece::of_str(" "));
+        assert_eq!(get_board_piece(&brd, &board_pos::from_str("H3").unwrap()), piece::of_str(" "));
+        assert_eq!(get_board_piece(&brd, &board_pos::from_str("H2").unwrap()), piece::of_str("♙"));
+        assert_eq!(get_board_piece(&brd, &board_pos::from_str("H1").unwrap()), piece::of_str("♖"));
+    }
+
+    #[test]
+    fn test_from_str() {
+        assert_eq!(
+            from_str([
+                "♜♞♝♛♚♝♞♜",
+                "♟♟♟♟♟♟♟♟",
+                "        ",
+                "        ",
+                "        ",
+                "        ",
+                "♙♙♙♙♙♙♙♙",
+                "♖♘♗♕♔♗♘♖",
+            ]),
+            Ok([
+                [
+                    piece::of_str("♜"),
+                    piece::of_str("♞"),
+                    piece::of_str("♝"),
+                    piece::of_str("♛"),
+                    piece::of_str("♚"),
+                    piece::of_str("♝"),
+                    piece::of_str("♞"),
+                    piece::of_str("♜"),
+                ],
+                [
+                    piece::of_str("♟"),
+                    piece::of_str("♟"),
+                    piece::of_str("♟"),
+                    piece::of_str("♟"),
+                    piece::of_str("♟"),
+                    piece::of_str("♟"),
+                    piece::of_str("♟"),
+                    piece::of_str("♟"),
+                ],
+                [None, None, None, None, None, None, None, None],
+                [None, None, None, None, None, None, None, None],
+                [None, None, None, None, None, None, None, None],
+                [None, None, None, None, None, None, None, None],
+                [
+                    piece::of_str("♙"),
+                    piece::of_str("♙"),
+                    piece::of_str("♙"),
+                    piece::of_str("♙"),
+                    piece::of_str("♙"),
+                    piece::of_str("♙"),
+                    piece::of_str("♙"),
+                    piece::of_str("♙"),
+                ],
+                [
+                    piece::of_str("♖"),
+                    piece::of_str("♘"),
+                    piece::of_str("♗"),
+                    piece::of_str("♕"),
+                    piece::of_str("♔"),
+                    piece::of_str("♗"),
+                    piece::of_str("♘"),
+                    piece::of_str("♖"),
+                ],
+            ])
+        );
     }
 }
