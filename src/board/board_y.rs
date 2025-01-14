@@ -10,7 +10,7 @@ pub enum BoardY {
     _8,
 }
 
-pub fn from_idx(i: u8) -> Option<BoardY> {
+pub fn of_idx(i: u8) -> Option<BoardY> {
     match i {
         0 => Some(BoardY::_1),
         1 => Some(BoardY::_2),
@@ -37,7 +37,7 @@ pub fn to_idx(y: &BoardY) -> u8 {
     }
 }
 
-pub fn from_str(s: &str) -> Option<BoardY> {
+pub fn of_str(s: &str) -> Option<BoardY> {
     match s {
         "1" => Some(BoardY::_1),
         "2" => Some(BoardY::_2),
@@ -69,16 +69,16 @@ mod test {
     use super::*;
 
     #[test]
-    fn test_from_idx() {
-        assert_eq!(from_idx(0), Some(BoardY::_1));
-        assert_eq!(from_idx(1), Some(BoardY::_2));
-        assert_eq!(from_idx(2), Some(BoardY::_3));
-        assert_eq!(from_idx(3), Some(BoardY::_4));
-        assert_eq!(from_idx(4), Some(BoardY::_5));
-        assert_eq!(from_idx(5), Some(BoardY::_6));
-        assert_eq!(from_idx(6), Some(BoardY::_7));
-        assert_eq!(from_idx(7), Some(BoardY::_8));
-        assert_eq!(from_idx(8), None);
+    fn test_of_idx() {
+        assert_eq!(of_idx(0), Some(BoardY::_1));
+        assert_eq!(of_idx(1), Some(BoardY::_2));
+        assert_eq!(of_idx(2), Some(BoardY::_3));
+        assert_eq!(of_idx(3), Some(BoardY::_4));
+        assert_eq!(of_idx(4), Some(BoardY::_5));
+        assert_eq!(of_idx(5), Some(BoardY::_6));
+        assert_eq!(of_idx(6), Some(BoardY::_7));
+        assert_eq!(of_idx(7), Some(BoardY::_8));
+        assert_eq!(of_idx(8), None);
     }
 
     #[test]
@@ -94,16 +94,16 @@ mod test {
     }
 
     #[test]
-    fn test_from_str() {
-        assert_eq!(from_str("0"), None);
-        assert_eq!(from_str("1"), Some(BoardY::_1));
-        assert_eq!(from_str("2"), Some(BoardY::_2));
-        assert_eq!(from_str("3"), Some(BoardY::_3));
-        assert_eq!(from_str("4"), Some(BoardY::_4));
-        assert_eq!(from_str("5"), Some(BoardY::_5));
-        assert_eq!(from_str("6"), Some(BoardY::_6));
-        assert_eq!(from_str("7"), Some(BoardY::_7));
-        assert_eq!(from_str("8"), Some(BoardY::_8));
+    fn test_of_str() {
+        assert_eq!(of_str("0"), None);
+        assert_eq!(of_str("1"), Some(BoardY::_1));
+        assert_eq!(of_str("2"), Some(BoardY::_2));
+        assert_eq!(of_str("3"), Some(BoardY::_3));
+        assert_eq!(of_str("4"), Some(BoardY::_4));
+        assert_eq!(of_str("5"), Some(BoardY::_5));
+        assert_eq!(of_str("6"), Some(BoardY::_6));
+        assert_eq!(of_str("7"), Some(BoardY::_7));
+        assert_eq!(of_str("8"), Some(BoardY::_8));
     }
 
     #[test]

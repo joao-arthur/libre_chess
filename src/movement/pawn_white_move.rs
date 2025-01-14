@@ -1,10 +1,10 @@
 use crate::board::{board_pos::BoardPos, board_y};
 
-fn pawn_white_move(board_pos: BoardPos) -> Vec<BoardPos> {
+fn white_pawn_movements(board_pos: BoardPos) -> Vec<BoardPos> {
     let y = board_y::to_idx(&board_pos.y);
     vec![
-        BoardPos { x: board_pos.x, y: board_y::from_idx(y - 1).unwrap() },
-        BoardPos { x: board_pos.x, y: board_y::from_idx(y - 2).unwrap() },
+        BoardPos { x: board_pos.x, y: board_y::of_idx(y - 1).unwrap() },
+        BoardPos { x: board_pos.x, y: board_y::of_idx(y - 2).unwrap() },
     ]
 }
 
@@ -15,8 +15,14 @@ mod test {
     use super::*;
 
     #[test]
-    fn test_from() {
-        assert_eq!(pawn_white_move(board_pos::from_str("D7").unwrap()), [board_pos::from_str("D6").unwrap(), board_pos::from_str("D5").unwrap()]);
-        assert_eq!(pawn_white_move(board_pos::from_str("E7").unwrap()), [board_pos::from_str("E6").unwrap(), board_pos::from_str("E5").unwrap()]);
+    fn test_pawn_white_move() {
+        assert_eq!(
+            white_pawn_movements(board_pos::of_str("D7").unwrap()),
+            [board_pos::of_str("D6").unwrap(), board_pos::of_str("D5").unwrap()]
+        );
+        assert_eq!(
+            white_pawn_movements(board_pos::of_str("E7").unwrap()),
+            [board_pos::of_str("E6").unwrap(), board_pos::of_str("E5").unwrap()]
+        );
     }
 }

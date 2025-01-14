@@ -30,7 +30,7 @@ pub enum FromStringErr {
     InvalidLength(InvalidLengthErr),
 }
 
-pub fn from_str(rows: [&str; 8]) -> Result<Board, FromStringErr> {
+pub fn of_str(rows: [&str; 8]) -> Result<Board, FromStringErr> {
     if !rows
         .join("")
         .replace("♖", "")
@@ -66,7 +66,7 @@ pub fn from_str(rows: [&str; 8]) -> Result<Board, FromStringErr> {
 }
 
 fn get_default_board() -> Board {
-    from_str([
+    of_str([
         "♜♞♝♛♚♝♞♜",
         "♟♟♟♟♟♟♟♟",
         "        ",
@@ -128,28 +128,28 @@ mod test {
     #[test]
     fn test_get_board_position() {
         let brd = get_default_board();
-        assert_eq!(get_board_piece(&brd, &board_pos::from_str("A8").unwrap()), piece::of_str("♜"));
-        assert_eq!(get_board_piece(&brd, &board_pos::from_str("B8").unwrap()), piece::of_str("♞"));
-        assert_eq!(get_board_piece(&brd, &board_pos::from_str("C8").unwrap()), piece::of_str("♝"));
-        assert_eq!(get_board_piece(&brd, &board_pos::from_str("D8").unwrap()), piece::of_str("♛"));
-        assert_eq!(get_board_piece(&brd, &board_pos::from_str("E8").unwrap()), piece::of_str("♚"));
-        assert_eq!(get_board_piece(&brd, &board_pos::from_str("F8").unwrap()), piece::of_str("♝"));
-        assert_eq!(get_board_piece(&brd, &board_pos::from_str("G8").unwrap()), piece::of_str("♞"));
-        assert_eq!(get_board_piece(&brd, &board_pos::from_str("H8").unwrap()), piece::of_str("♜"));
-        assert_eq!(get_board_piece(&brd, &board_pos::from_str("H8").unwrap()), piece::of_str("♜"));
-        assert_eq!(get_board_piece(&brd, &board_pos::from_str("H7").unwrap()), piece::of_str("♟"));
-        assert_eq!(get_board_piece(&brd, &board_pos::from_str("H6").unwrap()), piece::of_str(" "));
-        assert_eq!(get_board_piece(&brd, &board_pos::from_str("H5").unwrap()), piece::of_str(" "));
-        assert_eq!(get_board_piece(&brd, &board_pos::from_str("H4").unwrap()), piece::of_str(" "));
-        assert_eq!(get_board_piece(&brd, &board_pos::from_str("H3").unwrap()), piece::of_str(" "));
-        assert_eq!(get_board_piece(&brd, &board_pos::from_str("H2").unwrap()), piece::of_str("♙"));
-        assert_eq!(get_board_piece(&brd, &board_pos::from_str("H1").unwrap()), piece::of_str("♖"));
+        assert_eq!(get_board_piece(&brd, &board_pos::of_str("A8").unwrap()), piece::of_str("♜"));
+        assert_eq!(get_board_piece(&brd, &board_pos::of_str("B8").unwrap()), piece::of_str("♞"));
+        assert_eq!(get_board_piece(&brd, &board_pos::of_str("C8").unwrap()), piece::of_str("♝"));
+        assert_eq!(get_board_piece(&brd, &board_pos::of_str("D8").unwrap()), piece::of_str("♛"));
+        assert_eq!(get_board_piece(&brd, &board_pos::of_str("E8").unwrap()), piece::of_str("♚"));
+        assert_eq!(get_board_piece(&brd, &board_pos::of_str("F8").unwrap()), piece::of_str("♝"));
+        assert_eq!(get_board_piece(&brd, &board_pos::of_str("G8").unwrap()), piece::of_str("♞"));
+        assert_eq!(get_board_piece(&brd, &board_pos::of_str("H8").unwrap()), piece::of_str("♜"));
+        assert_eq!(get_board_piece(&brd, &board_pos::of_str("H8").unwrap()), piece::of_str("♜"));
+        assert_eq!(get_board_piece(&brd, &board_pos::of_str("H7").unwrap()), piece::of_str("♟"));
+        assert_eq!(get_board_piece(&brd, &board_pos::of_str("H6").unwrap()), piece::of_str(" "));
+        assert_eq!(get_board_piece(&brd, &board_pos::of_str("H5").unwrap()), piece::of_str(" "));
+        assert_eq!(get_board_piece(&brd, &board_pos::of_str("H4").unwrap()), piece::of_str(" "));
+        assert_eq!(get_board_piece(&brd, &board_pos::of_str("H3").unwrap()), piece::of_str(" "));
+        assert_eq!(get_board_piece(&brd, &board_pos::of_str("H2").unwrap()), piece::of_str("♙"));
+        assert_eq!(get_board_piece(&brd, &board_pos::of_str("H1").unwrap()), piece::of_str("♖"));
     }
 
     #[test]
-    fn test_from_str() {
+    fn test_of_str() {
         assert_eq!(
-            from_str([
+            of_str([
                 "♜♞♝♛♚♝♞♜",
                 "♟♟♟♟♟♟♟♟",
                 "        ",
