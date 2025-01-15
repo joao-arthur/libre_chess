@@ -20,17 +20,29 @@ fn black_pawn_movements(board_pos: &BoardPos) -> Vec<BoardPos> {
     }
 }
 
-fn rook_movements(board_pos: BoardPos) -> Vec<BoardPos> {
+fn rook_movements(board_pos: &BoardPos) -> Vec<BoardPos> {
+    let x = board_pos.x.to_idx();
     let y = board_pos.y.to_idx();
-    if y == 6 {
-        vec![
-            BoardPos::from_idx(board_pos.x.to_idx(), y - 1),
-            BoardPos::from_idx(board_pos.x.to_idx(), y - 2),
-        ]
-    } else {
-        vec![BoardPos::from_idx(board_pos.x.to_idx(), y - 1)]
-    }
+    vec![
+        BoardPos::from_idx(0, y),
+        BoardPos::from_idx(1, y),
+        BoardPos::from_idx(2, y),
+        BoardPos::from_idx(3, y),
+        BoardPos::from_idx(4, y),
+        BoardPos::from_idx(5, y),
+        BoardPos::from_idx(6, y),
+        BoardPos::from_idx(7, y),
+        BoardPos::from_idx(x, 0),
+        BoardPos::from_idx(x, 1),
+        BoardPos::from_idx(x, 2),
+        BoardPos::from_idx(x, 3),
+        BoardPos::from_idx(x, 4),
+        BoardPos::from_idx(x, 5),
+        BoardPos::from_idx(x, 6),
+        BoardPos::from_idx(x, 7),
+    ]
 }
+
 
 #[cfg(test)]
 mod test {
@@ -62,5 +74,29 @@ mod test {
         assert_eq!(black_pawn_movements(&BoardPos::from_str("E2")), [BoardPos::from_str("E1")]);
     }
 
+    #[test]
+    fn test_rook_movements() {
+        assert_eq!(
+            rook_movements(&BoardPos::from_str("D4")),
+            [
+                BoardPos::from_str("A4"),
+                BoardPos::from_str("B4"),
+                BoardPos::from_str("C4"),
+                BoardPos::from_str("D4"),
+                BoardPos::from_str("E4"),
+                BoardPos::from_str("F4"),
+                BoardPos::from_str("G4"),
+                BoardPos::from_str("H4"),
+                BoardPos::from_str("D8"),
+                BoardPos::from_str("D7"),
+                BoardPos::from_str("D6"),
+                BoardPos::from_str("D5"),
+                BoardPos::from_str("D4"),
+                BoardPos::from_str("D3"),
+                BoardPos::from_str("D2"),
+                BoardPos::from_str("D1"),
+            ]
+        );
+    }
     }
 }
