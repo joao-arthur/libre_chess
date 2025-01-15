@@ -42,6 +42,23 @@ fn rook_movements(board_pos: &BoardPos) -> Vec<BoardPos> {
         BoardPos::from_idx(x, 7),
     ]
 }
+fn king_movements(board_pos: &BoardPos) -> Vec<BoardPos> {
+    let x = board_pos.x.to_idx();
+    let y = board_pos.y.to_idx();
+    vec![
+        if x > 0 && y > 0 { BoardPos::try_from_idx(x - 1, y - 1) } else { None },
+        if y > 0 { BoardPos::try_from_idx(x, y - 1) } else { None },
+        if y > 0 { BoardPos::try_from_idx(x + 1, y - 1) } else { None },
+        if x > 0 { BoardPos::try_from_idx(x - 1, y) } else { None },
+        BoardPos::try_from_idx(x + 1, y),
+        if x > 0 { BoardPos::try_from_idx(x - 1, y + 1) } else { None },
+        BoardPos::try_from_idx(x, y + 1),
+        BoardPos::try_from_idx(x + 1, y + 1),
+    ]
+        .into_iter()
+        .filter_map(|x| x)
+        .collect()
+}
 
 
 #[cfg(test)]
@@ -98,5 +115,62 @@ mod test {
             ]
         );
     }
+    #[test]
+    fn test_king_movements() {
+        assert_eq!(
+            king_movements(&BoardPos::from_str("D4")),
+            [
+                BoardPos::from_str("C5"),
+                BoardPos::from_str("D5"),
+                BoardPos::from_str("E5"),
+                BoardPos::from_str("C4"),
+                BoardPos::from_str("E4"),
+                BoardPos::from_str("C3"),
+                BoardPos::from_str("D3"),
+                BoardPos::from_str("E3"),
+            ]
+        );
+        assert_eq!(
+            king_movements(&BoardPos::from_str("E1")),
+            [
+                BoardPos::from_str("D2"),
+                BoardPos::from_str("E2"),
+                BoardPos::from_str("F2"),
+                BoardPos::from_str("D1"),
+                BoardPos::from_str("F1"),
+            ]
+        );
+        assert_eq!(
+            king_movements(&BoardPos::from_str("A1")),
+            [
+                BoardPos::from_str("A2"),
+                BoardPos::from_str("B2"),
+                BoardPos::from_str("B1"),
+            ]
+        );
+        assert_eq!(
+            king_movements(&BoardPos::from_str("H1")),
+            [
+                BoardPos::from_str("G2"),
+                BoardPos::from_str("H2"),
+                BoardPos::from_str("G1"),
+            ]
+        );
+        assert_eq!(
+            king_movements(&BoardPos::from_str("A8")),
+            [
+                BoardPos::from_str("B8"),
+                BoardPos::from_str("A7"),
+                BoardPos::from_str("B7"),
+            ]
+        );
+        assert_eq!(
+            king_movements(&BoardPos::from_str("H8")),
+            [
+                BoardPos::from_str("G8"),
+                BoardPos::from_str("G7"),
+                BoardPos::from_str("H7"),
+            ]
+        );
     }
 }
