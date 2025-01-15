@@ -161,7 +161,7 @@ pub struct BoardPos {
 }
 
 impl BoardPos {
-    fn try_from_idx(x: u8, y: u8) -> Option<BoardPos> {
+    pub fn try_from_idx(x: u8, y: u8) -> Option<BoardPos> {
         let x = BoardX::try_from_idx(x)?;
         let y = BoardY::try_from_idx(y)?;
         Some(BoardPos { x, y })
