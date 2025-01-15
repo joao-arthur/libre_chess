@@ -21,7 +21,7 @@ pub struct Piece {
 }
 
 impl Piece {
-    pub fn of_str(s: &str) -> Option<Piece> {
+    pub fn try_from_str(s: &str) -> Option<Piece> {
         match s {
             "♖" => Some(Piece { t: Type::Rook, c: Color::White }),
             "♘" => Some(Piece { t: Type::Knight, c: Color::White }),
@@ -37,6 +37,10 @@ impl Piece {
             "♟" => Some(Piece { t: Type::Pawn, c: Color::Black }),
             _ => None,
         }
+    }
+
+    pub fn from_str(s: &str) -> Self {
+        Self::try_from_str(s).unwrap()
     }
 
     pub fn to_str(&self) -> &'static str {
@@ -66,30 +70,46 @@ mod test {
     use super::*;
 
     #[test]
-    fn test_of_str_some() {
-        assert_eq!(Piece::of_str("♖"), Some(Piece { t: Type::Rook, c: Color::White }));
-        assert_eq!(Piece::of_str("♘"), Some(Piece { t: Type::Knight, c: Color::White }));
-        assert_eq!(Piece::of_str("♗"), Some(Piece { t: Type::Bishop, c: Color::White }));
-        assert_eq!(Piece::of_str("♕"), Some(Piece { t: Type::Queen, c: Color::White }));
-        assert_eq!(Piece::of_str("♔"), Some(Piece { t: Type::King, c: Color::White }));
-        assert_eq!(Piece::of_str("♙"), Some(Piece { t: Type::Pawn, c: Color::White }));
-        assert_eq!(Piece::of_str("♜"), Some(Piece { t: Type::Rook, c: Color::Black }));
-        assert_eq!(Piece::of_str("♞"), Some(Piece { t: Type::Knight, c: Color::Black }));
-        assert_eq!(Piece::of_str("♝"), Some(Piece { t: Type::Bishop, c: Color::Black }));
-        assert_eq!(Piece::of_str("♛"), Some(Piece { t: Type::Queen, c: Color::Black }));
-        assert_eq!(Piece::of_str("♚"), Some(Piece { t: Type::King, c: Color::Black }));
-        assert_eq!(Piece::of_str("♟"), Some(Piece { t: Type::Pawn, c: Color::Black }));
+    fn test_try_from_str_some() {
+        assert_eq!(Piece::try_from_str("♖"), Some(Piece { t: Type::Rook, c: Color::White }));
+        assert_eq!(Piece::try_from_str("♘"), Some(Piece { t: Type::Knight, c: Color::White }));
+        assert_eq!(Piece::try_from_str("♗"), Some(Piece { t: Type::Bishop, c: Color::White }));
+        assert_eq!(Piece::try_from_str("♕"), Some(Piece { t: Type::Queen, c: Color::White }));
+        assert_eq!(Piece::try_from_str("♔"), Some(Piece { t: Type::King, c: Color::White }));
+        assert_eq!(Piece::try_from_str("♙"), Some(Piece { t: Type::Pawn, c: Color::White }));
+        assert_eq!(Piece::try_from_str("♜"), Some(Piece { t: Type::Rook, c: Color::Black }));
+        assert_eq!(Piece::try_from_str("♞"), Some(Piece { t: Type::Knight, c: Color::Black }));
+        assert_eq!(Piece::try_from_str("♝"), Some(Piece { t: Type::Bishop, c: Color::Black }));
+        assert_eq!(Piece::try_from_str("♛"), Some(Piece { t: Type::Queen, c: Color::Black }));
+        assert_eq!(Piece::try_from_str("♚"), Some(Piece { t: Type::King, c: Color::Black }));
+        assert_eq!(Piece::try_from_str("♟"), Some(Piece { t: Type::Pawn, c: Color::Black }));
     }
 
     #[test]
-    fn test_of_str_none() {
-        assert_eq!(Piece::of_str(""), None);
-        assert_eq!(Piece::of_str("R"), None);
-        assert_eq!(Piece::of_str("N"), None);
-        assert_eq!(Piece::of_str("B"), None);
-        assert_eq!(Piece::of_str("Q"), None);
-        assert_eq!(Piece::of_str("K"), None);
-        assert_eq!(Piece::of_str("P"), None);
+    fn test_try_from_str_none() {
+        assert_eq!(Piece::try_from_str(""), None);
+        assert_eq!(Piece::try_from_str("R"), None);
+        assert_eq!(Piece::try_from_str("N"), None);
+        assert_eq!(Piece::try_from_str("B"), None);
+        assert_eq!(Piece::try_from_str("Q"), None);
+        assert_eq!(Piece::try_from_str("K"), None);
+        assert_eq!(Piece::try_from_str("P"), None);
+    }
+
+    #[test]
+    fn test_from() {
+        assert_eq!(Piece::from_str("♖"), Piece { t: Type::Rook, c: Color::White });
+        assert_eq!(Piece::from_str("♘"), Piece { t: Type::Knight, c: Color::White });
+        assert_eq!(Piece::from_str("♗"), Piece { t: Type::Bishop, c: Color::White });
+        assert_eq!(Piece::from_str("♕"), Piece { t: Type::Queen, c: Color::White });
+        assert_eq!(Piece::from_str("♔"), Piece { t: Type::King, c: Color::White });
+        assert_eq!(Piece::from_str("♙"), Piece { t: Type::Pawn, c: Color::White });
+        assert_eq!(Piece::from_str("♜"), Piece { t: Type::Rook, c: Color::Black });
+        assert_eq!(Piece::from_str("♞"), Piece { t: Type::Knight, c: Color::Black });
+        assert_eq!(Piece::from_str("♝"), Piece { t: Type::Bishop, c: Color::Black });
+        assert_eq!(Piece::from_str("♛"), Piece { t: Type::Queen, c: Color::Black });
+        assert_eq!(Piece::from_str("♚"), Piece { t: Type::King, c: Color::Black });
+        assert_eq!(Piece::from_str("♟"), Piece { t: Type::Pawn, c: Color::Black });
     }
 
     #[test]
