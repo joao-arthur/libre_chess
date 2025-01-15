@@ -1,6 +1,6 @@
 use crate::board::BoardPos;
 
-fn white_pawn_movements(board_pos: &BoardPos) -> Vec<BoardPos> {
+fn white_pawn_mov(board_pos: &BoardPos) -> Vec<BoardPos> {
     let x = board_pos.x.to_idx();
     let y = board_pos.y.to_idx();
     if y == 6 {
@@ -10,7 +10,7 @@ fn white_pawn_movements(board_pos: &BoardPos) -> Vec<BoardPos> {
     }
 }
 
-fn black_pawn_movements(board_pos: &BoardPos) -> Vec<BoardPos> {
+fn black_pawn_mov(board_pos: &BoardPos) -> Vec<BoardPos> {
     let x = board_pos.x.to_idx();
     let y = board_pos.y.to_idx();
     if y == 1 {
@@ -20,7 +20,7 @@ fn black_pawn_movements(board_pos: &BoardPos) -> Vec<BoardPos> {
     }
 }
 
-fn rook_movements(board_pos: &BoardPos) -> Vec<BoardPos> {
+fn rook_mov(board_pos: &BoardPos) -> Vec<BoardPos> {
     let x = board_pos.x.to_idx();
     let y = board_pos.y.to_idx();
     vec![
@@ -42,7 +42,36 @@ fn rook_movements(board_pos: &BoardPos) -> Vec<BoardPos> {
         BoardPos::from_idx(x, 7),
     ]
 }
-fn king_movements(board_pos: &BoardPos) -> Vec<BoardPos> {
+
+fn knight_mov(board_pos: &BoardPos) -> Vec<BoardPos> {
+    let x = board_pos.x.to_idx();
+    let y = board_pos.y.to_idx();
+    vec![
+        BoardPos::try_from_idx(x - 2, y - 1),
+        BoardPos::try_from_idx(x - 1, y - 2),
+        BoardPos::try_from_idx(x + 1, y - 2),
+        BoardPos::try_from_idx(x + 2, y - 1),
+        BoardPos::try_from_idx(x - 2, y + 1),
+        BoardPos::try_from_idx(x - 1, y + 2),
+        BoardPos::try_from_idx(x + 1, y + 2),
+        BoardPos::try_from_idx(x + 2, y + 1),
+    ]
+        .into_iter()
+        .filter_map(|x| x)
+        .collect()
+}
+
+fn bishop_movements(board_pos: &BoardPos) {
+    let x = board_pos.x.to_idx();
+    let y = board_pos.y.to_idx();
+}
+
+fn queen_movements(board_pos: &BoardPos) {
+    let x = board_pos.x.to_idx();
+    let y = board_pos.y.to_idx();
+}
+
+fn king_mov(board_pos: &BoardPos) -> Vec<BoardPos> {
     let x = board_pos.x.to_idx();
     let y = board_pos.y.to_idx();
     vec![
@@ -66,35 +95,32 @@ mod test {
     use super::*;
 
     #[test]
-    fn test_white_pawn_movements() {
+    fn test_white_pawn_mov() {
         assert_eq!(
-            white_pawn_movements(&BoardPos::from_str("E2")),
+            white_pawn_mov(&BoardPos::from_str("E2")),
             [BoardPos::from_str("E3"), BoardPos::from_str("E4")]
         );
-        assert_eq!(white_pawn_movements(&BoardPos::from_str("E3")), [BoardPos::from_str("E4")]);
-        assert_eq!(white_pawn_movements(&BoardPos::from_str("E4")), [BoardPos::from_str("E5")]);
-        assert_eq!(white_pawn_movements(&BoardPos::from_str("E5")), [BoardPos::from_str("E6")]);
-        assert_eq!(white_pawn_movements(&BoardPos::from_str("E6")), [BoardPos::from_str("E7")]);
-        assert_eq!(white_pawn_movements(&BoardPos::from_str("E7")), [BoardPos::from_str("E8")]);
+        assert_eq!(white_pawn_mov(&BoardPos::from_str("E3")), [BoardPos::from_str("E4")]);
+        assert_eq!(white_pawn_mov(&BoardPos::from_str("E4")), [BoardPos::from_str("E5")]);
+        assert_eq!(white_pawn_mov(&BoardPos::from_str("E5")), [BoardPos::from_str("E6")]);
+        assert_eq!(white_pawn_mov(&BoardPos::from_str("E6")), [BoardPos::from_str("E7")]);
+        assert_eq!(white_pawn_mov(&BoardPos::from_str("E7")), [BoardPos::from_str("E8")]);
     }
 
     #[test]
-    fn test_black_pawn_movements() {
-        assert_eq!(
-            black_pawn_movements(&BoardPos::from_str("E7")),
-            [BoardPos::from_str("E6"), BoardPos::from_str("E5")]
-        );
-        assert_eq!(black_pawn_movements(&BoardPos::from_str("E6")), [BoardPos::from_str("E5")]);
-        assert_eq!(black_pawn_movements(&BoardPos::from_str("E5")), [BoardPos::from_str("E4")]);
-        assert_eq!(black_pawn_movements(&BoardPos::from_str("E4")), [BoardPos::from_str("E3")]);
-        assert_eq!(black_pawn_movements(&BoardPos::from_str("E3")), [BoardPos::from_str("E2")]);
-        assert_eq!(black_pawn_movements(&BoardPos::from_str("E2")), [BoardPos::from_str("E1")]);
+    fn test_black_pawn_mov() {
+        assert_eq!(black_pawn_mov(&BoardPos::from_str("E7")), [BoardPos::from_str("E6"), BoardPos::from_str("E5")]);
+        assert_eq!(black_pawn_mov(&BoardPos::from_str("E6")), [BoardPos::from_str("E5")]);
+        assert_eq!(black_pawn_mov(&BoardPos::from_str("E5")), [BoardPos::from_str("E4")]);
+        assert_eq!(black_pawn_mov(&BoardPos::from_str("E4")), [BoardPos::from_str("E3")]);
+        assert_eq!(black_pawn_mov(&BoardPos::from_str("E3")), [BoardPos::from_str("E2")]);
+        assert_eq!(black_pawn_mov(&BoardPos::from_str("E2")), [BoardPos::from_str("E1")]);
     }
 
     #[test]
-    fn test_rook_movements() {
+    fn test_rook_mov() {
         assert_eq!(
-            rook_movements(&BoardPos::from_str("D4")),
+            rook_mov(&BoardPos::from_str("D4")),
             [
                 BoardPos::from_str("A4"),
                 BoardPos::from_str("B4"),
@@ -115,10 +141,28 @@ mod test {
             ]
         );
     }
+
     #[test]
-    fn test_king_movements() {
+    fn test_knight_mov() {
         assert_eq!(
-            king_movements(&BoardPos::from_str("D4")),
+            knight_mov(&BoardPos::from_str("D4")),
+            [
+                BoardPos::from_str("B5"),
+                BoardPos::from_str("C6"),
+                BoardPos::from_str("E6"),
+                BoardPos::from_str("F5"),
+                BoardPos::from_str("B3"),
+                BoardPos::from_str("C2"),
+                BoardPos::from_str("E2"),
+                BoardPos::from_str("F3"),
+            ]
+        )
+    }
+
+    #[test]
+    fn test_king_mov() {
+        assert_eq!(
+            king_mov(&BoardPos::from_str("D4")),
             [
                 BoardPos::from_str("C5"),
                 BoardPos::from_str("D5"),
@@ -131,7 +175,7 @@ mod test {
             ]
         );
         assert_eq!(
-            king_movements(&BoardPos::from_str("E1")),
+            king_mov(&BoardPos::from_str("E1")),
             [
                 BoardPos::from_str("D2"),
                 BoardPos::from_str("E2"),
@@ -141,36 +185,20 @@ mod test {
             ]
         );
         assert_eq!(
-            king_movements(&BoardPos::from_str("A1")),
-            [
-                BoardPos::from_str("A2"),
-                BoardPos::from_str("B2"),
-                BoardPos::from_str("B1"),
-            ]
+            king_mov(&BoardPos::from_str("A1")),
+            [ BoardPos::from_str("A2"), BoardPos::from_str("B2"), BoardPos::from_str("B1"),]
         );
         assert_eq!(
-            king_movements(&BoardPos::from_str("H1")),
-            [
-                BoardPos::from_str("G2"),
-                BoardPos::from_str("H2"),
-                BoardPos::from_str("G1"),
-            ]
+            king_mov(&BoardPos::from_str("H1")),
+            [ BoardPos::from_str("G2"), BoardPos::from_str("H2"), BoardPos::from_str("G1")]
         );
         assert_eq!(
-            king_movements(&BoardPos::from_str("A8")),
-            [
-                BoardPos::from_str("B8"),
-                BoardPos::from_str("A7"),
-                BoardPos::from_str("B7"),
-            ]
+            king_mov(&BoardPos::from_str("A8")),
+            [ BoardPos::from_str("B8"), BoardPos::from_str("A7"), BoardPos::from_str("B7")]
         );
         assert_eq!(
-            king_movements(&BoardPos::from_str("H8")),
-            [
-                BoardPos::from_str("G8"),
-                BoardPos::from_str("G7"),
-                BoardPos::from_str("H7"),
-            ]
+            king_mov(&BoardPos::from_str("H8")),
+            [ BoardPos::from_str("G8"), BoardPos::from_str("G7"), BoardPos::from_str("H7")]
         );
     }
 }
