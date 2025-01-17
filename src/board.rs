@@ -183,6 +183,10 @@ impl BoardPos {
         BoardPos::try_of_idx((self_x + x) as u8, (self_y + y) as u8)
     }
 
+    pub fn of_rel_idx(&self, x: i8, y: i8) -> Self {
+        self.try_of_rel_idx(x, y).unwrap()
+    }
+
     fn try_of_str(s: &str) -> Option<Self> {
         let mut chars = s.chars();
         let x = chars.next().and_then(|pos| BoardX::try_of_str(&pos.to_string()))?;
@@ -300,7 +304,7 @@ mod test {
     use super::*;
 
     #[test]
-    fn test_board_x_try_from_idx_some() {
+    fn test_board_x_try_of_idx_some() {
         assert_eq!(BoardX::try_of_idx(0), Some(BoardX::A));
         assert_eq!(BoardX::try_of_idx(1), Some(BoardX::B));
         assert_eq!(BoardX::try_of_idx(2), Some(BoardX::C));
@@ -312,7 +316,7 @@ mod test {
     }
 
     #[test]
-    fn test_board_x_try_from_idx_none() {
+    fn test_board_x_try_of_idx_none() {
         assert_eq!(BoardX::try_of_idx(8), None);
         assert_eq!(BoardX::try_of_idx(9), None);
         assert_eq!(BoardX::try_of_idx(10), None);
@@ -343,7 +347,7 @@ mod test {
     }
 
     #[test]
-    fn test_board_x_try_from_str_some() {
+    fn test_board_x_try_of_str_some() {
         assert_eq!(BoardX::try_of_str("A"), Some(BoardX::A));
         assert_eq!(BoardX::try_of_str("B"), Some(BoardX::B));
         assert_eq!(BoardX::try_of_str("C"), Some(BoardX::C));
@@ -355,7 +359,7 @@ mod test {
     }
 
     #[test]
-    fn test_board_x_try_from_str_none() {
+    fn test_board_x_try_of_str_none() {
         assert_eq!(BoardX::try_of_str("I"), None);
         assert_eq!(BoardX::try_of_str("J"), None);
         assert_eq!(BoardX::try_of_str("K"), None);
@@ -386,7 +390,7 @@ mod test {
     }
 
     #[test]
-    fn test_board_y_try_from_idx_some() {
+    fn test_board_y_try_of_idx_some() {
         assert_eq!(BoardY::try_of_idx(0), Some(BoardY::_8));
         assert_eq!(BoardY::try_of_idx(1), Some(BoardY::_7));
         assert_eq!(BoardY::try_of_idx(2), Some(BoardY::_6));
@@ -398,7 +402,7 @@ mod test {
     }
 
     #[test]
-    fn test_board_y_try_from_idx_none() {
+    fn test_board_y_try_of_idx_none() {
         assert_eq!(BoardY::try_of_idx(8), None);
         assert_eq!(BoardY::try_of_idx(9), None);
         assert_eq!(BoardY::try_of_idx(10), None);
@@ -429,7 +433,7 @@ mod test {
     }
 
     #[test]
-    fn test_board_y_try_from_str_some() {
+    fn test_board_y_try_of_str_some() {
         assert_eq!(BoardY::try_of_str("1"), Some(BoardY::_1));
         assert_eq!(BoardY::try_of_str("2"), Some(BoardY::_2));
         assert_eq!(BoardY::try_of_str("3"), Some(BoardY::_3));
@@ -441,7 +445,7 @@ mod test {
     }
 
     #[test]
-    fn test_board_y_try_from_str_none() {
+    fn test_board_y_try_of_str_none() {
         assert_eq!(BoardY::try_of_str("0"), None);
         assert_eq!(BoardY::try_of_str("9"), None);
         assert_eq!(BoardY::try_of_str("10"), None);
@@ -472,7 +476,7 @@ mod test {
     }
 
     #[test]
-    fn test_board_pos_try_from_idx_some() {
+    fn test_board_pos_try_of_idx_some() {
         assert_eq!(BoardPos::try_of_idx(0, 7), Some(BoardPos { x: BoardX::A, y: BoardY::_1 }));
         assert_eq!(BoardPos::try_of_idx(0, 6), Some(BoardPos { x: BoardX::A, y: BoardY::_2 }));
         assert_eq!(BoardPos::try_of_idx(0, 5), Some(BoardPos { x: BoardX::A, y: BoardY::_3 }));
@@ -491,7 +495,7 @@ mod test {
     }
 
     #[test]
-    fn test_board_pos_try_from_idx_none() {
+    fn test_board_pos_try_of_idx_none() {
         assert_eq!(BoardPos::try_of_idx(8, 8), None);
         assert_eq!(BoardPos::try_of_idx(9, 9), None);
         assert_eq!(BoardPos::try_of_idx(10, 10), None);
@@ -517,7 +521,7 @@ mod test {
     }
 
     #[test]
-    fn test_board_pos_try_from_rel_idx_some() {
+    fn test_board_pos_try_of_rel_idx_some() {
         assert_eq!(BoardPos::of_idx(7, 7).try_of_rel_idx(0, 0), Some(BoardPos::of_idx(7, 7)));
         assert_eq!(BoardPos::of_idx(7, 7).try_of_rel_idx(-1, -1), Some(BoardPos::of_idx(6, 6)));
         assert_eq!(BoardPos::of_idx(7, 7).try_of_rel_idx(-2, -2), Some(BoardPos::of_idx(5, 5)));
@@ -537,7 +541,7 @@ mod test {
     }
 
     #[test]
-    fn test_board_pos_try_from_rel_idx_none() {
+    fn test_board_pos_try_of_rel_idx_none() {
         assert_eq!(BoardPos::of_idx(0, 0).try_of_rel_idx(-1, -1), None);
         assert_eq!(BoardPos::of_idx(0, 0).try_of_rel_idx(-2, -2), None);
         assert_eq!(BoardPos::of_idx(0, 0).try_of_rel_idx(-3, -3), None);
@@ -555,7 +559,27 @@ mod test {
     }
 
     #[test]
-    fn test_board_pos_try_from_str_some() {
+    fn test_board_pos_of_rel_idx() {
+        assert_eq!(BoardPos::of_idx(7, 7).of_rel_idx(0, 0), BoardPos::of_idx(7, 7));
+        assert_eq!(BoardPos::of_idx(7, 7).of_rel_idx(-1, -1), BoardPos::of_idx(6, 6));
+        assert_eq!(BoardPos::of_idx(7, 7).of_rel_idx(-2, -2), BoardPos::of_idx(5, 5));
+        assert_eq!(BoardPos::of_idx(7, 7).of_rel_idx(-3, -3), BoardPos::of_idx(4, 4));
+        assert_eq!(BoardPos::of_idx(7, 7).of_rel_idx(-4, -4), BoardPos::of_idx(3, 3));
+        assert_eq!(BoardPos::of_idx(7, 7).of_rel_idx(-5, -5), BoardPos::of_idx(2, 2));
+        assert_eq!(BoardPos::of_idx(7, 7).of_rel_idx(-6, -6), BoardPos::of_idx(1, 1));
+        assert_eq!(BoardPos::of_idx(7, 7).of_rel_idx(-7, -7), BoardPos::of_idx(0, 0));
+        assert_eq!(BoardPos::of_idx(0, 0).of_rel_idx(0, 0), BoardPos::of_idx(0, 0));
+        assert_eq!(BoardPos::of_idx(0, 0).of_rel_idx(1, 1), BoardPos::of_idx(1, 1));
+        assert_eq!(BoardPos::of_idx(0, 0).of_rel_idx(2, 2), BoardPos::of_idx(2, 2));
+        assert_eq!(BoardPos::of_idx(0, 0).of_rel_idx(3, 3), BoardPos::of_idx(3, 3));
+        assert_eq!(BoardPos::of_idx(0, 0).of_rel_idx(4, 4), BoardPos::of_idx(4, 4));
+        assert_eq!(BoardPos::of_idx(0, 0).of_rel_idx(5, 5), BoardPos::of_idx(5, 5));
+        assert_eq!(BoardPos::of_idx(0, 0).of_rel_idx(6, 6), BoardPos::of_idx(6, 6));
+        assert_eq!(BoardPos::of_idx(0, 0).of_rel_idx(7, 7), BoardPos::of_idx(7, 7));
+    }
+
+    #[test]
+    fn test_board_pos_try_of_str_some() {
         assert_eq!(BoardPos::try_of_str("A1"), Some(BoardPos { x: BoardX::A, y: BoardY::_1 }));
         assert_eq!(BoardPos::try_of_str("A2"), Some(BoardPos { x: BoardX::A, y: BoardY::_2 }));
         assert_eq!(BoardPos::try_of_str("A3"), Some(BoardPos { x: BoardX::A, y: BoardY::_3 }));
@@ -574,7 +598,7 @@ mod test {
     }
 
     #[test]
-    fn test_board_pos_try_from_str_none() {
+    fn test_board_pos_try_of_str_none() {
         assert_eq!(BoardPos::try_of_str("A0"), None);
         assert_eq!(BoardPos::try_of_str("A9"), None);
         assert_eq!(BoardPos::try_of_str("I1"), None);

@@ -70,7 +70,7 @@ mod test {
     use super::*;
 
     #[test]
-    fn test_try_from_str_some() {
+    fn test_try_of_str_some() {
         assert_eq!(Piece::try_of_str("♖"), Some(Piece { t: Type::Rook, c: Color::White }));
         assert_eq!(Piece::try_of_str("♘"), Some(Piece { t: Type::Knight, c: Color::White }));
         assert_eq!(Piece::try_of_str("♗"), Some(Piece { t: Type::Bishop, c: Color::White }));
@@ -86,7 +86,7 @@ mod test {
     }
 
     #[test]
-    fn test_try_from_str_none() {
+    fn test_try_of_str_none() {
         assert_eq!(Piece::try_of_str(""), None);
         assert_eq!(Piece::try_of_str("R"), None);
         assert_eq!(Piece::try_of_str("N"), None);

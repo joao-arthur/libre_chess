@@ -1,8 +1,7 @@
 use crate::board::BoardPos;
 
 fn white_pawn_mov(pos: &BoardPos) -> Vec<BoardPos> {
-    let y = pos.y.to_idx();
-    if y == 6 {
+    if pos.y.to_idx() == 6 {
         vec![pos.try_of_rel_idx(0, -1), pos.try_of_rel_idx(0, -2)]
             .into_iter()
             .filter_map(|x| x)
@@ -13,12 +12,13 @@ fn white_pawn_mov(pos: &BoardPos) -> Vec<BoardPos> {
 }
 
 fn black_pawn_mov(pos: &BoardPos) -> Vec<BoardPos> {
-    let x = pos.x.to_idx();
-    let y = pos.y.to_idx();
-    if y == 1 {
-        vec![BoardPos::of_idx(x, y + 1), BoardPos::of_idx(x, y + 2)]
+    if pos.y.to_idx() == 1 {
+        vec![pos.try_of_rel_idx(0, 1), pos.try_of_rel_idx(0, 2)]
+            .into_iter()
+            .filter_map(|x| x)
+            .collect()
     } else {
-        vec![BoardPos::of_idx(x, y + 1)]
+        vec![pos.try_of_rel_idx(0, 1)].into_iter().filter_map(|x| x).collect()
     }
 }
 
