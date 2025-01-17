@@ -21,7 +21,7 @@ pub struct Piece {
 }
 
 impl Piece {
-    pub fn try_from_str(s: &str) -> Option<Piece> {
+    pub fn try_from_str(s: &str) -> Option<Self> {
         match s {
             "♖" => Some(Piece { t: Type::Rook, c: Color::White }),
             "♘" => Some(Piece { t: Type::Knight, c: Color::White }),

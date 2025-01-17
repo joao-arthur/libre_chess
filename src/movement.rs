@@ -1,18 +1,20 @@
 use crate::board::BoardPos;
 
-fn white_pawn_mov(board_pos: &BoardPos) -> Vec<BoardPos> {
-    let x = board_pos.x.to_idx();
-    let y = board_pos.y.to_idx();
+fn white_pawn_mov(pos: &BoardPos) -> Vec<BoardPos> {
+    let y = pos.y.to_idx();
     if y == 6 {
-        vec![BoardPos::from_idx(x, y - 1), BoardPos::from_idx(x, y - 2)]
+        vec![pos.try_from_rel_idx(0, -1), pos.try_from_rel_idx(0, -2)]
+            .into_iter()
+            .filter_map(|x| x)
+            .collect()
     } else {
-        vec![BoardPos::from_idx(x, y - 1)]
+        vec![pos.try_from_rel_idx(0, -1)].into_iter().filter_map(|x| x).collect()
     }
 }
 
-fn black_pawn_mov(board_pos: &BoardPos) -> Vec<BoardPos> {
-    let x = board_pos.x.to_idx();
-    let y = board_pos.y.to_idx();
+fn black_pawn_mov(pos: &BoardPos) -> Vec<BoardPos> {
+    let x = pos.x.to_idx();
+    let y = pos.y.to_idx();
     if y == 1 {
         vec![BoardPos::from_idx(x, y + 1), BoardPos::from_idx(x, y + 2)]
     } else {
@@ -20,9 +22,25 @@ fn black_pawn_mov(board_pos: &BoardPos) -> Vec<BoardPos> {
     }
 }
 
-fn rook_mov(board_pos: &BoardPos) -> Vec<BoardPos> {
-    let x = board_pos.x.to_idx();
-    let y = board_pos.y.to_idx();
+fn knight_mov(pos: &BoardPos) -> Vec<BoardPos> {
+    vec![
+        pos.try_from_rel_idx(-2, -1),
+        pos.try_from_rel_idx(-1, -2),
+        pos.try_from_rel_idx(1, -2),
+        pos.try_from_rel_idx(2, -1),
+        pos.try_from_rel_idx(-2, 1),
+        pos.try_from_rel_idx(-1, 2),
+        pos.try_from_rel_idx(1, 2),
+        pos.try_from_rel_idx(2, 1),
+    ]
+    .into_iter()
+    .filter_map(|x| x)
+    .collect()
+}
+
+fn rook_mov(pos: &BoardPos) -> Vec<BoardPos> {
+    let x = pos.x.to_idx();
+    let y = pos.y.to_idx();
     vec![
         BoardPos::from_idx(0, y),
         BoardPos::from_idx(1, y),
@@ -43,27 +61,9 @@ fn rook_mov(board_pos: &BoardPos) -> Vec<BoardPos> {
     ]
 }
 
-fn knight_mov(board_pos: &BoardPos) -> Vec<BoardPos> {
-    let x = board_pos.x.to_idx();
-    let y = board_pos.y.to_idx();
-    vec![
-        BoardPos::try_from_idx(x - 2, y - 1),
-        BoardPos::try_from_idx(x - 1, y - 2),
-        BoardPos::try_from_idx(x + 1, y - 2),
-        BoardPos::try_from_idx(x + 2, y - 1),
-        BoardPos::try_from_idx(x - 2, y + 1),
-        BoardPos::try_from_idx(x - 1, y + 2),
-        BoardPos::try_from_idx(x + 1, y + 2),
-        BoardPos::try_from_idx(x + 2, y + 1),
-    ]
-    .into_iter()
-    .filter_map(|x| x)
-    .collect()
-}
-
-fn bishop_mov(board_pos: &BoardPos) -> Vec<BoardPos> {
-    let x = board_pos.x.to_idx();
-    let y = board_pos.y.to_idx();
+fn bishop_mov(pos: &BoardPos) -> Vec<BoardPos> {
+    let x = pos.x.to_idx();
+    let y = pos.y.to_idx();
     let mut res = vec![];
     let x_negative = 7 - x;
     if x > y {
@@ -94,23 +94,21 @@ fn bishop_mov(board_pos: &BoardPos) -> Vec<BoardPos> {
     return res.into_iter().filter_map(|x| x).collect();
 }
 
-fn queen_movements(board_pos: &BoardPos) {
-    let x = board_pos.x.to_idx();
-    let y = board_pos.y.to_idx();
+fn queen_movements(pos: &BoardPos) {
+    let x = pos.x.to_idx();
+    let y = pos.y.to_idx();
 }
 
-fn king_mov(board_pos: &BoardPos) -> Vec<BoardPos> {
-    let x = board_pos.x.to_idx();
-    let y = board_pos.y.to_idx();
+fn king_mov(pos: &BoardPos) -> Vec<BoardPos> {
     vec![
-        if x > 0 && y > 0 { BoardPos::try_from_idx(x - 1, y - 1) } else { None },
-        if y > 0 { BoardPos::try_from_idx(x, y - 1) } else { None },
-        if y > 0 { BoardPos::try_from_idx(x + 1, y - 1) } else { None },
-        if x > 0 { BoardPos::try_from_idx(x - 1, y) } else { None },
-        BoardPos::try_from_idx(x + 1, y),
-        if x > 0 { BoardPos::try_from_idx(x - 1, y + 1) } else { None },
-        BoardPos::try_from_idx(x, y + 1),
-        BoardPos::try_from_idx(x + 1, y + 1),
+        pos.try_from_rel_idx(-1, -1),
+        pos.try_from_rel_idx(0, -1),
+        pos.try_from_rel_idx(1, -1),
+        pos.try_from_rel_idx(-1, 0),
+        pos.try_from_rel_idx(1, 0),
+        pos.try_from_rel_idx(-1, 1),
+        pos.try_from_rel_idx(0, 1),
+        pos.try_from_rel_idx(1, 1),
     ]
     .into_iter()
     .filter_map(|x| x)
@@ -148,6 +146,39 @@ mod test {
     }
 
     #[test]
+    fn test_knight_mov() {
+        assert_eq!(
+            knight_mov(&BoardPos::from_str("D4")),
+            [
+                BoardPos::from_str("B5"),
+                BoardPos::from_str("C6"),
+                BoardPos::from_str("E6"),
+                BoardPos::from_str("F5"),
+                BoardPos::from_str("B3"),
+                BoardPos::from_str("C2"),
+                BoardPos::from_str("E2"),
+                BoardPos::from_str("F3"),
+            ]
+        );
+        assert_eq!(
+            knight_mov(&BoardPos::from_str("A1")),
+            [BoardPos::from_str("B3"), BoardPos::from_str("C2")]
+        );
+        assert_eq!(
+            knight_mov(&BoardPos::from_str("A8")),
+            [BoardPos::from_str("B6"), BoardPos::from_str("C7")]
+        );
+        assert_eq!(
+            knight_mov(&BoardPos::from_str("H1")),
+            [BoardPos::from_str("F2"), BoardPos::from_str("G3")]
+        );
+        assert_eq!(
+            knight_mov(&BoardPos::from_str("H8")),
+            [BoardPos::from_str("F7"), BoardPos::from_str("G6")]
+        );
+    }
+
+    #[test]
     fn test_rook_mov() {
         assert_eq!(
             rook_mov(&BoardPos::from_str("D4")),
@@ -170,23 +201,6 @@ mod test {
                 BoardPos::from_str("D1"),
             ]
         );
-    }
-
-    #[test]
-    fn test_knight_mov() {
-        assert_eq!(
-            knight_mov(&BoardPos::from_str("D4")),
-            [
-                BoardPos::from_str("B5"),
-                BoardPos::from_str("C6"),
-                BoardPos::from_str("E6"),
-                BoardPos::from_str("F5"),
-                BoardPos::from_str("B3"),
-                BoardPos::from_str("C2"),
-                BoardPos::from_str("E2"),
-                BoardPos::from_str("F3"),
-            ]
-        )
     }
 
     #[test]
