@@ -182,7 +182,7 @@ impl BoardPos {
         Self::try_from_str(s).unwrap()
     }
 
-    fn to_string(&self) -> String {
+    pub fn to_string(&self) -> String {
         format!("{}{}", self.x.to_str(), self.y.to_str())
     }
 }
@@ -239,8 +239,8 @@ fn try_from_str(rows: [&str; 8]) -> Result<Board, FromStringErr> {
         }
     }
     let mut res: [[Option<Piece>; 8]; 8] = [[None; 8]; 8];
-    for row in 0..8 {
-        for col in 0..8 {
+    for row in 0..=7 {
+        for col in 0..=7 {
             res[row as usize][col as usize] =
                 Piece::try_from_str(&rows[row as usize].chars().nth(col).unwrap().to_string());
         }
