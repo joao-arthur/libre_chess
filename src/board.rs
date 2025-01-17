@@ -15,7 +15,7 @@ pub enum BoardX {
 }
 
 impl BoardX {
-    fn try_from_idx(i: u8) -> Option<Self> {
+    fn try_of_idx(i: u8) -> Option<Self> {
         match i {
             0 => Some(BoardX::A),
             1 => Some(BoardX::B),
@@ -29,8 +29,8 @@ impl BoardX {
         }
     }
 
-    fn from_idx(i: u8) -> Self {
-        Self::try_from_idx(i).unwrap()
+    fn of_idx(i: u8) -> Self {
+        Self::try_of_idx(i).unwrap()
     }
 
     pub fn to_idx(&self) -> u8 {
@@ -46,7 +46,7 @@ impl BoardX {
         }
     }
 
-    fn try_from_str(s: &str) -> Option<Self> {
+    fn try_of_str(s: &str) -> Option<Self> {
         match s {
             "A" => Some(BoardX::A),
             "B" => Some(BoardX::B),
@@ -60,8 +60,8 @@ impl BoardX {
         }
     }
 
-    fn from_str(s: &str) -> Self {
-        Self::try_from_str(s).unwrap()
+    fn of_str(s: &str) -> Self {
+        Self::try_of_str(s).unwrap()
     }
 
     fn to_str(&self) -> &'static str {
@@ -91,7 +91,7 @@ pub enum BoardY {
 }
 
 impl BoardY {
-    fn try_from_idx(i: u8) -> Option<Self> {
+    fn try_of_idx(i: u8) -> Option<Self> {
         match i {
             7 => Some(BoardY::_1),
             6 => Some(BoardY::_2),
@@ -105,8 +105,8 @@ impl BoardY {
         }
     }
 
-    fn from_idx(i: u8) -> Self {
-        Self::try_from_idx(i).unwrap()
+    fn of_idx(i: u8) -> Self {
+        Self::try_of_idx(i).unwrap()
     }
 
     pub fn to_idx(&self) -> u8 {
@@ -122,7 +122,7 @@ impl BoardY {
         }
     }
 
-    fn try_from_str(s: &str) -> Option<BoardY> {
+    fn try_of_str(s: &str) -> Option<BoardY> {
         match s {
             "1" => Some(BoardY::_1),
             "2" => Some(BoardY::_2),
@@ -136,8 +136,8 @@ impl BoardY {
         }
     }
 
-    fn from_str(s: &str) -> Self {
-        Self::try_from_str(s).unwrap()
+    fn of_str(s: &str) -> Self {
+        Self::try_of_str(s).unwrap()
     }
 
     fn to_str(&self) -> &'static str {
@@ -161,17 +161,17 @@ pub struct BoardPos {
 }
 
 impl BoardPos {
-    pub fn try_from_idx(x: u8, y: u8) -> Option<Self> {
-        let x = BoardX::try_from_idx(x)?;
-        let y = BoardY::try_from_idx(y)?;
+    pub fn try_of_idx(x: u8, y: u8) -> Option<Self> {
+        let x = BoardX::try_of_idx(x)?;
+        let y = BoardY::try_of_idx(y)?;
         Some(BoardPos { x, y })
     }
 
-    pub fn from_idx(x: u8, y: u8) -> Self {
-        Self::try_from_idx(x, y).unwrap()
+    pub fn of_idx(x: u8, y: u8) -> Self {
+        Self::try_of_idx(x, y).unwrap()
     }
 
-    pub fn try_from_rel_idx(&self, x: i8, y: i8) -> Option<Self> {
+    pub fn try_of_rel_idx(&self, x: i8, y: i8) -> Option<Self> {
         let self_x = self.x.to_idx() as i8;
         let self_y = self.y.to_idx() as i8;
         if x < 0 && x.abs() > self_x {
@@ -180,18 +180,18 @@ impl BoardPos {
         if y < 0 && y.abs() > self_y {
             return None;
         }
-        BoardPos::try_from_idx((self_x + x) as u8, (self_y + y) as u8)
+        BoardPos::try_of_idx((self_x + x) as u8, (self_y + y) as u8)
     }
 
-    fn try_from_str(s: &str) -> Option<Self> {
+    fn try_of_str(s: &str) -> Option<Self> {
         let mut chars = s.chars();
-        let x = chars.next().and_then(|pos| BoardX::try_from_str(&pos.to_string()))?;
-        let y = chars.next().and_then(|pos| BoardY::try_from_str(&pos.to_string()))?;
+        let x = chars.next().and_then(|pos| BoardX::try_of_str(&pos.to_string()))?;
+        let y = chars.next().and_then(|pos| BoardY::try_of_str(&pos.to_string()))?;
         Some(BoardPos { x, y })
     }
 
-    pub fn from_str(s: &str) -> Self {
-        Self::try_from_str(s).unwrap()
+    pub fn of_str(s: &str) -> Self {
+        Self::try_of_str(s).unwrap()
     }
 
     pub fn to_string(&self) -> String {
@@ -225,7 +225,7 @@ pub enum FromStringErr {
     InvalidLength(InvalidLengthErr),
 }
 
-fn try_from_str(rows: [&str; 8]) -> Result<Board, FromStringErr> {
+fn try_of_str(rows: [&str; 8]) -> Result<Board, FromStringErr> {
     if !rows
         .join("")
         .replace("♖", "")
@@ -254,18 +254,18 @@ fn try_from_str(rows: [&str; 8]) -> Result<Board, FromStringErr> {
     for row in 0..=7 {
         for col in 0..=7 {
             res[row as usize][col as usize] =
-                Piece::try_from_str(&rows[row as usize].chars().nth(col).unwrap().to_string());
+                Piece::try_of_str(&rows[row as usize].chars().nth(col).unwrap().to_string());
         }
     }
     Ok(res)
 }
 
-fn from_str(rows: [&str; 8]) -> Board {
-    try_from_str(rows).unwrap()
+fn of_str(rows: [&str; 8]) -> Board {
+    try_of_str(rows).unwrap()
 }
 
 fn get_default_board() -> Board {
-    from_str([
+    of_str([
         "♜♞♝♛♚♝♞♜",
         "♟♟♟♟♟♟♟♟",
         "        ",
@@ -301,33 +301,33 @@ mod test {
 
     #[test]
     fn test_board_x_try_from_idx_some() {
-        assert_eq!(BoardX::try_from_idx(0), Some(BoardX::A));
-        assert_eq!(BoardX::try_from_idx(1), Some(BoardX::B));
-        assert_eq!(BoardX::try_from_idx(2), Some(BoardX::C));
-        assert_eq!(BoardX::try_from_idx(3), Some(BoardX::D));
-        assert_eq!(BoardX::try_from_idx(4), Some(BoardX::E));
-        assert_eq!(BoardX::try_from_idx(5), Some(BoardX::F));
-        assert_eq!(BoardX::try_from_idx(6), Some(BoardX::G));
-        assert_eq!(BoardX::try_from_idx(7), Some(BoardX::H));
+        assert_eq!(BoardX::try_of_idx(0), Some(BoardX::A));
+        assert_eq!(BoardX::try_of_idx(1), Some(BoardX::B));
+        assert_eq!(BoardX::try_of_idx(2), Some(BoardX::C));
+        assert_eq!(BoardX::try_of_idx(3), Some(BoardX::D));
+        assert_eq!(BoardX::try_of_idx(4), Some(BoardX::E));
+        assert_eq!(BoardX::try_of_idx(5), Some(BoardX::F));
+        assert_eq!(BoardX::try_of_idx(6), Some(BoardX::G));
+        assert_eq!(BoardX::try_of_idx(7), Some(BoardX::H));
     }
 
     #[test]
     fn test_board_x_try_from_idx_none() {
-        assert_eq!(BoardX::try_from_idx(8), None);
-        assert_eq!(BoardX::try_from_idx(9), None);
-        assert_eq!(BoardX::try_from_idx(10), None);
+        assert_eq!(BoardX::try_of_idx(8), None);
+        assert_eq!(BoardX::try_of_idx(9), None);
+        assert_eq!(BoardX::try_of_idx(10), None);
     }
 
     #[test]
     fn test_board_x_from_idx() {
-        assert_eq!(BoardX::from_idx(0), BoardX::A);
-        assert_eq!(BoardX::from_idx(1), BoardX::B);
-        assert_eq!(BoardX::from_idx(2), BoardX::C);
-        assert_eq!(BoardX::from_idx(3), BoardX::D);
-        assert_eq!(BoardX::from_idx(4), BoardX::E);
-        assert_eq!(BoardX::from_idx(5), BoardX::F);
-        assert_eq!(BoardX::from_idx(6), BoardX::G);
-        assert_eq!(BoardX::from_idx(7), BoardX::H);
+        assert_eq!(BoardX::of_idx(0), BoardX::A);
+        assert_eq!(BoardX::of_idx(1), BoardX::B);
+        assert_eq!(BoardX::of_idx(2), BoardX::C);
+        assert_eq!(BoardX::of_idx(3), BoardX::D);
+        assert_eq!(BoardX::of_idx(4), BoardX::E);
+        assert_eq!(BoardX::of_idx(5), BoardX::F);
+        assert_eq!(BoardX::of_idx(6), BoardX::G);
+        assert_eq!(BoardX::of_idx(7), BoardX::H);
     }
 
     #[test]
@@ -344,33 +344,33 @@ mod test {
 
     #[test]
     fn test_board_x_try_from_str_some() {
-        assert_eq!(BoardX::try_from_str("A"), Some(BoardX::A));
-        assert_eq!(BoardX::try_from_str("B"), Some(BoardX::B));
-        assert_eq!(BoardX::try_from_str("C"), Some(BoardX::C));
-        assert_eq!(BoardX::try_from_str("D"), Some(BoardX::D));
-        assert_eq!(BoardX::try_from_str("E"), Some(BoardX::E));
-        assert_eq!(BoardX::try_from_str("F"), Some(BoardX::F));
-        assert_eq!(BoardX::try_from_str("G"), Some(BoardX::G));
-        assert_eq!(BoardX::try_from_str("H"), Some(BoardX::H));
+        assert_eq!(BoardX::try_of_str("A"), Some(BoardX::A));
+        assert_eq!(BoardX::try_of_str("B"), Some(BoardX::B));
+        assert_eq!(BoardX::try_of_str("C"), Some(BoardX::C));
+        assert_eq!(BoardX::try_of_str("D"), Some(BoardX::D));
+        assert_eq!(BoardX::try_of_str("E"), Some(BoardX::E));
+        assert_eq!(BoardX::try_of_str("F"), Some(BoardX::F));
+        assert_eq!(BoardX::try_of_str("G"), Some(BoardX::G));
+        assert_eq!(BoardX::try_of_str("H"), Some(BoardX::H));
     }
 
     #[test]
     fn test_board_x_try_from_str_none() {
-        assert_eq!(BoardX::try_from_str("I"), None);
-        assert_eq!(BoardX::try_from_str("J"), None);
-        assert_eq!(BoardX::try_from_str("K"), None);
+        assert_eq!(BoardX::try_of_str("I"), None);
+        assert_eq!(BoardX::try_of_str("J"), None);
+        assert_eq!(BoardX::try_of_str("K"), None);
     }
 
     #[test]
     fn test_board_x_from_str() {
-        assert_eq!(BoardX::from_str("A"), BoardX::A);
-        assert_eq!(BoardX::from_str("B"), BoardX::B);
-        assert_eq!(BoardX::from_str("C"), BoardX::C);
-        assert_eq!(BoardX::from_str("D"), BoardX::D);
-        assert_eq!(BoardX::from_str("E"), BoardX::E);
-        assert_eq!(BoardX::from_str("F"), BoardX::F);
-        assert_eq!(BoardX::from_str("G"), BoardX::G);
-        assert_eq!(BoardX::from_str("H"), BoardX::H);
+        assert_eq!(BoardX::of_str("A"), BoardX::A);
+        assert_eq!(BoardX::of_str("B"), BoardX::B);
+        assert_eq!(BoardX::of_str("C"), BoardX::C);
+        assert_eq!(BoardX::of_str("D"), BoardX::D);
+        assert_eq!(BoardX::of_str("E"), BoardX::E);
+        assert_eq!(BoardX::of_str("F"), BoardX::F);
+        assert_eq!(BoardX::of_str("G"), BoardX::G);
+        assert_eq!(BoardX::of_str("H"), BoardX::H);
     }
 
     #[test]
@@ -387,33 +387,33 @@ mod test {
 
     #[test]
     fn test_board_y_try_from_idx_some() {
-        assert_eq!(BoardY::try_from_idx(0), Some(BoardY::_8));
-        assert_eq!(BoardY::try_from_idx(1), Some(BoardY::_7));
-        assert_eq!(BoardY::try_from_idx(2), Some(BoardY::_6));
-        assert_eq!(BoardY::try_from_idx(3), Some(BoardY::_5));
-        assert_eq!(BoardY::try_from_idx(4), Some(BoardY::_4));
-        assert_eq!(BoardY::try_from_idx(5), Some(BoardY::_3));
-        assert_eq!(BoardY::try_from_idx(6), Some(BoardY::_2));
-        assert_eq!(BoardY::try_from_idx(7), Some(BoardY::_1));
+        assert_eq!(BoardY::try_of_idx(0), Some(BoardY::_8));
+        assert_eq!(BoardY::try_of_idx(1), Some(BoardY::_7));
+        assert_eq!(BoardY::try_of_idx(2), Some(BoardY::_6));
+        assert_eq!(BoardY::try_of_idx(3), Some(BoardY::_5));
+        assert_eq!(BoardY::try_of_idx(4), Some(BoardY::_4));
+        assert_eq!(BoardY::try_of_idx(5), Some(BoardY::_3));
+        assert_eq!(BoardY::try_of_idx(6), Some(BoardY::_2));
+        assert_eq!(BoardY::try_of_idx(7), Some(BoardY::_1));
     }
 
     #[test]
     fn test_board_y_try_from_idx_none() {
-        assert_eq!(BoardY::try_from_idx(8), None);
-        assert_eq!(BoardY::try_from_idx(9), None);
-        assert_eq!(BoardY::try_from_idx(10), None);
+        assert_eq!(BoardY::try_of_idx(8), None);
+        assert_eq!(BoardY::try_of_idx(9), None);
+        assert_eq!(BoardY::try_of_idx(10), None);
     }
 
     #[test]
     fn test_board_y_from_idx() {
-        assert_eq!(BoardY::from_idx(0), BoardY::_8);
-        assert_eq!(BoardY::from_idx(1), BoardY::_7);
-        assert_eq!(BoardY::from_idx(2), BoardY::_6);
-        assert_eq!(BoardY::from_idx(3), BoardY::_5);
-        assert_eq!(BoardY::from_idx(4), BoardY::_4);
-        assert_eq!(BoardY::from_idx(5), BoardY::_3);
-        assert_eq!(BoardY::from_idx(6), BoardY::_2);
-        assert_eq!(BoardY::from_idx(7), BoardY::_1);
+        assert_eq!(BoardY::of_idx(0), BoardY::_8);
+        assert_eq!(BoardY::of_idx(1), BoardY::_7);
+        assert_eq!(BoardY::of_idx(2), BoardY::_6);
+        assert_eq!(BoardY::of_idx(3), BoardY::_5);
+        assert_eq!(BoardY::of_idx(4), BoardY::_4);
+        assert_eq!(BoardY::of_idx(5), BoardY::_3);
+        assert_eq!(BoardY::of_idx(6), BoardY::_2);
+        assert_eq!(BoardY::of_idx(7), BoardY::_1);
     }
 
     #[test]
@@ -430,33 +430,33 @@ mod test {
 
     #[test]
     fn test_board_y_try_from_str_some() {
-        assert_eq!(BoardY::try_from_str("1"), Some(BoardY::_1));
-        assert_eq!(BoardY::try_from_str("2"), Some(BoardY::_2));
-        assert_eq!(BoardY::try_from_str("3"), Some(BoardY::_3));
-        assert_eq!(BoardY::try_from_str("4"), Some(BoardY::_4));
-        assert_eq!(BoardY::try_from_str("5"), Some(BoardY::_5));
-        assert_eq!(BoardY::try_from_str("6"), Some(BoardY::_6));
-        assert_eq!(BoardY::try_from_str("7"), Some(BoardY::_7));
-        assert_eq!(BoardY::try_from_str("8"), Some(BoardY::_8));
+        assert_eq!(BoardY::try_of_str("1"), Some(BoardY::_1));
+        assert_eq!(BoardY::try_of_str("2"), Some(BoardY::_2));
+        assert_eq!(BoardY::try_of_str("3"), Some(BoardY::_3));
+        assert_eq!(BoardY::try_of_str("4"), Some(BoardY::_4));
+        assert_eq!(BoardY::try_of_str("5"), Some(BoardY::_5));
+        assert_eq!(BoardY::try_of_str("6"), Some(BoardY::_6));
+        assert_eq!(BoardY::try_of_str("7"), Some(BoardY::_7));
+        assert_eq!(BoardY::try_of_str("8"), Some(BoardY::_8));
     }
 
     #[test]
     fn test_board_y_try_from_str_none() {
-        assert_eq!(BoardY::try_from_str("0"), None);
-        assert_eq!(BoardY::try_from_str("9"), None);
-        assert_eq!(BoardY::try_from_str("10"), None);
+        assert_eq!(BoardY::try_of_str("0"), None);
+        assert_eq!(BoardY::try_of_str("9"), None);
+        assert_eq!(BoardY::try_of_str("10"), None);
     }
 
     #[test]
     fn test_board_y_from_str() {
-        assert_eq!(BoardY::from_str("1"), BoardY::_1);
-        assert_eq!(BoardY::from_str("2"), BoardY::_2);
-        assert_eq!(BoardY::from_str("3"), BoardY::_3);
-        assert_eq!(BoardY::from_str("4"), BoardY::_4);
-        assert_eq!(BoardY::from_str("5"), BoardY::_5);
-        assert_eq!(BoardY::from_str("6"), BoardY::_6);
-        assert_eq!(BoardY::from_str("7"), BoardY::_7);
-        assert_eq!(BoardY::from_str("8"), BoardY::_8);
+        assert_eq!(BoardY::of_str("1"), BoardY::_1);
+        assert_eq!(BoardY::of_str("2"), BoardY::_2);
+        assert_eq!(BoardY::of_str("3"), BoardY::_3);
+        assert_eq!(BoardY::of_str("4"), BoardY::_4);
+        assert_eq!(BoardY::of_str("5"), BoardY::_5);
+        assert_eq!(BoardY::of_str("6"), BoardY::_6);
+        assert_eq!(BoardY::of_str("7"), BoardY::_7);
+        assert_eq!(BoardY::of_str("8"), BoardY::_8);
     }
 
     #[test]
@@ -473,132 +473,132 @@ mod test {
 
     #[test]
     fn test_board_pos_try_from_idx_some() {
-        assert_eq!(BoardPos::try_from_idx(0, 7), Some(BoardPos { x: BoardX::A, y: BoardY::_1 }));
-        assert_eq!(BoardPos::try_from_idx(0, 6), Some(BoardPos { x: BoardX::A, y: BoardY::_2 }));
-        assert_eq!(BoardPos::try_from_idx(0, 5), Some(BoardPos { x: BoardX::A, y: BoardY::_3 }));
-        assert_eq!(BoardPos::try_from_idx(0, 4), Some(BoardPos { x: BoardX::A, y: BoardY::_4 }));
-        assert_eq!(BoardPos::try_from_idx(0, 3), Some(BoardPos { x: BoardX::A, y: BoardY::_5 }));
-        assert_eq!(BoardPos::try_from_idx(0, 2), Some(BoardPos { x: BoardX::A, y: BoardY::_6 }));
-        assert_eq!(BoardPos::try_from_idx(0, 1), Some(BoardPos { x: BoardX::A, y: BoardY::_7 }));
-        assert_eq!(BoardPos::try_from_idx(0, 0), Some(BoardPos { x: BoardX::A, y: BoardY::_8 }));
-        assert_eq!(BoardPos::try_from_idx(1, 0), Some(BoardPos { x: BoardX::B, y: BoardY::_8 }));
-        assert_eq!(BoardPos::try_from_idx(2, 0), Some(BoardPos { x: BoardX::C, y: BoardY::_8 }));
-        assert_eq!(BoardPos::try_from_idx(3, 0), Some(BoardPos { x: BoardX::D, y: BoardY::_8 }));
-        assert_eq!(BoardPos::try_from_idx(4, 0), Some(BoardPos { x: BoardX::E, y: BoardY::_8 }));
-        assert_eq!(BoardPos::try_from_idx(5, 0), Some(BoardPos { x: BoardX::F, y: BoardY::_8 }));
-        assert_eq!(BoardPos::try_from_idx(6, 0), Some(BoardPos { x: BoardX::G, y: BoardY::_8 }));
-        assert_eq!(BoardPos::try_from_idx(7, 0), Some(BoardPos { x: BoardX::H, y: BoardY::_8 }));
+        assert_eq!(BoardPos::try_of_idx(0, 7), Some(BoardPos { x: BoardX::A, y: BoardY::_1 }));
+        assert_eq!(BoardPos::try_of_idx(0, 6), Some(BoardPos { x: BoardX::A, y: BoardY::_2 }));
+        assert_eq!(BoardPos::try_of_idx(0, 5), Some(BoardPos { x: BoardX::A, y: BoardY::_3 }));
+        assert_eq!(BoardPos::try_of_idx(0, 4), Some(BoardPos { x: BoardX::A, y: BoardY::_4 }));
+        assert_eq!(BoardPos::try_of_idx(0, 3), Some(BoardPos { x: BoardX::A, y: BoardY::_5 }));
+        assert_eq!(BoardPos::try_of_idx(0, 2), Some(BoardPos { x: BoardX::A, y: BoardY::_6 }));
+        assert_eq!(BoardPos::try_of_idx(0, 1), Some(BoardPos { x: BoardX::A, y: BoardY::_7 }));
+        assert_eq!(BoardPos::try_of_idx(0, 0), Some(BoardPos { x: BoardX::A, y: BoardY::_8 }));
+        assert_eq!(BoardPos::try_of_idx(1, 0), Some(BoardPos { x: BoardX::B, y: BoardY::_8 }));
+        assert_eq!(BoardPos::try_of_idx(2, 0), Some(BoardPos { x: BoardX::C, y: BoardY::_8 }));
+        assert_eq!(BoardPos::try_of_idx(3, 0), Some(BoardPos { x: BoardX::D, y: BoardY::_8 }));
+        assert_eq!(BoardPos::try_of_idx(4, 0), Some(BoardPos { x: BoardX::E, y: BoardY::_8 }));
+        assert_eq!(BoardPos::try_of_idx(5, 0), Some(BoardPos { x: BoardX::F, y: BoardY::_8 }));
+        assert_eq!(BoardPos::try_of_idx(6, 0), Some(BoardPos { x: BoardX::G, y: BoardY::_8 }));
+        assert_eq!(BoardPos::try_of_idx(7, 0), Some(BoardPos { x: BoardX::H, y: BoardY::_8 }));
     }
 
     #[test]
     fn test_board_pos_try_from_idx_none() {
-        assert_eq!(BoardPos::try_from_idx(8, 8), None);
-        assert_eq!(BoardPos::try_from_idx(9, 9), None);
-        assert_eq!(BoardPos::try_from_idx(10, 10), None);
+        assert_eq!(BoardPos::try_of_idx(8, 8), None);
+        assert_eq!(BoardPos::try_of_idx(9, 9), None);
+        assert_eq!(BoardPos::try_of_idx(10, 10), None);
     }
 
     #[test]
     fn test_board_pos_from_idx() {
-        assert_eq!(BoardPos::from_idx(0, 7), BoardPos { x: BoardX::A, y: BoardY::_1 });
-        assert_eq!(BoardPos::from_idx(0, 6), BoardPos { x: BoardX::A, y: BoardY::_2 });
-        assert_eq!(BoardPos::from_idx(0, 5), BoardPos { x: BoardX::A, y: BoardY::_3 });
-        assert_eq!(BoardPos::from_idx(0, 4), BoardPos { x: BoardX::A, y: BoardY::_4 });
-        assert_eq!(BoardPos::from_idx(0, 3), BoardPos { x: BoardX::A, y: BoardY::_5 });
-        assert_eq!(BoardPos::from_idx(0, 2), BoardPos { x: BoardX::A, y: BoardY::_6 });
-        assert_eq!(BoardPos::from_idx(0, 1), BoardPos { x: BoardX::A, y: BoardY::_7 });
-        assert_eq!(BoardPos::from_idx(0, 0), BoardPos { x: BoardX::A, y: BoardY::_8 });
-        assert_eq!(BoardPos::from_idx(1, 0), BoardPos { x: BoardX::B, y: BoardY::_8 });
-        assert_eq!(BoardPos::from_idx(2, 0), BoardPos { x: BoardX::C, y: BoardY::_8 });
-        assert_eq!(BoardPos::from_idx(3, 0), BoardPos { x: BoardX::D, y: BoardY::_8 });
-        assert_eq!(BoardPos::from_idx(4, 0), BoardPos { x: BoardX::E, y: BoardY::_8 });
-        assert_eq!(BoardPos::from_idx(5, 0), BoardPos { x: BoardX::F, y: BoardY::_8 });
-        assert_eq!(BoardPos::from_idx(6, 0), BoardPos { x: BoardX::G, y: BoardY::_8 });
-        assert_eq!(BoardPos::from_idx(7, 0), BoardPos { x: BoardX::H, y: BoardY::_8 });
+        assert_eq!(BoardPos::of_idx(0, 7), BoardPos { x: BoardX::A, y: BoardY::_1 });
+        assert_eq!(BoardPos::of_idx(0, 6), BoardPos { x: BoardX::A, y: BoardY::_2 });
+        assert_eq!(BoardPos::of_idx(0, 5), BoardPos { x: BoardX::A, y: BoardY::_3 });
+        assert_eq!(BoardPos::of_idx(0, 4), BoardPos { x: BoardX::A, y: BoardY::_4 });
+        assert_eq!(BoardPos::of_idx(0, 3), BoardPos { x: BoardX::A, y: BoardY::_5 });
+        assert_eq!(BoardPos::of_idx(0, 2), BoardPos { x: BoardX::A, y: BoardY::_6 });
+        assert_eq!(BoardPos::of_idx(0, 1), BoardPos { x: BoardX::A, y: BoardY::_7 });
+        assert_eq!(BoardPos::of_idx(0, 0), BoardPos { x: BoardX::A, y: BoardY::_8 });
+        assert_eq!(BoardPos::of_idx(1, 0), BoardPos { x: BoardX::B, y: BoardY::_8 });
+        assert_eq!(BoardPos::of_idx(2, 0), BoardPos { x: BoardX::C, y: BoardY::_8 });
+        assert_eq!(BoardPos::of_idx(3, 0), BoardPos { x: BoardX::D, y: BoardY::_8 });
+        assert_eq!(BoardPos::of_idx(4, 0), BoardPos { x: BoardX::E, y: BoardY::_8 });
+        assert_eq!(BoardPos::of_idx(5, 0), BoardPos { x: BoardX::F, y: BoardY::_8 });
+        assert_eq!(BoardPos::of_idx(6, 0), BoardPos { x: BoardX::G, y: BoardY::_8 });
+        assert_eq!(BoardPos::of_idx(7, 0), BoardPos { x: BoardX::H, y: BoardY::_8 });
     }
 
     #[test]
     fn test_board_pos_try_from_rel_idx_some() {
-        assert_eq!(BoardPos::from_idx(7, 7).try_from_rel_idx(0, 0), Some(BoardPos::from_idx(7, 7)));
-        assert_eq!(BoardPos::from_idx(7, 7).try_from_rel_idx(-1, -1), Some(BoardPos::from_idx(6, 6)));
-        assert_eq!(BoardPos::from_idx(7, 7).try_from_rel_idx(-2, -2), Some(BoardPos::from_idx(5, 5)));
-        assert_eq!(BoardPos::from_idx(7, 7).try_from_rel_idx(-3, -3), Some(BoardPos::from_idx(4, 4)));
-        assert_eq!(BoardPos::from_idx(7, 7).try_from_rel_idx(-4, -4), Some(BoardPos::from_idx(3, 3)));
-        assert_eq!(BoardPos::from_idx(7, 7).try_from_rel_idx(-5, -5), Some(BoardPos::from_idx(2, 2)));
-        assert_eq!(BoardPos::from_idx(7, 7).try_from_rel_idx(-6, -6), Some(BoardPos::from_idx(1, 1)));
-        assert_eq!(BoardPos::from_idx(7, 7).try_from_rel_idx(-7, -7), Some(BoardPos::from_idx(0, 0)));
-        assert_eq!(BoardPos::from_idx(0, 0).try_from_rel_idx(0, 0), Some(BoardPos::from_idx(0, 0)));
-        assert_eq!(BoardPos::from_idx(0, 0).try_from_rel_idx(1, 1), Some(BoardPos::from_idx(1, 1)));
-        assert_eq!(BoardPos::from_idx(0, 0).try_from_rel_idx(2, 2), Some(BoardPos::from_idx(2, 2)));
-        assert_eq!(BoardPos::from_idx(0, 0).try_from_rel_idx(3, 3), Some(BoardPos::from_idx(3, 3)));
-        assert_eq!(BoardPos::from_idx(0, 0).try_from_rel_idx(4, 4), Some(BoardPos::from_idx(4, 4)));
-        assert_eq!(BoardPos::from_idx(0, 0).try_from_rel_idx(5, 5), Some(BoardPos::from_idx(5, 5)));
-        assert_eq!(BoardPos::from_idx(0, 0).try_from_rel_idx(6, 6), Some(BoardPos::from_idx(6, 6)));
-        assert_eq!(BoardPos::from_idx(0, 0).try_from_rel_idx(7, 7), Some(BoardPos::from_idx(7, 7)));
+        assert_eq!(BoardPos::of_idx(7, 7).try_of_rel_idx(0, 0), Some(BoardPos::of_idx(7, 7)));
+        assert_eq!(BoardPos::of_idx(7, 7).try_of_rel_idx(-1, -1), Some(BoardPos::of_idx(6, 6)));
+        assert_eq!(BoardPos::of_idx(7, 7).try_of_rel_idx(-2, -2), Some(BoardPos::of_idx(5, 5)));
+        assert_eq!(BoardPos::of_idx(7, 7).try_of_rel_idx(-3, -3), Some(BoardPos::of_idx(4, 4)));
+        assert_eq!(BoardPos::of_idx(7, 7).try_of_rel_idx(-4, -4), Some(BoardPos::of_idx(3, 3)));
+        assert_eq!(BoardPos::of_idx(7, 7).try_of_rel_idx(-5, -5), Some(BoardPos::of_idx(2, 2)));
+        assert_eq!(BoardPos::of_idx(7, 7).try_of_rel_idx(-6, -6), Some(BoardPos::of_idx(1, 1)));
+        assert_eq!(BoardPos::of_idx(7, 7).try_of_rel_idx(-7, -7), Some(BoardPos::of_idx(0, 0)));
+        assert_eq!(BoardPos::of_idx(0, 0).try_of_rel_idx(0, 0), Some(BoardPos::of_idx(0, 0)));
+        assert_eq!(BoardPos::of_idx(0, 0).try_of_rel_idx(1, 1), Some(BoardPos::of_idx(1, 1)));
+        assert_eq!(BoardPos::of_idx(0, 0).try_of_rel_idx(2, 2), Some(BoardPos::of_idx(2, 2)));
+        assert_eq!(BoardPos::of_idx(0, 0).try_of_rel_idx(3, 3), Some(BoardPos::of_idx(3, 3)));
+        assert_eq!(BoardPos::of_idx(0, 0).try_of_rel_idx(4, 4), Some(BoardPos::of_idx(4, 4)));
+        assert_eq!(BoardPos::of_idx(0, 0).try_of_rel_idx(5, 5), Some(BoardPos::of_idx(5, 5)));
+        assert_eq!(BoardPos::of_idx(0, 0).try_of_rel_idx(6, 6), Some(BoardPos::of_idx(6, 6)));
+        assert_eq!(BoardPos::of_idx(0, 0).try_of_rel_idx(7, 7), Some(BoardPos::of_idx(7, 7)));
     }
 
     #[test]
     fn test_board_pos_try_from_rel_idx_none() {
-        assert_eq!(BoardPos::from_idx(0, 0).try_from_rel_idx(-1, -1), None);
-        assert_eq!(BoardPos::from_idx(0, 0).try_from_rel_idx(-2, -2), None);
-        assert_eq!(BoardPos::from_idx(0, 0).try_from_rel_idx(-3, -3), None);
-        assert_eq!(BoardPos::from_idx(0, 0).try_from_rel_idx(-4, -4), None);
-        assert_eq!(BoardPos::from_idx(0, 0).try_from_rel_idx(-5, -5), None);
-        assert_eq!(BoardPos::from_idx(0, 0).try_from_rel_idx(-6, -6), None);
-        assert_eq!(BoardPos::from_idx(0, 0).try_from_rel_idx(-7, -7), None);
-        assert_eq!(BoardPos::from_idx(7, 7).try_from_rel_idx(1, 1), None);
-        assert_eq!(BoardPos::from_idx(7, 7).try_from_rel_idx(2, 2), None);
-        assert_eq!(BoardPos::from_idx(7, 7).try_from_rel_idx(3, 3), None);
-        assert_eq!(BoardPos::from_idx(7, 7).try_from_rel_idx(4, 4), None);
-        assert_eq!(BoardPos::from_idx(7, 7).try_from_rel_idx(5, 5), None);
-        assert_eq!(BoardPos::from_idx(7, 7).try_from_rel_idx(6, 6), None);
-        assert_eq!(BoardPos::from_idx(7, 7).try_from_rel_idx(7, 7), None);
+        assert_eq!(BoardPos::of_idx(0, 0).try_of_rel_idx(-1, -1), None);
+        assert_eq!(BoardPos::of_idx(0, 0).try_of_rel_idx(-2, -2), None);
+        assert_eq!(BoardPos::of_idx(0, 0).try_of_rel_idx(-3, -3), None);
+        assert_eq!(BoardPos::of_idx(0, 0).try_of_rel_idx(-4, -4), None);
+        assert_eq!(BoardPos::of_idx(0, 0).try_of_rel_idx(-5, -5), None);
+        assert_eq!(BoardPos::of_idx(0, 0).try_of_rel_idx(-6, -6), None);
+        assert_eq!(BoardPos::of_idx(0, 0).try_of_rel_idx(-7, -7), None);
+        assert_eq!(BoardPos::of_idx(7, 7).try_of_rel_idx(1, 1), None);
+        assert_eq!(BoardPos::of_idx(7, 7).try_of_rel_idx(2, 2), None);
+        assert_eq!(BoardPos::of_idx(7, 7).try_of_rel_idx(3, 3), None);
+        assert_eq!(BoardPos::of_idx(7, 7).try_of_rel_idx(4, 4), None);
+        assert_eq!(BoardPos::of_idx(7, 7).try_of_rel_idx(5, 5), None);
+        assert_eq!(BoardPos::of_idx(7, 7).try_of_rel_idx(6, 6), None);
+        assert_eq!(BoardPos::of_idx(7, 7).try_of_rel_idx(7, 7), None);
     }
 
     #[test]
     fn test_board_pos_try_from_str_some() {
-        assert_eq!(BoardPos::try_from_str("A1"), Some(BoardPos { x: BoardX::A, y: BoardY::_1 }));
-        assert_eq!(BoardPos::try_from_str("A2"), Some(BoardPos { x: BoardX::A, y: BoardY::_2 }));
-        assert_eq!(BoardPos::try_from_str("A3"), Some(BoardPos { x: BoardX::A, y: BoardY::_3 }));
-        assert_eq!(BoardPos::try_from_str("A4"), Some(BoardPos { x: BoardX::A, y: BoardY::_4 }));
-        assert_eq!(BoardPos::try_from_str("A5"), Some(BoardPos { x: BoardX::A, y: BoardY::_5 }));
-        assert_eq!(BoardPos::try_from_str("A6"), Some(BoardPos { x: BoardX::A, y: BoardY::_6 }));
-        assert_eq!(BoardPos::try_from_str("A7"), Some(BoardPos { x: BoardX::A, y: BoardY::_7 }));
-        assert_eq!(BoardPos::try_from_str("A8"), Some(BoardPos { x: BoardX::A, y: BoardY::_8 }));
-        assert_eq!(BoardPos::try_from_str("B8"), Some(BoardPos { x: BoardX::B, y: BoardY::_8 }));
-        assert_eq!(BoardPos::try_from_str("C8"), Some(BoardPos { x: BoardX::C, y: BoardY::_8 }));
-        assert_eq!(BoardPos::try_from_str("D8"), Some(BoardPos { x: BoardX::D, y: BoardY::_8 }));
-        assert_eq!(BoardPos::try_from_str("E8"), Some(BoardPos { x: BoardX::E, y: BoardY::_8 }));
-        assert_eq!(BoardPos::try_from_str("F8"), Some(BoardPos { x: BoardX::F, y: BoardY::_8 }));
-        assert_eq!(BoardPos::try_from_str("G8"), Some(BoardPos { x: BoardX::G, y: BoardY::_8 }));
-        assert_eq!(BoardPos::try_from_str("H8"), Some(BoardPos { x: BoardX::H, y: BoardY::_8 }));
+        assert_eq!(BoardPos::try_of_str("A1"), Some(BoardPos { x: BoardX::A, y: BoardY::_1 }));
+        assert_eq!(BoardPos::try_of_str("A2"), Some(BoardPos { x: BoardX::A, y: BoardY::_2 }));
+        assert_eq!(BoardPos::try_of_str("A3"), Some(BoardPos { x: BoardX::A, y: BoardY::_3 }));
+        assert_eq!(BoardPos::try_of_str("A4"), Some(BoardPos { x: BoardX::A, y: BoardY::_4 }));
+        assert_eq!(BoardPos::try_of_str("A5"), Some(BoardPos { x: BoardX::A, y: BoardY::_5 }));
+        assert_eq!(BoardPos::try_of_str("A6"), Some(BoardPos { x: BoardX::A, y: BoardY::_6 }));
+        assert_eq!(BoardPos::try_of_str("A7"), Some(BoardPos { x: BoardX::A, y: BoardY::_7 }));
+        assert_eq!(BoardPos::try_of_str("A8"), Some(BoardPos { x: BoardX::A, y: BoardY::_8 }));
+        assert_eq!(BoardPos::try_of_str("B8"), Some(BoardPos { x: BoardX::B, y: BoardY::_8 }));
+        assert_eq!(BoardPos::try_of_str("C8"), Some(BoardPos { x: BoardX::C, y: BoardY::_8 }));
+        assert_eq!(BoardPos::try_of_str("D8"), Some(BoardPos { x: BoardX::D, y: BoardY::_8 }));
+        assert_eq!(BoardPos::try_of_str("E8"), Some(BoardPos { x: BoardX::E, y: BoardY::_8 }));
+        assert_eq!(BoardPos::try_of_str("F8"), Some(BoardPos { x: BoardX::F, y: BoardY::_8 }));
+        assert_eq!(BoardPos::try_of_str("G8"), Some(BoardPos { x: BoardX::G, y: BoardY::_8 }));
+        assert_eq!(BoardPos::try_of_str("H8"), Some(BoardPos { x: BoardX::H, y: BoardY::_8 }));
     }
 
     #[test]
     fn test_board_pos_try_from_str_none() {
-        assert_eq!(BoardPos::try_from_str("A0"), None);
-        assert_eq!(BoardPos::try_from_str("A9"), None);
-        assert_eq!(BoardPos::try_from_str("I1"), None);
-        assert_eq!(BoardPos::try_from_str("J2"), None);
-        assert_eq!(BoardPos::try_from_str("K3"), None);
+        assert_eq!(BoardPos::try_of_str("A0"), None);
+        assert_eq!(BoardPos::try_of_str("A9"), None);
+        assert_eq!(BoardPos::try_of_str("I1"), None);
+        assert_eq!(BoardPos::try_of_str("J2"), None);
+        assert_eq!(BoardPos::try_of_str("K3"), None);
     }
 
     #[test]
     fn test_board_pos_from_str() {
-        assert_eq!(BoardPos::from_str("A1"), BoardPos { x: BoardX::A, y: BoardY::_1 });
-        assert_eq!(BoardPos::from_str("A2"), BoardPos { x: BoardX::A, y: BoardY::_2 });
-        assert_eq!(BoardPos::from_str("A3"), BoardPos { x: BoardX::A, y: BoardY::_3 });
-        assert_eq!(BoardPos::from_str("A4"), BoardPos { x: BoardX::A, y: BoardY::_4 });
-        assert_eq!(BoardPos::from_str("A5"), BoardPos { x: BoardX::A, y: BoardY::_5 });
-        assert_eq!(BoardPos::from_str("A6"), BoardPos { x: BoardX::A, y: BoardY::_6 });
-        assert_eq!(BoardPos::from_str("A7"), BoardPos { x: BoardX::A, y: BoardY::_7 });
-        assert_eq!(BoardPos::from_str("A8"), BoardPos { x: BoardX::A, y: BoardY::_8 });
-        assert_eq!(BoardPos::from_str("B8"), BoardPos { x: BoardX::B, y: BoardY::_8 });
-        assert_eq!(BoardPos::from_str("C8"), BoardPos { x: BoardX::C, y: BoardY::_8 });
-        assert_eq!(BoardPos::from_str("D8"), BoardPos { x: BoardX::D, y: BoardY::_8 });
-        assert_eq!(BoardPos::from_str("E8"), BoardPos { x: BoardX::E, y: BoardY::_8 });
-        assert_eq!(BoardPos::from_str("F8"), BoardPos { x: BoardX::F, y: BoardY::_8 });
-        assert_eq!(BoardPos::from_str("G8"), BoardPos { x: BoardX::G, y: BoardY::_8 });
-        assert_eq!(BoardPos::from_str("H8"), BoardPos { x: BoardX::H, y: BoardY::_8 });
+        assert_eq!(BoardPos::of_str("A1"), BoardPos { x: BoardX::A, y: BoardY::_1 });
+        assert_eq!(BoardPos::of_str("A2"), BoardPos { x: BoardX::A, y: BoardY::_2 });
+        assert_eq!(BoardPos::of_str("A3"), BoardPos { x: BoardX::A, y: BoardY::_3 });
+        assert_eq!(BoardPos::of_str("A4"), BoardPos { x: BoardX::A, y: BoardY::_4 });
+        assert_eq!(BoardPos::of_str("A5"), BoardPos { x: BoardX::A, y: BoardY::_5 });
+        assert_eq!(BoardPos::of_str("A6"), BoardPos { x: BoardX::A, y: BoardY::_6 });
+        assert_eq!(BoardPos::of_str("A7"), BoardPos { x: BoardX::A, y: BoardY::_7 });
+        assert_eq!(BoardPos::of_str("A8"), BoardPos { x: BoardX::A, y: BoardY::_8 });
+        assert_eq!(BoardPos::of_str("B8"), BoardPos { x: BoardX::B, y: BoardY::_8 });
+        assert_eq!(BoardPos::of_str("C8"), BoardPos { x: BoardX::C, y: BoardY::_8 });
+        assert_eq!(BoardPos::of_str("D8"), BoardPos { x: BoardX::D, y: BoardY::_8 });
+        assert_eq!(BoardPos::of_str("E8"), BoardPos { x: BoardX::E, y: BoardY::_8 });
+        assert_eq!(BoardPos::of_str("F8"), BoardPos { x: BoardX::F, y: BoardY::_8 });
+        assert_eq!(BoardPos::of_str("G8"), BoardPos { x: BoardX::G, y: BoardY::_8 });
+        assert_eq!(BoardPos::of_str("H8"), BoardPos { x: BoardX::H, y: BoardY::_8 });
     }
 
     #[test]
@@ -623,7 +623,7 @@ mod test {
     #[test]
     fn test_from_str() {
         assert_eq!(
-            try_from_str([
+            try_of_str([
                 "♜♞♝♛♚♝♞♜",
                 "♟♟♟♟♟♟♟♟",
                 "        ",
@@ -635,48 +635,48 @@ mod test {
             ]),
             Ok([
                 [
-                    Piece::try_from_str("♜"),
-                    Piece::try_from_str("♞"),
-                    Piece::try_from_str("♝"),
-                    Piece::try_from_str("♛"),
-                    Piece::try_from_str("♚"),
-                    Piece::try_from_str("♝"),
-                    Piece::try_from_str("♞"),
-                    Piece::try_from_str("♜"),
+                    Piece::try_of_str("♜"),
+                    Piece::try_of_str("♞"),
+                    Piece::try_of_str("♝"),
+                    Piece::try_of_str("♛"),
+                    Piece::try_of_str("♚"),
+                    Piece::try_of_str("♝"),
+                    Piece::try_of_str("♞"),
+                    Piece::try_of_str("♜"),
                 ],
                 [
-                    Piece::try_from_str("♟"),
-                    Piece::try_from_str("♟"),
-                    Piece::try_from_str("♟"),
-                    Piece::try_from_str("♟"),
-                    Piece::try_from_str("♟"),
-                    Piece::try_from_str("♟"),
-                    Piece::try_from_str("♟"),
-                    Piece::try_from_str("♟"),
+                    Piece::try_of_str("♟"),
+                    Piece::try_of_str("♟"),
+                    Piece::try_of_str("♟"),
+                    Piece::try_of_str("♟"),
+                    Piece::try_of_str("♟"),
+                    Piece::try_of_str("♟"),
+                    Piece::try_of_str("♟"),
+                    Piece::try_of_str("♟"),
                 ],
                 [None, None, None, None, None, None, None, None],
                 [None, None, None, None, None, None, None, None],
                 [None, None, None, None, None, None, None, None],
                 [None, None, None, None, None, None, None, None],
                 [
-                    Piece::try_from_str("♙"),
-                    Piece::try_from_str("♙"),
-                    Piece::try_from_str("♙"),
-                    Piece::try_from_str("♙"),
-                    Piece::try_from_str("♙"),
-                    Piece::try_from_str("♙"),
-                    Piece::try_from_str("♙"),
-                    Piece::try_from_str("♙"),
+                    Piece::try_of_str("♙"),
+                    Piece::try_of_str("♙"),
+                    Piece::try_of_str("♙"),
+                    Piece::try_of_str("♙"),
+                    Piece::try_of_str("♙"),
+                    Piece::try_of_str("♙"),
+                    Piece::try_of_str("♙"),
+                    Piece::try_of_str("♙"),
                 ],
                 [
-                    Piece::try_from_str("♖"),
-                    Piece::try_from_str("♘"),
-                    Piece::try_from_str("♗"),
-                    Piece::try_from_str("♕"),
-                    Piece::try_from_str("♔"),
-                    Piece::try_from_str("♗"),
-                    Piece::try_from_str("♘"),
-                    Piece::try_from_str("♖"),
+                    Piece::try_of_str("♖"),
+                    Piece::try_of_str("♘"),
+                    Piece::try_of_str("♗"),
+                    Piece::try_of_str("♕"),
+                    Piece::try_of_str("♔"),
+                    Piece::try_of_str("♗"),
+                    Piece::try_of_str("♘"),
+                    Piece::try_of_str("♖"),
                 ],
             ])
         );
@@ -685,22 +685,22 @@ mod test {
     #[test]
     fn test_get_board_piece() {
         let b = get_default_board();
-        assert_eq!(get_board_piece(&b, &BoardPos::from_str("A8")), Piece::try_from_str("♜"));
-        assert_eq!(get_board_piece(&b, &BoardPos::from_str("B8")), Piece::try_from_str("♞"));
-        assert_eq!(get_board_piece(&b, &BoardPos::from_str("C8")), Piece::try_from_str("♝"));
-        assert_eq!(get_board_piece(&b, &BoardPos::from_str("D8")), Piece::try_from_str("♛"));
-        assert_eq!(get_board_piece(&b, &BoardPos::from_str("E8")), Piece::try_from_str("♚"));
-        assert_eq!(get_board_piece(&b, &BoardPos::from_str("F8")), Piece::try_from_str("♝"));
-        assert_eq!(get_board_piece(&b, &BoardPos::from_str("G8")), Piece::try_from_str("♞"));
-        assert_eq!(get_board_piece(&b, &BoardPos::from_str("H8")), Piece::try_from_str("♜"));
-        assert_eq!(get_board_piece(&b, &BoardPos::from_str("H8")), Piece::try_from_str("♜"));
-        assert_eq!(get_board_piece(&b, &BoardPos::from_str("H7")), Piece::try_from_str("♟"));
-        assert_eq!(get_board_piece(&b, &BoardPos::from_str("H6")), Piece::try_from_str(" "));
-        assert_eq!(get_board_piece(&b, &BoardPos::from_str("H5")), Piece::try_from_str(" "));
-        assert_eq!(get_board_piece(&b, &BoardPos::from_str("H4")), Piece::try_from_str(" "));
-        assert_eq!(get_board_piece(&b, &BoardPos::from_str("H3")), Piece::try_from_str(" "));
-        assert_eq!(get_board_piece(&b, &BoardPos::from_str("H2")), Piece::try_from_str("♙"));
-        assert_eq!(get_board_piece(&b, &BoardPos::from_str("H1")), Piece::try_from_str("♖"));
+        assert_eq!(get_board_piece(&b, &BoardPos::of_str("A8")), Piece::try_of_str("♜"));
+        assert_eq!(get_board_piece(&b, &BoardPos::of_str("B8")), Piece::try_of_str("♞"));
+        assert_eq!(get_board_piece(&b, &BoardPos::of_str("C8")), Piece::try_of_str("♝"));
+        assert_eq!(get_board_piece(&b, &BoardPos::of_str("D8")), Piece::try_of_str("♛"));
+        assert_eq!(get_board_piece(&b, &BoardPos::of_str("E8")), Piece::try_of_str("♚"));
+        assert_eq!(get_board_piece(&b, &BoardPos::of_str("F8")), Piece::try_of_str("♝"));
+        assert_eq!(get_board_piece(&b, &BoardPos::of_str("G8")), Piece::try_of_str("♞"));
+        assert_eq!(get_board_piece(&b, &BoardPos::of_str("H8")), Piece::try_of_str("♜"));
+        assert_eq!(get_board_piece(&b, &BoardPos::of_str("H8")), Piece::try_of_str("♜"));
+        assert_eq!(get_board_piece(&b, &BoardPos::of_str("H7")), Piece::try_of_str("♟"));
+        assert_eq!(get_board_piece(&b, &BoardPos::of_str("H6")), Piece::try_of_str(" "));
+        assert_eq!(get_board_piece(&b, &BoardPos::of_str("H5")), Piece::try_of_str(" "));
+        assert_eq!(get_board_piece(&b, &BoardPos::of_str("H4")), Piece::try_of_str(" "));
+        assert_eq!(get_board_piece(&b, &BoardPos::of_str("H3")), Piece::try_of_str(" "));
+        assert_eq!(get_board_piece(&b, &BoardPos::of_str("H2")), Piece::try_of_str("♙"));
+        assert_eq!(get_board_piece(&b, &BoardPos::of_str("H1")), Piece::try_of_str("♖"));
     }
 
     #[test]
