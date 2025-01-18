@@ -1,4 +1,4 @@
-use crate::board::BoardPos;
+use crate::domain::board::BoardPos;
 
 fn white_pawn_mov(pos: &BoardPos) -> Vec<BoardPos> {
     if pos.y.to_idx() == 6 {

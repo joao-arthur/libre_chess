@@ -1,6 +1,6 @@
 use std::fmt;
 
-use crate::piece::Piece;
+use crate::domain::piece::Piece;
 
 #[derive(Debug, PartialEq, Clone, Copy)]
 pub enum BoardX {
