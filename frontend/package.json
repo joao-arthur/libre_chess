@@ -1,14 +1,12 @@
 {
-    "name": "game_of_life_frontend",
+    "name": "libre_chess_frontend",
     "author": "joao-arthur",
     "version": "1.0.0",
     "private": true,
     "scripts": {
         "dev": "next dev",
         "build": "next build",
-        "start": "next start",
-        "test": "vitest run",
-        "test:cov": "vitest run --coverage"
+        "start": "next start"
     },
     "dependencies": {
         "next": "15.1.5",
