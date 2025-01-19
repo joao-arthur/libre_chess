@@ -154,7 +154,7 @@ impl BoardY {
     }
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct BoardPos {
     pub x: BoardX,
     pub y: BoardY,
@@ -268,7 +268,7 @@ fn of_str(rows: [&str; 8]) -> Board {
     try_of_str(rows).unwrap()
 }
 
-fn get_default_board() -> Board {
+pub fn get_default_board() -> Board {
     of_str([
         "♜♞♝♛♚♝♞♜",
         "♟♟♟♟♟♟♟♟",

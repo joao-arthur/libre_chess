@@ -1,26 +1,29 @@
 import type {  ReactElement } from "react";
 import {  useEffect, useRef } from "react";
 import { useWindowDimension } from "../hooks/useWindowDimension";
-import initWASM, { engineInit } from "libre_chess_engine";
+import initWASM from "libre_chess_engine";
+import { useChess } from "../hooks/useChess";
 
 export default function Main(): ReactElement {
+    const { 
+        init,
+        //model
+    } = useChess();
+    const initiated = useRef(false);
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const dimension = useWindowDimension();
 
     useEffect(() => {
-        setTimeout(() => {
+        if (!initiated.current) {
+            initiated.current = true;
             initWASM().then(() => {
                 if (!canvasRef.current) {
                     return;
                 }
-                const context = canvasRef.current.getContext("2d");
-                if (!context) {
-                    return;
-                }
-                engineInit(context);
+                init(canvasRef.current);
             });
-        }, 3000);
-    })
+        }
+    }, []);
 
     return (
         <main className="w-screen h-screen flex">
