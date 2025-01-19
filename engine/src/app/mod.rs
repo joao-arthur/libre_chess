@@ -1,6 +1,10 @@
-use std::cell::RefCell;
-use web_sys::CanvasRenderingContext2d;
+use std::{cell::RefCell, rc::Rc};
+use sets::{set_1, set_2, set_maurizio_monge_fantasy, set_maurizio_monge_spatial};
+use wasm_bindgen::{prelude::Closure, JsCast, JsValue};
+use web_sys::{console, js_sys, window, Blob, BlobPropertyBag, CanvasRenderingContext2d, HtmlImageElement, Url};
 use crate::domain::play::Play;
+
+mod sets;
 
 #[derive(Debug, PartialEq)]
 pub struct RectF64 {
@@ -108,5 +112,56 @@ pub fn render() {
                 context.fill_rect(col as f64 * cell_size, row as f64 * cell_size, cell_size, cell_size);
             }
         }
+    // Access the window object
+    let window = window().ok_or("No window object available").unwrap();
+
+    // Create a Blob from the SVG string
+    let blob = Blob::new_with_str_sequence_and_options(
+        &js_sys::Array::of1(&JsValue::from_str(&set_maurizio_monge_spatial().bb)),
+        BlobPropertyBag::new().type_("image/svg+xml"),
+    ).unwrap();
+
+    // Create an object URL for the Blob
+    let url = Url::create_object_url_with_blob(&blob).unwrap();
+
+    // Create an Image element wrapped in Rc
+    let img = Rc::new(HtmlImageElement::new().unwrap());
+    img.set_src(&url);
+
+    // Clone Rc for use in the closure
+    let img_clone = Rc::clone(&img);
+    let closure = Closure::wrap(Box::new({
+        let canvas_ctx = context.clone();
+        let url = url.clone();
+        move || {
+            // Draw the image onto the canvas
+            canvas_ctx
+                .draw_image_with_html_image_element_and_dw_and_dh(&img_clone, 0.0, 0.0, cell_size, cell_size)
+                .unwrap();
+
+            // Revoke the object URL
+            Url::revoke_object_url(&url).unwrap();
+        }
+    }) as Box<dyn FnMut()>);
+
+    // Attach the onload event
+    img.set_onload(Some(closure.as_ref().unchecked_ref()));
+    closure.forget(); // Prevent the closure from being dropped prematurely
+
+
+        //     let img1 = new Image();
+   //     let svg = new Blob([piece], {type: 'image/svg+xml'});
+   //     let url = DOMURL.createObjectURL(svg);
+   //     img1.onload = function() {
+   //        ctx.drawImage(img1, 25, 70);
+   //        DOMURL.revokeObjectURL(url);
+   //     }
+   //     img1.src = url;
+//
+
+
+
+
+
     }
 }
