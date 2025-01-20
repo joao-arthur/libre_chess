@@ -187,7 +187,7 @@ impl BoardPos {
         self.try_of_rel_idx(x, y).unwrap()
     }
 
-    fn try_of_str(s: &str) -> Option<Self> {
+    pub fn try_of_str(s: &str) -> Option<Self> {
         let mut chars = s.chars();
         let x = chars.next().and_then(|pos| BoardX::try_of_str(&pos.to_string()))?;
         let y = chars.next().and_then(|pos| BoardY::try_of_str(&pos.to_string()))?;

@@ -1,4 +1,8 @@
-use crate::domain::{play::Play, render::{get_values_to_render, RenderSettings}, piece};
+use crate::domain::{
+    piece,
+    play::Play,
+    render::{get_values_to_render, RenderSettings},
+};
 use sets::{set_1, set_2, set_maurizio_monge_fantasy, set_maurizio_monge_spatial, BoardSet};
 use std::{cell::RefCell, rc::Rc};
 use wasm_bindgen::{prelude::Closure, JsCast, JsValue};
@@ -113,7 +117,6 @@ pub fn render() {
         let window = window().unwrap();
 
         for v in values_to_render {
-
             let piece_str = match v.p.c {
                 piece::Color::White => match v.p.t {
                     piece::Type::Rook => set_.wr.clone(),
@@ -148,7 +151,11 @@ pub fn render() {
                 move || {
                     canvas_ctx
                         .draw_image_with_html_image_element_and_dw_and_dh(
-                            &img_clone, v.rect.x1, v.rect.y1, v.rect.x2 - v.rect.x1, v.rect.y2 - v.rect.y1,
+                            &img_clone,
+                            v.rect.x1,
+                            v.rect.y1,
+                            v.rect.x2 - v.rect.x1,
+                            v.rect.y2 - v.rect.y1,
                         )
                         .unwrap();
                     Url::revoke_object_url(&url).unwrap();
