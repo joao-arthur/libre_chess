@@ -15,8 +15,9 @@ mod sets;
 #[derive(Debug, PartialEq, Clone)]
 pub struct AppSettings {
     pub render_settings: RenderSettings,
-    //pub board_set: BoardSet,
-    //pub board_colors:
+    // pub board_set: BoardSet,
+    // pub board_colors:
+    // pub selected_squares: Vec<BoardPos>
 }
 
 pub struct Model {

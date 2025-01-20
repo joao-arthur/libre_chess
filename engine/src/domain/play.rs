@@ -1,6 +1,6 @@
 use crate::domain::{board::BoardPos, piece::Piece};
 
-use super::board::{get_initial_white_board, Board};
+use super::{board::{get_initial_white_board, Board}, piece::{Color, Type}};
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct PlayMove {
@@ -40,6 +40,58 @@ fn is_white_turn(p: &Play) -> bool {
 
 fn is_black_turn(p: &Play) -> bool {
     p.moves.len() % 2 == 1
+}
+
+// fn move_piece(play: &Play, pos: &PlayMove) {
+//     if pos.p.c == Color::Black && !is_black_turn(p)  {
+//         return;
+//     }
+//     if pos.p.c == Color::White && !is_white_turn(p)  {
+//         return;
+//     }
+//     if is_check && aftermoveischeck() return;
+//     if let Some() 
+//         capture
+//     else {
+//         after move
+//         if 50 moves with no capture return MoveResult::Stalemate
+//     }
+// }
+
+fn get_moves(play: &Play, pos: &BoardPos) -> Vec<BoardPos> {
+    let piece = play.b[pos.y.to_idx() as usize][pos.x.to_idx() as usize];
+    if let Some(piece) = piece {
+
+        match piece.t {
+            Type::Rook => {
+                return Vec::new();
+            }
+            Type::Knight => {
+                return Vec::new();
+            }
+            Type::Bishop => {
+                return Vec::new();
+            }
+            Type::Queen => {
+                return Vec::new();
+            }
+            Type::King => {
+                return Vec::new();
+            }
+            Type::Pawn => {
+                match piece.c {
+                    Color::Black => {
+                        return Vec::new();
+                    }
+                    Color::White => {
+                         return Vec::new();
+                    }
+                }
+            }
+        }
+    } else {
+        return Vec::new();
+    }
 }
 
 mod test {
@@ -86,6 +138,16 @@ mod test {
             }),
             false
         );
+        assert_eq!(
+            is_white_turn(&Play {
+                moves: Vec::from([
+                    PlayMove::of_str("♟", "D2", "D4"),
+                    PlayMove::of_str("♟", "A2", "A3")
+                ]),
+                ..Default::default()
+            }),
+            true
+        );
     }
 
     #[test]
@@ -97,6 +159,16 @@ mod test {
                 ..Default::default()
             }),
             true
+        );
+        assert_eq!(
+            is_black_turn(&Play {
+                moves: Vec::from([
+                    PlayMove::of_str("♟", "D2", "D4"),
+                    PlayMove::of_str("♟", "A2", "A3")
+                ]),
+                ..Default::default()
+            }),
+            false
         );
     }
 }

@@ -39,8 +39,8 @@ export function useChess(): Chess {
         setInit(true);
     }
 
-    return { 
+    return {
         init,
         // model
-         };
+    };
 }
