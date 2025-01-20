@@ -268,7 +268,20 @@ fn of_str(rows: [&str; 8]) -> Board {
     try_of_str(rows).unwrap()
 }
 
-pub fn get_default_board() -> Board {
+pub fn get_initial_white_board() -> Board {
+    of_str([
+        "♖♘♗♕♔♗♘♖",
+        "♙♙♙♙♙♙♙♙",
+        "        ",
+        "        ",
+        "        ",
+        "        ",
+        "♟♟♟♟♟♟♟♟",
+        "♜♞♝♛♚♝♞♜",
+    ])
+}
+
+pub fn get_initial_black_board() -> Board {
     of_str([
         "♜♞♝♛♚♝♞♜",
         "♟♟♟♟♟♟♟♟",
@@ -708,7 +721,7 @@ mod test {
 
     #[test]
     fn test_get_board_piece() {
-        let b = get_default_board();
+        let b = get_initial_black_board();
         assert_eq!(get_board_piece(&b, &BoardPos::of_str("A8")), Piece::try_of_str("♜"));
         assert_eq!(get_board_piece(&b, &BoardPos::of_str("B8")), Piece::try_of_str("♞"));
         assert_eq!(get_board_piece(&b, &BoardPos::of_str("C8")), Piece::try_of_str("♝"));
@@ -729,7 +742,7 @@ mod test {
 
     #[test]
     fn test_board_to_string() {
-        let brd = get_default_board();
+        let brd = get_initial_black_board();
         let res = board_to_string(&brd);
         assert_eq!(
             res.to_owned(),

@@ -1,6 +1,6 @@
 use crate::domain::{board::BoardPos, piece::Piece};
 
-use super::board::{get_default_board, Board};
+use super::board::{get_initial_white_board, Board};
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct PlayMove {
@@ -11,12 +11,12 @@ pub struct PlayMove {
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct Play {
-    board: Board,
-    moves: Vec<PlayMove>,
+    pub b: Board,
+    pub moves: Vec<PlayMove>,
 }
 
 impl Default for Play {
     fn default() -> Self {
-        Play { board: get_default_board(), moves: Vec::new() }
+        Play { b: get_initial_white_board(), moves: Vec::new() }
     }
 }

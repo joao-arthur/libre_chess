@@ -64,7 +64,7 @@ fn rook_mov(pos: &BoardPos) -> Vec<BoardPos> {
 fn bishop_mov(pos: &BoardPos) -> Vec<BoardPos> {
     let x = pos.x.to_idx();
     let y = pos.y.to_idx();
-    let mut res = vec![];
+    let mut res = Vec::new();
     let x_negative = 7 - x;
     if x > y {
         let x_offset = x - y;

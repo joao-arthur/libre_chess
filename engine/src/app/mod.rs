@@ -1,27 +1,18 @@
+use crate::domain::{play::Play, render::{get_values_to_render, RenderSettings}, piece};
+use sets::{set_1, set_2, set_maurizio_monge_fantasy, set_maurizio_monge_spatial, BoardSet};
 use std::{cell::RefCell, rc::Rc};
-use sets::{set_1, set_2, set_maurizio_monge_fantasy, set_maurizio_monge_spatial};
 use wasm_bindgen::{prelude::Closure, JsCast, JsValue};
-use web_sys::{console, js_sys, window, Blob, BlobPropertyBag, CanvasRenderingContext2d, HtmlImageElement, Url};
-use crate::domain::play::Play;
+use web_sys::{
+    console, js_sys, window, Blob, BlobPropertyBag, CanvasRenderingContext2d, HtmlImageElement, Url,
+};
 
 mod sets;
-
-#[derive(Debug, PartialEq)]
-pub struct RectF64 {
-    pub x1: f64,
-    pub y1: f64,
-    pub x2: f64,
-    pub y2: f64,
-}
-
-#[derive(Debug, PartialEq, Clone)]
-pub struct RenderSettings {
-    pub dim: u16,
-}
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct AppSettings {
     pub render_settings: RenderSettings,
+    //pub board_set: BoardSet,
+    //pub board_colors:
 }
 
 pub struct Model {
@@ -34,9 +25,7 @@ impl Default for Model {
     fn default() -> Self {
         Model {
             play: Play::default(),
-            settings: AppSettings {
-                render_settings: RenderSettings { dim: 0 },
-            },
+            settings: AppSettings { render_settings: RenderSettings { dim: 0 } },
             context: None,
         }
     }
@@ -97,7 +86,7 @@ pub fn render() {
         (m.play.clone(), m.settings.clone(), m.context.clone())
     });
     if let Some(context) = context {
-        let dimmm =settings.render_settings.dim as f64;
+        let dimmm = settings.render_settings.dim as f64;
         let cell_size = dimmm / 8.0;
         let mut acc = 0;
         for row in 0..8 {
@@ -109,59 +98,64 @@ pub fn render() {
                     context.set_fill_style(&WHITE.into());
                 }
                 acc += 1;
-                context.fill_rect(col as f64 * cell_size, row as f64 * cell_size, cell_size, cell_size);
+                context.fill_rect(
+                    col as f64 * cell_size,
+                    row as f64 * cell_size,
+                    cell_size,
+                    cell_size,
+                );
             }
         }
-    // Access the window object
-    let window = window().ok_or("No window object available").unwrap();
+        let values_to_render = get_values_to_render(&play.b, &settings.render_settings);
 
-    // Create a Blob from the SVG string
-    let blob = Blob::new_with_str_sequence_and_options(
-        &js_sys::Array::of1(&JsValue::from_str(&set_maurizio_monge_spatial().bb)),
-        BlobPropertyBag::new().type_("image/svg+xml"),
-    ).unwrap();
+        let set_ = set_maurizio_monge_fantasy();
 
-    // Create an object URL for the Blob
-    let url = Url::create_object_url_with_blob(&blob).unwrap();
+        let window = window().unwrap();
 
-    // Create an Image element wrapped in Rc
-    let img = Rc::new(HtmlImageElement::new().unwrap());
-    img.set_src(&url);
+        for v in values_to_render {
 
-    // Clone Rc for use in the closure
-    let img_clone = Rc::clone(&img);
-    let closure = Closure::wrap(Box::new({
-        let canvas_ctx = context.clone();
-        let url = url.clone();
-        move || {
-            // Draw the image onto the canvas
-            canvas_ctx
-                .draw_image_with_html_image_element_and_dw_and_dh(&img_clone, 0.0, 0.0, cell_size, cell_size)
-                .unwrap();
+            let piece_str = match v.p.c {
+                piece::Color::White => match v.p.t {
+                    piece::Type::Rook => set_.wr.clone(),
+                    piece::Type::Knight => set_.wn.clone(),
+                    piece::Type::Bishop => set_.wb.clone(),
+                    piece::Type::Queen => set_.wq.clone(),
+                    piece::Type::King => set_.wk.clone(),
+                    piece::Type::Pawn => set_.wp.clone(),
+                },
+                piece::Color::Black => match v.p.t {
+                    piece::Type::Rook => set_.br.clone(),
+                    piece::Type::Knight => set_.bn.clone(),
+                    piece::Type::Bishop => set_.bb.clone(),
+                    piece::Type::Queen => set_.bq.clone(),
+                    piece::Type::King => set_.bk.clone(),
+                    piece::Type::Pawn => set_.bp.clone(),
+                },
+            };
 
-            // Revoke the object URL
-            Url::revoke_object_url(&url).unwrap();
+            let blob = Blob::new_with_str_sequence_and_options(
+                &js_sys::Array::of1(&JsValue::from_str(&piece_str)),
+                BlobPropertyBag::new().type_("image/svg+xml"),
+            )
+            .unwrap();
+            let url = Url::create_object_url_with_blob(&blob).unwrap();
+            let img = Rc::new(HtmlImageElement::new().unwrap());
+            img.set_src(&url);
+            let img_clone = Rc::clone(&img);
+            let closure = Closure::wrap(Box::new({
+                let canvas_ctx = context.clone();
+                let url = url.clone();
+                move || {
+                    canvas_ctx
+                        .draw_image_with_html_image_element_and_dw_and_dh(
+                            &img_clone, v.rect.x1, v.rect.y1, v.rect.x2 - v.rect.x1, v.rect.y2 - v.rect.y1,
+                        )
+                        .unwrap();
+                    Url::revoke_object_url(&url).unwrap();
+                }
+            }) as Box<dyn FnMut()>);
+            img.set_onload(Some(closure.as_ref().unchecked_ref()));
+            closure.forget();
         }
-    }) as Box<dyn FnMut()>);
-
-    // Attach the onload event
-    img.set_onload(Some(closure.as_ref().unchecked_ref()));
-    closure.forget(); // Prevent the closure from being dropped prematurely
-
-
-        //     let img1 = new Image();
-   //     let svg = new Blob([piece], {type: 'image/svg+xml'});
-   //     let url = DOMURL.createObjectURL(svg);
-   //     img1.onload = function() {
-   //        ctx.drawImage(img1, 25, 70);
-   //        DOMURL.revokeObjectURL(url);
-   //     }
-   //     img1.src = url;
-//
-
-
-
-
-
     }
 }
