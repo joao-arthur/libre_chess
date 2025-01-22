@@ -1,30 +1,11 @@
 use crate::{board::pos::Pos, piece::Piece, play::Play};
 
-pub fn bishop_movements(play: &Play, pos: &Pos, piece: &Piece) -> Vec<Pos> {
+use super::{bishop::bishop_movements, rook::rook_movements};
+
+pub fn queen_movements(play: &Play, pos: &Pos, piece: &Piece) -> Vec<Pos> {
     let mut result: Vec<Pos> = Vec::new();
-    let modifiers: [[i8; 2]; 4] = [[-1, 1], [1, 1], [1, -1], [-1, -1]];
-    for modifier in modifiers {
-        let mut rel_row: i8 = 0;
-        let mut rel_col: i8 = 0;
-        loop {
-            rel_row += modifier[0];
-            rel_col += modifier[1];
-            if let Some(curr_pos) = pos.try_of_rel_idx(rel_row, rel_col) {
-                if let Some(curr_piece) = play.board[curr_pos.clone()] {
-                    if curr_piece.c == piece.c {
-                        break;
-                    } else {
-                        result.push(curr_pos);
-                        break;
-                    }
-                } else {
-                    result.push(curr_pos);
-                }
-            } else {
-                break;
-            }
-        }
-    }
+    result.append(&mut bishop_movements(play, pos, piece));
+    result.append(&mut rook_movements(play, pos, piece));
     result
 }
 
@@ -35,15 +16,15 @@ mod test {
     use super::*;
 
     #[test]
-    fn test_bishop_movements_empty_board() {
+    fn test_queen_movements_empty_board() {
         assert_eq!(
-            bishop_movements(
+            queen_movements(
                 &Play {
                     board: Board::of_str([
                         "        ",
                         "        ",
                         "        ",
-                        "  ♝     ",
+                        "  ♛     ",
                         "        ",
                         "        ",
                         "        ",
@@ -52,7 +33,7 @@ mod test {
                     ..Default::default()
                 },
                 &Pos::of_str("C5"),
-                &Piece::of_str("♝")
+                &Piece::of_str("♛")
             ),
             [
                 Pos::of_str("D6"),
@@ -69,17 +50,35 @@ mod test {
                 //
                 Pos::of_str("B6"),
                 Pos::of_str("A7"),
+                //
+                Pos::of_str("C6"),
+                Pos::of_str("C7"),
+                Pos::of_str("C8"),
+                //
+                Pos::of_str("D5"),
+                Pos::of_str("E5"),
+                Pos::of_str("F5"),
+                Pos::of_str("G5"),
+                Pos::of_str("H5"),
+                //
+                Pos::of_str("C4"),
+                Pos::of_str("C3"),
+                Pos::of_str("C2"),
+                Pos::of_str("C1"),
+                //
+                Pos::of_str("B5"),
+                Pos::of_str("A5"),
             ]
         );
     }
 
     #[test]
-    fn test_bishop_movements_edge() {
+    fn test_queen_movements_edge() {
         assert_eq!(
-            bishop_movements(
+            queen_movements(
                 &Play {
                     board: Board::of_str([
-                        "♝       ",
+                        "♛       ",
                         "        ",
                         "        ",
                         "        ",
@@ -91,7 +90,7 @@ mod test {
                     ..Default::default()
                 },
                 &Pos::of_str("A8"),
-                &Piece::of_str("♝")
+                &Piece::of_str("♛")
             ),
             [
                 Pos::of_str("B7"),
@@ -101,29 +100,45 @@ mod test {
                 Pos::of_str("F3"),
                 Pos::of_str("G2"),
                 Pos::of_str("H1"),
+                //
+                Pos::of_str("B8"),
+                Pos::of_str("C8"),
+                Pos::of_str("D8"),
+                Pos::of_str("E8"),
+                Pos::of_str("F8"),
+                Pos::of_str("G8"),
+                Pos::of_str("H8"),
+                //
+                Pos::of_str("A7"),
+                Pos::of_str("A6"),
+                Pos::of_str("A5"),
+                Pos::of_str("A4"),
+                Pos::of_str("A3"),
+                Pos::of_str("A2"),
+                Pos::of_str("A1"),
             ]
         );
     }
 
     #[test]
-    fn test_bishop_movements_with_capture() {
+    fn test_queen_movements_with_capture() {
         assert_eq!(
-            bishop_movements(
+            queen_movements(
                 &Play {
                     board: Board::of_str([
                         "        ",
-                        "        ",
-                        "   ♖    ",
                         "  ♝     ",
+                        "   ♖    ",
+                        "  ♛   ♗ ",
                         "        ",
                         "♖   ♜   ",
-                        "        ",
+                        "  ♗     ",
                         "        ",
                     ]),
                     ..Default::default()
                 },
                 &Pos::of_str("C5"),
-                &Piece::of_str("♝")
+                &Piece::of_str("♛")
             ),
             [
                 Pos::of_str("D6"),
@@ -135,25 +150,39 @@ mod test {
                 //
                 Pos::of_str("B6"),
                 Pos::of_str("A7"),
+                //
+                Pos::of_str("C6"),
+                //
+                Pos::of_str("D5"),
+                Pos::of_str("E5"),
+                Pos::of_str("F5"),
+                Pos::of_str("G5"),
+                //
+                Pos::of_str("C4"),
+                Pos::of_str("C3"),
+                Pos::of_str("C2"),
+                //
+                Pos::of_str("B5"),
+                Pos::of_str("A5"),
             ]
         );
         assert_eq!(
-            bishop_movements(
+            queen_movements(
                 &Play {
                     board: Board::of_str([
                         "        ",
-                        "        ",
-                        "   ♜    ",
                         "  ♗     ",
+                        "   ♜    ",
+                        "  ♕   ♝ ",
                         "        ",
                         "♜   ♖   ",
-                        "        ",
+                        "  ♝     ",
                         "        ",
                     ]),
                     ..Default::default()
                 },
                 &Pos::of_str("C5"),
-                &Piece::of_str("♗")
+                &Piece::of_str("♕")
             ),
             [
                 Pos::of_str("D6"),
@@ -165,6 +194,20 @@ mod test {
                 //
                 Pos::of_str("B6"),
                 Pos::of_str("A7"),
+                //
+                Pos::of_str("C6"),
+                //
+                Pos::of_str("D5"),
+                Pos::of_str("E5"),
+                Pos::of_str("F5"),
+                Pos::of_str("G5"),
+                //
+                Pos::of_str("C4"),
+                Pos::of_str("C3"),
+                Pos::of_str("C2"),
+                //
+                Pos::of_str("B5"),
+                Pos::of_str("A5"),
             ]
         );
     }

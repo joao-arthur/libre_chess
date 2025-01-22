@@ -1,6 +1,6 @@
 use crate::{board::pos::Pos, piece::Piece, play::Play};
 
-fn rook_movements(play: &Play, pos: &Pos, piece: &Piece) -> Vec<Pos> {
+pub fn rook_movements(play: &Play, pos: &Pos, piece: &Piece) -> Vec<Pos> {
     let mut result: Vec<Pos> = Vec::new();
     let modifiers: [[i8; 2]; 4] = [[-1, 0], [0, 1], [1, 0], [0, -1]];
     for modifier in modifiers {

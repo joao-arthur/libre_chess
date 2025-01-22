@@ -1,6 +1,6 @@
 use crate::{board::pos::Pos, piece::Piece, play::Play};
 
-fn knight_movements(play: &Play, pos: &Pos, piece: &Piece) -> Vec<Pos> {
+pub fn knight_movements(play: &Play, pos: &Pos, piece: &Piece) -> Vec<Pos> {
     let mut result: Vec<Pos> = Vec::new();
     let base = [
         pos.try_of_rel_idx(-2, -1),
