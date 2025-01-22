@@ -1,4 +1,7 @@
-use std::{fmt, ops::{Index, IndexMut}};
+use std::{
+    fmt,
+    ops::{Index, IndexMut},
+};
 
 use pos::Pos;
 
@@ -33,7 +36,7 @@ pub enum FromStringErr {
 }
 
 #[derive(Debug, PartialEq)]
-struct Board {
+pub struct Board {
     pub b: [[Option<Piece>; 8]; 8],
 }
 
@@ -56,7 +59,6 @@ impl IndexMut<Pos> for Board {
         &mut self.b[pos.row.to_idx() as usize][pos.col.to_idx() as usize]
     }
 }
-
 
 impl Board {
     fn try_of_str(rows: [&str; 8]) -> Result<Self, FromStringErr> {
@@ -96,7 +98,7 @@ impl Board {
         Ok(board)
     }
 
-    fn of_str(rows: [&str; 8]) -> Board {
+    pub fn of_str(rows: [&str; 8]) -> Board {
         Self::try_of_str(rows).unwrap()
     }
 
