@@ -4,12 +4,9 @@ use pos::Pos;
 
 use crate::piece::Piece;
 
-mod col;
-mod row;
-mod pos;
-
-
-pub type Board = [[Option<Piece>; 8]; 8];
+pub mod col;
+pub mod pos;
+pub mod row;
 
 #[derive(Debug, PartialEq)]
 pub struct InvalidCharacterErr;
@@ -35,86 +32,105 @@ pub enum FromStringErr {
     InvalidLength(InvalidLengthErr),
 }
 
-fn try_of_str(rows: [&str; 8]) -> Result<Board, FromStringErr> {
-    if !rows
-        .join("")
-        .replace("♖", "")
-        .replace("♘", "")
-        .replace("♗", "")
-        .replace("♕", "")
-        .replace("♔", "")
-        .replace("♙", "")
-        .replace("♜", "")
-        .replace("♞", "")
-        .replace("♝", "")
-        .replace("♛", "")
-        .replace("♚", "")
-        .replace("♟", "")
-        .replace(" ", "")
-        .is_empty()
-    {
-        return Err(FromStringErr::InvalidCharacter(InvalidCharacterErr));
+#[derive(Debug, PartialEq)]
+struct Board {
+    pub b: [[Option<Piece>; 8]; 8],
+}
+
+impl Default for Board {
+    fn default() -> Self {
+        Board { b: [[None; 8]; 8] }
     }
-    for line in rows {
-        if line.chars().count() != 8 {
-            return Err(FromStringErr::InvalidLength(InvalidLengthErr));
+}
+
+impl Board {
+    fn try_of_str(rows: [&str; 8]) -> Result<Self, FromStringErr> {
+        if !rows
+            .join("")
+            .replace("♖", "")
+            .replace("♘", "")
+            .replace("♗", "")
+            .replace("♕", "")
+            .replace("♔", "")
+            .replace("♙", "")
+            .replace("♜", "")
+            .replace("♞", "")
+            .replace("♝", "")
+            .replace("♛", "")
+            .replace("♚", "")
+            .replace("♟", "")
+            .replace(" ", "")
+            .is_empty()
+        {
+            return Err(FromStringErr::InvalidCharacter(InvalidCharacterErr));
         }
-    }
-    let mut res: [[Option<Piece>; 8]; 8] = [[None; 8]; 8];
-    for row in 0..8 {
-        for col in 0..8 {
-            res[row as usize][col as usize] = Piece::try_of_str(&rows[row as usize].chars().nth(col).unwrap().to_string());
-        }
-    }
-    Ok(res)
-}
-
-pub fn of_str(rows: [&str; 8]) -> Board {
-    try_of_str(rows).unwrap()
-}
-
-pub fn get_initial_white_board() -> Board {
-    of_str([
-        "♖♘♗♕♔♗♘♖",
-        "♙♙♙♙♙♙♙♙",
-        "        ",
-        "        ",
-        "        ",
-        "        ",
-        "♟♟♟♟♟♟♟♟",
-        "♜♞♝♛♚♝♞♜",
-    ])
-}
-
-pub fn get_initial_black_board() -> Board {
-    of_str([
-        "♜♞♝♛♚♝♞♜",
-        "♟♟♟♟♟♟♟♟",
-        "        ",
-        "        ",
-        "        ",
-        "        ",
-        "♙♙♙♙♙♙♙♙",
-        "♖♘♗♕♔♗♘♖",
-    ])
-}
-
-fn get_board_piece(b: &Board, pos: &Pos) -> Option<Piece> {
-    b[pos.row.to_idx() as usize][pos.col.to_idx() as usize]
-}
-
-fn board_to_string(b: &Board) -> String {
-    let mut res: String = String::from("");
-    for row in b {
-        for col in row {
-            match col {
-                Some(p) => res.push_str(Piece::to_str(&p)),
-                None => res.push_str(" "),
+        for line in rows {
+            if line.chars().count() != 8 {
+                return Err(FromStringErr::InvalidLength(InvalidLengthErr));
             }
         }
-        res.push_str("\n")
+        let mut board = Self::default();
+        for row in 0..8 {
+            for col in 0..8 {
+                let pos = Pos::of_idx(row, col);
+                let piece = Piece::try_of_str(&rows[row as usize].chars().nth(col.into()).unwrap().to_string());
+                board.set_piece(&pos, piece);
+            }
+        }
+        Ok(board)
     }
-    res
+
+    fn of_str(rows: [&str; 8]) -> Board {
+        Self::try_of_str(rows).unwrap()
+    }
+
+    pub fn get_initial_white_board() -> Board {
+        Self::of_str([
+            "♖♘♗♕♔♗♘♖",
+            "♙♙♙♙♙♙♙♙",
+            "        ",
+            "        ",
+            "        ",
+            "        ",
+            "♟♟♟♟♟♟♟♟",
+            "♜♞♝♛♚♝♞♜",
+        ])
+    }
+
+    pub fn get_initial_black_board() -> Board {
+        Self::of_str([
+            "♜♞♝♛♚♝♞♜",
+            "♟♟♟♟♟♟♟♟",
+            "        ",
+            "        ",
+            "        ",
+            "        ",
+            "♙♙♙♙♙♙♙♙",
+            "♖♘♗♕♔♗♘♖",
+        ])
+    }
+
+    pub fn get_piece(&self, pos: &Pos) -> Option<Piece> {
+        self.b[pos.row.to_idx() as usize][pos.col.to_idx() as usize]
+    }
+
+    pub fn set_piece(&mut self, pos: &Pos, piece: Option<Piece>) {
+        self.b[pos.row.to_idx() as usize][pos.col.to_idx() as usize] = piece;
+    }
+
+    fn to_string(&self) -> String {
+        let mut res: String = String::from("");
+        for row in self.b {
+            for col in row {
+                match col {
+                    Some(p) => res.push_str(Piece::to_str(&p)),
+                    None => res.push_str(" "),
+                }
+            }
+            res.push_str("\n")
+        }
+        res
+    }
 }
 
 #[cfg(test)]
@@ -122,9 +138,9 @@ mod test {
     use super::*;
 
     #[test]
-    fn test_from_str() {
+    fn test_try_of_str() {
         assert_eq!(
-            try_of_str([
+            Board::try_of_str([
                 "♜♞♝♛♚♝♞♜",
                 "♟♟♟♟♟♟♟♟",
                 "        ",
@@ -134,82 +150,154 @@ mod test {
                 "♙♙♙♙♙♙♙♙",
                 "♖♘♗♕♔♗♘♖",
             ]),
-            Ok([
-                [
-                    Piece::try_of_str("♜"),
-                    Piece::try_of_str("♞"),
-                    Piece::try_of_str("♝"),
-                    Piece::try_of_str("♛"),
-                    Piece::try_of_str("♚"),
-                    Piece::try_of_str("♝"),
-                    Piece::try_of_str("♞"),
-                    Piece::try_of_str("♜"),
-                ],
-                [
-                    Piece::try_of_str("♟"),
-                    Piece::try_of_str("♟"),
-                    Piece::try_of_str("♟"),
-                    Piece::try_of_str("♟"),
-                    Piece::try_of_str("♟"),
-                    Piece::try_of_str("♟"),
-                    Piece::try_of_str("♟"),
-                    Piece::try_of_str("♟"),
-                ],
-                [None, None, None, None, None, None, None, None],
-                [None, None, None, None, None, None, None, None],
-                [None, None, None, None, None, None, None, None],
-                [None, None, None, None, None, None, None, None],
-                [
-                    Piece::try_of_str("♙"),
-                    Piece::try_of_str("♙"),
-                    Piece::try_of_str("♙"),
-                    Piece::try_of_str("♙"),
-                    Piece::try_of_str("♙"),
-                    Piece::try_of_str("♙"),
-                    Piece::try_of_str("♙"),
-                    Piece::try_of_str("♙"),
-                ],
-                [
-                    Piece::try_of_str("♖"),
-                    Piece::try_of_str("♘"),
-                    Piece::try_of_str("♗"),
-                    Piece::try_of_str("♕"),
-                    Piece::try_of_str("♔"),
-                    Piece::try_of_str("♗"),
-                    Piece::try_of_str("♘"),
-                    Piece::try_of_str("♖"),
-                ],
-            ])
+            Ok(Board {
+                b: [
+                    [
+                        Piece::try_of_str("♜"),
+                        Piece::try_of_str("♞"),
+                        Piece::try_of_str("♝"),
+                        Piece::try_of_str("♛"),
+                        Piece::try_of_str("♚"),
+                        Piece::try_of_str("♝"),
+                        Piece::try_of_str("♞"),
+                        Piece::try_of_str("♜"),
+                    ],
+                    [
+                        Piece::try_of_str("♟"),
+                        Piece::try_of_str("♟"),
+                        Piece::try_of_str("♟"),
+                        Piece::try_of_str("♟"),
+                        Piece::try_of_str("♟"),
+                        Piece::try_of_str("♟"),
+                        Piece::try_of_str("♟"),
+                        Piece::try_of_str("♟"),
+                    ],
+                    [None, None, None, None, None, None, None, None],
+                    [None, None, None, None, None, None, None, None],
+                    [None, None, None, None, None, None, None, None],
+                    [None, None, None, None, None, None, None, None],
+                    [
+                        Piece::try_of_str("♙"),
+                        Piece::try_of_str("♙"),
+                        Piece::try_of_str("♙"),
+                        Piece::try_of_str("♙"),
+                        Piece::try_of_str("♙"),
+                        Piece::try_of_str("♙"),
+                        Piece::try_of_str("♙"),
+                        Piece::try_of_str("♙"),
+                    ],
+                    [
+                        Piece::try_of_str("♖"),
+                        Piece::try_of_str("♘"),
+                        Piece::try_of_str("♗"),
+                        Piece::try_of_str("♕"),
+                        Piece::try_of_str("♔"),
+                        Piece::try_of_str("♗"),
+                        Piece::try_of_str("♘"),
+                        Piece::try_of_str("♖"),
+                    ],
+                ]
+            })
         );
     }
 
     #[test]
-    fn test_get_board_piece() {
-        let b = get_initial_black_board();
-        assert_eq!(get_board_piece(&b, &Pos::of_str("A8")), Piece::try_of_str("♜"));
-        assert_eq!(get_board_piece(&b, &Pos::of_str("B8")), Piece::try_of_str("♞"));
-        assert_eq!(get_board_piece(&b, &Pos::of_str("C8")), Piece::try_of_str("♝"));
-        assert_eq!(get_board_piece(&b, &Pos::of_str("D8")), Piece::try_of_str("♛"));
-        assert_eq!(get_board_piece(&b, &Pos::of_str("E8")), Piece::try_of_str("♚"));
-        assert_eq!(get_board_piece(&b, &Pos::of_str("F8")), Piece::try_of_str("♝"));
-        assert_eq!(get_board_piece(&b, &Pos::of_str("G8")), Piece::try_of_str("♞"));
-        assert_eq!(get_board_piece(&b, &Pos::of_str("H8")), Piece::try_of_str("♜"));
-        assert_eq!(get_board_piece(&b, &Pos::of_str("H8")), Piece::try_of_str("♜"));
-        assert_eq!(get_board_piece(&b, &Pos::of_str("H7")), Piece::try_of_str("♟"));
-        assert_eq!(get_board_piece(&b, &Pos::of_str("H6")), Piece::try_of_str(" "));
-        assert_eq!(get_board_piece(&b, &Pos::of_str("H5")), Piece::try_of_str(" "));
-        assert_eq!(get_board_piece(&b, &Pos::of_str("H4")), Piece::try_of_str(" "));
-        assert_eq!(get_board_piece(&b, &Pos::of_str("H3")), Piece::try_of_str(" "));
-        assert_eq!(get_board_piece(&b, &Pos::of_str("H2")), Piece::try_of_str("♙"));
-        assert_eq!(get_board_piece(&b, &Pos::of_str("H1")), Piece::try_of_str("♖"));
+    fn test_of_str() {
+        assert_eq!(
+            Board::of_str([
+                "♜♞♝♛♚♝♞♜",
+                "♟♟♟♟♟♟♟♟",
+                "        ",
+                "        ",
+                "        ",
+                "        ",
+                "♙♙♙♙♙♙♙♙",
+                "♖♘♗♕♔♗♘♖",
+            ]),
+            Board {
+                b: [
+                    [
+                        Piece::try_of_str("♜"),
+                        Piece::try_of_str("♞"),
+                        Piece::try_of_str("♝"),
+                        Piece::try_of_str("♛"),
+                        Piece::try_of_str("♚"),
+                        Piece::try_of_str("♝"),
+                        Piece::try_of_str("♞"),
+                        Piece::try_of_str("♜"),
+                    ],
+                    [
+                        Piece::try_of_str("♟"),
+                        Piece::try_of_str("♟"),
+                        Piece::try_of_str("♟"),
+                        Piece::try_of_str("♟"),
+                        Piece::try_of_str("♟"),
+                        Piece::try_of_str("♟"),
+                        Piece::try_of_str("♟"),
+                        Piece::try_of_str("♟"),
+                    ],
+                    [None, None, None, None, None, None, None, None],
+                    [None, None, None, None, None, None, None, None],
+                    [None, None, None, None, None, None, None, None],
+                    [None, None, None, None, None, None, None, None],
+                    [
+                        Piece::try_of_str("♙"),
+                        Piece::try_of_str("♙"),
+                        Piece::try_of_str("♙"),
+                        Piece::try_of_str("♙"),
+                        Piece::try_of_str("♙"),
+                        Piece::try_of_str("♙"),
+                        Piece::try_of_str("♙"),
+                        Piece::try_of_str("♙"),
+                    ],
+                    [
+                        Piece::try_of_str("♖"),
+                        Piece::try_of_str("♘"),
+                        Piece::try_of_str("♗"),
+                        Piece::try_of_str("♕"),
+                        Piece::try_of_str("♔"),
+                        Piece::try_of_str("♗"),
+                        Piece::try_of_str("♘"),
+                        Piece::try_of_str("♖"),
+                    ],
+                ]
+            }
+        );
     }
 
     #[test]
-    fn test_board_to_string() {
-        let brd = get_initial_black_board();
-        let res = board_to_string(&brd);
+    fn test_get_piece() {
+        let board = Board::get_initial_black_board();
+        assert_eq!(Board::get_piece(&board, &Pos::of_str("A8")), Piece::try_of_str("♜"));
+        assert_eq!(Board::get_piece(&board, &Pos::of_str("B8")), Piece::try_of_str("♞"));
+        assert_eq!(Board::get_piece(&board, &Pos::of_str("C8")), Piece::try_of_str("♝"));
+        assert_eq!(Board::get_piece(&board, &Pos::of_str("D8")), Piece::try_of_str("♛"));
+        assert_eq!(Board::get_piece(&board, &Pos::of_str("E8")), Piece::try_of_str("♚"));
+        assert_eq!(Board::get_piece(&board, &Pos::of_str("F8")), Piece::try_of_str("♝"));
+        assert_eq!(Board::get_piece(&board, &Pos::of_str("G8")), Piece::try_of_str("♞"));
+        assert_eq!(Board::get_piece(&board, &Pos::of_str("H8")), Piece::try_of_str("♜"));
+        assert_eq!(Board::get_piece(&board, &Pos::of_str("H8")), Piece::try_of_str("♜"));
+        assert_eq!(Board::get_piece(&board, &Pos::of_str("H7")), Piece::try_of_str("♟"));
+        assert_eq!(Board::get_piece(&board, &Pos::of_str("H6")), Piece::try_of_str(" "));
+        assert_eq!(Board::get_piece(&board, &Pos::of_str("H5")), Piece::try_of_str(" "));
+        assert_eq!(Board::get_piece(&board, &Pos::of_str("H4")), Piece::try_of_str(" "));
+        assert_eq!(Board::get_piece(&board, &Pos::of_str("H3")), Piece::try_of_str(" "));
+        assert_eq!(Board::get_piece(&board, &Pos::of_str("H2")), Piece::try_of_str("♙"));
+        assert_eq!(Board::get_piece(&board, &Pos::of_str("H1")), Piece::try_of_str("♖"));
+    }
+
+    #[test]
+    fn test_set_piece() {
+        let mut board = Board::get_initial_black_board();
+        assert_eq!(Board::get_piece(&board, &Pos::of_str("A8")), Piece::try_of_str("♜"));
+        board.set_piece(&Pos::of_str("A8"), Piece::try_of_str("♖"));
+        assert_eq!(Board::get_piece(&board, &Pos::of_str("A8")), Piece::try_of_str("♖"));
+    }
+
+    #[test]
+    fn test_to_string() {
         assert_eq!(
-            res.to_owned(),
+            Board::get_initial_black_board().to_string(),
             "".to_owned()
                 + "♜♞♝♛♚♝♞♜\n"
                 + "♟♟♟♟♟♟♟♟\n"
