@@ -1,4 +1,4 @@
-use std::fmt;
+use std::{fmt, ops::{Index, IndexMut}};
 
 use pos::Pos;
 
@@ -43,6 +43,21 @@ impl Default for Board {
     }
 }
 
+impl Index<Pos> for Board {
+    type Output = Option<Piece>;
+
+    fn index(&self, pos: Pos) -> &Self::Output {
+        &self.b[pos.row.to_idx() as usize][pos.col.to_idx() as usize]
+    }
+}
+
+impl IndexMut<Pos> for Board {
+    fn index_mut(&mut self, pos: Pos) -> &mut Self::Output {
+        &mut self.b[pos.row.to_idx() as usize][pos.col.to_idx() as usize]
+    }
+}
+
+
 impl Board {
     fn try_of_str(rows: [&str; 8]) -> Result<Self, FromStringErr> {
         if !rows
@@ -72,9 +87,10 @@ impl Board {
         let mut board = Self::default();
         for row in 0..8 {
             for col in 0..8 {
-                let pos = Pos::of_idx(row, col);
-                let piece = Piece::try_of_str(&rows[row as usize].chars().nth(col.into()).unwrap().to_string());
-                board.set_piece(&pos, piece);
+                let piece = Piece::try_of_str(
+                    &rows[row as usize].chars().nth(col.into()).unwrap().to_string(),
+                );
+                board[Pos::of_idx(row, col)] = piece;
             }
         }
         Ok(board)
@@ -108,14 +124,6 @@ impl Board {
             "♙♙♙♙♙♙♙♙",
             "♖♘♗♕♔♗♘♖",
         ])
-    }
-
-    pub fn get_piece(&self, pos: &Pos) -> Option<Piece> {
-        self.b[pos.row.to_idx() as usize][pos.col.to_idx() as usize]
-    }
-
-    pub fn set_piece(&mut self, pos: &Pos, piece: Option<Piece>) {
-        self.b[pos.row.to_idx() as usize][pos.col.to_idx() as usize] = piece;
     }
 
     fn to_string(&self) -> String {
@@ -268,30 +276,30 @@ mod test {
     #[test]
     fn test_get_piece() {
         let board = Board::get_initial_black_board();
-        assert_eq!(Board::get_piece(&board, &Pos::of_str("A8")), Piece::try_of_str("♜"));
-        assert_eq!(Board::get_piece(&board, &Pos::of_str("B8")), Piece::try_of_str("♞"));
-        assert_eq!(Board::get_piece(&board, &Pos::of_str("C8")), Piece::try_of_str("♝"));
-        assert_eq!(Board::get_piece(&board, &Pos::of_str("D8")), Piece::try_of_str("♛"));
-        assert_eq!(Board::get_piece(&board, &Pos::of_str("E8")), Piece::try_of_str("♚"));
-        assert_eq!(Board::get_piece(&board, &Pos::of_str("F8")), Piece::try_of_str("♝"));
-        assert_eq!(Board::get_piece(&board, &Pos::of_str("G8")), Piece::try_of_str("♞"));
-        assert_eq!(Board::get_piece(&board, &Pos::of_str("H8")), Piece::try_of_str("♜"));
-        assert_eq!(Board::get_piece(&board, &Pos::of_str("H8")), Piece::try_of_str("♜"));
-        assert_eq!(Board::get_piece(&board, &Pos::of_str("H7")), Piece::try_of_str("♟"));
-        assert_eq!(Board::get_piece(&board, &Pos::of_str("H6")), Piece::try_of_str(" "));
-        assert_eq!(Board::get_piece(&board, &Pos::of_str("H5")), Piece::try_of_str(" "));
-        assert_eq!(Board::get_piece(&board, &Pos::of_str("H4")), Piece::try_of_str(" "));
-        assert_eq!(Board::get_piece(&board, &Pos::of_str("H3")), Piece::try_of_str(" "));
-        assert_eq!(Board::get_piece(&board, &Pos::of_str("H2")), Piece::try_of_str("♙"));
-        assert_eq!(Board::get_piece(&board, &Pos::of_str("H1")), Piece::try_of_str("♖"));
+        assert_eq!(board[Pos::of_str("A8")], Piece::try_of_str("♜"));
+        assert_eq!(board[Pos::of_str("B8")], Piece::try_of_str("♞"));
+        assert_eq!(board[Pos::of_str("C8")], Piece::try_of_str("♝"));
+        assert_eq!(board[Pos::of_str("D8")], Piece::try_of_str("♛"));
+        assert_eq!(board[Pos::of_str("E8")], Piece::try_of_str("♚"));
+        assert_eq!(board[Pos::of_str("F8")], Piece::try_of_str("♝"));
+        assert_eq!(board[Pos::of_str("G8")], Piece::try_of_str("♞"));
+        assert_eq!(board[Pos::of_str("H8")], Piece::try_of_str("♜"));
+        assert_eq!(board[Pos::of_str("H8")], Piece::try_of_str("♜"));
+        assert_eq!(board[Pos::of_str("H7")], Piece::try_of_str("♟"));
+        assert_eq!(board[Pos::of_str("H6")], Piece::try_of_str(" "));
+        assert_eq!(board[Pos::of_str("H5")], Piece::try_of_str(" "));
+        assert_eq!(board[Pos::of_str("H4")], Piece::try_of_str(" "));
+        assert_eq!(board[Pos::of_str("H3")], Piece::try_of_str(" "));
+        assert_eq!(board[Pos::of_str("H2")], Piece::try_of_str("♙"));
+        assert_eq!(board[Pos::of_str("H1")], Piece::try_of_str("♖"));
     }
 
     #[test]
     fn test_set_piece() {
         let mut board = Board::get_initial_black_board();
-        assert_eq!(Board::get_piece(&board, &Pos::of_str("A8")), Piece::try_of_str("♜"));
-        board.set_piece(&Pos::of_str("A8"), Piece::try_of_str("♖"));
-        assert_eq!(Board::get_piece(&board, &Pos::of_str("A8")), Piece::try_of_str("♖"));
+        assert_eq!(board[Pos::of_str("A8")], Piece::try_of_str("♜"));
+        board[Pos::of_str("A8")] = Piece::try_of_str("♖");
+        assert_eq!(board[Pos::of_str("A8")], Piece::try_of_str("♖"));
     }
 
     #[test]
