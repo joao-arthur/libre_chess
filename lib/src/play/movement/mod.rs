@@ -1,6 +1,10 @@
 use crate::{board::pos::Pos, piece::Piece};
 
 mod bishop;
+mod king;
+mod knight;
+mod pawn;
+mod queen;
 mod rook;
 
 #[derive(Debug, PartialEq, Clone)]
