@@ -14,8 +14,7 @@ pub fn knight_movements(play: &Play, pos: &Pos, piece: &Piece) -> Vec<Pos> {
     ];
     for curr_pos in base {
         if let Some(curr_pos) = curr_pos {
-            let curr_piece = play.board[curr_pos.clone()];
-            if let Some(curr_piece) = curr_piece {
+            if let Some(curr_piece) = play.board[curr_pos.clone()] {
                 if curr_piece.c != piece.c {
                     result.push(curr_pos);
                 }
