@@ -1,6 +1,9 @@
-use crate::{board::pos::Pos, piece::Piece, play::Play};
+use crate::{
+    board::{pos::Pos, Board},
+    piece::Color,
+};
 
-pub fn rook_movements(play: &Play, pos: &Pos, piece: &Piece) -> Vec<Pos> {
+pub fn naive_movements_rook(board: &Board, pos: &Pos, color: &Color) -> Vec<Pos> {
     let mut result: Vec<Pos> = Vec::new();
     let modifiers: [[i8; 2]; 4] = [[-1, 0], [0, 1], [1, 0], [0, -1]];
     for modifier in modifiers {
@@ -10,8 +13,8 @@ pub fn rook_movements(play: &Play, pos: &Pos, piece: &Piece) -> Vec<Pos> {
             rel_row += modifier[0];
             rel_col += modifier[1];
             if let Some(curr_pos) = pos.try_of_rel_idx(rel_row, rel_col) {
-                if let Some(curr_piece) = play.board[curr_pos.clone()] {
-                    if curr_piece.c == piece.c {
+                if let Some(curr_piece) = board[curr_pos.clone()] {
+                    if &curr_piece.c == color {
                         break;
                     } else {
                         result.push(curr_pos);
@@ -35,24 +38,21 @@ mod test {
     use super::*;
 
     #[test]
-    fn test_rook_movements_empty_board() {
+    fn test_naive_movements_rook_empty_board() {
         assert_eq!(
-            rook_movements(
-                &Play {
-                    board: Board::of_str([
-                        "        ",
-                        "        ",
-                        "        ",
-                        "        ",
-                        "   ♜    ",
-                        "        ",
-                        "        ",
-                        "        ",
-                    ]),
-                    ..Default::default()
-                },
+            naive_movements_rook(
+                &Board::of_str([
+                    "        ",
+                    "        ",
+                    "        ",
+                    "        ",
+                    "   ♜    ",
+                    "        ",
+                    "        ",
+                    "        ",
+                ]),
                 &Pos::of_str("D4"),
-                &Piece::of_str("♜")
+                &Color::Black
             ),
             [
                 Pos::of_str("D5"),
@@ -77,24 +77,21 @@ mod test {
     }
 
     #[test]
-    fn test_rook_movements_edge() {
+    fn test_naive_movements_rook_edge() {
         assert_eq!(
-            rook_movements(
-                &Play {
-                    board: Board::of_str([
-                        "♜       ",
-                        "        ",
-                        "        ",
-                        "        ",
-                        "        ",
-                        "        ",
-                        "        ",
-                        "        ",
-                    ]),
-                    ..Default::default()
-                },
+            naive_movements_rook(
+                &Board::of_str([
+                    "♜       ",
+                    "        ",
+                    "        ",
+                    "        ",
+                    "        ",
+                    "        ",
+                    "        ",
+                    "        ",
+                ]),
                 &Pos::of_str("A8"),
-                &Piece::of_str("♜")
+                &Color::Black
             ),
             [
                 Pos::of_str("B8"),
@@ -117,24 +114,21 @@ mod test {
     }
 
     #[test]
-    fn test_rook_movements_with_capture() {
+    fn test_naive_movements_rook_with_capture() {
         assert_eq!(
-            rook_movements(
-                &Play {
-                    board: Board::of_str([
-                        "        ",
-                        "   ♗    ",
-                        "        ",
-                        "        ",
-                        "   ♜  ♝ ",
-                        "        ",
-                        "        ",
-                        "   ♗    ",
-                    ]),
-                    ..Default::default()
-                },
+            naive_movements_rook(
+                &Board::of_str([
+                    "        ",
+                    "   ♗    ",
+                    "        ",
+                    "        ",
+                    "   ♜  ♝ ",
+                    "        ",
+                    "        ",
+                    "   ♗    ",
+                ]),
                 &Pos::of_str("D4"),
-                &Piece::of_str("♜")
+                &Color::Black
             ),
             [
                 Pos::of_str("D5"),
@@ -154,22 +148,19 @@ mod test {
             ]
         );
         assert_eq!(
-            rook_movements(
-                &Play {
-                    board: Board::of_str([
-                        "        ",
-                        "   ♝    ",
-                        "        ",
-                        "        ",
-                        "   ♖  ♗ ",
-                        "        ",
-                        "        ",
-                        "   ♝    ",
-                    ]),
-                    ..Default::default()
-                },
+            naive_movements_rook(
+                &Board::of_str([
+                    "        ",
+                    "   ♝    ",
+                    "        ",
+                    "        ",
+                    "   ♖  ♗ ",
+                    "        ",
+                    "        ",
+                    "   ♝    ",
+                ]),
                 &Pos::of_str("D4"),
-                &Piece::of_str("♖")
+                &Color::White
             ),
             [
                 Pos::of_str("D5"),

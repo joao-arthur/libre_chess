@@ -1,11 +1,14 @@
-use crate::{board::pos::Pos, piece::Piece, play::Play};
+use crate::{
+    board::{pos::Pos, Board},
+    piece::Color,
+};
 
-use super::{bishop::bishop_movements, rook::rook_movements};
+use super::{bishop::naive_movements_bishop, rook::naive_movements_rook};
 
-pub fn queen_movements(play: &Play, pos: &Pos, piece: &Piece) -> Vec<Pos> {
+pub fn naive_movements_queen(board: &Board, pos: &Pos, color: &Color) -> Vec<Pos> {
     let mut result: Vec<Pos> = Vec::new();
-    result.append(&mut bishop_movements(play, pos, piece));
-    result.append(&mut rook_movements(play, pos, piece));
+    result.append(&mut naive_movements_bishop(board, pos, color));
+    result.append(&mut naive_movements_rook(board, pos, color));
     result
 }
 
@@ -16,24 +19,21 @@ mod test {
     use super::*;
 
     #[test]
-    fn test_queen_movements_empty_board() {
+    fn test_naive_movements_queen_empty_board() {
         assert_eq!(
-            queen_movements(
-                &Play {
-                    board: Board::of_str([
-                        "        ",
-                        "        ",
-                        "        ",
-                        "  ♛     ",
-                        "        ",
-                        "        ",
-                        "        ",
-                        "        ",
-                    ]),
-                    ..Default::default()
-                },
+            naive_movements_queen(
+                &Board::of_str([
+                    "        ",
+                    "        ",
+                    "        ",
+                    "  ♛     ",
+                    "        ",
+                    "        ",
+                    "        ",
+                    "        ",
+                ]),
                 &Pos::of_str("C5"),
-                &Piece::of_str("♛")
+                &Color::Black
             ),
             [
                 Pos::of_str("D6"),
@@ -73,24 +73,21 @@ mod test {
     }
 
     #[test]
-    fn test_queen_movements_edge() {
+    fn test_naive_movements_queen_edge() {
         assert_eq!(
-            queen_movements(
-                &Play {
-                    board: Board::of_str([
-                        "♛       ",
-                        "        ",
-                        "        ",
-                        "        ",
-                        "        ",
-                        "        ",
-                        "        ",
-                        "        ",
-                    ]),
-                    ..Default::default()
-                },
+            naive_movements_queen(
+                &Board::of_str([
+                    "♛       ",
+                    "        ",
+                    "        ",
+                    "        ",
+                    "        ",
+                    "        ",
+                    "        ",
+                    "        ",
+                ]),
                 &Pos::of_str("A8"),
-                &Piece::of_str("♛")
+                &Color::Black
             ),
             [
                 Pos::of_str("B7"),
@@ -121,24 +118,21 @@ mod test {
     }
 
     #[test]
-    fn test_queen_movements_with_capture() {
+    fn test_naive_movements_queen_with_capture() {
         assert_eq!(
-            queen_movements(
-                &Play {
-                    board: Board::of_str([
-                        "        ",
-                        "  ♝     ",
-                        "   ♖    ",
-                        "  ♛   ♗ ",
-                        "        ",
-                        "♖   ♜   ",
-                        "  ♗     ",
-                        "        ",
-                    ]),
-                    ..Default::default()
-                },
+            naive_movements_queen(
+                &Board::of_str([
+                    "        ",
+                    "  ♝     ",
+                    "   ♖    ",
+                    "  ♛   ♗ ",
+                    "        ",
+                    "♖   ♜   ",
+                    "  ♗     ",
+                    "        ",
+                ]),
                 &Pos::of_str("C5"),
-                &Piece::of_str("♛")
+                &Color::Black
             ),
             [
                 Pos::of_str("D6"),
@@ -167,22 +161,19 @@ mod test {
             ]
         );
         assert_eq!(
-            queen_movements(
-                &Play {
-                    board: Board::of_str([
-                        "        ",
-                        "  ♗     ",
-                        "   ♜    ",
-                        "  ♕   ♝ ",
-                        "        ",
-                        "♜   ♖   ",
-                        "  ♝     ",
-                        "        ",
-                    ]),
-                    ..Default::default()
-                },
+            naive_movements_queen(
+                &Board::of_str([
+                    "        ",
+                    "  ♗     ",
+                    "   ♜    ",
+                    "  ♕   ♝ ",
+                    "        ",
+                    "♜   ♖   ",
+                    "  ♝     ",
+                    "        ",
+                ]),
                 &Pos::of_str("C5"),
-                &Piece::of_str("♕")
+                &Color::White
             ),
             [
                 Pos::of_str("D6"),

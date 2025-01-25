@@ -102,7 +102,7 @@ impl Board {
         Self::try_of_str(rows).unwrap()
     }
 
-    pub fn get_initial_white_board() -> Board {
+    pub fn get_initial_board() -> Board {
         Self::of_str([
             "♜♞♝♛♚♝♞♜",
             "♟♟♟♟♟♟♟♟",
@@ -112,19 +112,6 @@ impl Board {
             "        ",
             "♙♙♙♙♙♙♙♙",
             "♖♘♗♕♔♗♘♖",
-        ])
-    }
-
-    pub fn get_initial_black_board() -> Board {
-        Self::of_str([
-            "♖♘♗♕♔♗♘♖",
-            "♙♙♙♙♙♙♙♙",
-            "        ",
-            "        ",
-            "        ",
-            "        ",
-            "♟♟♟♟♟♟♟♟",
-            "♜♞♝♛♚♝♞♜",
         ])
     }
 
@@ -277,7 +264,7 @@ mod test {
 
     #[test]
     fn test_get_piece() {
-        let board = Board::get_initial_white_board();
+        let board = Board::get_initial_board();
         assert_eq!(board[Pos::of_str("A8")], Piece::try_of_str("♜"));
         assert_eq!(board[Pos::of_str("B8")], Piece::try_of_str("♞"));
         assert_eq!(board[Pos::of_str("C8")], Piece::try_of_str("♝"));
@@ -298,7 +285,7 @@ mod test {
 
     #[test]
     fn test_set_piece() {
-        let mut board = Board::get_initial_white_board();
+        let mut board = Board::get_initial_board();
         assert_eq!(board[Pos::of_str("A8")], Piece::try_of_str("♜"));
         board[Pos::of_str("A8")] = Piece::try_of_str("♖");
         assert_eq!(board[Pos::of_str("A8")], Piece::try_of_str("♖"));
@@ -307,7 +294,7 @@ mod test {
     #[test]
     fn test_to_string() {
         assert_eq!(
-            Board::get_initial_white_board().to_string(),
+            Board::get_initial_board().to_string(),
             "".to_owned()
                 + "♜♞♝♛♚♝♞♜\n"
                 + "♟♟♟♟♟♟♟♟\n"
