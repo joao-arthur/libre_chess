@@ -1,7 +1,7 @@
-import type { MouseEvent, ReactElement } from "react";
+import type { ReactElement } from "react";
 import { useEffect, useRef } from "react";
 import { useWindowDimension } from "../hooks/useWindowDimension";
-import initWASM, { engineClick, EngineMatrixPoint } from "libre_chess_engine";
+import initWASM from "libre_chess_wasm";
 import { useChess } from "../hooks/useChess";
 
 export default function Main(): ReactElement {
@@ -25,25 +25,9 @@ export default function Main(): ReactElement {
         }
     }, []);
 
-    function onClick(e: MouseEvent<HTMLCanvasElement>): void {
-        // if (!model) {
-        //     return;
-        // }
-        const row = e.pageY - e.currentTarget.offsetTop;
-        const col = e.pageX - e.currentTarget.offsetLeft;
-        try {
-            engineClick(
-                new EngineMatrixPoint(BigInt(Number(row)), BigInt(Number(col))),
-            );
-        } catch (e) {
-            console.error(e);
-        }
-    }
-
     return (
         <main className="w-screen h-screen flex">
             <canvas
-                onClick={onClick}
                 className="m-auto"
                 width={dimension}
                 height={dimension}

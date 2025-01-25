@@ -8,9 +8,9 @@ importers:
 
   .:
     dependencies:
-      libre_chess_engine:
-        specifier: ../libre_chess_engine
-        version: link:../libre_chess_engine
+      libre_chess_wasm:
+        specifier: ../libre_chess_wasm
+        version: link:../libre_chess_wasm
       next:
         specifier: 15.1.5
         version: 15.1.5(react-dom@19.0.0(react@19.0.0))(react@19.0.0)

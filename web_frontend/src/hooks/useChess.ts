@@ -5,7 +5,7 @@ import {
     //EngineInfo,
     engineInit,
     engineSetDimension,
-} from "libre_chess_engine";
+} from "libre_chess_wasm";
 import { useWindowDimension } from "./useWindowDimension";
 
 type Chess = {
