@@ -1,6 +1,6 @@
 [package]
-name = "libre_chess_engine"
-version = "0.1.0"
+name = "libre_chess_web_backend"
+version = "1.0.0"
 edition = "2021"
 
 [lib]
@@ -19,5 +19,4 @@ web-sys = { version = "0.3.71", features = [
     'BlobPropertyBag',
     'console',
     'Url',
-
 ] }
