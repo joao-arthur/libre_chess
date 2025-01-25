@@ -9,7 +9,7 @@ import {
 import { useWindowDimension } from "./useWindowDimension";
 
 type Chess = {
-    readonly init: (canvasElement: HTMLCanvasElement) => void;
+    readonly init: (canvas: HTMLCanvasElement) => void;
     //readonly model: EngineInfo | undefined;
 };
 
@@ -24,12 +24,8 @@ export function useChess(): Chess {
         }
     }, [dimension, hasInited]);
 
-    function init(canvasElement: HTMLCanvasElement) {
-        const context = canvasElement.getContext("2d");
-        if (!context) {
-            return;
-        }
-        engineInit(context);
+    function init(canvas: HTMLCanvasElement) {
+        engineInit(canvas);
         //engineAddOnChangeListener(() => {
         //    let obj = engineGetSettings();
         //    setModel({

@@ -1,10 +1,18 @@
-
+use libre_chess_lib::{
+    board::Board,
+    piece::{Color, Type},
+    play::Play,
+};
 use std::{cell::RefCell, rc::Rc};
-use libre_chess_lib::{board::Board, piece::{Color, Type}, play::Play};
 use wasm_bindgen::{prelude::Closure, JsCast, JsValue};
-use web_sys::{console, js_sys, window, Blob, BlobPropertyBag, CanvasRenderingContext2d, HtmlImageElement, Url};
+use web_sys::{
+    console, js_sys, window, Blob, BlobPropertyBag, CanvasRenderingContext2d, HtmlImageElement, Url,
+};
 
-use crate::{render::{get_values_to_render, RenderSettings}, sets::{set_1, set_maurizio_monge_fantasy}};
+use crate::{
+    render::{get_values_to_render, RenderSettings},
+    sets::{set_1, set_maurizio_monge_fantasy},
+};
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct AppSettings {
@@ -83,7 +91,7 @@ pub fn app_set_dimension(dim: u16) {
 const BLACK: &str = "#b88762";
 const WHITE: &str = "#edd6b0";
 
-pub fn render() {
+pub fn app_render() {
     MODEL.with(|i| {
         let m = i.borrow();
         let board = &m.play.board;
@@ -161,6 +169,11 @@ pub fn render() {
                 closure.forget();
             }
         }
-
     });
+}
+
+pub fn app_click() {
+    // x, y
+    // get the moves for the piece, implement this function on lib
+    // select the square
 }

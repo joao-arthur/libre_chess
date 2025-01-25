@@ -19,5 +19,6 @@ web-sys = { version = "0.3.71", features = [
     'BlobPropertyBag',
     'console',
     'Url',
+    'MouseEvent'
 ] }
 libre_chess_lib = { path = "../lib" }
