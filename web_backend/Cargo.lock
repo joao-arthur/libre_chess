@@ -25,9 +25,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "libre_chess_lib"
+version = "1.0.0"
+
+[[package]]
 name = "libre_chess_web_backend"
 version = "1.0.0"
 dependencies = [
+ "libre_chess_lib",
  "wasm-bindgen",
  "web-sys",
 ]

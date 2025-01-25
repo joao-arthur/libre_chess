@@ -1,16 +1,10 @@
-use crate::domain::{
-    piece,
-    play::Play,
-    render::{get_values_to_render, RenderSettings},
-};
-use sets::{set_1, set_2, set_maurizio_monge_fantasy, set_maurizio_monge_spatial, BoardSet};
-use std::{cell::RefCell, rc::Rc};
-use wasm_bindgen::{prelude::Closure, JsCast, JsValue};
-use web_sys::{
-    console, js_sys, window, Blob, BlobPropertyBag, CanvasRenderingContext2d, HtmlImageElement, Url,
-};
 
-mod sets;
+use std::{cell::RefCell, rc::Rc};
+use libre_chess_lib::play::Play;
+use wasm_bindgen::{prelude::Closure, JsCast, JsValue};
+use web_sys::{console, js_sys, window, Blob, BlobPropertyBag, CanvasRenderingContext2d, HtmlImageElement, Url};
+
+use crate::render::RenderSettings;
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct AppSettings {

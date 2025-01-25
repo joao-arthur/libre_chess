@@ -1,3 +1,3 @@
-mod board;
-mod piece;
-mod play;
+pub mod board;
+pub mod piece;
+pub mod play;

@@ -66,10 +66,10 @@ fn naive_movements_black_pawn(board: &Board, pos: &Pos, color: &Color) -> Vec<Po
     result
 }
 
-fn white_pawn_en_passant(board: &Board, movements: Vec<Movement>, pos: &Pos) -> Vec<Pos> {
+fn white_pawn_en_passant(board: &Board, history: Vec<Movement>, pos: &Pos) -> Vec<Pos> {
     let mut result: Vec<Pos> = Vec::new();
     if pos.row == Row::_5 {
-        if let Some(mov) = movements.last() {
+        if let Some(mov) = history.last() {
             if mov.piece == Piece::of_str("♟") {
                 if Some(mov.from.clone()) == pos.try_of_rel_idx(-2, -1)
                     && Some(mov.to.clone()) == pos.try_of_rel_idx(0, -1)

@@ -15,14 +15,14 @@ pub struct Movement {
 }
 
 impl Movement {
-    fn try_of_str(piece: &str, from: &str, to: &str) -> Option<Self> {
+    pub fn try_of_str(piece: &str, from: &str, to: &str) -> Option<Self> {
         let piece = Piece::try_of_str(piece)?;
         let from = Pos::try_of_str(from)?;
         let to = Pos::try_of_str(to)?;
         Some(Movement { piece, from, to })
     }
 
-    fn of_str(p: &str, from: &str, to: &str) -> Self {
+    pub fn of_str(p: &str, from: &str, to: &str) -> Self {
         Self::try_of_str(p, from, to).unwrap()
     }
 }

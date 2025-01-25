@@ -1,4 +1,4 @@
-use super::{board::Board, piece::Piece};
+use libre_chess_lib::{board::Board, piece::Piece};
 
 #[derive(Debug, PartialEq)]
 pub struct RectF64 {
@@ -45,13 +45,11 @@ pub fn get_values_to_render(b: &Board, s: &RenderSettings) -> Vec<ValueToRender>
 
 #[cfg(test)]
 mod test {
-    use crate::domain::board::get_initial_white_board;
-
     use super::*;
 
     #[test]
     fn test_get_values_to_render() {
-        let u = get_initial_white_board();
+        let u = Board::get_initial_board();
         let s = RenderSettings { dim: 987 };
         assert_eq!(
             get_values_to_render(&u, &s),
