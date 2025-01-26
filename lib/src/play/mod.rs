@@ -56,7 +56,7 @@ fn is_black_turn(history: &Vec<Movement>) -> bool {
 //         return;
 //     }
 //     if is_check && aftermoveischeck() return;
-//     if let Some() 
+//     if let Some()
 //         capture
 //     else {
 //         after move
@@ -65,10 +65,8 @@ fn is_black_turn(history: &Vec<Movement>) -> bool {
 // }
 
 // fn get_moves(play: &Play, pos: &Pos) -> Vec<Pos> {
-//    
+//
 // }
-
-
 
 #[cfg(test)]
 mod test {
@@ -80,13 +78,25 @@ mod test {
     fn test_is_white_turn() {
         assert_eq!(is_white_turn(&Vec::new()), true);
         assert_eq!(is_white_turn(&Vec::from([Movement::of_str("♟", "D2", "D4")])), false);
-        assert_eq!(is_white_turn(&Vec::from([Movement::of_str("♟", "D2", "D4"), Movement::of_str("♟", "A2", "A3")])), true);
+        assert_eq!(
+            is_white_turn(&Vec::from([
+                Movement::of_str("♟", "D2", "D4"),
+                Movement::of_str("♟", "A2", "A3")
+            ])),
+            true
+        );
     }
 
     #[test]
     fn test_is_black_turn() {
         assert_eq!(is_black_turn(&Vec::new()), false);
         assert_eq!(is_black_turn(&Vec::from([Movement::of_str("♟", "D2", "D4")])), true);
-        assert_eq!(is_black_turn(&Vec::from([Movement::of_str("♟", "D2", "D4"),Movement::of_str("♟", "A2", "A3") ])), false);
+        assert_eq!(
+            is_black_turn(&Vec::from([
+                Movement::of_str("♟", "D2", "D4"),
+                Movement::of_str("♟", "A2", "A3")
+            ])),
+            false
+        );
     }
 }

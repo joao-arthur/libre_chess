@@ -1,4 +1,7 @@
-use libre_chess_lib::{board::{pos::Pos, Board}, piece::Piece};
+use libre_chess_lib::{
+    board::{pos::Pos, Board},
+    piece::Piece,
+};
 
 #[derive(Debug, PartialEq)]
 pub struct RectF64 {
@@ -8,7 +11,7 @@ pub struct RectF64 {
     pub y2: f64,
 }
 
-#[derive(Debug, PartialEq, Clone)]
+#[derive(Debug, PartialEq)]
 pub struct RenderSettings {
     pub dim: u16,
 }

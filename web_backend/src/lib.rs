@@ -1,16 +1,47 @@
-use app::{app_init, app_set_dimension};
+use app::{
+    app_add_on_change_listener, app_get_settings, app_init, app_set_board_color, app_set_board_set,
+    app_set_dim,
+};
+use board_color::get_board_color_presets;
+use board_set::get_board_set_presets;
+use serde::Serialize;
 use wasm_bindgen::{
     prelude::{wasm_bindgen, Closure},
-    JsCast,
+    JsCast, JsValue,
 };
-use web_sys::{console, CanvasRenderingContext2d, HtmlCanvasElement, MouseEvent};
+use web_sys::{console, js_sys::Function, CanvasRenderingContext2d, HtmlCanvasElement, MouseEvent};
 
 mod app;
-mod render;
-mod board_set;
 mod board_color;
+mod board_set;
+mod render;
 
-#[wasm_bindgen(js_name = "engineInit")]
+#[derive(Serialize)]
+pub struct Preset {
+    pub id: String,
+    pub name: String,
+}
+
+#[wasm_bindgen]
+pub struct EngineInfo {
+    board_set: String,
+    board_color: String,
+}
+
+#[wasm_bindgen]
+impl EngineInfo {
+    #[wasm_bindgen(getter)]
+    pub fn board_set(&self) -> String {
+        self.board_set.clone()
+    }
+
+    #[wasm_bindgen(getter)]
+    pub fn board_color(&self) -> String {
+        self.board_color.clone()
+    }
+}
+
+#[wasm_bindgen(js_name = "backendInit")]
 pub fn main_init(canvas: HtmlCanvasElement) {
     if let Ok(Some(context)) = canvas.get_context("2d") {
         app_init(context.dyn_into::<CanvasRenderingContext2d>().map_err(|_| ()).unwrap());
@@ -24,7 +55,48 @@ pub fn main_init(canvas: HtmlCanvasElement) {
     }
 }
 
-#[wasm_bindgen(js_name = "engineSetDimension")]
-pub fn main_set_dimension(dim: u16) {
-    app_set_dimension(dim);
+#[wasm_bindgen(js_name = "backendSetDimension")]
+pub fn main_set_dim(dim: u16) {
+    app_set_dim(dim);
+}
+
+#[wasm_bindgen(js_name = "backendSetBoardColor")]
+pub fn main_set_board_color(board_color: &str) {
+    app_set_board_color(board_color);
+}
+
+#[wasm_bindgen(js_name = "backendSetBoardSet")]
+pub fn main_set_board_set(board_set: &str) {
+    app_set_board_set(board_set);
+}
+
+#[wasm_bindgen(js_name = "backendGetSettings")]
+pub fn main_get_settings() -> EngineInfo {
+    let settings = app_get_settings();
+    EngineInfo { board_color: settings.board_color, board_set: settings.board_set }
+}
+
+#[wasm_bindgen(js_name = "backendGetBoardSetPresets")]
+pub fn main_get_board_set_presets() -> JsValue {
+    let groups: Vec<Preset> = get_board_set_presets()
+        .iter()
+        .map(|g| Preset { id: String::from(g.id), name: String::from(g.name) })
+        .collect();
+    serde_wasm_bindgen::to_value(&groups).unwrap()
+}
+
+#[wasm_bindgen(js_name = "backendGetBoardColorPresets")]
+pub fn main_get_board_color_presets() -> JsValue {
+    let groups: Vec<Preset> = get_board_color_presets()
+        .iter()
+        .map(|g| Preset { id: String::from(g.id), name: String::from(g.name) })
+        .collect();
+    serde_wasm_bindgen::to_value(&groups).unwrap()
+}
+
+#[wasm_bindgen(js_name = "backendAddOnChangeListener")]
+pub fn main_add_on_change_listener(cb: Function) {
+    app_add_on_change_listener(move |_| {
+        cb.call0(&JsValue::null()).unwrap();
+    });
 }

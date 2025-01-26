@@ -1,5 +1,5 @@
 use libre_chess_lib::{
-    board::Board,
+    board::{pos::Pos, Board},
     piece::{Color, Type},
     play::Play,
 };
@@ -10,18 +10,22 @@ use web_sys::{
 };
 
 use crate::{
+    board_color::{self, board_color_purple, try_get_board_color, BoardColor},
+    board_set::{board_set_normal_1, try_get_board_set, BoardSet},
     render::{get_values_to_render, RenderSettings},
-    sets::{set_1, set_maurizio_monge_fantasy},
 };
 
-#[derive(Debug, PartialEq, Clone)]
+#[derive(Debug, PartialEq)]
 pub struct AppSettings {
     pub render_settings: RenderSettings,
-    // pub board_set: BoardSet,
-    // pub board_colors:
-    // pub selected_squares: Vec<BoardPos>
+    pub board_set: BoardSet,
+    pub board_set_id: String,
+    pub board_color: BoardColor,
+    pub board_color_id: String,
+    pub selected_squares: Vec<Pos>,
 }
 
+#[derive(Debug, PartialEq)]
 pub struct Model {
     pub play: Play,
     pub settings: AppSettings,
@@ -32,14 +36,23 @@ impl Default for Model {
     fn default() -> Self {
         Model {
             play: Play::default(),
-            settings: AppSettings { render_settings: RenderSettings { dim: 0 } },
+            settings: AppSettings {
+                render_settings: RenderSettings { dim: 0 },
+                board_set: board_set_normal_1(),
+                board_set_id: String::from("normal_1"),
+                board_color: board_color_purple(),
+                board_color_id: String::from("purple"),
+                selected_squares: Vec::new(),
+            },
             context: None,
         }
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, PartialEq, Clone)]
 pub enum Prop {
+    BoardColor,
+    BoardSet,
     Dim,
 }
 
@@ -51,7 +64,7 @@ thread_local! {
     static LISTENERS: RefCell<Vec<Box<dyn FnMut(Prop) + 'static>>> = RefCell::new(Vec::new());
 }
 
-pub fn add_on_change_listener<F>(cb: F)
+pub fn app_add_on_change_listener<F>(cb: F)
 where
     F: FnMut(Prop) + 'static,
 {
@@ -66,21 +79,36 @@ fn on_change(param: Prop) {
     });
 }
 
+#[derive(Debug, PartialEq)]
+pub struct AppInfo {
+    pub board_set: String,
+    pub board_color: String,
+}
+
+pub fn app_get_settings() -> AppInfo {
+    MODEL.with(|i| {
+        let m = i.borrow();
+        AppInfo {
+            board_set: m.settings.board_set_id.clone(),
+            board_color: m.settings.board_color_id.clone(),
+        }
+    })
+}
 pub fn app_init(context: CanvasRenderingContext2d) {
     MODEL.with(|i| {
         let mut model = i.borrow_mut();
         model.context = Some(context);
         model.play.board = Board::get_initial_board();
     });
-    add_on_change_listener({
+    app_add_on_change_listener({
         move |prop| {
-            render();
+            app_render();
         }
     });
-    render();
+    app_render();
 }
 
-pub fn app_set_dimension(dim: u16) {
+pub fn app_set_dim(dim: u16) {
     MODEL.with(|i| {
         let mut m = i.borrow_mut();
         m.settings.render_settings.dim = dim;
@@ -88,8 +116,27 @@ pub fn app_set_dimension(dim: u16) {
     on_change(Prop::Dim);
 }
 
-const BLACK: &str = "#b88762";
-const WHITE: &str = "#edd6b0";
+pub fn app_set_board_color(board_color: &str) {
+    if let Some(preset) = try_get_board_color(board_color) {
+        MODEL.with(|i| {
+            let mut m = i.borrow_mut();
+            m.settings.board_color = preset;
+            m.settings.board_color_id = String::from(board_color);
+        });
+        on_change(Prop::BoardColor);
+    }
+}
+
+pub fn app_set_board_set(board_set: &str) {
+    if let Some(preset) = try_get_board_set(board_set) {
+        MODEL.with(|i| {
+            let mut m = i.borrow_mut();
+            m.settings.board_set = preset;
+            m.settings.board_set_id = String::from(board_set);
+        });
+        on_change(Prop::BoardSet);
+    }
+}
 
 pub fn app_render() {
     MODEL.with(|i| {
@@ -98,6 +145,13 @@ pub fn app_render() {
         let settings = &m.settings;
         let context = &m.context;
         if let Some(context) = context {
+            context.set_fill_style(&"white".into());
+            context.fill_rect(
+                0.0,
+                0.0,
+                settings.render_settings.dim as f64,
+                settings.render_settings.dim as f64,
+            );
             let dimmm = settings.render_settings.dim as f64;
             let cell_size = dimmm / 8.0;
             let mut acc = 0;
@@ -105,9 +159,9 @@ pub fn app_render() {
                 acc += 1;
                 for col in 0..8 {
                     if acc % 2 == 0 {
-                        context.set_fill_style(&BLACK.into());
+                        context.set_fill_style(&settings.board_color.dark.into());
                     } else {
-                        context.set_fill_style(&WHITE.into());
+                        context.set_fill_style(&settings.board_color.light.into());
                     }
                     acc += 1;
                     context.fill_rect(
@@ -119,25 +173,24 @@ pub fn app_render() {
                 }
             }
             let values_to_render = get_values_to_render(board, &settings.render_settings);
-            let set_ = set_1();
             let window = window().unwrap();
             for v in values_to_render {
                 let piece_str = match v.p.c {
                     Color::White => match v.p.t {
-                        Type::Rook => &set_.wr,
-                        Type::Knight => &set_.wn,
-                        Type::Bishop => &set_.wb,
-                        Type::Queen => &set_.wq,
-                        Type::King => &set_.wk,
-                        Type::Pawn => &set_.wp,
+                        Type::Rook => &settings.board_set.wr,
+                        Type::Knight => &settings.board_set.wn,
+                        Type::Bishop => &settings.board_set.wb,
+                        Type::Queen => &settings.board_set.wq,
+                        Type::King => &settings.board_set.wk,
+                        Type::Pawn => &settings.board_set.wp,
                     },
                     Color::Black => match v.p.t {
-                        Type::Rook => &set_.br,
-                        Type::Knight => &set_.bn,
-                        Type::Bishop => &set_.bb,
-                        Type::Queen => &set_.bq,
-                        Type::King => &set_.bk,
-                        Type::Pawn => &set_.bp,
+                        Type::Rook => &settings.board_set.br,
+                        Type::Knight => &settings.board_set.bn,
+                        Type::Bishop => &settings.board_set.bb,
+                        Type::Queen => &settings.board_set.bq,
+                        Type::King => &settings.board_set.bk,
+                        Type::Pawn => &settings.board_set.bp,
                     },
                 };
                 let blob = Blob::new_with_str_sequence_and_options(
@@ -162,7 +215,7 @@ pub fn app_render() {
                                 v.rect.y2 - v.rect.y1,
                             )
                             .unwrap();
-                        Url::revoke_object_url(&url).unwrap();
+                        // Url::revoke_object_url(&url).unwrap();
                     }
                 }) as Box<dyn FnMut()>);
                 img.set_onload(Some(closure.as_ref().unchecked_ref()));
