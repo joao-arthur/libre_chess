@@ -7,7 +7,8 @@ use web_sys::{console, CanvasRenderingContext2d, HtmlCanvasElement, MouseEvent};
 
 mod app;
 mod render;
-mod sets;
+mod board_set;
+mod board_color;
 
 #[wasm_bindgen(js_name = "engineInit")]
 pub fn main_init(canvas: HtmlCanvasElement) {
