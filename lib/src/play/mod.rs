@@ -1,10 +1,13 @@
 use std::collections::HashMap;
 
-use movement::Movement;
+use movement::{
+    bishop::naive_movements_bishop, king::naive_movements_king, knight::naive_movements_knight,
+    pawn::naive_movements_pawn, queen::naive_movements_queen, rook::naive_movements_rook, Movement,
+};
 
 use crate::{
     board::{pos::Pos, Board},
-    piece::Piece,
+    piece::{Color, Piece, Type},
 };
 
 mod movement;
@@ -64,9 +67,26 @@ fn is_black_turn(history: &Vec<Movement>) -> bool {
 //     }
 // }
 
-// fn get_moves(play: &Play, pos: &Pos) -> Vec<Pos> {
-//
-// }
+pub fn get_moves(play: &Play, pos: &Pos) -> Vec<Pos> {
+    if let Some(piece) = play.board[pos.clone()] {
+        if piece.c == Color::Black && !is_black_turn(&play.history) {
+            return Vec::new();
+        }
+        if piece.c == Color::White && !is_white_turn(&play.history) {
+            return Vec::new();
+        }
+        match piece.t {
+            Type::Rook => naive_movements_rook(&play.board, pos, &piece.c),
+            Type::Knight => naive_movements_knight(&play.board, pos, &piece.c),
+            Type::Bishop => naive_movements_bishop(&play.board, pos, &piece.c),
+            Type::Queen => naive_movements_queen(&play.board, pos, &piece.c),
+            Type::King => naive_movements_king(&play.board, pos, &piece.c),
+            Type::Pawn => naive_movements_pawn(&play.board, pos, &piece.c),
+        }
+    } else {
+        Vec::new()
+    }
+}
 
 #[cfg(test)]
 mod test {

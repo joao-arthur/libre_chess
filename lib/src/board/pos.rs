@@ -1,6 +1,6 @@
 use super::{col::Col, row::Row};
 
-#[derive(Debug, PartialEq, Clone)]
+#[derive(Debug, PartialEq, Eq, Clone, Hash)]
 pub struct Pos {
     pub row: Row,
     pub col: Col,

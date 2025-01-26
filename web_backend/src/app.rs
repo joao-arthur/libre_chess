@@ -1,12 +1,15 @@
+use core::f64;
 use libre_chess_lib::{
     board::{pos::Pos, Board},
     piece::{Color, Type},
-    play::Play,
+    play::{get_moves, Play},
 };
-use std::{cell::RefCell, rc::Rc};
+use std::{cell::RefCell, collections::HashSet, f64::consts::PI, hash::Hash, rc::Rc};
 use wasm_bindgen::{prelude::Closure, JsCast, JsValue};
 use web_sys::{
-    console, js_sys, window, Blob, BlobPropertyBag, CanvasRenderingContext2d, HtmlImageElement, Url,
+    console,
+    js_sys::{self, Math},
+    window, Blob, BlobPropertyBag, CanvasRenderingContext2d, HtmlImageElement, Url,
 };
 
 use crate::{
@@ -22,7 +25,9 @@ pub struct AppSettings {
     pub board_set_id: String,
     pub board_color: BoardColor,
     pub board_color_id: String,
-    pub selected_squares: Vec<Pos>,
+    pub selected_squares: HashSet<Pos>,
+    pub selected_piece: Option<Pos>,
+    pub selected_piece_movements: HashSet<Pos>,
 }
 
 #[derive(Debug, PartialEq)]
@@ -42,7 +47,9 @@ impl Default for Model {
                 board_set_id: String::from("normal_1"),
                 board_color: board_color_purple(),
                 board_color_id: String::from("purple"),
-                selected_squares: Vec::new(),
+                selected_squares: HashSet::new(),
+                selected_piece: None,
+                selected_piece_movements: HashSet::new(),
             },
             context: None,
         }
@@ -145,13 +152,6 @@ pub fn app_render() {
         let settings = &m.settings;
         let context = &m.context;
         if let Some(context) = context {
-            context.set_fill_style(&"white".into());
-            context.fill_rect(
-                0.0,
-                0.0,
-                settings.render_settings.dim as f64,
-                settings.render_settings.dim as f64,
-            );
             let dimmm = settings.render_settings.dim as f64;
             let cell_size = dimmm / 8.0;
             let mut acc = 0;
@@ -221,12 +221,67 @@ pub fn app_render() {
                 img.set_onload(Some(closure.as_ref().unchecked_ref()));
                 closure.forget();
             }
+            if settings.selected_squares.len() > 0 {
+                context.set_fill_style(&"#f0ec0088".into());
+                settings.selected_squares.iter().for_each(|pos| {
+                    context.fill_rect(
+                        pos.col.to_idx() as f64 * cell_size,
+                        pos.row.to_idx() as f64 * cell_size,
+                        cell_size,
+                        cell_size,
+                    );
+                })
+            }
+            if settings.selected_piece_movements.len() > 0 {
+                context.set_fill_style(&"#00000088".into());
+                settings.selected_piece_movements.iter().for_each(|pos| {
+                    context.begin_path();
+                    let _ = context.arc(
+                        pos.col.to_idx() as f64 * cell_size + cell_size / 2.0,
+                        pos.row.to_idx() as f64 * cell_size + cell_size / 2.0,
+                        cell_size / (2.0 * f64::consts::PI),
+                        0.0,
+                        2.0 * f64::consts::PI,
+                    );
+                    context.fill();
+                })
+            }
         }
     });
 }
 
-pub fn app_click() {
-    // x, y
-    // get the moves for the piece, implement this function on lib
-    // select the square
+pub fn app_click(row: u16, col: u16) {
+    MODEL.with(|i| {
+        let mut m = i.borrow_mut();
+        let dim = m.settings.render_settings.dim as f64;
+        let cell_size = dim / 8.0;
+        let cell_row = ((row as f64) / cell_size).floor() as u8;
+        let cell_col = ((col as f64) / cell_size).floor() as u8;
+        if let Some(pos) = Pos::try_of_idx(cell_row, cell_col) {
+            if let Some(piece) = m.play.board[pos.clone()] {
+                if m.settings.selected_piece == Some(pos.clone()) {
+                    m.settings.selected_piece = None;
+                    m.settings.selected_piece_movements = HashSet::new();
+                } else {
+                    m.settings.selected_squares.clear();
+                    let movements = get_moves(&m.play, &pos);
+                    m.settings.selected_piece = Some(pos.clone());
+                    m.settings.selected_piece_movements = movements.into_iter().collect();
+                }
+            } else {
+                if m.settings.selected_piece_movements.contains(&pos) {
+                    // move piece
+                } else {
+                    if m.settings.selected_squares.contains(&pos) {
+                        m.settings.selected_squares.remove(&pos);
+                    } else {
+                        m.settings.selected_squares.insert(pos);
+                        m.settings.selected_piece = None;
+                        m.settings.selected_piece_movements = HashSet::new();
+                    }
+                }
+            }
+        }
+    });
+    on_change(Prop::BoardSet);
 }

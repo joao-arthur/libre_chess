@@ -5,7 +5,7 @@ use crate::{
 
 use super::Movement;
 
-fn naive_movements_pawn(board: &Board, pos: &Pos, color: &Color) -> Vec<Pos> {
+pub fn naive_movements_pawn(board: &Board, pos: &Pos, color: &Color) -> Vec<Pos> {
     match color {
         Color::White => naive_movements_white_pawn(board, pos, color),
         Color::Black => naive_movements_black_pawn(board, pos, color),

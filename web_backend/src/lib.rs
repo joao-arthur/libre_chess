@@ -1,6 +1,6 @@
 use app::{
-    app_add_on_change_listener, app_get_settings, app_init, app_set_board_color, app_set_board_set,
-    app_set_dim,
+    app_add_on_change_listener, app_click, app_get_settings, app_init, app_set_board_color,
+    app_set_board_set, app_set_dim,
 };
 use board_color::get_board_color_presets;
 use board_set::get_board_set_presets;
@@ -45,10 +45,14 @@ impl EngineInfo {
 pub fn main_init(canvas: HtmlCanvasElement) {
     if let Ok(Some(context)) = canvas.get_context("2d") {
         app_init(context.dyn_into::<CanvasRenderingContext2d>().map_err(|_| ()).unwrap());
-        let closure = Closure::wrap(Box::new(move |event: MouseEvent| {
-            web_sys::console::log_1(
-                &format!("Clicked at: {}, {}", event.client_x(), event.client_y()).into(),
-            );
+        let closure = Closure::wrap(Box::new(move |e: MouseEvent| {
+            if let Some(Ok(element)) =
+                e.current_target().map(|target| target.dyn_into::<HtmlCanvasElement>())
+            {
+                let x = e.page_x() - element.offset_left();
+                let y = e.page_y() - element.offset_top();
+                app_click(y as u16, x as u16);
+            }
         }) as Box<dyn FnMut(_)>);
         canvas.add_event_listener_with_callback("click", closure.as_ref().unchecked_ref()).unwrap();
         closure.forget();
