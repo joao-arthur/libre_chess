@@ -10,7 +10,7 @@ use crate::{
     piece::{Color, Piece, Type},
 };
 
-mod movement;
+pub mod movement;
 
 #[derive(Debug, PartialEq)]
 pub struct Player {
@@ -51,21 +51,30 @@ fn is_black_turn(history: &Vec<Movement>) -> bool {
     history.len() % 2 == 1
 }
 
-// fn move_piece(play: &Play, pos: &PlayMove) {
-//     if pos.p.c == Color::Black && !is_black_turn(p)  {
-//         return;
-//     }
-//     if pos.p.c == Color::White && !is_white_turn(p)  {
-//         return;
-//     }
-//     if is_check && aftermoveischeck() return;
-//     if let Some()
-//         capture
-//     else {
-//         after move
-//         if 50 moves with no capture return MoveResult::Stalemate
-//     }
-// }
+pub fn move_piece(play: &mut Play, movement: Movement) {
+    if movement.piece.c == Color::Black && !is_black_turn(&play.history) {
+        return;
+    }
+    if movement.piece.c == Color::White && !is_white_turn(&play.history) {
+        return;
+    }
+    if let Some(captured) = play.board[movement.to.clone()] {
+        match movement.piece.c {
+            Color::White => play.white_player.captured_pieces.push(captured),
+            Color::Black => play.black_player.captured_pieces.push(captured),
+        }
+    }
+    play.board[movement.from.clone()] = None;
+    play.board[movement.to.clone()] = Some(movement.piece);
+    play.history.push(movement);
+    // if is_check && aftermoveischeck() return;
+    // if let Some()
+    //     capture
+    // else {
+    //     after move
+    //     if 50 moves with no capture return MoveResult::Stalemate
+    // }
+}
 
 pub fn get_moves(play: &Play, pos: &Pos) -> Vec<Pos> {
     if let Some(piece) = play.board[pos.clone()] {

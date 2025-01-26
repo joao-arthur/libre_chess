@@ -9,9 +9,9 @@ pub mod rook;
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct Movement {
-    piece: Piece,
-    from: Pos,
-    to: Pos,
+    pub piece: Piece,
+    pub from: Pos,
+    pub to: Pos,
 }
 
 impl Movement {

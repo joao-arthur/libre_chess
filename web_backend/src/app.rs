@@ -2,7 +2,7 @@ use core::f64;
 use libre_chess_lib::{
     board::{pos::Pos, Board},
     piece::{Color, Type},
-    play::{get_moves, Play},
+    play::{get_moves, move_piece, Play, movement::Movement},
 };
 use std::{cell::RefCell, collections::HashSet, f64::consts::PI, hash::Hash, rc::Rc};
 use wasm_bindgen::{prelude::Closure, JsCast, JsValue};
@@ -258,26 +258,42 @@ pub fn app_click(row: u16, col: u16) {
         let cell_row = ((row as f64) / cell_size).floor() as u8;
         let cell_col = ((col as f64) / cell_size).floor() as u8;
         if let Some(pos) = Pos::try_of_idx(cell_row, cell_col) {
-            if let Some(piece) = m.play.board[pos.clone()] {
-                if m.settings.selected_piece == Some(pos.clone()) {
-                    m.settings.selected_piece = None;
-                    m.settings.selected_piece_movements = HashSet::new();
-                } else {
-                    m.settings.selected_squares.clear();
-                    let movements = get_moves(&m.play, &pos);
-                    m.settings.selected_piece = Some(pos.clone());
-                    m.settings.selected_piece_movements = movements.into_iter().collect();
-                }
+            if m.settings.selected_piece_movements.contains(&pos) {
+                let piece = m.play.board[m.settings.selected_piece.clone().unwrap()].unwrap();
+                let from = m.settings.selected_piece.clone().unwrap();
+                let to = pos;
+                move_piece(
+                    &mut m.play,
+                    Movement {
+                        piece,
+                        from,
+                        to
+                    }
+                );
+                m.settings.selected_piece = None;
+                m.settings.selected_piece_movements = HashSet::new();
+                m.settings.selected_squares = HashSet::new()
             } else {
-                if m.settings.selected_piece_movements.contains(&pos) {
-                    // move piece
-                } else {
-                    if m.settings.selected_squares.contains(&pos) {
-                        m.settings.selected_squares.remove(&pos);
-                    } else {
-                        m.settings.selected_squares.insert(pos);
+                if let Some(piece) = m.play.board[pos.clone()] {
+                    if m.settings.selected_piece == Some(pos.clone()) {
                         m.settings.selected_piece = None;
                         m.settings.selected_piece_movements = HashSet::new();
+                    } else {
+                        m.settings.selected_squares.clear();
+                        let movements = get_moves(&m.play, &pos);
+                        m.settings.selected_piece = Some(pos.clone());
+                        m.settings.selected_piece_movements = movements.into_iter().collect();
+                    }
+                } else {
+                    if m.settings.selected_piece.is_some() {
+                        m.settings.selected_piece = None;
+                        m.settings.selected_piece_movements = HashSet::new();
+                    } else {
+                        if m.settings.selected_squares.contains(&pos) {
+                            m.settings.selected_squares.remove(&pos);
+                        } else {
+                            m.settings.selected_squares.insert(pos);
+                        }
                     }
                 }
             }
