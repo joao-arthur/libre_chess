@@ -1,6 +1,7 @@
 use crate::{
     board::{pos::Pos, row::Row, Board},
-    piece::{Color, Piece},
+    color::Color,
+    piece::Piece,
 };
 
 use super::Movement;

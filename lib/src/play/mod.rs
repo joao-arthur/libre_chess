@@ -1,72 +1,99 @@
-use std::collections::HashMap;
+use std::{
+    collections::{HashMap, HashSet},
+    hash::Hash,
+};
 
 use movement::{
-    bishop::naive_movements_bishop, king::naive_movements_king, knight::naive_movements_knight,
-    pawn::naive_movements_pawn, queen::naive_movements_queen, rook::naive_movements_rook, Movement,
+    // bishop::naive_movements_bishop,
+    get_naive_movements,
+    get_naive_movements_piece,
+    Movement,
 };
+use player::Player;
 
 use crate::{
     board::{pos::Pos, Board},
-    piece::{Color, Piece, Type},
+    color::Color,
+    piece::Type,
 };
 
 pub mod movement;
-
-#[derive(Debug, PartialEq)]
-pub struct Player {
-    captured_pieces: Vec<Piece>,
-    possible_movements: HashMap<Piece, Vec<Pos>>,
-}
+mod player;
 
 #[derive(Debug, PartialEq)]
 pub struct Play {
     pub board: Board,
+    pub players: HashMap<Color, Player>,
     pub history: Vec<Movement>,
-    pub white_player: Player,
-    pub black_player: Player,
 }
 
 impl Default for Play {
     fn default() -> Self {
         Play {
             board: Board::default(),
+            players: HashMap::from([
+                (
+                    Color::White,
+                    Player {
+                        color: Color::White,
+                        captured_pieces: Vec::new(),
+                        possible_movements: HashSet::new(),
+                    },
+                ),
+                (
+                    Color::Black,
+                    Player {
+                        color: Color::Black,
+                        captured_pieces: Vec::new(),
+                        possible_movements: HashSet::new(),
+                    },
+                ),
+            ]),
             history: Vec::new(),
-            white_player: Player {
-                captured_pieces: Vec::new(),
-                possible_movements: HashMap::new(),
-            },
-            black_player: Player {
-                captured_pieces: Vec::new(),
-                possible_movements: HashMap::new(),
-            },
         }
     }
 }
 
-fn is_white_turn(history: &Vec<Movement>) -> bool {
-    history.len() % 2 == 0
+fn set_board(play: &mut Play, board: Board) {
+    play.board = board;
+    for player in play.players.iter_mut() {
+        player.1.possible_movements = get_naive_movements(&play.board, &player.0);
+    }
 }
 
-fn is_black_turn(history: &Vec<Movement>) -> bool {
-    history.len() % 2 == 1
+fn get_turn(play: &Play) -> Color {
+    if play.history.len() % 2 == 0 {
+        Color::White
+    } else {
+        Color::Black
+    }
 }
 
 pub fn move_piece(play: &mut Play, movement: Movement) {
-    if movement.piece.c == Color::Black && !is_black_turn(&play.history) {
-        return;
-    }
-    if movement.piece.c == Color::White && !is_white_turn(&play.history) {
+    let turn = get_turn(play);
+    if movement.piece.c != turn {
         return;
     }
     if let Some(captured) = play.board[movement.to.clone()] {
-        match movement.piece.c {
-            Color::White => play.white_player.captured_pieces.push(captured),
-            Color::Black => play.black_player.captured_pieces.push(captured),
+        if let Some(player) = play.players.get_mut(&movement.piece.c) {
+            player.captured_pieces.push(captured);
         }
     }
     play.board[movement.from.clone()] = None;
     play.board[movement.to.clone()] = Some(movement.piece);
+    if let Some(player) = play.players.get_mut(&movement.piece.c) {
+        player.possible_movements = get_naive_movements(&play.board, &player.color);
+    }
     play.history.push(movement);
+    // match movement.piece.c {
+    //     Color::White => {
+    //         play.white_player.possible_movements = get_naive_movements_piece();
+    //     },
+    //     Color::Black => {
+    //         play.black_player.possible_movements = get_naive_movements_piece();
+    //     },
+    // }
+
     // if is_check && aftermoveischeck() return;
     // if let Some()
     //     capture
@@ -78,23 +105,43 @@ pub fn move_piece(play: &mut Play, movement: Movement) {
 
 pub fn get_moves(play: &Play, pos: &Pos) -> Vec<Pos> {
     if let Some(piece) = play.board[pos.clone()] {
-        if piece.c == Color::Black && !is_black_turn(&play.history) {
+        let turn = get_turn(play);
+        if piece.c != turn {
             return Vec::new();
         }
-        if piece.c == Color::White && !is_white_turn(&play.history) {
-            return Vec::new();
-        }
-        match piece.t {
-            Type::Rook => naive_movements_rook(&play.board, pos, &piece.c),
-            Type::Knight => naive_movements_knight(&play.board, pos, &piece.c),
-            Type::Bishop => naive_movements_bishop(&play.board, pos, &piece.c),
-            Type::Queen => naive_movements_queen(&play.board, pos, &piece.c),
-            Type::King => naive_movements_king(&play.board, pos, &piece.c),
-            Type::Pawn => naive_movements_pawn(&play.board, pos, &piece.c),
-        }
+        get_naive_movements_piece(&play.board, pos, &piece)
+        // add special movements here!
+        // check!
+        // en passant!
+        // castling!
     } else {
         Vec::new()
     }
+}
+
+pub fn is_in_check(play: &Play) -> bool {
+    let turn = get_turn(play);
+    for row in 0..8 {
+        for col in 0..8 {
+            if let Some(pos) = Pos::try_of_idx(row, col) {
+                if let Some(piece) = play.board[pos.clone()] {
+                    if piece.c == turn {
+                        if piece.t == Type::King {
+                            for player in play.players.values() {
+                                if player.color != turn {
+                                    if player.possible_movements.contains(&pos) {
+                                        return true;
+                                    }
+                                }
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    false
 }
 
 #[cfg(test)]
@@ -104,28 +151,9 @@ mod test {
     use crate::play::movement::Movement;
 
     #[test]
-    fn test_is_white_turn() {
-        assert_eq!(is_white_turn(&Vec::new()), true);
-        assert_eq!(is_white_turn(&Vec::from([Movement::of_str("♟", "D2", "D4")])), false);
-        assert_eq!(
-            is_white_turn(&Vec::from([
-                Movement::of_str("♟", "D2", "D4"),
-                Movement::of_str("♟", "A2", "A3")
-            ])),
-            true
-        );
-    }
-
-    #[test]
-    fn test_is_black_turn() {
-        assert_eq!(is_black_turn(&Vec::new()), false);
-        assert_eq!(is_black_turn(&Vec::from([Movement::of_str("♟", "D2", "D4")])), true);
-        assert_eq!(
-            is_black_turn(&Vec::from([
-                Movement::of_str("♟", "D2", "D4"),
-                Movement::of_str("♟", "A2", "A3")
-            ])),
-            false
-        );
+    fn test_get_turn() {
+        assert_eq!(get_turn(&Play { history: Vec::new(), ..Default::default() }), Color::White);
+        assert_eq!(get_turn(&Play { history: Vec::from([Movement::of_str("♟", "D2", "D4")]), ..Default::default() }), Color::Black);
+        assert_eq!(get_turn(&Play { history: Vec::from([Movement::of_str("♟", "D2", "D4"), Movement::of_str("♟", "A2", "A3") ]), ..Default::default() }), Color::White);
     }
 }

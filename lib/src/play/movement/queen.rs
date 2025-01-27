@@ -1,6 +1,6 @@
 use crate::{
     board::{pos::Pos, Board},
-    piece::Color,
+    color::Color,
 };
 
 use super::{bishop::naive_movements_bishop, rook::naive_movements_rook};

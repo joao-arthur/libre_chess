@@ -1,6 +1,6 @@
 use crate::{
     board::{pos::Pos, Board},
-    piece::Color,
+    color::Color,
 };
 
 pub fn naive_movements_rook(board: &Board, pos: &Pos, color: &Color) -> Vec<Pos> {

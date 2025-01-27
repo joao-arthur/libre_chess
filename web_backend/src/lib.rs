@@ -9,7 +9,7 @@ use wasm_bindgen::{
     prelude::{wasm_bindgen, Closure},
     JsCast, JsValue,
 };
-use web_sys::{console, js_sys::Function, CanvasRenderingContext2d, HtmlCanvasElement, MouseEvent};
+use web_sys::{js_sys::Function, CanvasRenderingContext2d, HtmlCanvasElement, MouseEvent};
 
 mod app;
 mod board_color;

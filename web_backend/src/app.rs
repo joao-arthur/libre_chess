@@ -1,8 +1,9 @@
 use core::f64;
 use libre_chess_lib::{
     board::{pos::Pos, Board},
-    piece::{Color, Type},
-    play::{get_moves, move_piece, Play, movement::Movement},
+    color::Color,
+    piece::Type,
+    play::{get_moves, is_in_check, move_piece, movement::Movement, Play},
 };
 use std::{cell::RefCell, collections::HashSet, f64::consts::PI, hash::Hash, rc::Rc};
 use wasm_bindgen::{prelude::Closure, JsCast, JsValue};
@@ -233,7 +234,7 @@ pub fn app_render() {
                 })
             }
             if settings.selected_piece_movements.len() > 0 {
-                context.set_fill_style(&"#00000088".into());
+                context.set_fill_style(&"#3d3d3dee".into());
                 settings.selected_piece_movements.iter().for_each(|pos| {
                     context.begin_path();
                     let _ = context.arc(
@@ -262,14 +263,8 @@ pub fn app_click(row: u16, col: u16) {
                 let piece = m.play.board[m.settings.selected_piece.clone().unwrap()].unwrap();
                 let from = m.settings.selected_piece.clone().unwrap();
                 let to = pos;
-                move_piece(
-                    &mut m.play,
-                    Movement {
-                        piece,
-                        from,
-                        to
-                    }
-                );
+                console::log_1(&format!("is in check {}", is_in_check(&m.play)).into());
+                move_piece(&mut m.play, Movement { piece, from, to });
                 m.settings.selected_piece = None;
                 m.settings.selected_piece_movements = HashSet::new();
                 m.settings.selected_squares = HashSet::new()

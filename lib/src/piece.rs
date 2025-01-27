@@ -1,3 +1,5 @@
+use crate::color::Color;
+
 #[derive(Debug, PartialEq, Eq, Clone, Copy, Hash)]
 pub enum Type {
     Rook,
@@ -6,12 +8,6 @@ pub enum Type {
     Queen,
     King,
     Pawn,
-}
-
-#[derive(Debug, PartialEq, Eq, Clone, Copy, Hash)]
-pub enum Color {
-    White,
-    Black,
 }
 
 #[derive(Debug, PartialEq, Eq, Clone, Copy, Hash)]
