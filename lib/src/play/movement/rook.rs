@@ -13,7 +13,7 @@ pub fn naive_movements_rook(board: &Board, pos: &Pos, color: &Color) -> Vec<Pos>
             rel_row += modifier[0];
             rel_col += modifier[1];
             if let Some(curr_pos) = pos.try_of_rel_idx(rel_row, rel_col) {
-                if let Some(curr_piece) = board[curr_pos.clone()] {
+                if let Some(curr_piece) = board.get(&curr_pos) {
                     if &curr_piece.c == color {
                         break;
                     } else {
@@ -33,7 +33,7 @@ pub fn naive_movements_rook(board: &Board, pos: &Pos, color: &Color) -> Vec<Pos>
 
 #[cfg(test)]
 mod test {
-    use crate::board::Board;
+    use crate::board;
 
     use super::*;
 
@@ -41,7 +41,7 @@ mod test {
     fn test_naive_movements_rook_empty_board() {
         assert_eq!(
             naive_movements_rook(
-                &Board::of_str([
+                &board::of_str([
                     "        ",
                     "        ",
                     "        ",
@@ -80,7 +80,7 @@ mod test {
     fn test_naive_movements_rook_edge() {
         assert_eq!(
             naive_movements_rook(
-                &Board::of_str([
+                &board::of_str([
                     "♜       ",
                     "        ",
                     "        ",
@@ -117,7 +117,7 @@ mod test {
     fn test_naive_movements_rook_with_capture() {
         assert_eq!(
             naive_movements_rook(
-                &Board::of_str([
+                &board::of_str([
                     "        ",
                     "   ♗    ",
                     "        ",
@@ -149,7 +149,7 @@ mod test {
         );
         assert_eq!(
             naive_movements_rook(
-                &Board::of_str([
+                &board::of_str([
                     "        ",
                     "   ♝    ",
                     "        ",

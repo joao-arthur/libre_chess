@@ -17,7 +17,7 @@ pub fn naive_movements_knight(board: &Board, pos: &Pos, color: &Color) -> Vec<Po
     ];
     for curr_pos in base {
         if let Some(curr_pos) = curr_pos {
-            if let Some(curr_piece) = board[curr_pos.clone()] {
+            if let Some(curr_piece) = board.get(&curr_pos) {
                 if &curr_piece.c != color {
                     result.push(curr_pos);
                 }
@@ -31,7 +31,7 @@ pub fn naive_movements_knight(board: &Board, pos: &Pos, color: &Color) -> Vec<Po
 
 #[cfg(test)]
 mod test {
-    use crate::board::Board;
+    use crate::board;
 
     use super::*;
 
@@ -39,7 +39,7 @@ mod test {
     fn test_naive_movements_knight_empty_board() {
         assert_eq!(
             naive_movements_knight(
-                &Board::of_str([
+                &board::of_str([
                     "        ",
                     "        ",
                     "        ",
@@ -69,7 +69,7 @@ mod test {
     fn test_naive_movements_knight_edge() {
         assert_eq!(
             naive_movements_knight(
-                &Board::of_str([
+                &board::of_str([
                     "        ",
                     "        ",
                     "        ",
@@ -90,7 +90,7 @@ mod test {
     fn test_naive_movements_knight_with_capture() {
         assert_eq!(
             naive_movements_knight(
-                &Board::of_str([
+                &board::of_str([
                     "        ",
                     "        ",
                     "    ♖   ",
@@ -115,7 +115,7 @@ mod test {
         );
         assert_eq!(
             naive_movements_knight(
-                &Board::of_str([
+                &board::of_str([
                     "        ",
                     "        ",
                     "    ♜   ",

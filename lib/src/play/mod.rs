@@ -3,12 +3,7 @@ use std::{
     hash::Hash,
 };
 
-use movement::{
-    // bishop::naive_movements_bishop,
-    get_naive_movements,
-    get_naive_movements_piece,
-    Movement,
-};
+use movement::{get_naive_movements, get_naive_movements_piece, Movement};
 use player::Player;
 
 use crate::{
@@ -74,13 +69,12 @@ pub fn move_piece(play: &mut Play, movement: Movement) {
     if movement.piece.c != turn {
         return;
     }
-    if let Some(captured) = play.board[movement.to.clone()] {
+    play.board.remove(&movement.from);
+    if let Some(captured) = play.board.insert(movement.to.clone(), movement.piece) {
         if let Some(player) = play.players.get_mut(&movement.piece.c) {
             player.captured_pieces.push(captured);
         }
     }
-    play.board[movement.from.clone()] = None;
-    play.board[movement.to.clone()] = Some(movement.piece);
     if let Some(player) = play.players.get_mut(&movement.piece.c) {
         player.possible_movements = get_naive_movements(&play.board, &player.color);
     }
@@ -104,7 +98,7 @@ pub fn move_piece(play: &mut Play, movement: Movement) {
 }
 
 pub fn get_moves(play: &Play, pos: &Pos) -> Vec<Pos> {
-    if let Some(piece) = play.board[pos.clone()] {
+    if let Some(piece) = play.board.get(&pos) {
         let turn = get_turn(play);
         if piece.c != turn {
             return Vec::new();
@@ -124,7 +118,7 @@ pub fn is_in_check(play: &Play) -> bool {
     for row in 0..8 {
         for col in 0..8 {
             if let Some(pos) = Pos::try_of_idx(row, col) {
-                if let Some(piece) = play.board[pos.clone()] {
+                if let Some(piece) = play.board.get(&pos) {
                     if piece.c == turn {
                         if piece.t == Type::King {
                             for player in play.players.values() {
@@ -153,7 +147,22 @@ mod test {
     #[test]
     fn test_get_turn() {
         assert_eq!(get_turn(&Play { history: Vec::new(), ..Default::default() }), Color::White);
-        assert_eq!(get_turn(&Play { history: Vec::from([Movement::of_str("♟", "D2", "D4")]), ..Default::default() }), Color::Black);
-        assert_eq!(get_turn(&Play { history: Vec::from([Movement::of_str("♟", "D2", "D4"), Movement::of_str("♟", "A2", "A3") ]), ..Default::default() }), Color::White);
+        assert_eq!(
+            get_turn(&Play {
+                history: Vec::from([Movement::of_str("♟", "D2", "D4")]),
+                ..Default::default()
+            }),
+            Color::Black
+        );
+        assert_eq!(
+            get_turn(&Play {
+                history: Vec::from([
+                    Movement::of_str("♟", "D2", "D4"),
+                    Movement::of_str("♟", "A2", "A3")
+                ]),
+                ..Default::default()
+            }),
+            Color::White
+        );
     }
 }

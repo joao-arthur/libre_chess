@@ -14,7 +14,7 @@ pub fn naive_movements_queen(board: &Board, pos: &Pos, color: &Color) -> Vec<Pos
 
 #[cfg(test)]
 mod test {
-    use crate::board::Board;
+    use crate::board;
 
     use super::*;
 
@@ -22,7 +22,7 @@ mod test {
     fn test_naive_movements_queen_empty_board() {
         assert_eq!(
             naive_movements_queen(
-                &Board::of_str([
+                &board::of_str([
                     "        ",
                     "        ",
                     "        ",
@@ -76,7 +76,7 @@ mod test {
     fn test_naive_movements_queen_edge() {
         assert_eq!(
             naive_movements_queen(
-                &Board::of_str([
+                &board::of_str([
                     "♛       ",
                     "        ",
                     "        ",
@@ -121,7 +121,7 @@ mod test {
     fn test_naive_movements_queen_with_capture() {
         assert_eq!(
             naive_movements_queen(
-                &Board::of_str([
+                &board::of_str([
                     "        ",
                     "  ♝     ",
                     "   ♖    ",
@@ -162,7 +162,7 @@ mod test {
         );
         assert_eq!(
             naive_movements_queen(
-                &Board::of_str([
+                &board::of_str([
                     "        ",
                     "  ♗     ",
                     "   ♜    ",

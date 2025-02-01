@@ -22,7 +22,7 @@ fn naive_movements_white_pawn(board: &Board, pos: &Pos, color: &Color) -> Vec<Po
     };
     for curr_pos in base {
         if let Some(curr_pos) = curr_pos {
-            if board[curr_pos.clone()].is_none() {
+            if board.get(&curr_pos).is_none() {
                 result.push(curr_pos);
             }
         }
@@ -30,7 +30,7 @@ fn naive_movements_white_pawn(board: &Board, pos: &Pos, color: &Color) -> Vec<Po
     let capture_base = [pos.try_of_rel_idx(-1, -1), pos.try_of_rel_idx(-1, 1)];
     for curr_pos in capture_base {
         if let Some(curr_pos) = curr_pos {
-            if let Some(curr_piece) = board[curr_pos.clone()] {
+            if let Some(curr_piece) = board.get(&curr_pos) {
                 if &curr_piece.c != color {
                     result.push(curr_pos);
                 }
@@ -49,7 +49,7 @@ fn naive_movements_black_pawn(board: &Board, pos: &Pos, color: &Color) -> Vec<Po
     };
     for curr_pos in base {
         if let Some(curr_pos) = curr_pos {
-            if board[curr_pos.clone()].is_none() {
+            if board.get(&curr_pos).is_none() {
                 result.push(curr_pos);
             }
         }
@@ -57,7 +57,7 @@ fn naive_movements_black_pawn(board: &Board, pos: &Pos, color: &Color) -> Vec<Po
     let capture_base = [pos.try_of_rel_idx(1, -1), pos.try_of_rel_idx(1, 1)];
     for curr_pos in capture_base {
         if let Some(curr_pos) = curr_pos {
-            if let Some(curr_piece) = board[curr_pos.clone()] {
+            if let Some(curr_piece) = board.get(&curr_pos) {
                 if &curr_piece.c != color {
                     result.push(curr_pos);
                 }
@@ -94,13 +94,15 @@ fn white_pawn_en_passant(board: &Board, history: Vec<Movement>, pos: &Pos) -> Ve
 
 #[cfg(test)]
 mod test {
+    use crate::board;
+
     use super::*;
 
     #[test]
     fn test_pawn_movements_empty_board() {
         assert_eq!(
             naive_movements_pawn(
-                &Board::of_str([
+                &board::of_str([
                     "        ",
                     "        ",
                     "        ",
@@ -117,7 +119,7 @@ mod test {
         );
         assert_eq!(
             naive_movements_pawn(
-                &Board::of_str([
+                &board::of_str([
                     "        ",
                     "        ",
                     "        ",
@@ -138,7 +140,7 @@ mod test {
     fn test_pawn_movements_first_move() {
         assert_eq!(
             naive_movements_pawn(
-                &Board::of_str([
+                &board::of_str([
                     "        ",
                     "        ",
                     "        ",
@@ -155,7 +157,7 @@ mod test {
         );
         assert_eq!(
             naive_movements_pawn(
-                &Board::of_str([
+                &board::of_str([
                     "        ",
                     "       ♟",
                     "        ",
@@ -176,7 +178,7 @@ mod test {
     fn test_pawn_movements_blocked() {
         assert_eq!(
             naive_movements_pawn(
-                &Board::of_str([
+                &board::of_str([
                     "        ",
                     "        ",
                     "  ♟     ",
@@ -193,7 +195,7 @@ mod test {
         );
         assert_eq!(
             naive_movements_pawn(
-                &Board::of_str([
+                &board::of_str([
                     "        ",
                     "        ",
                     "        ",
@@ -214,7 +216,7 @@ mod test {
     fn test_pawn_movements_capture() {
         assert_eq!(
             naive_movements_pawn(
-                &Board::of_str([
+                &board::of_str([
                     "        ",
                     "        ",
                     " ♟ ♟    ",
@@ -231,7 +233,7 @@ mod test {
         );
         assert_eq!(
             naive_movements_pawn(
-                &Board::of_str([
+                &board::of_str([
                     "        ",
                     "        ",
                     "        ",
@@ -252,7 +254,7 @@ mod test {
     fn test_white_pawn_en_passant() {
         assert_eq!(
             white_pawn_en_passant(
-                &Board::of_str([
+                &board::of_str([
                     "        ",
                     "        ",
                     "        ",

@@ -56,7 +56,7 @@ pub fn get_naive_movements(board: &Board, color: &Color) -> HashSet<Pos> {
     for row in 0..8 {
         for col in 0..8 {
             if let Some(pos) = Pos::try_of_idx(row, col) {
-                if let Some(piece) = board[pos.clone()] {
+                if let Some(piece) = board.get(&pos) {
                     if &piece.c == color {
                         result.append(&mut get_naive_movements_piece(board, &pos, &piece));
                     }
