@@ -1,14 +1,11 @@
-use crate::{
-    board::{pos::Pos, Board},
-    color::Color,
-};
+use crate::board::{pos::Pos, Board};
 
 use super::{bishop::naive_movements_bishop, rook::naive_movements_rook};
 
-pub fn naive_movements_queen(board: &Board, pos: &Pos, color: &Color) -> Vec<Pos> {
+pub fn naive_movements_queen(board: &Board, pos: &Pos) -> Vec<Pos> {
     let mut result: Vec<Pos> = Vec::new();
-    result.append(&mut naive_movements_bishop(board, pos, color));
-    result.append(&mut naive_movements_rook(board, pos, color));
+    result.append(&mut naive_movements_bishop(board, pos));
+    result.append(&mut naive_movements_rook(board, pos));
     result
 }
 
@@ -33,7 +30,6 @@ mod test {
                     "        ",
                 ]),
                 &Pos::of_str("C5"),
-                &Color::Black
             ),
             [
                 Pos::of_str("D6"),
@@ -87,7 +83,6 @@ mod test {
                     "        ",
                 ]),
                 &Pos::of_str("A8"),
-                &Color::Black
             ),
             [
                 Pos::of_str("B7"),
@@ -132,7 +127,6 @@ mod test {
                     "        ",
                 ]),
                 &Pos::of_str("C5"),
-                &Color::Black
             ),
             [
                 Pos::of_str("D6"),
@@ -173,7 +167,6 @@ mod test {
                     "        ",
                 ]),
                 &Pos::of_str("C5"),
-                &Color::White
             ),
             [
                 Pos::of_str("D6"),

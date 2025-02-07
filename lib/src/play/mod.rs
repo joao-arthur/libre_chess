@@ -103,7 +103,7 @@ pub fn get_moves(play: &Play, pos: &Pos) -> Vec<Pos> {
         if piece.c != turn {
             return Vec::new();
         }
-        get_naive_movements_piece(&play.board, pos, &piece)
+        get_naive_movements_piece(&play.board, pos)
         // add special movements here!
         // check!
         // en passant!

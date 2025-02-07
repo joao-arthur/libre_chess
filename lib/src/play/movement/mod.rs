@@ -40,28 +40,25 @@ impl Movement {
     }
 }
 
-pub fn get_naive_movements_piece(board: &Board, pos: &Pos, piece: &Piece) -> Vec<Pos> {
-    match piece.t {
-        Type::Rook => naive_movements_rook(&board, pos, &piece.c),
-        Type::Knight => naive_movements_knight(&board, pos, &piece.c),
-        Type::Bishop => naive_movements_bishop(&board, pos, &piece.c),
-        Type::Queen => naive_movements_queen(&board, pos, &piece.c),
-        Type::King => naive_movements_king(&board, pos, &piece.c),
-        Type::Pawn => naive_movements_pawn(&board, pos, &piece.c),
+pub fn get_naive_movements_piece(board: &Board, pos: &Pos) -> Vec<Pos> {
+    if let Some(piece) = board.get(&pos) {
+        return match piece.t {
+            Type::Rook => naive_movements_rook(&board, pos),
+            Type::Knight => naive_movements_knight(&board, pos),
+            Type::Bishop => naive_movements_bishop(&board, pos),
+            Type::Queen => naive_movements_queen(&board, pos),
+            Type::King => naive_movements_king(&board, pos),
+            Type::Pawn => naive_movements_pawn(&board, pos),
+        };
     }
+    return Vec::new();
 }
 
 pub fn get_naive_movements(board: &Board, color: &Color) -> HashSet<Pos> {
     let mut result: Vec<Pos> = Vec::new();
-    for row in 0..8 {
-        for col in 0..8 {
-            if let Some(pos) = Pos::try_of_idx(row, col) {
-                if let Some(piece) = board.get(&pos) {
-                    if &piece.c == color {
-                        result.append(&mut get_naive_movements_piece(board, &pos, &piece));
-                    }
-                }
-            }
+    for entry in board.iter() {
+        if &entry.1.c == color {
+            result.append(&mut get_naive_movements_piece(board, &entry.0));
         }
     }
     result.into_iter().collect()
@@ -69,6 +66,8 @@ pub fn get_naive_movements(board: &Board, color: &Color) -> HashSet<Pos> {
 
 #[cfg(test)]
 mod test {
+    use crate::board;
+
     use super::*;
 
     #[test]
@@ -97,6 +96,41 @@ mod test {
             Movement {
                 piece: Piece::of_str("♟"), from: Pos::of_str("D2"), to: Pos::of_str("D4")
             }
+        );
+    }
+
+    #[test]
+    fn test_get_naive_movements_piece() {
+        assert_eq!(
+            get_naive_movements_piece(
+                &board::of_str([
+                    "        ",
+                    "        ",
+                    "        ",
+                    "  ♝     ",
+                    "        ",
+                    "        ",
+                    "        ",
+                    "        ",
+                ]),
+                &Pos::of_str("C5"),
+            ),
+            [
+                Pos::of_str("D6"),
+                Pos::of_str("E7"),
+                Pos::of_str("F8"),
+                //
+                Pos::of_str("D4"),
+                Pos::of_str("E3"),
+                Pos::of_str("F2"),
+                Pos::of_str("G1"),
+                //
+                Pos::of_str("B4"),
+                Pos::of_str("A3"),
+                //
+                Pos::of_str("B6"),
+                Pos::of_str("A7"),
+            ]
         );
     }
 }

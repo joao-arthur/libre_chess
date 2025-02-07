@@ -1,30 +1,29 @@
-use crate::{
-    board::{pos::Pos, Board},
-    color::Color,
-};
+use crate::board::{pos::Pos, Board};
 
-pub fn naive_movements_bishop(board: &Board, pos: &Pos, color: &Color) -> Vec<Pos> {
+pub fn naive_movements_bishop(board: &Board, pos: &Pos) -> Vec<Pos> {
     let mut result: Vec<Pos> = Vec::new();
-    let modifiers: [[i8; 2]; 4] = [[-1, 1], [1, 1], [1, -1], [-1, -1]];
-    for modifier in modifiers {
-        let mut rel_row: i8 = 0;
-        let mut rel_col: i8 = 0;
-        loop {
-            rel_row += modifier[0];
-            rel_col += modifier[1];
-            if let Some(curr_pos) = pos.try_of_rel_idx(rel_row, rel_col) {
-                if let Some(curr_piece) = board.get(&curr_pos) {
-                    if &curr_piece.c == color {
-                        break;
+    if let Some(piece) = board.get(&pos) {
+        let modifiers: [[i8; 2]; 4] = [[-1, 1], [1, 1], [1, -1], [-1, -1]];
+        for modifier in modifiers {
+            let mut rel_row: i8 = 0;
+            let mut rel_col: i8 = 0;
+            loop {
+                rel_row += modifier[0];
+                rel_col += modifier[1];
+                if let Some(curr_pos) = pos.try_of_rel_idx(rel_row, rel_col) {
+                    if let Some(curr_piece) = board.get(&curr_pos) {
+                        if &curr_piece.c == &piece.c {
+                            break;
+                        } else {
+                            result.push(curr_pos);
+                            break;
+                        }
                     } else {
                         result.push(curr_pos);
-                        break;
                     }
                 } else {
-                    result.push(curr_pos);
+                    break;
                 }
-            } else {
-                break;
             }
         }
     }
@@ -52,7 +51,6 @@ mod test {
                     "        ",
                 ]),
                 &Pos::of_str("C5"),
-                &Color::Black
             ),
             [
                 Pos::of_str("D6"),
@@ -88,7 +86,6 @@ mod test {
                     "        ",
                 ]),
                 &Pos::of_str("A8"),
-                &Color::Black
             ),
             [
                 Pos::of_str("B7"),
@@ -117,7 +114,6 @@ mod test {
                     "        ",
                 ]),
                 &Pos::of_str("C5"),
-                &Color::Black
             ),
             [
                 Pos::of_str("D6"),
@@ -144,7 +140,6 @@ mod test {
                     "        ",
                 ]),
                 &Pos::of_str("C5"),
-                &Color::White
             ),
             [
                 Pos::of_str("D6"),

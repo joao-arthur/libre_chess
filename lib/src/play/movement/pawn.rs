@@ -1,19 +1,18 @@
-use crate::{
-    board::{pos::Pos, row::Row, Board},
-    color::Color,
-    piece::Piece,
-};
+use crate::{board::{pos::Pos, row::Row, Board}, color::Color, piece::Piece};
 
 use super::Movement;
 
-pub fn naive_movements_pawn(board: &Board, pos: &Pos, color: &Color) -> Vec<Pos> {
-    match color {
-        Color::White => naive_movements_white_pawn(board, pos, color),
-        Color::Black => naive_movements_black_pawn(board, pos, color),
+pub fn naive_movements_pawn(board: &Board, pos: &Pos) -> Vec<Pos> {
+    if let Some(piece) = board.get(&pos) {
+        return match &piece.c {
+            Color::White => naive_movements_white_pawn(board, pos),
+            Color::Black => naive_movements_black_pawn(board, pos),
+        }
     }
+    return Vec::new()
 }
 
-fn naive_movements_white_pawn(board: &Board, pos: &Pos, color: &Color) -> Vec<Pos> {
+fn naive_movements_white_pawn(board: &Board, pos: &Pos) -> Vec<Pos> {
     let mut result: Vec<Pos> = Vec::new();
     let base = if pos.row == Row::_2 {
         vec![pos.try_of_rel_idx(-1, 0), pos.try_of_rel_idx(-2, 0)]
@@ -31,7 +30,7 @@ fn naive_movements_white_pawn(board: &Board, pos: &Pos, color: &Color) -> Vec<Po
     for curr_pos in capture_base {
         if let Some(curr_pos) = curr_pos {
             if let Some(curr_piece) = board.get(&curr_pos) {
-                if &curr_piece.c != color {
+                if &curr_piece.c != &Color::White {
                     result.push(curr_pos);
                 }
             }
@@ -40,7 +39,7 @@ fn naive_movements_white_pawn(board: &Board, pos: &Pos, color: &Color) -> Vec<Po
     result
 }
 
-fn naive_movements_black_pawn(board: &Board, pos: &Pos, color: &Color) -> Vec<Pos> {
+fn naive_movements_black_pawn(board: &Board, pos: &Pos) -> Vec<Pos> {
     let mut result: Vec<Pos> = Vec::new();
     let base = if pos.row == Row::_7 {
         vec![pos.try_of_rel_idx(1, 0), pos.try_of_rel_idx(2, 0)]
@@ -58,7 +57,7 @@ fn naive_movements_black_pawn(board: &Board, pos: &Pos, color: &Color) -> Vec<Po
     for curr_pos in capture_base {
         if let Some(curr_pos) = curr_pos {
             if let Some(curr_piece) = board.get(&curr_pos) {
-                if &curr_piece.c != color {
+                if &curr_piece.c != &Color::Black {
                     result.push(curr_pos);
                 }
             }
@@ -113,7 +112,6 @@ mod test {
                     "        ",
                 ]),
                 &Pos::of_str("C5"),
-                &Color::White
             ),
             [Pos::of_str("C6")]
         );
@@ -130,7 +128,6 @@ mod test {
                     "        ",
                 ]),
                 &Pos::of_str("C5"),
-                &Color::Black
             ),
             [Pos::of_str("C4")]
         );
@@ -151,7 +148,6 @@ mod test {
                     "        ",
                 ]),
                 &Pos::of_str("A2"),
-                &Color::White
             ),
             [Pos::of_str("A3"), Pos::of_str("A4")]
         );
@@ -168,7 +164,6 @@ mod test {
                     "        ",
                 ]),
                 &Pos::of_str("H7"),
-                &Color::Black
             ),
             [Pos::of_str("H6"), Pos::of_str("H5")]
         );
@@ -189,7 +184,6 @@ mod test {
                     "        ",
                 ]),
                 &Pos::of_str("C5"),
-                &Color::White
             ),
             []
         );
@@ -206,7 +200,6 @@ mod test {
                     "        ",
                 ]),
                 &Pos::of_str("C5"),
-                &Color::Black
             ),
             []
         );
@@ -227,7 +220,6 @@ mod test {
                     "        ",
                 ]),
                 &Pos::of_str("C5"),
-                &Color::White
             ),
             [Pos::of_str("C6"), Pos::of_str("B6"), Pos::of_str("D6")]
         );
@@ -244,7 +236,6 @@ mod test {
                     "        ",
                 ]),
                 &Pos::of_str("C5"),
-                &Color::Black
             ),
             [Pos::of_str("C4"), Pos::of_str("B4"), Pos::of_str("D4")]
         );

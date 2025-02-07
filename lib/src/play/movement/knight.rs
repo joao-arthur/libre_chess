@@ -1,28 +1,27 @@
-use crate::{
-    board::{pos::Pos, Board},
-    color::Color,
-};
+use crate::board::{pos::Pos, Board};
 
-pub fn naive_movements_knight(board: &Board, pos: &Pos, color: &Color) -> Vec<Pos> {
+pub fn naive_movements_knight(board: &Board, pos: &Pos) -> Vec<Pos> {
     let mut result: Vec<Pos> = Vec::new();
-    let base = [
-        pos.try_of_rel_idx(-2, -1),
-        pos.try_of_rel_idx(-1, -2),
-        pos.try_of_rel_idx(1, -2),
-        pos.try_of_rel_idx(2, -1),
-        pos.try_of_rel_idx(-2, 1),
-        pos.try_of_rel_idx(-1, 2),
-        pos.try_of_rel_idx(1, 2),
-        pos.try_of_rel_idx(2, 1),
-    ];
-    for curr_pos in base {
-        if let Some(curr_pos) = curr_pos {
-            if let Some(curr_piece) = board.get(&curr_pos) {
-                if &curr_piece.c != color {
+    if let Some(piece) = board.get(&pos) {
+        let base = [
+            pos.try_of_rel_idx(-2, -1),
+            pos.try_of_rel_idx(-1, -2),
+            pos.try_of_rel_idx(1, -2),
+            pos.try_of_rel_idx(2, -1),
+            pos.try_of_rel_idx(-2, 1),
+            pos.try_of_rel_idx(-1, 2),
+            pos.try_of_rel_idx(1, 2),
+            pos.try_of_rel_idx(2, 1),
+        ];
+        for curr_pos in base {
+            if let Some(curr_pos) = curr_pos {
+                if let Some(curr_piece) = board.get(&curr_pos) {
+                    if &curr_piece.c != &piece.c {
+                        result.push(curr_pos);
+                    }
+                } else {
                     result.push(curr_pos);
                 }
-            } else {
-                result.push(curr_pos);
             }
         }
     }
@@ -50,7 +49,6 @@ mod test {
                     "        ",
                 ]),
                 &Pos::of_str("D4"),
-                &Color::Black
             ),
             [
                 Pos::of_str("C6"),
@@ -80,7 +78,6 @@ mod test {
                     "♞       ",
                 ]),
                 &Pos::of_str("A1"),
-                &Color::Black
             ),
             [Pos::of_str("B3"), Pos::of_str("C2")]
         );
@@ -101,7 +98,6 @@ mod test {
                     "        ",
                 ]),
                 &Pos::of_str("D4"),
-                &Color::Black
             ),
             [
                 Pos::of_str("C6"),
@@ -126,7 +122,6 @@ mod test {
                     "        ",
                 ]),
                 &Pos::of_str("D4"),
-                &Color::White
             ),
             [
                 Pos::of_str("C6"),
