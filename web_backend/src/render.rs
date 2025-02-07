@@ -27,10 +27,10 @@ pub fn get_values_to_render(b: &Board, s: &RenderSettings) -> Vec<ValueToRender>
     let cell_size = s.dim as f64 / 8.0;
     for row in 0..8 {
         for col in 0..8 {
-            let p = b[Pos::of_idx(row, col)];
+            let p = b.get(&Pos::of_idx(row, col));
             if let Some(p) = p {
                 values_to_render.push(ValueToRender {
-                    p,
+                    p: p.clone(),
                     rect: RectF64 {
                         x1: col as f64 * cell_size,
                         y1: row as f64 * cell_size,
@@ -48,11 +48,13 @@ pub fn get_values_to_render(b: &Board, s: &RenderSettings) -> Vec<ValueToRender>
 
 #[cfg(test)]
 mod test {
+    use libre_chess_lib::board::get_initial_board;
+
     use super::*;
 
     #[test]
     fn test_get_values_to_render() {
-        let u = Board::get_initial_board();
+        let u = get_initial_board();
         let s = RenderSettings { dim: 987 };
         assert_eq!(
             get_values_to_render(&u, &s),

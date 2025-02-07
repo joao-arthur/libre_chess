@@ -1,6 +1,6 @@
 use core::f64;
 use libre_chess_lib::{
-    board::{pos::Pos, Board},
+    board::{get_initial_board, pos::Pos, Board},
     color::Color,
     piece::Type,
     play::{get_moves, is_in_check, move_piece, movement::Movement, Play},
@@ -106,7 +106,7 @@ pub fn app_init(context: CanvasRenderingContext2d) {
     MODEL.with(|i| {
         let mut model = i.borrow_mut();
         model.context = Some(context);
-        model.play.board = Board::get_initial_board();
+        model.play.board = get_initial_board();
     });
     app_add_on_change_listener({
         move |prop| {
@@ -260,16 +260,16 @@ pub fn app_click(row: u16, col: u16) {
         let cell_col = ((col as f64) / cell_size).floor() as u8;
         if let Some(pos) = Pos::try_of_idx(cell_row, cell_col) {
             if m.settings.selected_piece_movements.contains(&pos) {
-                let piece = m.play.board[m.settings.selected_piece.clone().unwrap()].unwrap();
+                let piece = m.play.board.get(m.settings.selected_piece.as_ref().unwrap()).unwrap().clone();
                 let from = m.settings.selected_piece.clone().unwrap();
                 let to = pos;
                 console::log_1(&format!("is in check {}", is_in_check(&m.play)).into());
-                move_piece(&mut m.play, Movement { piece, from, to });
+                move_piece(&mut m.play, Movement { piece: piece.clone(), from, to });
                 m.settings.selected_piece = None;
                 m.settings.selected_piece_movements = HashSet::new();
                 m.settings.selected_squares = HashSet::new()
             } else {
-                if let Some(piece) = m.play.board[pos.clone()] {
+                if let Some(piece) = m.play.board.get(&pos.clone()) {
                     if m.settings.selected_piece == Some(pos.clone()) {
                         m.settings.selected_piece = None;
                         m.settings.selected_piece_movements = HashSet::new();
