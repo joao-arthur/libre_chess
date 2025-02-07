@@ -35,6 +35,26 @@ mod test {
     use super::*;
 
     #[test]
+    fn test_naive_movements_knight_none() {
+        assert_eq!(
+            naive_movements_knight(
+                &board::of_str([
+                    "        ",
+                    "        ",
+                    "        ",
+                    "        ",
+                    "   ♞    ",
+                    "        ",
+                    "        ",
+                    "        ",
+                ]),
+                &Pos::of_str("A1"),
+            ),
+            []
+        );
+    }
+
+    #[test]
     fn test_naive_movements_knight_empty_board() {
         assert_eq!(
             naive_movements_knight(

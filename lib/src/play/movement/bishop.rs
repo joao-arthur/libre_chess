@@ -37,6 +37,26 @@ mod test {
     use super::*;
 
     #[test]
+    fn test_naive_movements_bishop_none() {
+        assert_eq!(
+            naive_movements_bishop(
+                &board::of_str([
+                    "        ",
+                    "        ",
+                    "        ",
+                    "  ♝     ",
+                    "        ",
+                    "        ",
+                    "        ",
+                    "        ",
+                ]),
+                &Pos::of_str("A1"),
+            ),
+            []
+        );
+    }
+
+    #[test]
     fn test_naive_movements_bishop_empty_board() {
         assert_eq!(
             naive_movements_bishop(

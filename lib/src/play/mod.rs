@@ -3,7 +3,7 @@ use std::{
     hash::Hash,
 };
 
-use movement::{get_naive_movements, get_naive_movements_piece, Movement};
+use movement::{get_naive_movements, naive_movements_piece, Movement};
 use player::Player;
 
 use crate::{
@@ -81,10 +81,10 @@ pub fn move_piece(play: &mut Play, movement: Movement) {
     play.history.push(movement);
     // match movement.piece.c {
     //     Color::White => {
-    //         play.white_player.possible_movements = get_naive_movements_piece();
+    //         play.white_player.possible_movements = naive_movements_piece();
     //     },
     //     Color::Black => {
-    //         play.black_player.possible_movements = get_naive_movements_piece();
+    //         play.black_player.possible_movements = naive_movements_piece();
     //     },
     // }
 
@@ -103,7 +103,7 @@ pub fn get_moves(play: &Play, pos: &Pos) -> Vec<Pos> {
         if piece.c != turn {
             return Vec::new();
         }
-        get_naive_movements_piece(&play.board, pos)
+        naive_movements_piece(&play.board, pos)
         // add special movements here!
         // check!
         // en passant!

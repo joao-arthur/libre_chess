@@ -1,64 +1,47 @@
-use crate::{board::{pos::Pos, row::Row, Board}, color::Color, piece::Piece};
+use crate::{
+    board::{pos::Pos, row::Row, Board},
+    color::Color,
+    piece::Piece,
+};
 
 use super::Movement;
 
 pub fn naive_movements_pawn(board: &Board, pos: &Pos) -> Vec<Pos> {
-    if let Some(piece) = board.get(&pos) {
-        return match &piece.c {
-            Color::White => naive_movements_white_pawn(board, pos),
-            Color::Black => naive_movements_black_pawn(board, pos),
-        }
-    }
-    return Vec::new()
-}
-
-fn naive_movements_white_pawn(board: &Board, pos: &Pos) -> Vec<Pos> {
     let mut result: Vec<Pos> = Vec::new();
-    let base = if pos.row == Row::_2 {
-        vec![pos.try_of_rel_idx(-1, 0), pos.try_of_rel_idx(-2, 0)]
-    } else {
-        vec![pos.try_of_rel_idx(-1, 0)]
-    };
-    for curr_pos in base {
-        if let Some(curr_pos) = curr_pos {
-            if board.get(&curr_pos).is_none() {
-                result.push(curr_pos);
+    if let Some(piece) = board.get(&pos) {
+        let base = match &piece.c {
+            Color::White => {
+                if pos.row == Row::_2 {
+                    vec![pos.try_of_rel_idx(-1, 0), pos.try_of_rel_idx(-2, 0)]
+                } else {
+                    vec![pos.try_of_rel_idx(-1, 0)]
+                }
             }
-        }
-    }
-    let capture_base = [pos.try_of_rel_idx(-1, -1), pos.try_of_rel_idx(-1, 1)];
-    for curr_pos in capture_base {
-        if let Some(curr_pos) = curr_pos {
-            if let Some(curr_piece) = board.get(&curr_pos) {
-                if &curr_piece.c != &Color::White {
+            Color::Black => {
+                if pos.row == Row::_7 {
+                    vec![pos.try_of_rel_idx(1, 0), pos.try_of_rel_idx(2, 0)]
+                } else {
+                    vec![pos.try_of_rel_idx(1, 0)]
+                }
+            }
+        };
+        let capture_base = match &piece.c {
+            Color::White => [pos.try_of_rel_idx(-1, -1), pos.try_of_rel_idx(-1, 1)],
+            Color::Black => [pos.try_of_rel_idx(1, -1), pos.try_of_rel_idx(1, 1)],
+        };
+        for curr_pos in base {
+            if let Some(curr_pos) = curr_pos {
+                if board.get(&curr_pos).is_none() {
                     result.push(curr_pos);
                 }
             }
         }
-    }
-    result
-}
-
-fn naive_movements_black_pawn(board: &Board, pos: &Pos) -> Vec<Pos> {
-    let mut result: Vec<Pos> = Vec::new();
-    let base = if pos.row == Row::_7 {
-        vec![pos.try_of_rel_idx(1, 0), pos.try_of_rel_idx(2, 0)]
-    } else {
-        vec![pos.try_of_rel_idx(1, 0)]
-    };
-    for curr_pos in base {
-        if let Some(curr_pos) = curr_pos {
-            if board.get(&curr_pos).is_none() {
-                result.push(curr_pos);
-            }
-        }
-    }
-    let capture_base = [pos.try_of_rel_idx(1, -1), pos.try_of_rel_idx(1, 1)];
-    for curr_pos in capture_base {
-        if let Some(curr_pos) = curr_pos {
-            if let Some(curr_piece) = board.get(&curr_pos) {
-                if &curr_piece.c != &Color::Black {
-                    result.push(curr_pos);
+        for curr_pos in capture_base {
+            if let Some(curr_pos) = curr_pos {
+                if let Some(curr_piece) = board.get(&curr_pos) {
+                    if &curr_piece.c != &piece.c {
+                        result.push(curr_pos);
+                    }
                 }
             }
         }
@@ -96,6 +79,26 @@ mod test {
     use crate::board;
 
     use super::*;
+
+    #[test]
+    fn test_pawn_movements_none() {
+        assert_eq!(
+            naive_movements_pawn(
+                &board::of_str([
+                    "        ",
+                    "        ",
+                    "        ",
+                    "  ♙     ",
+                    "        ",
+                    "        ",
+                    "        ",
+                    "        ",
+                ]),
+                &Pos::of_str("A1"),
+            ),
+            []
+        );
+    }
 
     #[test]
     fn test_pawn_movements_empty_board() {

@@ -16,6 +16,26 @@ mod test {
     use super::*;
 
     #[test]
+    fn test_naive_movements_queen_none() {
+        assert_eq!(
+            naive_movements_queen(
+                &board::of_str([
+                    "        ",
+                    "        ",
+                    "        ",
+                    "  ♛     ",
+                    "        ",
+                    "        ",
+                    "        ",
+                    "        ",
+                ]),
+                &Pos::of_str("A1"),
+            ),
+            []
+        );
+    }
+
+    #[test]
     fn test_naive_movements_queen_empty_board() {
         assert_eq!(
             naive_movements_queen(
