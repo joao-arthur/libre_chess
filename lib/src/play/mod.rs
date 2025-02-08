@@ -1,13 +1,10 @@
-use std::{
-    collections::{HashMap, HashSet},
-    hash::Hash,
-};
+use std::collections::{HashMap, HashSet};
 
-use movement::{get_naive_movements, naive_movements_piece, Movement};
+use movement::{naive_movements_board, naive_movements_piece, Movement};
 use player::Player;
 
 use crate::{
-    board::{pos::Pos, Board},
+    board::{self, pos::Pos, Board},
     color::Color,
     piece::Type,
 };
@@ -52,7 +49,7 @@ impl Default for Play {
 fn set_board(play: &mut Play, board: Board) {
     play.board = board;
     for player in play.players.iter_mut() {
-        player.1.possible_movements = get_naive_movements(&play.board, &player.0);
+        player.1.possible_movements = naive_movements_board(&play.board, &player.0);
     }
 }
 
@@ -76,7 +73,7 @@ pub fn move_piece(play: &mut Play, movement: Movement) {
         }
     }
     if let Some(player) = play.players.get_mut(&movement.piece.c) {
-        player.possible_movements = get_naive_movements(&play.board, &player.color);
+        player.possible_movements = naive_movements_board(&play.board, &player.color);
     }
     play.history.push(movement);
     // match movement.piece.c {
@@ -136,6 +133,19 @@ pub fn is_in_check(play: &Play) -> bool {
         }
     }
     false
+}
+
+pub fn get_initial_board() -> Board {
+    board::of_str([
+        "♜♞♝♛♚♝♞♜",
+        "♟♟♟♟♟♟♟♟",
+        "        ",
+        "        ",
+        "        ",
+        "        ",
+        "♙♙♙♙♙♙♙♙",
+        "♖♘♗♕♔♗♘♖",
+    ])
 }
 
 #[cfg(test)]

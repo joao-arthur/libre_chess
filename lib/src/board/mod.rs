@@ -64,9 +64,7 @@ fn try_of_str(rows: [&str; 8]) -> Result<Board, FromStringErr> {
         for col in 0..8 {
             let pos_str = rows[row as usize].chars().nth(col.into()).unwrap().to_string();
             if let Some(piece) = Piece::try_of_str(&pos_str) {
-                if let Some(pos) = Pos::try_of_idx(row, col) {
-                    board.insert(pos, piece);
-                }
+                board.insert(Pos::of_idx(row, col), piece);
             }
         }
     }
@@ -77,28 +75,13 @@ pub fn of_str(rows: [&str; 8]) -> Board {
     try_of_str(rows).unwrap()
 }
 
-pub fn get_initial_board() -> Board {
-    of_str([
-        "♜♞♝♛♚♝♞♜",
-        "♟♟♟♟♟♟♟♟",
-        "        ",
-        "        ",
-        "        ",
-        "        ",
-        "♙♙♙♙♙♙♙♙",
-        "♖♘♗♕♔♗♘♖",
-    ])
-}
-
 fn to_string(board: &Board) -> String {
     let mut res: String = String::from("");
     for row in 0..8 {
         for col in 0..8 {
-            if let Some(pos) = Pos::try_of_idx(row, col) {
-                match board.get(&pos) {
-                    Some(p) => res.push_str(Piece::to_str(&p)),
-                    None => res.push_str(" "),
-                }
+            match board.get(&Pos::of_idx(row, col)) {
+                Some(p) => res.push_str(Piece::to_str(&p)),
+                None => res.push_str(" "),
             }
         }
         res.push_str("\n")
@@ -111,7 +94,7 @@ mod test {
     use super::*;
 
     #[test]
-    fn test_try_of_str() {
+    fn test_try_of_str_ok() {
         assert_eq!(
             try_of_str([
                 "♜♞♝♛♚♝♞♜",
@@ -158,6 +141,39 @@ mod test {
                 (Pos::of_str("H1"), Piece::of_str("♖")),
             ]))
         );
+    }
+
+    #[test]
+    fn test_try_of_str_err() {
+        assert_eq!(
+            try_of_str([
+                "RNBQKBNR",
+                "PPPPPPPP",
+                "        ",
+                "        ",
+                "        ",
+                "        ",
+                "♙♙♙♙♙♙♙♙",
+                "♖♘♗♕♔♗♘♖",
+            ]),
+            Err(FromStringErr::InvalidCharacter(InvalidCharacterErr))
+        );
+        assert_eq!(
+            try_of_str([
+                "♜♞♝♛♚♝♞",
+                "♟♟♟♟♟♟♟♟",
+                "        ",
+                "        ",
+                "        ",
+                "        ",
+                "♙♙♙♙♙♙♙♙",
+                "♖♘♗♕♔♗♘♖",
+            ]),
+            Err(FromStringErr::InvalidLength(InvalidLengthErr))
+        );
+
+        assert_eq!(format!("{}", InvalidCharacterErr), "Only [0-9] characters and spaces are allowed!");
+        assert_eq!(format!("{}", InvalidLengthErr), "Every line must be 8 characters long");
     }
 
     #[test]
@@ -213,7 +229,16 @@ mod test {
     #[test]
     fn test_to_string() {
         assert_eq!(
-            to_string(&get_initial_board()),
+            to_string(&of_str([
+                "♜♞♝♛♚♝♞♜",
+                "♟♟♟♟♟♟♟♟",
+                "        ",
+                "        ",
+                "        ",
+                "        ",
+                "♙♙♙♙♙♙♙♙",
+                "♖♘♗♕♔♗♘♖",
+            ])),
             "".to_owned()
                 + "♜♞♝♛♚♝♞♜\n"
                 + "♟♟♟♟♟♟♟♟\n"

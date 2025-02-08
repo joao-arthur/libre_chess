@@ -24,3 +24,12 @@
     - [ ] 3 repetions
 - [ ] Stalemate
 - [ ] Dead position
+
+
+## CLI
+
+```sh
+cargo build     # build
+cargo test      # run tests
+cargo llvm-cov  # run tests with coverage 
+```

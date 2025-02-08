@@ -37,7 +37,11 @@ impl Pos {
         let mut chars = s.chars();
         let col = chars.next().and_then(|pos| Col::try_of_str(&pos.to_string()))?;
         let row = chars.next().and_then(|pos| Row::try_of_str(&pos.to_string()))?;
-        Some(Pos { col, row })
+        if chars.next() == None {
+            Some(Pos { col, row })
+        } else {
+            None
+        }
     }
 
     pub fn of_str(s: &str) -> Self {
@@ -177,11 +181,16 @@ mod test {
 
     #[test]
     fn test_try_of_str_none() {
+        assert_eq!(Pos::try_of_str("A10"), None);
+        assert_eq!(Pos::try_of_str("H10"), None);
         assert_eq!(Pos::try_of_str("A0"), None);
         assert_eq!(Pos::try_of_str("A9"), None);
         assert_eq!(Pos::try_of_str("I1"), None);
         assert_eq!(Pos::try_of_str("J2"), None);
         assert_eq!(Pos::try_of_str("K3"), None);
+        assert_eq!(Pos::try_of_str("33"), None);
+        assert_eq!(Pos::try_of_str("AB"), None);
+        assert_eq!(Pos::try_of_str("4A"), None);
     }
 
     #[test]

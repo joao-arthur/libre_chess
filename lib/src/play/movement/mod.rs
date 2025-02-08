@@ -54,7 +54,7 @@ pub fn naive_movements_piece(board: &Board, pos: &Pos) -> Vec<Pos> {
     return Vec::new();
 }
 
-pub fn get_naive_movements(board: &Board, color: &Color) -> HashSet<Pos> {
+pub fn naive_movements_board(board: &Board, color: &Color) -> HashSet<Pos> {
     let mut result: Vec<Pos> = Vec::new();
     for entry in board.iter() {
         if &entry.1.c == color {
@@ -66,7 +66,7 @@ pub fn get_naive_movements(board: &Board, color: &Color) -> HashSet<Pos> {
 
 #[cfg(test)]
 mod test {
-    use crate::board;
+    use crate::{board, play::get_initial_board};
 
     use super::*;
 
@@ -100,7 +100,7 @@ mod test {
     }
 
     #[test]
-    fn test_get_naive_movements_piece() {
+    fn test_get_naive_movements_piece_some() {
         assert_eq!(
             naive_movements_piece(
                 &board::of_str([
@@ -265,7 +265,6 @@ mod test {
                 Pos::of_str("E3"),
             ]
         );
-
         assert_eq!(
             naive_movements_piece(
                 &board::of_str([
@@ -281,6 +280,72 @@ mod test {
                 &Pos::of_str("C5"),
             ),
             [Pos::of_str("C6")]
+        );
+    }
+
+    #[test]
+    fn test_get_naive_movements_piece_none() {
+        assert_eq!(
+            naive_movements_piece(
+                &board::of_str([
+                    "        ",
+                    "        ",
+                    "        ",
+                    "  ♙     ",
+                    "        ",
+                    "        ",
+                    "        ",
+                    "        ",
+                ]),
+                &Pos::of_str("A1"),
+            ),
+            []
+        );
+    }
+
+    #[test]
+    fn test_naive_movements_board() {
+        assert_eq!(
+            naive_movements_board(&get_initial_board(), &Color::Black),
+            HashSet::from([
+                Pos::of_str("A6"),
+                Pos::of_str("B6"),
+                Pos::of_str("C6"),
+                Pos::of_str("D6"),
+                Pos::of_str("E6"),
+                Pos::of_str("F6"),
+                Pos::of_str("G6"),
+                Pos::of_str("H6"),
+                Pos::of_str("A5"),
+                Pos::of_str("B5"),
+                Pos::of_str("C5"),
+                Pos::of_str("D5"),
+                Pos::of_str("E5"),
+                Pos::of_str("F5"),
+                Pos::of_str("G5"),
+                Pos::of_str("H5"),
+            ])
+        );
+        assert_eq!(
+            naive_movements_board(&get_initial_board(), &Color::White),
+            HashSet::from([
+                Pos::of_str("A4"),
+                Pos::of_str("B4"),
+                Pos::of_str("C4"),
+                Pos::of_str("D4"),
+                Pos::of_str("E4"),
+                Pos::of_str("F4"),
+                Pos::of_str("G4"),
+                Pos::of_str("H4"),
+                Pos::of_str("A3"),
+                Pos::of_str("B3"),
+                Pos::of_str("C3"),
+                Pos::of_str("D3"),
+                Pos::of_str("E3"),
+                Pos::of_str("F3"),
+                Pos::of_str("G3"),
+                Pos::of_str("H3"),
+            ])
         );
     }
 }
