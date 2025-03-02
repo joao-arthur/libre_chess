@@ -66,7 +66,7 @@ pub fn naive_movements_board(board: &Board, color: &Color) -> HashSet<Pos> {
 
 #[cfg(test)]
 mod test {
-    use crate::{board, play::get_initial_board};
+    use crate::{board, play::initial_board};
 
     use super::*;
 
@@ -100,7 +100,7 @@ mod test {
     }
 
     #[test]
-    fn test_get_naive_movements_piece_some() {
+    fn test_naive_movements_piece_some() {
         assert_eq!(
             naive_movements_piece(
                 &board::of_str([
@@ -284,7 +284,7 @@ mod test {
     }
 
     #[test]
-    fn test_get_naive_movements_piece_none() {
+    fn test_naive_movements_piece_none() {
         assert_eq!(
             naive_movements_piece(
                 &board::of_str([
@@ -306,7 +306,7 @@ mod test {
     #[test]
     fn test_naive_movements_board() {
         assert_eq!(
-            naive_movements_board(&get_initial_board(), &Color::Black),
+            naive_movements_board(&initial_board(), &Color::Black),
             HashSet::from([
                 Pos::of_str("A6"),
                 Pos::of_str("B6"),
@@ -327,7 +327,7 @@ mod test {
             ])
         );
         assert_eq!(
-            naive_movements_board(&get_initial_board(), &Color::White),
+            naive_movements_board(&initial_board(), &Color::White),
             HashSet::from([
                 Pos::of_str("A4"),
                 Pos::of_str("B4"),

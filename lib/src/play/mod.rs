@@ -6,7 +6,7 @@ use player::Player;
 use crate::{
     board::{self, pos::Pos, Board},
     color::Color,
-    piece::Type,
+    piece::{Piece, Type},
 };
 
 pub mod movement;
@@ -48,12 +48,14 @@ impl Default for Play {
 
 fn set_board(play: &mut Play, board: Board) {
     play.board = board;
-    for player in play.players.iter_mut() {
-        player.1.possible_movements = naive_movements_board(&play.board, &player.0);
+    for entry in play.players.iter_mut() {
+        if entry.0 != &Color::White {
+            entry.1.possible_movements = naive_movements_board(&play.board, &entry.0);
+        }
     }
 }
 
-fn get_turn(play: &Play) -> Color {
+fn turn(play: &Play) -> Color {
     if play.history.len() % 2 == 0 {
         Color::White
     } else {
@@ -62,80 +64,69 @@ fn get_turn(play: &Play) -> Color {
 }
 
 pub fn move_piece(play: &mut Play, movement: Movement) {
-    let turn = get_turn(play);
-    if movement.piece.c != turn {
+    let curr_turn = turn(play);
+    if movement.piece.c != curr_turn {
         return;
     }
+    // if (is_in_check() && is_check_after_move()) {
+    //     return;
+    // }
     play.board.remove(&movement.from);
-    if let Some(captured) = play.board.insert(movement.to.clone(), movement.piece) {
-        if let Some(player) = play.players.get_mut(&movement.piece.c) {
+    if let Some(player) = play.players.get_mut(&movement.piece.c) {
+        if let Some(captured) = play.board.insert(movement.to.clone(), movement.piece) {
             player.captured_pieces.push(captured);
         }
-    }
-    if let Some(player) = play.players.get_mut(&movement.piece.c) {
         player.possible_movements = naive_movements_board(&play.board, &player.color);
     }
     play.history.push(movement);
-    // match movement.piece.c {
-    //     Color::White => {
-    //         play.white_player.possible_movements = naive_movements_piece();
-    //     },
-    //     Color::Black => {
-    //         play.black_player.possible_movements = naive_movements_piece();
-    //     },
-    // }
-
-    // if is_check && aftermoveischeck() return;
-    // if let Some()
-    //     capture
-    // else {
-    //     after move
-    //     if 50 moves with no capture return MoveResult::Stalemate
-    // }
+    // if 50 moves with no capture return MoveResult::Stalemate
 }
 
-pub fn get_moves(play: &Play, pos: &Pos) -> Vec<Pos> {
+pub fn movements_piece(play: &Play, pos: &Pos) -> Vec<Pos> {
     if let Some(piece) = play.board.get(&pos) {
-        let turn = get_turn(play);
-        if piece.c != turn {
+        let curr_turn = turn(play);
+        if piece.c != curr_turn {
             return Vec::new();
         }
-        naive_movements_piece(&play.board, pos)
+        let mut naive_movements = naive_movements_piece(&play.board, pos);
+        if piece.t == Type::King {
+            let mut other_pos: HashSet<Pos> = HashSet::new();
+            for player in play.players.values() {
+                if player.color != curr_turn {
+                    for mov in player.possible_movements.iter() {
+                        other_pos.insert(mov.clone());
+                    }
+                }
+            }
+            naive_movements = naive_movements.into_iter().filter(|mov| !other_pos.contains(&mov)).collect();
+        }
         // add special movements here!
         // check!
         // en passant!
         // castling!
+        return naive_movements;
     } else {
-        Vec::new()
+        return Vec::new();
     }
 }
 
 pub fn is_in_check(play: &Play) -> bool {
-    let turn = get_turn(play);
-    for row in 0..8 {
-        for col in 0..8 {
-            if let Some(pos) = Pos::try_of_idx(row, col) {
-                if let Some(piece) = play.board.get(&pos) {
-                    if piece.c == turn {
-                        if piece.t == Type::King {
-                            for player in play.players.values() {
-                                if player.color != turn {
-                                    if player.possible_movements.contains(&pos) {
-                                        return true;
-                                    }
-                                }
-                            }
-                            break;
-                        }
-                    }
+    let curr_turn = turn(play);
+    for entry in play.board.iter() {
+        if entry.1.t == Type::King && entry.1.c == curr_turn {
+            for player in play.players.values() {
+                if player.color != curr_turn && player.possible_movements.contains(entry.0) {
+                    return true;
                 }
             }
+            break;
         }
     }
     false
 }
 
-pub fn get_initial_board() -> Board {
+// create game mode module
+pub fn initial_board() -> Board {
     board::of_str([
         "♜♞♝♛♚♝♞♜",
         "♟♟♟♟♟♟♟♟",
@@ -148,24 +139,58 @@ pub fn get_initial_board() -> Board {
     ])
 }
 
+// TODO board states
+// neutral
+// selected_movement
+// selected_square
+
 #[cfg(test)]
 mod test {
     use super::*;
 
-    use crate::play::movement::Movement;
+    use crate::{piece::Piece, play::movement::Movement};
 
     #[test]
-    fn test_get_turn() {
-        assert_eq!(get_turn(&Play { history: Vec::new(), ..Default::default() }), Color::White);
+    fn test_play() {
         assert_eq!(
-            get_turn(&Play {
+            Play::default(),
+            Play {
+                board: Board::default(),
+                players: HashMap::from([
+                    (
+                        Color::White,
+                        Player {
+                            color: Color::White,
+                            captured_pieces: Vec::new(),
+                            possible_movements: HashSet::new(),
+                        },
+                    ),
+                    (
+                        Color::Black,
+                        Player {
+                            color: Color::Black,
+                            captured_pieces: Vec::new(),
+                            possible_movements: HashSet::new(),
+                        },
+                    ),
+                ]),
+                history: Vec::new(),
+            }
+        );
+    }
+
+    #[test]
+    fn test_turn() {
+        assert_eq!(turn(&Play { history: Vec::new(), ..Default::default() }), Color::White);
+        assert_eq!(
+            turn(&Play {
                 history: Vec::from([Movement::of_str("♟", "D2", "D4")]),
                 ..Default::default()
             }),
             Color::Black
         );
         assert_eq!(
-            get_turn(&Play {
+            turn(&Play {
                 history: Vec::from([
                     Movement::of_str("♟", "D2", "D4"),
                     Movement::of_str("♟", "A2", "A3")
@@ -173,6 +198,247 @@ mod test {
                 ..Default::default()
             }),
             Color::White
+        );
+    }
+
+    #[test]
+    fn test_set_board() {
+        let mut play = Play::default();
+        set_board(&mut play, initial_board());
+        assert_eq!(
+            play,
+            Play {
+                board: HashMap::from([
+                    (Pos::of_str("A8"), Piece::of_str("♜")),
+                    (Pos::of_str("B8"), Piece::of_str("♞")),
+                    (Pos::of_str("C8"), Piece::of_str("♝")),
+                    (Pos::of_str("D8"), Piece::of_str("♛")),
+                    (Pos::of_str("E8"), Piece::of_str("♚")),
+                    (Pos::of_str("F8"), Piece::of_str("♝")),
+                    (Pos::of_str("G8"), Piece::of_str("♞")),
+                    (Pos::of_str("H8"), Piece::of_str("♜")),
+                    (Pos::of_str("A7"), Piece::of_str("♟")),
+                    (Pos::of_str("B7"), Piece::of_str("♟")),
+                    (Pos::of_str("C7"), Piece::of_str("♟")),
+                    (Pos::of_str("D7"), Piece::of_str("♟")),
+                    (Pos::of_str("E7"), Piece::of_str("♟")),
+                    (Pos::of_str("F7"), Piece::of_str("♟")),
+                    (Pos::of_str("G7"), Piece::of_str("♟")),
+                    (Pos::of_str("H7"), Piece::of_str("♟")),
+                    (Pos::of_str("A2"), Piece::of_str("♙")),
+                    (Pos::of_str("B2"), Piece::of_str("♙")),
+                    (Pos::of_str("C2"), Piece::of_str("♙")),
+                    (Pos::of_str("D2"), Piece::of_str("♙")),
+                    (Pos::of_str("E2"), Piece::of_str("♙")),
+                    (Pos::of_str("F2"), Piece::of_str("♙")),
+                    (Pos::of_str("G2"), Piece::of_str("♙")),
+                    (Pos::of_str("H2"), Piece::of_str("♙")),
+                    (Pos::of_str("A1"), Piece::of_str("♖")),
+                    (Pos::of_str("B1"), Piece::of_str("♘")),
+                    (Pos::of_str("C1"), Piece::of_str("♗")),
+                    (Pos::of_str("D1"), Piece::of_str("♕")),
+                    (Pos::of_str("E1"), Piece::of_str("♔")),
+                    (Pos::of_str("F1"), Piece::of_str("♗")),
+                    (Pos::of_str("G1"), Piece::of_str("♘")),
+                    (Pos::of_str("H1"), Piece::of_str("♖")),
+                ]),
+                players: HashMap::from([
+                    (
+                        Color::White,
+                        Player {
+                            color: Color::White,
+                            captured_pieces: Vec::new(),
+                            possible_movements: HashSet::new(),
+                        },
+                    ),
+                    (
+                        Color::Black,
+                        Player {
+                            color: Color::Black,
+                            captured_pieces: Vec::new(),
+                            possible_movements: HashSet::from([
+                                Pos::of_str("A6"),
+                                Pos::of_str("B6"),
+                                Pos::of_str("C6"),
+                                Pos::of_str("D6"),
+                                Pos::of_str("E6"),
+                                Pos::of_str("F6"),
+                                Pos::of_str("G6"),
+                                Pos::of_str("H6"),
+                                Pos::of_str("A5"),
+                                Pos::of_str("B5"),
+                                Pos::of_str("C5"),
+                                Pos::of_str("D5"),
+                                Pos::of_str("E5"),
+                                Pos::of_str("F5"),
+                                Pos::of_str("G5"),
+                                Pos::of_str("H5"),
+                            ]),
+                        },
+                    ),
+                ]),
+                history: Vec::new(),
+            }
+        )
+    }
+
+    #[test]
+    fn test_move_piece() {}
+
+    #[test]
+    fn test_movements_piece() {
+        // pra testar aqui, o resto tem que estar funcionando
+    }
+
+    #[test]
+    fn test_is_in_check_false() {
+        assert_eq!(is_in_check(
+            &Play {
+                board: board::of_str([
+                    "    ♚   ",
+                    "    ♟   ",
+                    "        ",
+                    "        ",
+                    "        ",
+                    "    ♖   ",
+                    "        ",
+                    "    ♔   ",
+                ]),
+                players: HashMap::from([
+                    (
+                        Color::White,
+                        Player {
+                            color: Color::White,
+                            captured_pieces: Vec::new(),
+                            possible_movements: HashSet::new(),
+                        },
+                    ),
+                    (
+                        Color::Black,
+                        Player {
+                            color: Color::Black,
+                            captured_pieces: Vec::new(),
+                            possible_movements: HashSet::from([
+                                Pos::of_str(""),
+                                Pos::of_str(""),
+                                Pos::of_str(""),
+                                Pos::of_str(""),
+                                Pos::of_str(""),
+                                Pos::of_str(""),
+                                Pos::of_str(""),
+                                Pos::of_str(""),
+                                Pos::of_str(""),
+                                Pos::of_str(""),
+                                Pos::of_str(""),
+                                Pos::of_str(""),
+                                Pos::of_str(""),
+                                Pos::of_str(""),
+                                Pos::of_str(""),
+                                Pos::of_str(""),
+                            ]),
+                        },
+                    ),
+                ]),
+                history: Vec::new(),
+            }
+        ), false);
+    }
+
+    #[test]
+    fn test_is_in_check_true() {
+        assert_eq!(is_in_check(
+            &Play {
+                board: board::of_str([
+                    "    ♚   ",
+                    "   ♙ ♟  ",
+                    "        ",
+                    "        ",
+                    "        ",
+                    "        ",
+                    "        ",
+                    "    ♔   ",
+                ]),
+                players: HashMap::from([
+                    (
+                        Color::White,
+                        Player {
+                            color: Color::White,
+                            captured_pieces: Vec::new(),
+                            possible_movements: HashSet::new(),
+                        },
+                    ),
+                    (
+                        Color::Black,
+                        Player {
+                            color: Color::Black,
+                            captured_pieces: Vec::new(),
+                            possible_movements: HashSet::from([
+                                Pos::of_str("A6"),
+                                Pos::of_str("B6"),
+                                Pos::of_str("C6"),
+                                Pos::of_str("D6"),
+                                Pos::of_str("E6"),
+                                Pos::of_str("F6"),
+                                Pos::of_str("G6"),
+                                Pos::of_str("H6"),
+                                Pos::of_str("A5"),
+                                Pos::of_str("B5"),
+                                Pos::of_str("C5"),
+                                Pos::of_str("D5"),
+                                Pos::of_str("E5"),
+                                Pos::of_str("F5"),
+                                Pos::of_str("G5"),
+                                Pos::of_str("H5"),
+                            ]),
+                        },
+                    ),
+                ]),
+                history: Vec::new(),
+            }
+        ), true);
+    }
+
+    // criar módulo MODO DE JOGO, criar modo padrão lá
+    // criar função pra criar PLAY::from_historico
+
+    #[test]
+    fn test_initial_board() {
+        assert_eq!(
+            initial_board(),
+            HashMap::from([
+                (Pos::of_str("A8"), Piece::of_str("♜")),
+                (Pos::of_str("B8"), Piece::of_str("♞")),
+                (Pos::of_str("C8"), Piece::of_str("♝")),
+                (Pos::of_str("D8"), Piece::of_str("♛")),
+                (Pos::of_str("E8"), Piece::of_str("♚")),
+                (Pos::of_str("F8"), Piece::of_str("♝")),
+                (Pos::of_str("G8"), Piece::of_str("♞")),
+                (Pos::of_str("H8"), Piece::of_str("♜")),
+                (Pos::of_str("A7"), Piece::of_str("♟")),
+                (Pos::of_str("B7"), Piece::of_str("♟")),
+                (Pos::of_str("C7"), Piece::of_str("♟")),
+                (Pos::of_str("D7"), Piece::of_str("♟")),
+                (Pos::of_str("E7"), Piece::of_str("♟")),
+                (Pos::of_str("F7"), Piece::of_str("♟")),
+                (Pos::of_str("G7"), Piece::of_str("♟")),
+                (Pos::of_str("H7"), Piece::of_str("♟")),
+                (Pos::of_str("A2"), Piece::of_str("♙")),
+                (Pos::of_str("B2"), Piece::of_str("♙")),
+                (Pos::of_str("C2"), Piece::of_str("♙")),
+                (Pos::of_str("D2"), Piece::of_str("♙")),
+                (Pos::of_str("E2"), Piece::of_str("♙")),
+                (Pos::of_str("F2"), Piece::of_str("♙")),
+                (Pos::of_str("G2"), Piece::of_str("♙")),
+                (Pos::of_str("H2"), Piece::of_str("♙")),
+                (Pos::of_str("A1"), Piece::of_str("♖")),
+                (Pos::of_str("B1"), Piece::of_str("♘")),
+                (Pos::of_str("C1"), Piece::of_str("♗")),
+                (Pos::of_str("D1"), Piece::of_str("♕")),
+                (Pos::of_str("E1"), Piece::of_str("♔")),
+                (Pos::of_str("F1"), Piece::of_str("♗")),
+                (Pos::of_str("G1"), Piece::of_str("♘")),
+                (Pos::of_str("H1"), Piece::of_str("♖")),
+            ])
         );
     }
 }

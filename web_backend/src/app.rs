@@ -1,11 +1,11 @@
 use core::f64;
 use libre_chess_lib::{
-    board::{get_initial_board, pos::Pos, Board},
+    board::pos::Pos,
     color::Color,
     piece::Type,
-    play::{get_moves, is_in_check, move_piece, movement::Movement, Play},
+    play::{initial_board, is_in_check, move_piece, movement::Movement, movements_piece, Play},
 };
-use std::{cell::RefCell, collections::HashSet, f64::consts::PI, hash::Hash, rc::Rc};
+use std::{cell::RefCell, collections::HashSet, rc::Rc};
 use wasm_bindgen::{prelude::Closure, JsCast, JsValue};
 use web_sys::{
     console,
@@ -106,7 +106,7 @@ pub fn app_init(context: CanvasRenderingContext2d) {
     MODEL.with(|i| {
         let mut model = i.borrow_mut();
         model.context = Some(context);
-        model.play.board = get_initial_board();
+        model.play.board = initial_board();
     });
     app_add_on_change_listener({
         move |prop| {
@@ -275,7 +275,7 @@ pub fn app_click(row: u16, col: u16) {
                         m.settings.selected_piece_movements = HashSet::new();
                     } else {
                         m.settings.selected_squares.clear();
-                        let movements = get_moves(&m.play, &pos);
+                        let movements = movements_piece(&m.play, &pos);
                         m.settings.selected_piece = Some(pos.clone());
                         m.settings.selected_piece_movements = movements.into_iter().collect();
                     }

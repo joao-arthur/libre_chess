@@ -172,7 +172,10 @@ mod test {
             Err(FromStringErr::InvalidLength(InvalidLengthErr))
         );
 
-        assert_eq!(format!("{}", InvalidCharacterErr), "Only [0-9] characters and spaces are allowed!");
+        assert_eq!(
+            format!("{}", InvalidCharacterErr),
+            "Only [0-9] characters and spaces are allowed!"
+        );
         assert_eq!(format!("{}", InvalidLengthErr), "Every line must be 8 characters long");
     }
 
