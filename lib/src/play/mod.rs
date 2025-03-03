@@ -10,6 +10,7 @@ use crate::{
 };
 
 pub mod movement;
+mod variant;
 mod player;
 
 #[derive(Debug, PartialEq)]
@@ -125,20 +126,6 @@ pub fn is_in_check(play: &Play) -> bool {
     false
 }
 
-// create game mode module
-pub fn initial_board() -> Board {
-    board::of_str([
-        "♜♞♝♛♚♝♞♜",
-        "♟♟♟♟♟♟♟♟",
-        "        ",
-        "        ",
-        "        ",
-        "        ",
-        "♙♙♙♙♙♙♙♙",
-        "♖♘♗♕♔♗♘♖",
-    ])
-}
-
 // TODO board states
 // neutral
 // selected_movement
@@ -148,7 +135,7 @@ pub fn initial_board() -> Board {
 mod test {
     use super::*;
 
-    use crate::{piece::Piece, play::movement::Movement};
+    use crate::{piece::Piece, play::{movement::Movement, variant::standard_initial_board}};
 
     #[test]
     fn test_play() {
@@ -204,7 +191,7 @@ mod test {
     #[test]
     fn test_set_board() {
         let mut play = Play::default();
-        set_board(&mut play, initial_board());
+        set_board(&mut play, standard_initial_board());
         assert_eq!(
             play,
             Play {
@@ -398,47 +385,5 @@ mod test {
         ), true);
     }
 
-    // criar módulo MODO DE JOGO, criar modo padrão lá
     // criar função pra criar PLAY::from_historico
-
-    #[test]
-    fn test_initial_board() {
-        assert_eq!(
-            initial_board(),
-            HashMap::from([
-                (Pos::of_str("A8"), Piece::of_str("♜")),
-                (Pos::of_str("B8"), Piece::of_str("♞")),
-                (Pos::of_str("C8"), Piece::of_str("♝")),
-                (Pos::of_str("D8"), Piece::of_str("♛")),
-                (Pos::of_str("E8"), Piece::of_str("♚")),
-                (Pos::of_str("F8"), Piece::of_str("♝")),
-                (Pos::of_str("G8"), Piece::of_str("♞")),
-                (Pos::of_str("H8"), Piece::of_str("♜")),
-                (Pos::of_str("A7"), Piece::of_str("♟")),
-                (Pos::of_str("B7"), Piece::of_str("♟")),
-                (Pos::of_str("C7"), Piece::of_str("♟")),
-                (Pos::of_str("D7"), Piece::of_str("♟")),
-                (Pos::of_str("E7"), Piece::of_str("♟")),
-                (Pos::of_str("F7"), Piece::of_str("♟")),
-                (Pos::of_str("G7"), Piece::of_str("♟")),
-                (Pos::of_str("H7"), Piece::of_str("♟")),
-                (Pos::of_str("A2"), Piece::of_str("♙")),
-                (Pos::of_str("B2"), Piece::of_str("♙")),
-                (Pos::of_str("C2"), Piece::of_str("♙")),
-                (Pos::of_str("D2"), Piece::of_str("♙")),
-                (Pos::of_str("E2"), Piece::of_str("♙")),
-                (Pos::of_str("F2"), Piece::of_str("♙")),
-                (Pos::of_str("G2"), Piece::of_str("♙")),
-                (Pos::of_str("H2"), Piece::of_str("♙")),
-                (Pos::of_str("A1"), Piece::of_str("♖")),
-                (Pos::of_str("B1"), Piece::of_str("♘")),
-                (Pos::of_str("C1"), Piece::of_str("♗")),
-                (Pos::of_str("D1"), Piece::of_str("♕")),
-                (Pos::of_str("E1"), Piece::of_str("♔")),
-                (Pos::of_str("F1"), Piece::of_str("♗")),
-                (Pos::of_str("G1"), Piece::of_str("♘")),
-                (Pos::of_str("H1"), Piece::of_str("♖")),
-            ])
-        );
-    }
 }
