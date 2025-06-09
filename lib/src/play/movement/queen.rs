@@ -10,7 +10,7 @@ pub fn naive_movements_queen(board: &Board, pos: &Pos) -> Vec<Pos> {
 }
 
 #[cfg(test)]
-mod test {
+mod tests {
     use crate::board;
 
     use super::*;

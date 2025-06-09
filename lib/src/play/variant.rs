@@ -14,7 +14,7 @@ pub fn standard_initial_board() -> Board {
 }
 
 #[cfg(test)]
-mod test {
+mod tests {
     use std::collections::HashMap;
 
     use crate::{board::pos::Pos, piece::Piece};

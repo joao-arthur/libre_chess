@@ -65,7 +65,7 @@ pub fn naive_movements_board(board: &Board, color: &Color) -> HashSet<Pos> {
 }
 
 #[cfg(test)]
-mod test {
+mod tests {
     use crate::{board, play::variant::standard_initial_board};
 
     use super::*;

@@ -122,7 +122,7 @@ pub fn is_in_check(play: &Play) -> bool {
 }
 
 #[cfg(test)]
-mod test {
+mod tests {
     use super::*;
 
     use crate::{board, piece::Piece, play::variant::standard_initial_board};

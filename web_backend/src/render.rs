@@ -47,7 +47,7 @@ pub fn get_values_to_render(b: &Board, s: &RenderSettings) -> Vec<ValueToRender>
 }
 
 #[cfg(test)]
-mod test {
+mod tests {
     use libre_chess_lib::board::get_initial_board;
 
     use super::*;

@@ -10,7 +10,7 @@ fn get_turn(play: &Play) -> Color {
 }
 
 #[cfg(test)]
-mod test {
+mod tests {
     use super::*;
 
     #[test]

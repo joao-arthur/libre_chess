@@ -90,7 +90,7 @@ fn to_string(board: &Board) -> String {
 }
 
 #[cfg(test)]
-mod test {
+mod tests {
     use super::*;
 
     #[test]

@@ -29,7 +29,7 @@ pub fn naive_movements_king(board: &Board, pos: &Pos) -> Vec<Pos> {
 }
 
 #[cfg(test)]
-mod test {
+mod tests {
     use crate::board;
 
     use super::*;

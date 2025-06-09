@@ -54,7 +54,7 @@ impl Pos {
 }
 
 #[cfg(test)]
-mod test {
+mod tests {
     use super::*;
 
     #[test]

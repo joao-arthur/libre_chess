@@ -75,7 +75,7 @@ fn white_pawn_en_passant(board: &Board, history: Vec<Movement>, pos: &Pos) -> Ve
 }
 
 #[cfg(test)]
-mod test {
+mod tests {
     use crate::board;
 
     use super::*;
