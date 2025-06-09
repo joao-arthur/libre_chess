@@ -79,7 +79,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_try_of_idx_some() {
+    fn try_of_idx_some() {
         assert_eq!(Row::try_of_idx(0), Some(Row::_8));
         assert_eq!(Row::try_of_idx(1), Some(Row::_7));
         assert_eq!(Row::try_of_idx(2), Some(Row::_6));
@@ -91,14 +91,14 @@ mod tests {
     }
 
     #[test]
-    fn test_try_of_idx_none() {
+    fn try_of_idx_none() {
         assert_eq!(Row::try_of_idx(8), None);
         assert_eq!(Row::try_of_idx(9), None);
         assert_eq!(Row::try_of_idx(10), None);
     }
 
     #[test]
-    fn test_of_idx() {
+    fn of_idx() {
         assert_eq!(Row::of_idx(0), Row::_8);
         assert_eq!(Row::of_idx(1), Row::_7);
         assert_eq!(Row::of_idx(2), Row::_6);
@@ -110,7 +110,7 @@ mod tests {
     }
 
     #[test]
-    fn test_to_idx() {
+    fn to_idx() {
         assert_eq!(Row::_1.to_idx(), 7);
         assert_eq!(Row::_2.to_idx(), 6);
         assert_eq!(Row::_3.to_idx(), 5);
@@ -122,7 +122,7 @@ mod tests {
     }
 
     #[test]
-    fn test_try_of_str_some() {
+    fn try_of_str_some() {
         assert_eq!(Row::try_of_str("1"), Some(Row::_1));
         assert_eq!(Row::try_of_str("2"), Some(Row::_2));
         assert_eq!(Row::try_of_str("3"), Some(Row::_3));
@@ -134,14 +134,14 @@ mod tests {
     }
 
     #[test]
-    fn test_try_of_str_none() {
+    fn try_of_str_none() {
         assert_eq!(Row::try_of_str("0"), None);
         assert_eq!(Row::try_of_str("9"), None);
         assert_eq!(Row::try_of_str("10"), None);
     }
 
     #[test]
-    fn test_of_str() {
+    fn of_str() {
         assert_eq!(Row::of_str("1"), Row::_1);
         assert_eq!(Row::of_str("2"), Row::_2);
         assert_eq!(Row::of_str("3"), Row::_3);
@@ -153,7 +153,7 @@ mod tests {
     }
 
     #[test]
-    fn test_to_str() {
+    fn to_str() {
         assert_eq!(Row::_1.to_str(), "1");
         assert_eq!(Row::_2.to_str(), "2");
         assert_eq!(Row::_3.to_str(), "3");

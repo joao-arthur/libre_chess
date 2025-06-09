@@ -1,7 +1,8 @@
-//wip
+use crate::color::Color;
+
 use super::Play;
 
-fn get_turn(play: &Play) -> Color {
+pub fn get_turn(play: &Play) -> Color {
     if play.history.len() % 2 == 0 {
         Color::White
     } else {
@@ -11,10 +12,12 @@ fn get_turn(play: &Play) -> Color {
 
 #[cfg(test)]
 mod tests {
+    use crate::play::movement::Movement;
+
     use super::*;
 
     #[test]
-    fn test_turn() {
+    fn test_get_turn() {
         assert_eq!(get_turn(&Play { history: Vec::new(), ..Default::default() }), Color::White);
         assert_eq!(get_turn(&Play {
                 history: Vec::from([Movement::of_str("♟", "D2", "D4")]),

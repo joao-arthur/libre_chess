@@ -37,7 +37,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_naive_movements_bishop_none() {
+    fn naive_movements_bishop_none() {
         assert_eq!(
             naive_movements_bishop(
                 &board::of_str([
@@ -57,7 +57,7 @@ mod tests {
     }
 
     #[test]
-    fn test_naive_movements_bishop_empty_board() {
+    fn naive_movements_bishop_empty_board() {
         assert_eq!(
             naive_movements_bishop(
                 &board::of_str([
@@ -92,7 +92,7 @@ mod tests {
     }
 
     #[test]
-    fn test_naive_movements_bishop_edge() {
+    fn naive_movements_bishop_edge() {
         assert_eq!(
             naive_movements_bishop(
                 &board::of_str([
@@ -120,7 +120,7 @@ mod tests {
     }
 
     #[test]
-    fn test_naive_movements_bishop_with_capture() {
+    fn naive_movements_bishop_with_capture() {
         assert_eq!(
             naive_movements_bishop(
                 &board::of_str([

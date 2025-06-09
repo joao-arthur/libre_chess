@@ -94,7 +94,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_try_of_str_ok() {
+    fn try_of_str_ok() {
         assert_eq!(
             try_of_str([
                 "♜♞♝♛♚♝♞♜",
@@ -144,7 +144,7 @@ mod tests {
     }
 
     #[test]
-    fn test_try_of_str_err() {
+    fn try_of_str_err() {
         assert_eq!(
             try_of_str([
                 "RNBQKBNR",

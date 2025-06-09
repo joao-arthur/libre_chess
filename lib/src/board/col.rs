@@ -79,7 +79,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_try_of_idx_some() {
+    fn try_of_idx_some() {
         assert_eq!(Col::try_of_idx(0), Some(Col::A));
         assert_eq!(Col::try_of_idx(1), Some(Col::B));
         assert_eq!(Col::try_of_idx(2), Some(Col::C));
@@ -91,14 +91,14 @@ mod tests {
     }
 
     #[test]
-    fn test_try_of_idx_none() {
+    fn try_of_idx_none() {
         assert_eq!(Col::try_of_idx(8), None);
         assert_eq!(Col::try_of_idx(9), None);
         assert_eq!(Col::try_of_idx(10), None);
     }
 
     #[test]
-    fn test_of_idx() {
+    fn of_idx() {
         assert_eq!(Col::of_idx(0), Col::A);
         assert_eq!(Col::of_idx(1), Col::B);
         assert_eq!(Col::of_idx(2), Col::C);
@@ -110,7 +110,7 @@ mod tests {
     }
 
     #[test]
-    fn test_to_idx() {
+    fn to_idx() {
         assert_eq!(Col::A.to_idx(), 0);
         assert_eq!(Col::B.to_idx(), 1);
         assert_eq!(Col::C.to_idx(), 2);
@@ -122,7 +122,7 @@ mod tests {
     }
 
     #[test]
-    fn test_try_of_str_some() {
+    fn try_of_str_some() {
         assert_eq!(Col::try_of_str("A"), Some(Col::A));
         assert_eq!(Col::try_of_str("B"), Some(Col::B));
         assert_eq!(Col::try_of_str("C"), Some(Col::C));
@@ -134,14 +134,14 @@ mod tests {
     }
 
     #[test]
-    fn test_try_of_str_none() {
+    fn try_of_str_none() {
         assert_eq!(Col::try_of_str("I"), None);
         assert_eq!(Col::try_of_str("J"), None);
         assert_eq!(Col::try_of_str("K"), None);
     }
 
     #[test]
-    fn test_of_str() {
+    fn of_str() {
         assert_eq!(Col::of_str("A"), Col::A);
         assert_eq!(Col::of_str("B"), Col::B);
         assert_eq!(Col::of_str("C"), Col::C);
@@ -153,7 +153,7 @@ mod tests {
     }
 
     #[test]
-    fn test_to_str() {
+    fn to_str() {
         assert_eq!(Col::A.to_str(), "A");
         assert_eq!(Col::B.to_str(), "B");
         assert_eq!(Col::C.to_str(), "C");

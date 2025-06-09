@@ -81,7 +81,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_pawn_movements_none() {
+    fn pawn_movements_none() {
         assert_eq!(
             naive_movements_pawn(
                 &board::of_str([
@@ -101,7 +101,7 @@ mod tests {
     }
 
     #[test]
-    fn test_pawn_movements_empty_board() {
+    fn pawn_movements_empty_board() {
         assert_eq!(
             naive_movements_pawn(
                 &board::of_str([
@@ -137,7 +137,7 @@ mod tests {
     }
 
     #[test]
-    fn test_pawn_movements_first_move() {
+    fn pawn_movements_first_move() {
         assert_eq!(
             naive_movements_pawn(
                 &board::of_str([
@@ -173,7 +173,7 @@ mod tests {
     }
 
     #[test]
-    fn test_pawn_movements_blocked() {
+    fn pawn_movements_blocked() {
         assert_eq!(
             naive_movements_pawn(
                 &board::of_str([
@@ -209,7 +209,7 @@ mod tests {
     }
 
     #[test]
-    fn test_pawn_movements_capture() {
+    fn pawn_movements_capture() {
         assert_eq!(
             naive_movements_pawn(
                 &board::of_str([

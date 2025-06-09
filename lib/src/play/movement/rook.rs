@@ -37,7 +37,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_naive_movements_rook_none() {
+    fn naive_movements_rook_none() {
         assert_eq!(
             naive_movements_rook(
                 &board::of_str([
@@ -57,7 +57,7 @@ mod tests {
     }
 
     #[test]
-    fn test_naive_movements_rook_empty_board() {
+    fn naive_movements_rook_empty_board() {
         assert_eq!(
             naive_movements_rook(
                 &board::of_str([
@@ -95,7 +95,7 @@ mod tests {
     }
 
     #[test]
-    fn test_naive_movements_rook_edge() {
+    fn naive_movements_rook_edge() {
         assert_eq!(
             naive_movements_rook(
                 &board::of_str([
@@ -131,7 +131,7 @@ mod tests {
     }
 
     #[test]
-    fn test_naive_movements_rook_with_capture() {
+    fn naive_movements_rook_with_capture() {
         assert_eq!(
             naive_movements_rook(
                 &board::of_str([

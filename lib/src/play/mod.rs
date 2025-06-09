@@ -6,7 +6,7 @@ use player::Player;
 use crate::{
     board::{pos::Pos, Board},
     color::Color,
-    piece::Type,
+    piece::Type, play::turn::get_turn,
 };
 
 pub mod movement;
@@ -60,7 +60,7 @@ fn set_board(play: &mut Play, board: Board) {
 
 
 pub fn piece_move(play: &mut Play, movement: Movement) {
-    let curr_turn = turn(play);
+    let curr_turn = get_turn(play);
     if movement.piece.c != curr_turn {
         return;
     }
@@ -80,7 +80,7 @@ pub fn piece_move(play: &mut Play, movement: Movement) {
 
 pub fn piece_movements(play: &Play, pos: &Pos) -> Vec<Pos> {
     if let Some(piece) = play.board.get(&pos) {
-        let curr_turn = turn(play);
+        let curr_turn = get_turn(play);
         if piece.c != curr_turn {
             return Vec::new();
         }
@@ -107,7 +107,7 @@ pub fn piece_movements(play: &Play, pos: &Pos) -> Vec<Pos> {
 }
 
 pub fn is_in_check(play: &Play) -> bool {
-    let curr_turn = turn(play);
+    let curr_turn = get_turn(play);
     for entry in play.board.iter() {
         if entry.1.t == Type::King && entry.1.c == curr_turn {
             for player in play.players.values() {
@@ -128,7 +128,7 @@ mod tests {
     use crate::{board, piece::Piece, play::variant::standard_initial_board};
 
     #[test]
-    fn test_play() {
+    fn play() {
         assert_eq!(
             Play::default(),
             Play {
@@ -238,15 +238,15 @@ mod tests {
     }
 
     #[test]
-    fn test_move_piece() {}
+    fn move_piece() {}
 
     #[test]
-    fn test_movements_piece() {
+    fn movements_piece() {
         // pra testar aqui, o resto tem que estar funcionando
     }
 
     #[test]
-    fn test_is_in_check_false() {
+    fn is_in_check_false() {
         assert_eq!(is_in_check(
             &Play {
                 board: board::of_str([
@@ -300,7 +300,7 @@ mod tests {
     }
 
     #[test]
-    fn test_is_in_check_true() {
+    fn is_in_check_true() {
         assert_eq!(is_in_check(
             &Play {
                 board: board::of_str([

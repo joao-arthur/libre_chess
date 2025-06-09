@@ -58,7 +58,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_try_of_idx_some() {
+    fn try_of_idx_some() {
         assert_eq!(Pos::try_of_idx(7, 0), Some(Pos { row: Row::_1, col: Col::A }));
         assert_eq!(Pos::try_of_idx(6, 0), Some(Pos { row: Row::_2, col: Col::A }));
         assert_eq!(Pos::try_of_idx(5, 0), Some(Pos { row: Row::_3, col: Col::A }));
@@ -77,14 +77,14 @@ mod tests {
     }
 
     #[test]
-    fn test_try_of_idx_none() {
+    fn try_of_idx_none() {
         assert_eq!(Pos::try_of_idx(8, 8), None);
         assert_eq!(Pos::try_of_idx(9, 9), None);
         assert_eq!(Pos::try_of_idx(10, 10), None);
     }
 
     #[test]
-    fn test_of_idx() {
+    fn of_idx() {
         assert_eq!(Pos::of_idx(7, 0), Pos { row: Row::_1, col: Col::A });
         assert_eq!(Pos::of_idx(6, 0), Pos { row: Row::_2, col: Col::A });
         assert_eq!(Pos::of_idx(5, 0), Pos { row: Row::_3, col: Col::A });
@@ -103,7 +103,7 @@ mod tests {
     }
 
     #[test]
-    fn test_try_of_rel_idx_some() {
+    fn try_of_rel_idx_some() {
         assert_eq!(Pos::of_idx(7, 7).try_of_rel_idx(0, 0), Some(Pos::of_idx(7, 7)));
         assert_eq!(Pos::of_idx(7, 7).try_of_rel_idx(-1, -1,), Some(Pos::of_idx(6, 6)));
         assert_eq!(Pos::of_idx(7, 7).try_of_rel_idx(-2, -2,), Some(Pos::of_idx(5, 5)));
@@ -123,7 +123,7 @@ mod tests {
     }
 
     #[test]
-    fn test_try_of_rel_idx_none() {
+    fn try_of_rel_idx_none() {
         assert_eq!(Pos::of_idx(0, 0).try_of_rel_idx(-1, -1), None);
         assert_eq!(Pos::of_idx(0, 0).try_of_rel_idx(-2, -2), None);
         assert_eq!(Pos::of_idx(0, 0).try_of_rel_idx(-3, -3), None);
@@ -141,7 +141,7 @@ mod tests {
     }
 
     #[test]
-    fn test_of_rel_idx() {
+    fn of_rel_idx() {
         assert_eq!(Pos::of_idx(7, 7).of_rel_idx(0, 0), Pos::of_idx(7, 7));
         assert_eq!(Pos::of_idx(7, 7).of_rel_idx(-1, -1), Pos::of_idx(6, 6));
         assert_eq!(Pos::of_idx(7, 7).of_rel_idx(-2, -2), Pos::of_idx(5, 5));
@@ -161,7 +161,7 @@ mod tests {
     }
 
     #[test]
-    fn test_try_of_str_some() {
+    fn try_of_str_some() {
         assert_eq!(Pos::try_of_str("A1"), Some(Pos { row: Row::_1, col: Col::A }));
         assert_eq!(Pos::try_of_str("A2"), Some(Pos { row: Row::_2, col: Col::A }));
         assert_eq!(Pos::try_of_str("A3"), Some(Pos { row: Row::_3, col: Col::A }));
@@ -180,7 +180,7 @@ mod tests {
     }
 
     #[test]
-    fn test_try_of_str_none() {
+    fn try_of_str_none() {
         assert_eq!(Pos::try_of_str("A10"), None);
         assert_eq!(Pos::try_of_str("H10"), None);
         assert_eq!(Pos::try_of_str("A0"), None);
@@ -194,7 +194,7 @@ mod tests {
     }
 
     #[test]
-    fn test_of_str() {
+    fn of_str() {
         assert_eq!(Pos::of_str("A1"), Pos { row: Row::_1, col: Col::A });
         assert_eq!(Pos::of_str("A2"), Pos { row: Row::_2, col: Col::A });
         assert_eq!(Pos::of_str("A3"), Pos { row: Row::_3, col: Col::A });
@@ -213,7 +213,7 @@ mod tests {
     }
 
     #[test]
-    fn test_to_string() {
+    fn to_string() {
         assert_eq!(Pos { row: Row::_1, col: Col::A }.to_string(), "A1".to_string());
         assert_eq!(Pos { row: Row::_2, col: Col::A }.to_string(), "A2".to_string());
         assert_eq!(Pos { row: Row::_3, col: Col::A }.to_string(), "A3".to_string());

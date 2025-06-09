@@ -66,7 +66,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_try_of_str_some() {
+    fn pirece_try_of_str_some() {
         assert_eq!(Piece::try_of_str("♖"), Some(Piece { t: Type::Rook, c: Color::White }));
         assert_eq!(Piece::try_of_str("♘"), Some(Piece { t: Type::Knight, c: Color::White }));
         assert_eq!(Piece::try_of_str("♗"), Some(Piece { t: Type::Bishop, c: Color::White }));
@@ -82,7 +82,7 @@ mod tests {
     }
 
     #[test]
-    fn test_try_of_str_none() {
+    fn try_of_str_none() {
         assert_eq!(Piece::try_of_str(""), None);
         assert_eq!(Piece::try_of_str("R"), None);
         assert_eq!(Piece::try_of_str("N"), None);
@@ -93,7 +93,7 @@ mod tests {
     }
 
     #[test]
-    fn test_of_str() {
+    fn of_str() {
         assert_eq!(Piece::of_str("♖"), Piece { t: Type::Rook, c: Color::White });
         assert_eq!(Piece::of_str("♘"), Piece { t: Type::Knight, c: Color::White });
         assert_eq!(Piece::of_str("♗"), Piece { t: Type::Bishop, c: Color::White });
@@ -109,7 +109,7 @@ mod tests {
     }
 
     #[test]
-    fn test_to_str() {
+    fn to_str() {
         assert_eq!(Piece { t: Type::Rook, c: Color::White }.to_str(), "♖");
         assert_eq!(Piece { t: Type::Knight, c: Color::White }.to_str(), "♘");
         assert_eq!(Piece { t: Type::Bishop, c: Color::White }.to_str(), "♗");

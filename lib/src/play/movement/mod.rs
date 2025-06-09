@@ -71,7 +71,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_play_move_try_of_str_some() {
+    fn play_move_try_of_str_some() {
         assert_eq!(
             Movement::try_of_str("♟", "D2", "D4"),
             Some(Movement {
@@ -83,14 +83,14 @@ mod tests {
     }
 
     #[test]
-    fn test_play_move_try_of_str_none() {
+    fn play_move_try_of_str_none() {
         assert_eq!(Movement::try_of_str("P", "D2", "D4"), None);
         assert_eq!(Movement::try_of_str("♟", "K9", "D4"), None);
         assert_eq!(Movement::try_of_str("♟", "D2", "K9"), None);
     }
 
     #[test]
-    fn test_play_move_of_str() {
+    fn play_move_of_str() {
         assert_eq!(
             Movement::of_str("♟", "D2", "D4"),
             Movement {
@@ -100,7 +100,7 @@ mod tests {
     }
 
     #[test]
-    fn test_naive_movements_piece_some() {
+    fn naive_movements_piece_some() {
         assert_eq!(
             naive_movements_piece(
                 &board::of_str([
@@ -284,7 +284,7 @@ mod tests {
     }
 
     #[test]
-    fn test_naive_movements_piece_none() {
+    fn naive_movements_piece_none() {
         assert_eq!(
             naive_movements_piece(
                 &board::of_str([
