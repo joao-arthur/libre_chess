@@ -84,7 +84,7 @@ pub fn main_get_settings() -> EngineInfo {
 pub fn main_get_board_set_presets() -> JsValue {
     let groups: Vec<Preset> = get_board_set_presets()
         .iter()
-        .map(|g| Preset { id: String::from(g.id), name: String::from(g.name) })
+        .map(|g| Preset { id: g.id.into(), name: g.name.into() })
         .collect();
     serde_wasm_bindgen::to_value(&groups).unwrap()
 }
@@ -93,7 +93,7 @@ pub fn main_get_board_set_presets() -> JsValue {
 pub fn main_get_board_color_presets() -> JsValue {
     let groups: Vec<Preset> = get_board_color_presets()
         .iter()
-        .map(|g| Preset { id: String::from(g.id), name: String::from(g.name) })
+        .map(|g| Preset { id: g.id.into(), name: g.name.into() })
         .collect();
     serde_wasm_bindgen::to_value(&groups).unwrap()
 }

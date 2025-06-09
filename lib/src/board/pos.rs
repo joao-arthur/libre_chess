@@ -214,20 +214,20 @@ mod tests {
 
     #[test]
     fn test_to_string() {
-        assert_eq!(Pos { row: Row::_1, col: Col::A }.to_string(), String::from("A1"));
-        assert_eq!(Pos { row: Row::_2, col: Col::A }.to_string(), String::from("A2"));
-        assert_eq!(Pos { row: Row::_3, col: Col::A }.to_string(), String::from("A3"));
-        assert_eq!(Pos { row: Row::_4, col: Col::A }.to_string(), String::from("A4"));
-        assert_eq!(Pos { row: Row::_5, col: Col::A }.to_string(), String::from("A5"));
-        assert_eq!(Pos { row: Row::_6, col: Col::A }.to_string(), String::from("A6"));
-        assert_eq!(Pos { row: Row::_7, col: Col::A }.to_string(), String::from("A7"));
-        assert_eq!(Pos { row: Row::_8, col: Col::A }.to_string(), String::from("A8"));
-        assert_eq!(Pos { row: Row::_8, col: Col::B }.to_string(), String::from("B8"));
-        assert_eq!(Pos { row: Row::_8, col: Col::C }.to_string(), String::from("C8"));
-        assert_eq!(Pos { row: Row::_8, col: Col::D }.to_string(), String::from("D8"));
-        assert_eq!(Pos { row: Row::_8, col: Col::E }.to_string(), String::from("E8"));
-        assert_eq!(Pos { row: Row::_8, col: Col::F }.to_string(), String::from("F8"));
-        assert_eq!(Pos { row: Row::_8, col: Col::G }.to_string(), String::from("G8"));
-        assert_eq!(Pos { row: Row::_8, col: Col::H }.to_string(), String::from("H8"));
+        assert_eq!(Pos { row: Row::_1, col: Col::A }.to_string(), "A1".to_string());
+        assert_eq!(Pos { row: Row::_2, col: Col::A }.to_string(), "A2".to_string());
+        assert_eq!(Pos { row: Row::_3, col: Col::A }.to_string(), "A3".to_string());
+        assert_eq!(Pos { row: Row::_4, col: Col::A }.to_string(), "A4".to_string());
+        assert_eq!(Pos { row: Row::_5, col: Col::A }.to_string(), "A5".to_string());
+        assert_eq!(Pos { row: Row::_6, col: Col::A }.to_string(), "A6".to_string());
+        assert_eq!(Pos { row: Row::_7, col: Col::A }.to_string(), "A7".to_string());
+        assert_eq!(Pos { row: Row::_8, col: Col::A }.to_string(), "A8".to_string());
+        assert_eq!(Pos { row: Row::_8, col: Col::B }.to_string(), "B8".to_string());
+        assert_eq!(Pos { row: Row::_8, col: Col::C }.to_string(), "C8".to_string());
+        assert_eq!(Pos { row: Row::_8, col: Col::D }.to_string(), "D8".to_string());
+        assert_eq!(Pos { row: Row::_8, col: Col::E }.to_string(), "E8".to_string());
+        assert_eq!(Pos { row: Row::_8, col: Col::F }.to_string(), "F8".to_string());
+        assert_eq!(Pos { row: Row::_8, col: Col::G }.to_string(), "G8".to_string());
+        assert_eq!(Pos { row: Row::_8, col: Col::H }.to_string(), "H8".to_string());
     }
 }

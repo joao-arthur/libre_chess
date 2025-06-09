@@ -76,7 +76,7 @@ pub fn of_str(rows: [&str; 8]) -> Board {
 }
 
 fn to_string(board: &Board) -> String {
-    let mut res: String = String::from("");
+    let mut res = "".to_string();
     for row in 0..8 {
         for col in 0..8 {
             match board.get(&Pos::of_idx(row, col)) {

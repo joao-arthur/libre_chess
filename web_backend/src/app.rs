@@ -45,9 +45,9 @@ impl Default for Model {
             settings: AppSettings {
                 render_settings: RenderSettings { dim: 0 },
                 board_set: board_set_normal_1(),
-                board_set_id: String::from("normal_1"),
+                board_set_id: "normal_1".into() ,
                 board_color: board_color_purple(),
-                board_color_id: String::from("purple"),
+                board_color_id: "purple".into() ,
                 selected_squares: HashSet::new(),
                 selected_piece: None,
                 selected_piece_movements: HashSet::new(),
@@ -129,7 +129,7 @@ pub fn app_set_board_color(board_color: &str) {
         MODEL.with(|i| {
             let mut m = i.borrow_mut();
             m.settings.board_color = preset;
-            m.settings.board_color_id = String::from(board_color);
+            m.settings.board_color_id = board_color.into();
         });
         on_change(Prop::BoardColor);
     }
@@ -140,7 +140,7 @@ pub fn app_set_board_set(board_set: &str) {
         MODEL.with(|i| {
             let mut m = i.borrow_mut();
             m.settings.board_set = preset;
-            m.settings.board_set_id = String::from(board_set);
+            m.settings.board_set_id = board_set.into();
         });
         on_change(Prop::BoardSet);
     }
