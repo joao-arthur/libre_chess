@@ -2,11 +2,11 @@ import type { ReactElement } from "react";
 import { useEffect, useRef, useState } from "react";
 import { useWindowDimension } from "../hooks/useWindowDimension";
 import initWASM, {
-    backendGetBoardColorPresets,
-    backendGetBoardSetPresets,
-    backendSetBoardColor,
-    backendSetBoardSet,
-} from "libre_chess_wasm";
+    engineGetBoardColorPresets,
+    engineGetBoardSetPresets,
+    engineSetBoardColor,
+    engineSetBoardSet,
+} from "libre_chess_engine";
 import { useChess } from "../hooks/useChess";
 import { Select } from "@/components/Select";
 
@@ -29,26 +29,18 @@ export default function Main(): ReactElement {
                     return;
                 }
                 init(canvasRef.current);
-                setBoardColorPresets(backendGetBoardColorPresets());
-                setBoardSetPresets(backendGetBoardSetPresets());
+                setBoardColorPresets(engineGetBoardColorPresets());
+                setBoardSetPresets(engineGetBoardSetPresets());
             });
         }
     }, []);
 
     function handleSetBoardColor(preset: string) {
-        try {
-            backendSetBoardColor(preset);
-        } catch (e) {
-            console.error(e);
-        }
+            engineSetBoardColor(preset);
     }
 
     function handleSetBoardSet(preset: string) {
-        try {
-            backendSetBoardSet(preset);
-        } catch (e) {
-            console.error(e);
-        }
+            engineSetBoardSet(preset);
     }
 
     return (

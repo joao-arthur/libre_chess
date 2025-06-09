@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import {
-    backendAddOnChangeListener,
-    backendGetSettings,
-    backendInit,
-    backendSetDimension,
+    engineAddOnChangeListener,
+    engineGetSettings,
+    engineInit,
+    engineSetDimension,
     EngineInfo,
-} from "libre_chess_wasm";
+} from "libre_chess_engine";
 import { useWindowDimension } from "./useWindowDimension";
 
 type Chess = {
@@ -20,14 +20,14 @@ export function useChess(): Chess {
 
     useEffect(() => {
         if (hasInited && dimension > 0) {
-            backendSetDimension(dimension);
+            engineSetDimension(dimension);
         }
     }, [dimension, hasInited]);
 
     function init(canvas: HTMLCanvasElement) {
-        backendInit(canvas);
-        backendAddOnChangeListener(() => {
-            let obj = backendGetSettings();
+        engineInit(canvas);
+        engineAddOnChangeListener(() => {
+            let obj = engineGetSettings();
             setModel({
                 board_set: obj.board_set,
                 board_color: obj.board_color,

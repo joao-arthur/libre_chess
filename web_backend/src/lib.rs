@@ -41,7 +41,7 @@ impl EngineInfo {
     }
 }
 
-#[wasm_bindgen(js_name = "backendInit")]
+#[wasm_bindgen(js_name = "engineInit")]
 pub fn main_init(canvas: HtmlCanvasElement) {
     if let Ok(Some(context)) = canvas.get_context("2d") {
         app_init(context.dyn_into::<CanvasRenderingContext2d>().map_err(|_| ()).unwrap());
@@ -59,28 +59,28 @@ pub fn main_init(canvas: HtmlCanvasElement) {
     }
 }
 
-#[wasm_bindgen(js_name = "backendSetDimension")]
+#[wasm_bindgen(js_name = "engineSetDimension")]
 pub fn main_set_dim(dim: u16) {
     app_set_dim(dim);
 }
 
-#[wasm_bindgen(js_name = "backendSetBoardColor")]
+#[wasm_bindgen(js_name = "engineSetBoardColor")]
 pub fn main_set_board_color(board_color: &str) {
     app_set_board_color(board_color);
 }
 
-#[wasm_bindgen(js_name = "backendSetBoardSet")]
+#[wasm_bindgen(js_name = "engineSetBoardSet")]
 pub fn main_set_board_set(board_set: &str) {
     app_set_board_set(board_set);
 }
 
-#[wasm_bindgen(js_name = "backendGetSettings")]
+#[wasm_bindgen(js_name = "engineGetSettings")]
 pub fn main_get_settings() -> EngineInfo {
     let settings = app_get_settings();
     EngineInfo { board_color: settings.board_color, board_set: settings.board_set }
 }
 
-#[wasm_bindgen(js_name = "backendGetBoardSetPresets")]
+#[wasm_bindgen(js_name = "engineGetBoardSetPresets")]
 pub fn main_get_board_set_presets() -> JsValue {
     let groups: Vec<Preset> = get_board_set_presets()
         .iter()
@@ -89,7 +89,7 @@ pub fn main_get_board_set_presets() -> JsValue {
     serde_wasm_bindgen::to_value(&groups).unwrap()
 }
 
-#[wasm_bindgen(js_name = "backendGetBoardColorPresets")]
+#[wasm_bindgen(js_name = "engineGetBoardColorPresets")]
 pub fn main_get_board_color_presets() -> JsValue {
     let groups: Vec<Preset> = get_board_color_presets()
         .iter()
@@ -98,7 +98,7 @@ pub fn main_get_board_color_presets() -> JsValue {
     serde_wasm_bindgen::to_value(&groups).unwrap()
 }
 
-#[wasm_bindgen(js_name = "backendAddOnChangeListener")]
+#[wasm_bindgen(js_name = "engineAddOnChangeListener")]
 pub fn main_add_on_change_listener(cb: Function) {
     app_add_on_change_listener(move |_| {
         cb.call0(&JsValue::null()).unwrap();
