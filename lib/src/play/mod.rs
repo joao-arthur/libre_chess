@@ -4,14 +4,15 @@ use movement::{naive_movements_board, naive_movements_piece, Movement};
 use player::Player;
 
 use crate::{
-    board::{self, pos::Pos, Board},
+    board::{pos::Pos, Board},
     color::Color,
-    piece::{Piece, Type},
+    piece::Type,
 };
 
 pub mod movement;
-mod variant;
+pub mod variant;
 mod player;
+mod turn;
 
 #[derive(Debug, PartialEq)]
 pub struct Play {
@@ -56,15 +57,9 @@ fn set_board(play: &mut Play, board: Board) {
     }
 }
 
-fn turn(play: &Play) -> Color {
-    if play.history.len() % 2 == 0 {
-        Color::White
-    } else {
-        Color::Black
-    }
-}
 
-pub fn move_piece(play: &mut Play, movement: Movement) {
+
+pub fn piece_move(play: &mut Play, movement: Movement) {
     let curr_turn = turn(play);
     if movement.piece.c != curr_turn {
         return;
@@ -83,7 +78,7 @@ pub fn move_piece(play: &mut Play, movement: Movement) {
     // if 50 moves with no capture return MoveResult::Stalemate
 }
 
-pub fn movements_piece(play: &Play, pos: &Pos) -> Vec<Pos> {
+pub fn piece_movements(play: &Play, pos: &Pos) -> Vec<Pos> {
     if let Some(piece) = play.board.get(&pos) {
         let curr_turn = turn(play);
         if piece.c != curr_turn {
@@ -126,16 +121,11 @@ pub fn is_in_check(play: &Play) -> bool {
     false
 }
 
-// TODO board states
-// neutral
-// selected_movement
-// selected_square
-
 #[cfg(test)]
 mod test {
     use super::*;
 
-    use crate::{piece::Piece, play::{movement::Movement, variant::standard_initial_board}};
+    use crate::{board, piece::Piece, play::variant::standard_initial_board};
 
     #[test]
     fn test_play() {
@@ -163,28 +153,6 @@ mod test {
                 ]),
                 history: Vec::new(),
             }
-        );
-    }
-
-    #[test]
-    fn test_turn() {
-        assert_eq!(turn(&Play { history: Vec::new(), ..Default::default() }), Color::White);
-        assert_eq!(
-            turn(&Play {
-                history: Vec::from([Movement::of_str("♟", "D2", "D4")]),
-                ..Default::default()
-            }),
-            Color::Black
-        );
-        assert_eq!(
-            turn(&Play {
-                history: Vec::from([
-                    Movement::of_str("♟", "D2", "D4"),
-                    Movement::of_str("♟", "A2", "A3")
-                ]),
-                ..Default::default()
-            }),
-            Color::White
         );
     }
 

@@ -13,20 +13,6 @@ pub fn standard_initial_board() -> Board {
     ])
 }
 
-pub fn chess960() -> Board {
-    board::of_str([
-        "♜♞♝♛♚♝♞♜",
-        "♟♟♟♟♟♟♟♟",
-        "        ",
-        "        ",
-        "        ",
-        "        ",
-        "♙♙♙♙♙♙♙♙",
-        "♖♘♗♕♔♗♘♖",
-    ])
-}
-
-
 #[cfg(test)]
 mod test {
     use std::collections::HashMap;
@@ -36,7 +22,7 @@ mod test {
     use super::*;
 
     #[test]
-    fn test_standard() {
+    fn test_standard_initial_board() {
         assert_eq!(
             standard_initial_board(),
             HashMap::from([
