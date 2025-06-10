@@ -25,7 +25,7 @@ impl Col {
         }
     }
 
-    fn of_idx(i: u8) -> Self {
+    pub fn of_idx(i: u8) -> Self {
         Self::try_of_idx(i).unwrap()
     }
 
@@ -56,7 +56,7 @@ impl Col {
         }
     }
 
-    fn of_str(s: &str) -> Self {
+    pub fn of_str(s: &str) -> Self {
         Self::try_of_str(s).unwrap()
     }
 
@@ -79,7 +79,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn try_of_idx_some() {
+    fn test_try_of_idx() {
         assert_eq!(Col::try_of_idx(0), Some(Col::A));
         assert_eq!(Col::try_of_idx(1), Some(Col::B));
         assert_eq!(Col::try_of_idx(2), Some(Col::C));
@@ -88,10 +88,6 @@ mod tests {
         assert_eq!(Col::try_of_idx(5), Some(Col::F));
         assert_eq!(Col::try_of_idx(6), Some(Col::G));
         assert_eq!(Col::try_of_idx(7), Some(Col::H));
-    }
-
-    #[test]
-    fn try_of_idx_none() {
         assert_eq!(Col::try_of_idx(8), None);
         assert_eq!(Col::try_of_idx(9), None);
         assert_eq!(Col::try_of_idx(10), None);
@@ -122,7 +118,7 @@ mod tests {
     }
 
     #[test]
-    fn try_of_str_some() {
+    fn test_try_of_str() {
         assert_eq!(Col::try_of_str("A"), Some(Col::A));
         assert_eq!(Col::try_of_str("B"), Some(Col::B));
         assert_eq!(Col::try_of_str("C"), Some(Col::C));
@@ -131,10 +127,6 @@ mod tests {
         assert_eq!(Col::try_of_str("F"), Some(Col::F));
         assert_eq!(Col::try_of_str("G"), Some(Col::G));
         assert_eq!(Col::try_of_str("H"), Some(Col::H));
-    }
-
-    #[test]
-    fn try_of_str_none() {
         assert_eq!(Col::try_of_str("I"), None);
         assert_eq!(Col::try_of_str("J"), None);
         assert_eq!(Col::try_of_str("K"), None);

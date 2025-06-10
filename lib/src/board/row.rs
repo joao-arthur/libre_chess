@@ -13,19 +13,19 @@ pub enum Row {
 impl Row {
     pub fn try_of_idx(i: u8) -> Option<Self> {
         match i {
-            7 => Some(Row::_1),
-            6 => Some(Row::_2),
-            5 => Some(Row::_3),
-            4 => Some(Row::_4),
-            3 => Some(Row::_5),
-            2 => Some(Row::_6),
-            1 => Some(Row::_7),
             0 => Some(Row::_8),
+            1 => Some(Row::_7),
+            2 => Some(Row::_6),
+            3 => Some(Row::_5),
+            4 => Some(Row::_4),
+            5 => Some(Row::_3),
+            6 => Some(Row::_2),
+            7 => Some(Row::_1),
             _ => None,
         }
     }
 
-    fn of_idx(i: u8) -> Self {
+    pub fn of_idx(i: u8) -> Self {
         Self::try_of_idx(i).unwrap()
     }
 
@@ -56,7 +56,7 @@ impl Row {
         }
     }
 
-    fn of_str(s: &str) -> Self {
+    pub fn of_str(s: &str) -> Self {
         Self::try_of_str(s).unwrap()
     }
 
@@ -79,7 +79,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn try_of_idx_some() {
+    fn test_try_of_idx() {
         assert_eq!(Row::try_of_idx(0), Some(Row::_8));
         assert_eq!(Row::try_of_idx(1), Some(Row::_7));
         assert_eq!(Row::try_of_idx(2), Some(Row::_6));
@@ -88,10 +88,6 @@ mod tests {
         assert_eq!(Row::try_of_idx(5), Some(Row::_3));
         assert_eq!(Row::try_of_idx(6), Some(Row::_2));
         assert_eq!(Row::try_of_idx(7), Some(Row::_1));
-    }
-
-    #[test]
-    fn try_of_idx_none() {
         assert_eq!(Row::try_of_idx(8), None);
         assert_eq!(Row::try_of_idx(9), None);
         assert_eq!(Row::try_of_idx(10), None);

@@ -19,7 +19,8 @@ mod tests {
     #[test]
     fn test_get_turn() {
         assert_eq!(get_turn(&Play { history: Vec::new(), ..Default::default() }), Color::White);
-        assert_eq!(get_turn(&Play {
+        assert_eq!(
+            get_turn(&Play {
                 history: Vec::from([Movement::of_str("♟", "D2", "D4")]),
                 ..Default::default()
             }),
