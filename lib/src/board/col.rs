@@ -1,158 +1,130 @@
-#[derive(Debug, PartialEq, Eq, Clone, Copy, Hash)]
-pub enum Col {
-    A,
-    B,
-    C,
-    D,
-    E,
-    F,
-    G,
-    H,
+
+pub fn try_of_str(s: &str) -> Option<u8> {
+    let mut chars = s.chars().rev().filter(|c| c.is_ascii_alphabetic() && c.is_ascii_uppercase()).peekable();
+    if let None = chars.peek() {
+        return None;
+    }
+    let mut result = 0;
+    let mut power = 0;
+    for c in chars {
+        let mut as_ut8: [u8; 2] = [0; 2];
+        c.encode_utf8(&mut as_ut8);
+        let value = as_ut8[0] - 64;
+        let value_in_position = value * (26 as u8).pow(power);
+        result += value_in_position;
+        power += 1;
+    }
+    Some(result - 1)
 }
 
-impl Col {
-    pub fn try_of_idx(i: u8) -> Option<Self> {
-        match i {
-            0 => Some(Col::A),
-            1 => Some(Col::B),
-            2 => Some(Col::C),
-            3 => Some(Col::D),
-            4 => Some(Col::E),
-            5 => Some(Col::F),
-            6 => Some(Col::G),
-            7 => Some(Col::H),
-            _ => None,
-        }
-    }
-
-    pub fn of_idx(i: u8) -> Self {
-        Self::try_of_idx(i).unwrap()
-    }
-
-    pub fn to_idx(&self) -> u8 {
-        match self {
-            Col::A => 0,
-            Col::B => 1,
-            Col::C => 2,
-            Col::D => 3,
-            Col::E => 4,
-            Col::F => 5,
-            Col::G => 6,
-            Col::H => 7,
-        }
-    }
-
-    pub fn try_of_str(s: &str) -> Option<Self> {
-        match s {
-            "A" => Some(Col::A),
-            "B" => Some(Col::B),
-            "C" => Some(Col::C),
-            "D" => Some(Col::D),
-            "E" => Some(Col::E),
-            "F" => Some(Col::F),
-            "G" => Some(Col::G),
-            "H" => Some(Col::H),
-            _ => None,
-        }
-    }
-
-    pub fn of_str(s: &str) -> Self {
-        Self::try_of_str(s).unwrap()
-    }
-
-    pub fn to_str(&self) -> &'static str {
-        match self {
-            Col::A => "A",
-            Col::B => "B",
-            Col::C => "C",
-            Col::D => "D",
-            Col::E => "E",
-            Col::F => "F",
-            Col::G => "G",
-            Col::H => "H",
-        }
-    }
+pub fn of_str(s: &str) -> u8 {
+    try_of_str(s).unwrap()
 }
+
+pub fn to_str(value: u8) -> String {
+    let mut result = String::new();
+    let mut curr_value = value;
+
+    let mut power = 0;
+    let mut curr_value_power = curr_value;
+
+    let mut div = (curr_value_power as f32) / (26 as f32);
+    while div > 1.0 {
+        power += 1;
+        curr_value_power -= (26 as u8).pow(power);
+        div = (curr_value_power as f32) / (26 as f32);
+    }
+
+    curr_value -= (26 as u8).pow(power);
+
+    let code = curr_value + 65;
+    result.push(char::from_u32(code.into()).unwrap());
+
+    result
+}
+
 
 #[cfg(test)]
 mod tests {
-    use super::*;
+    use super::{try_of_str,of_str , to_str };
 
     #[test]
-    fn test_try_of_idx() {
-        assert_eq!(Col::try_of_idx(0), Some(Col::A));
-        assert_eq!(Col::try_of_idx(1), Some(Col::B));
-        assert_eq!(Col::try_of_idx(2), Some(Col::C));
-        assert_eq!(Col::try_of_idx(3), Some(Col::D));
-        assert_eq!(Col::try_of_idx(4), Some(Col::E));
-        assert_eq!(Col::try_of_idx(5), Some(Col::F));
-        assert_eq!(Col::try_of_idx(6), Some(Col::G));
-        assert_eq!(Col::try_of_idx(7), Some(Col::H));
-        assert_eq!(Col::try_of_idx(8), None);
-        assert_eq!(Col::try_of_idx(9), None);
-        assert_eq!(Col::try_of_idx(10), None);
+    fn try_of_str_a_z() {
+        assert_eq!(try_of_str("A"), Some(0));
+        assert_eq!(try_of_str("B"), Some(1));
+        assert_eq!(try_of_str("C"), Some(2));
+        assert_eq!(try_of_str("D"), Some(3));
+        assert_eq!(try_of_str("E"), Some(4));
+        assert_eq!(try_of_str("F"), Some(5));
+        assert_eq!(try_of_str("G"), Some(6));
+        assert_eq!(try_of_str("H"), Some(7));
+        assert_eq!(try_of_str("I"), Some(8));
+        assert_eq!(try_of_str("J"), Some(9));
+        assert_eq!(try_of_str("K"), Some(10));
+        assert_eq!(try_of_str("L"), Some(11));
+        assert_eq!(try_of_str("M"), Some(12));
+        assert_eq!(try_of_str("N"), Some(13));
+        assert_eq!(try_of_str("O"), Some(14));
+        assert_eq!(try_of_str("P"), Some(15));
+        assert_eq!(try_of_str("Q"), Some(16));
+        assert_eq!(try_of_str("R"), Some(17));
+        assert_eq!(try_of_str("S"), Some(18));
+        assert_eq!(try_of_str("T"), Some(19));
+        assert_eq!(try_of_str("U"), Some(20));
+        assert_eq!(try_of_str("V"), Some(21));
+        assert_eq!(try_of_str("W"), Some(22));
+        assert_eq!(try_of_str("X"), Some(23));
+        assert_eq!(try_of_str("Y"), Some(24));
+        assert_eq!(try_of_str("Z"), Some(25));
     }
 
     #[test]
-    fn of_idx() {
-        assert_eq!(Col::of_idx(0), Col::A);
-        assert_eq!(Col::of_idx(1), Col::B);
-        assert_eq!(Col::of_idx(2), Col::C);
-        assert_eq!(Col::of_idx(3), Col::D);
-        assert_eq!(Col::of_idx(4), Col::E);
-        assert_eq!(Col::of_idx(5), Col::F);
-        assert_eq!(Col::of_idx(6), Col::G);
-        assert_eq!(Col::of_idx(7), Col::H);
+    fn try_of_str_aa_iu() {
+        assert_eq!(try_of_str("AA"), Some(26));
+        assert_eq!(try_of_str("AZ"), Some(51));
+        assert_eq!(try_of_str("BA"), Some(52));
+        assert_eq!(try_of_str("BZ"), Some(77));
+        assert_eq!(try_of_str("CA"), Some(78));
+        assert_eq!(try_of_str("CZ"), Some(103));
+        assert_eq!(try_of_str("DA"), Some(104));
+        assert_eq!(try_of_str("DZ"), Some(129));
+        assert_eq!(try_of_str("EA"), Some(130));
+        assert_eq!(try_of_str("EZ"), Some(155));
+        assert_eq!(try_of_str("FA"), Some(156));
+        assert_eq!(try_of_str("FZ"), Some(181));
+        assert_eq!(try_of_str("GA"), Some(182));
+        assert_eq!(try_of_str("GZ"), Some(207));
+        assert_eq!(try_of_str("HA"), Some(208));
+        assert_eq!(try_of_str("HZ"), Some(233));
+        assert_eq!(try_of_str("IA"), Some(234));
+        assert_eq!(try_of_str("IU"), Some(254));
     }
 
     #[test]
-    fn to_idx() {
-        assert_eq!(Col::A.to_idx(), 0);
-        assert_eq!(Col::B.to_idx(), 1);
-        assert_eq!(Col::C.to_idx(), 2);
-        assert_eq!(Col::D.to_idx(), 3);
-        assert_eq!(Col::E.to_idx(), 4);
-        assert_eq!(Col::F.to_idx(), 5);
-        assert_eq!(Col::G.to_idx(), 6);
-        assert_eq!(Col::H.to_idx(), 7);
+    fn try_of_str_none() {
+        assert_eq!(try_of_str(""), None);
+        assert_eq!(try_of_str("123"), None);
+        assert_eq!(try_of_str("a"), None);
     }
 
     #[test]
-    fn test_try_of_str() {
-        assert_eq!(Col::try_of_str("A"), Some(Col::A));
-        assert_eq!(Col::try_of_str("B"), Some(Col::B));
-        assert_eq!(Col::try_of_str("C"), Some(Col::C));
-        assert_eq!(Col::try_of_str("D"), Some(Col::D));
-        assert_eq!(Col::try_of_str("E"), Some(Col::E));
-        assert_eq!(Col::try_of_str("F"), Some(Col::F));
-        assert_eq!(Col::try_of_str("G"), Some(Col::G));
-        assert_eq!(Col::try_of_str("H"), Some(Col::H));
-        assert_eq!(Col::try_of_str("I"), None);
-        assert_eq!(Col::try_of_str("J"), None);
-        assert_eq!(Col::try_of_str("K"), None);
+    fn test_of_str() {
+        assert_eq!(of_str("A"), 0 );
+        assert_eq!(of_str("B"), 1 );
+        assert_eq!(of_str("C"), 2 );
     }
 
     #[test]
-    fn of_str() {
-        assert_eq!(Col::of_str("A"), Col::A);
-        assert_eq!(Col::of_str("B"), Col::B);
-        assert_eq!(Col::of_str("C"), Col::C);
-        assert_eq!(Col::of_str("D"), Col::D);
-        assert_eq!(Col::of_str("E"), Col::E);
-        assert_eq!(Col::of_str("F"), Col::F);
-        assert_eq!(Col::of_str("G"), Col::G);
-        assert_eq!(Col::of_str("H"), Col::H);
-    }
-
-    #[test]
-    fn to_str() {
-        assert_eq!(Col::A.to_str(), "A");
-        assert_eq!(Col::B.to_str(), "B");
-        assert_eq!(Col::C.to_str(), "C");
-        assert_eq!(Col::D.to_str(), "D");
-        assert_eq!(Col::E.to_str(), "E");
-        assert_eq!(Col::F.to_str(), "F");
-        assert_eq!(Col::G.to_str(), "G");
-        assert_eq!(Col::H.to_str(), "H");
+    fn test_to_str() {
+        assert_eq!(to_str(0), "A".to_string());
+        assert_eq!(to_str(26), "AA".to_string());
+        assert_eq!(to_str(52), "BA".to_string());
+        assert_eq!(to_str(78), "CA".to_string());
+        assert_eq!(to_str(104), "DA".to_string());
+        assert_eq!(to_str(130), "EA".to_string());
+        assert_eq!(to_str(156), "FA".to_string());
+        assert_eq!(to_str(182), "GA".to_string());
+        assert_eq!(to_str(208), "HA".to_string());
+        assert_eq!(to_str(234), "IA".to_string());
     }
 }
