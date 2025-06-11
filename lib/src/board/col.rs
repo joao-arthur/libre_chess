@@ -1,20 +1,21 @@
-
 pub fn try_of_str(s: &str) -> Option<u8> {
-    let mut chars = s.chars().rev().filter(|c| c.is_ascii_alphabetic() && c.is_ascii_uppercase()).peekable();
-    if let None = chars.peek() {
-        return None;
+    let bytes = s.as_bytes();
+    match bytes {
+        [c] if (b'A'..=b'Z').contains(c) => {
+            Some(c - b'A')
+        }
+        [hi, lo] if (b'A'..=b'Z').contains(hi) && (b'A'..=b'Z').contains(lo) => {
+            let hi_index = hi - b'A';
+            let lo_index = lo - b'A';
+            let value = ((hi_index as u16 + 1) * 26) + lo_index as u16;
+            if value <= u8::MAX as u16 {
+                Some(value as u8)
+            } else {
+                None
+            }
+        }
+        _ => None,
     }
-    let mut result = 0;
-    let mut power = 0;
-    for c in chars {
-        let mut as_ut8: [u8; 2] = [0; 2];
-        c.encode_utf8(&mut as_ut8);
-        let value = as_ut8[0] - 64;
-        let value_in_position = value * (26 as u8).pow(power);
-        result += value_in_position;
-        power += 1;
-    }
-    Some(result - 1)
 }
 
 pub fn of_str(s: &str) -> u8 {
@@ -22,27 +23,21 @@ pub fn of_str(s: &str) -> u8 {
 }
 
 pub fn to_str(value: u8) -> String {
-    let mut result = String::new();
-    let mut curr_value = value;
-
-    let mut power = 0;
-    let mut curr_value_power = curr_value;
-
-    let mut div = (curr_value_power as f32) / (26 as f32);
-    while div > 1.0 {
-        power += 1;
-        curr_value_power -= (26 as u8).pow(power);
-        div = (curr_value_power as f32) / (26 as f32);
+    if value < 26 {
+        let c = (b'A' + value) as char;
+        c.to_string()
+    } else {
+        let q = value / 26;
+        let r = value % 26;
+        let prefix = (b'A' + (q - 1)) as char;
+        let suffix = (b'A' + r) as char;
+        let mut s = String::with_capacity(2);
+        s.push(prefix);
+        s.push(suffix);
+        s
     }
 
-    curr_value -= (26 as u8).pow(power);
-
-    let code = curr_value + 65;
-    result.push(char::from_u32(code.into()).unwrap());
-
-    result
 }
-
 
 #[cfg(test)]
 mod tests {
@@ -98,6 +93,7 @@ mod tests {
         assert_eq!(try_of_str("HZ"), Some(233));
         assert_eq!(try_of_str("IA"), Some(234));
         assert_eq!(try_of_str("IU"), Some(254));
+        assert_eq!(try_of_str("IV"), Some(255));
     }
 
     #[test]
@@ -117,7 +113,9 @@ mod tests {
     #[test]
     fn test_to_str() {
         assert_eq!(to_str(0), "A".to_string());
+        assert_eq!(to_str(25), "Z".to_string());
         assert_eq!(to_str(26), "AA".to_string());
+        assert_eq!(to_str(51), "AZ".to_string());
         assert_eq!(to_str(52), "BA".to_string());
         assert_eq!(to_str(78), "CA".to_string());
         assert_eq!(to_str(104), "DA".to_string());
