@@ -1,162 +1,80 @@
-#[derive(Debug, PartialEq, Eq, Clone, Copy, Hash)]
-pub enum Row {
-    _1,
-    _2,
-    _3,
-    _4,
-    _5,
-    _6,
-    _7,
-    _8,
+pub fn try_of_str(s: &str) -> Option<u8> {
+    match s.parse::<u16>() {
+        Ok(value) => {
+            if value > 0 && value <= (u8::MAX as u16 + 1) {
+                Some((value - 1) as u8)
+            } else {
+                None
+            }
+        }
+        Err(_) => None,
+    }
 }
 
-impl Row {
-    pub fn try_of_idx(i: u8) -> Option<Self> {
-        match i {
-            0 => Some(Row::_8),
-            1 => Some(Row::_7),
-            2 => Some(Row::_6),
-            3 => Some(Row::_5),
-            4 => Some(Row::_4),
-            5 => Some(Row::_3),
-            6 => Some(Row::_2),
-            7 => Some(Row::_1),
-            _ => None,
-        }
-    }
+pub fn of_str(s: &str) -> u8 {
+    try_of_str(s).unwrap()
+}
 
-    pub fn of_idx(i: u8) -> Self {
-        Self::try_of_idx(i).unwrap()
-    }
-
-    pub fn to_idx(&self) -> u8 {
-        match self {
-            Row::_1 => 7,
-            Row::_2 => 6,
-            Row::_3 => 5,
-            Row::_4 => 4,
-            Row::_5 => 3,
-            Row::_6 => 2,
-            Row::_7 => 1,
-            Row::_8 => 0,
-        }
-    }
-
-    pub fn try_of_str(s: &str) -> Option<Row> {
-        match s {
-            "1" => Some(Row::_1),
-            "2" => Some(Row::_2),
-            "3" => Some(Row::_3),
-            "4" => Some(Row::_4),
-            "5" => Some(Row::_5),
-            "6" => Some(Row::_6),
-            "7" => Some(Row::_7),
-            "8" => Some(Row::_8),
-            _ => None,
-        }
-    }
-
-    pub fn of_str(s: &str) -> Self {
-        Self::try_of_str(s).unwrap()
-    }
-
-    pub fn to_str(&self) -> &'static str {
-        match self {
-            Row::_1 => "1",
-            Row::_2 => "2",
-            Row::_3 => "3",
-            Row::_4 => "4",
-            Row::_5 => "5",
-            Row::_6 => "6",
-            Row::_7 => "7",
-            Row::_8 => "8",
-        }
-    }
+pub fn to_str(value: u8) -> String {
+    (value + 1).to_string()
 }
 
 #[cfg(test)]
 mod tests {
-    use super::*;
+    use super::{of_str, to_str, try_of_str};
 
     #[test]
-    fn test_try_of_idx() {
-        assert_eq!(Row::try_of_idx(0), Some(Row::_8));
-        assert_eq!(Row::try_of_idx(1), Some(Row::_7));
-        assert_eq!(Row::try_of_idx(2), Some(Row::_6));
-        assert_eq!(Row::try_of_idx(3), Some(Row::_5));
-        assert_eq!(Row::try_of_idx(4), Some(Row::_4));
-        assert_eq!(Row::try_of_idx(5), Some(Row::_3));
-        assert_eq!(Row::try_of_idx(6), Some(Row::_2));
-        assert_eq!(Row::try_of_idx(7), Some(Row::_1));
-        assert_eq!(Row::try_of_idx(8), None);
-        assert_eq!(Row::try_of_idx(9), None);
-        assert_eq!(Row::try_of_idx(10), None);
+    fn test_try_of_str() {
+        assert_eq!(try_of_str("1"), Some(0));
+        assert_eq!(try_of_str("2"), Some(1));
+        assert_eq!(try_of_str("3"), Some(2));
+        assert_eq!(try_of_str("4"), Some(3));
+        assert_eq!(try_of_str("5"), Some(4));
+        assert_eq!(try_of_str("6"), Some(5));
+        assert_eq!(try_of_str("7"), Some(6));
+        assert_eq!(try_of_str("8"), Some(7));
+        assert_eq!(try_of_str("9"), Some(8));
+        assert_eq!(try_of_str("10"), Some(9));
+        assert_eq!(try_of_str("100"), Some(99));
+        assert_eq!(try_of_str("200"), Some(199));
+        assert_eq!(try_of_str("255"), Some(254));
+        assert_eq!(try_of_str("256"), Some(255));
     }
 
     #[test]
-    fn of_idx() {
-        assert_eq!(Row::of_idx(0), Row::_8);
-        assert_eq!(Row::of_idx(1), Row::_7);
-        assert_eq!(Row::of_idx(2), Row::_6);
-        assert_eq!(Row::of_idx(3), Row::_5);
-        assert_eq!(Row::of_idx(4), Row::_4);
-        assert_eq!(Row::of_idx(5), Row::_3);
-        assert_eq!(Row::of_idx(6), Row::_2);
-        assert_eq!(Row::of_idx(7), Row::_1);
-    }
-
-    #[test]
-    fn to_idx() {
-        assert_eq!(Row::_1.to_idx(), 7);
-        assert_eq!(Row::_2.to_idx(), 6);
-        assert_eq!(Row::_3.to_idx(), 5);
-        assert_eq!(Row::_4.to_idx(), 4);
-        assert_eq!(Row::_5.to_idx(), 3);
-        assert_eq!(Row::_6.to_idx(), 2);
-        assert_eq!(Row::_7.to_idx(), 1);
-        assert_eq!(Row::_8.to_idx(), 0);
-    }
-
-    #[test]
-    fn try_of_str_some() {
-        assert_eq!(Row::try_of_str("1"), Some(Row::_1));
-        assert_eq!(Row::try_of_str("2"), Some(Row::_2));
-        assert_eq!(Row::try_of_str("3"), Some(Row::_3));
-        assert_eq!(Row::try_of_str("4"), Some(Row::_4));
-        assert_eq!(Row::try_of_str("5"), Some(Row::_5));
-        assert_eq!(Row::try_of_str("6"), Some(Row::_6));
-        assert_eq!(Row::try_of_str("7"), Some(Row::_7));
-        assert_eq!(Row::try_of_str("8"), Some(Row::_8));
+    fn test_try_of_str_out_of_bounds() {
+        assert_eq!(try_of_str("0"), None);
+        assert_eq!(try_of_str("257"), None);
     }
 
     #[test]
     fn try_of_str_none() {
-        assert_eq!(Row::try_of_str("0"), None);
-        assert_eq!(Row::try_of_str("9"), None);
-        assert_eq!(Row::try_of_str("10"), None);
+        assert_eq!(try_of_str(""), None);
+        assert_eq!(try_of_str("a"), None);
     }
 
     #[test]
-    fn of_str() {
-        assert_eq!(Row::of_str("1"), Row::_1);
-        assert_eq!(Row::of_str("2"), Row::_2);
-        assert_eq!(Row::of_str("3"), Row::_3);
-        assert_eq!(Row::of_str("4"), Row::_4);
-        assert_eq!(Row::of_str("5"), Row::_5);
-        assert_eq!(Row::of_str("6"), Row::_6);
-        assert_eq!(Row::of_str("7"), Row::_7);
-        assert_eq!(Row::of_str("8"), Row::_8);
+    fn test_of_str() {
+        assert_eq!(of_str("1"), 0);
+        assert_eq!(of_str("2"), 1);
+        assert_eq!(of_str("3"), 2);
+        assert_eq!(of_str("4"), 3);
+        assert_eq!(of_str("5"), 4);
+        assert_eq!(of_str("6"), 5);
+        assert_eq!(of_str("7"), 6);
+        assert_eq!(of_str("8"), 7);
+        assert_eq!(of_str("9"), 8);
     }
 
     #[test]
-    fn to_str() {
-        assert_eq!(Row::_1.to_str(), "1");
-        assert_eq!(Row::_2.to_str(), "2");
-        assert_eq!(Row::_3.to_str(), "3");
-        assert_eq!(Row::_4.to_str(), "4");
-        assert_eq!(Row::_5.to_str(), "5");
-        assert_eq!(Row::_6.to_str(), "6");
-        assert_eq!(Row::_7.to_str(), "7");
-        assert_eq!(Row::_8.to_str(), "8");
+    fn test_to_str() {
+        assert_eq!(to_str(0), "1");
+        assert_eq!(to_str(1), "2");
+        assert_eq!(to_str(2), "3");
+        assert_eq!(to_str(3), "4");
+        assert_eq!(to_str(4), "5");
+        assert_eq!(to_str(5), "6");
+        assert_eq!(to_str(6), "7");
+        assert_eq!(to_str(7), "8");
     }
 }
