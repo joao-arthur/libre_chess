@@ -16,7 +16,7 @@ pub fn of_str(s: &str) -> u8 {
 }
 
 pub fn to_str(value: u8) -> String {
-    (value + 1).to_string()
+    ((value as u16) + 1).to_string()
 }
 
 #[cfg(test)]
@@ -34,10 +34,10 @@ mod tests {
         assert_eq!(try_of_str("7"), Some(6));
         assert_eq!(try_of_str("8"), Some(7));
         assert_eq!(try_of_str("9"), Some(8));
-        assert_eq!(try_of_str("10"), Some(9));
-        assert_eq!(try_of_str("100"), Some(99));
-        assert_eq!(try_of_str("200"), Some(199));
-        assert_eq!(try_of_str("255"), Some(254));
+        assert_eq!(try_of_str("16"), Some(15));
+        assert_eq!(try_of_str("32"), Some(31));
+        assert_eq!(try_of_str("64"), Some(63));
+        assert_eq!(try_of_str("128"), Some(127));
         assert_eq!(try_of_str("256"), Some(255));
     }
 
@@ -76,5 +76,10 @@ mod tests {
         assert_eq!(to_str(5), "6");
         assert_eq!(to_str(6), "7");
         assert_eq!(to_str(7), "8");
+        assert_eq!(to_str(15), "16");
+        assert_eq!(to_str(31), "32");
+        assert_eq!(to_str(63), "64");
+        assert_eq!(to_str(127), "128");
+        assert_eq!(to_str(255), "256");
     }
 }

@@ -1,18 +1,12 @@
 pub fn try_of_str(s: &str) -> Option<u8> {
     let bytes = s.as_bytes();
     match bytes {
-        [c] if (b'A'..=b'Z').contains(c) => {
-            Some(c - b'A')
-        }
+        [c] if (b'A'..=b'Z').contains(c) => Some(c - b'A'),
         [hi, lo] if (b'A'..=b'Z').contains(hi) && (b'A'..=b'Z').contains(lo) => {
             let hi_index = hi - b'A';
             let lo_index = lo - b'A';
             let value = ((hi_index as u16 + 1) * 26) + lo_index as u16;
-            if value <= u8::MAX as u16 {
-                Some(value as u8)
-            } else {
-                None
-            }
+            if value <= u8::MAX as u16 { Some(value as u8) } else { None }
         }
         _ => None,
     }
@@ -36,12 +30,11 @@ pub fn to_str(value: u8) -> String {
         s.push(suffix);
         s
     }
-
 }
 
 #[cfg(test)]
 mod tests {
-    use super::{try_of_str,of_str , to_str };
+    use super::{of_str, to_str, try_of_str};
 
     #[test]
     fn try_of_str_a_z() {
@@ -97,6 +90,12 @@ mod tests {
     }
 
     #[test]
+    fn try_of_str_out_of_bounds() {
+        assert_eq!(try_of_str("IW"), None);
+        assert_eq!(try_of_str("ZZ"), None);
+    }
+
+    #[test]
     fn try_of_str_none() {
         assert_eq!(try_of_str(""), None);
         assert_eq!(try_of_str("123"), None);
@@ -105,9 +104,9 @@ mod tests {
 
     #[test]
     fn test_of_str() {
-        assert_eq!(of_str("A"), 0 );
-        assert_eq!(of_str("B"), 1 );
-        assert_eq!(of_str("C"), 2 );
+        assert_eq!(of_str("A"), 0);
+        assert_eq!(of_str("B"), 1);
+        assert_eq!(of_str("C"), 2);
     }
 
     #[test]
