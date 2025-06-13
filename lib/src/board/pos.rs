@@ -14,14 +14,12 @@ impl Pos {
         if col < 0 && (col.abs() as u8) > self.col {
             return None;
         }
-
         if row > 0 && (row as u8) > u8::MAX - self.row {
             return None;
         }
         if col > 0 && (col as u8) > u8::MAX - self.col {
             return None;
         }
-
         Some(Pos {
             row: ((self.row as i16) + row as i16) as u8,
             col: ((self.col as i16) + col as i16) as u8,
@@ -59,7 +57,7 @@ impl Pos {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
+    use super::Pos;
 
     #[test]
     fn try_of_rel_idx_positive() {

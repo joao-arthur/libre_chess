@@ -63,7 +63,7 @@ impl Piece {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
+    use super::{Color, Piece, Type};
 
     #[test]
     fn pirece_try_of_str_some() {
