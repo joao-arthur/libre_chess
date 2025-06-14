@@ -1,20 +1,20 @@
 use crate::color::Color;
 
-use super::Play;
+use super::play::Play;
 
 pub fn get_turn(play: &Play) -> Color {
-    if play.history.len() % 2 == 0 {
-        Color::White
-    } else {
-        Color::Black
-    }
+    if play.history.len() % 2 == 0 { Color::White } else { Color::Black }
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::play::movement::Movement;
 
-    use super::*;
+    use crate::{
+        color::Color,
+        game::{movement::Movement, play::Play},
+    };
+
+    use super::get_turn;
 
     #[test]
     fn test_get_turn() {

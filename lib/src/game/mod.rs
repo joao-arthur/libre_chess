@@ -1,4 +1,6 @@
 mod movement;
+mod play;
 mod player;
-mod turn;
 mod rule;
+mod selection;
+mod turn;

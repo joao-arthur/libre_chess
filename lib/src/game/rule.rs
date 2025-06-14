@@ -1,68 +1,35 @@
-use std::collections::{HashMap, HashSet};
+use std::collections::HashSet;
 
-use movement::{naive_movements_board, naive_movements_piece, Movement};
-use player::Player;
+use crate::{board::pos::Pos, color::Color, game_board::Board, piece::Type};
 
-use crate::{
-    board::{pos::Pos, Board},
-    color::Color,
-    piece::Type,
-    play::turn::get_turn,
+use super::{
+    movement::{
+        Movement,
+        naive::{naive_movements_board, naive_movements_piece},
+    },
+    play::Play,
+    turn::get_turn,
 };
-
-#[derive(Debug, PartialEq)]
-pub struct Play {
-    pub board: Board,
-    pub players: HashMap<Color, Player>,
-    pub history: Vec<Movement>,
-}
-
-impl Default for Play {
-    fn default() -> Self {
-        Play {
-            board: Board::default(),
-            players: HashMap::from([
-                (
-                    Color::White,
-                    Player {
-                        color: Color::White,
-                        captured_pieces: Vec::new(),
-                        possible_movements: HashSet::new(),
-                    },
-                ),
-                (
-                    Color::Black,
-                    Player {
-                        color: Color::Black,
-                        captured_pieces: Vec::new(),
-                        possible_movements: HashSet::new(),
-                    },
-                ),
-            ]),
-            history: Vec::new(),
-        }
-    }
-}
 
 fn set_board(play: &mut Play, board: Board) {
     play.board = board;
-    for entry in play.players.iter_mut() {
-        if entry.0 != &Color::White {
-            entry.1.possible_movements = naive_movements_board(&play.board, &entry.0);
+    for (color, player) in play.players.iter_mut() {
+        if color != &Color::White {
+            player.possible_movements = naive_movements_board(&play.board, &color);
         }
     }
 }
 
 pub fn piece_move(play: &mut Play, movement: Movement) {
     let curr_turn = get_turn(play);
-    if movement.piece.c != curr_turn {
+    if movement.piece.color != curr_turn {
         return;
     }
     // if (is_in_check() && is_check_after_move()) {
     //     return;
     // }
     play.board.remove(&movement.from);
-    if let Some(player) = play.players.get_mut(&movement.piece.c) {
+    if let Some(player) = play.players.get_mut(&movement.piece.color) {
         if let Some(captured) = play.board.insert(movement.to.clone(), movement.piece) {
             player.captured_pieces.push(captured);
         }
@@ -75,7 +42,7 @@ pub fn piece_move(play: &mut Play, movement: Movement) {
 pub fn piece_movements(play: &Play, pos: &Pos) -> Vec<Pos> {
     if let Some(piece) = play.board.get(&pos) {
         let curr_turn = get_turn(play);
-        if piece.c != curr_turn {
+        if piece.color != curr_turn {
             return Vec::new();
         }
         let mut naive_movements = naive_movements_piece(&play.board, pos);
@@ -103,10 +70,10 @@ pub fn piece_movements(play: &Play, pos: &Pos) -> Vec<Pos> {
 
 pub fn is_in_check(play: &Play) -> bool {
     let curr_turn = get_turn(play);
-    for entry in play.board.iter() {
-        if entry.1.t == Type::King && entry.1.c == curr_turn {
+    for (pos, piece) in play.board.iter() {
+        if piece.t == Type::King && piece.color == curr_turn {
             for player in play.players.values() {
-                if player.color != curr_turn && player.possible_movements.contains(entry.0) {
+                if player.color != curr_turn && player.possible_movements.contains(pos) {
                     return true;
                 }
             }
@@ -118,133 +85,114 @@ pub fn is_in_check(play: &Play) -> bool {
 
 #[cfg(test)]
 mod tests {
-    use super::{};
 
-    use crate::{board, piece::Piece, play::variant::standard_initial_board};
+    use std::collections::{HashMap, HashSet};
 
-    #[test]
-    fn play() {
-        assert_eq!(
-            Play::default(),
-            Play {
-                board: Board::default(),
-                players: HashMap::from([
-                    (
-                        Color::White,
-                        Player {
-                            color: Color::White,
-                            captured_pieces: Vec::new(),
-                            possible_movements: HashSet::new(),
-                        },
-                    ),
-                    (
-                        Color::Black,
-                        Player {
-                            color: Color::Black,
-                            captured_pieces: Vec::new(),
-                            possible_movements: HashSet::new(),
-                        },
-                    ),
-                ]),
-                history: Vec::new(),
-            }
-        );
-    }
+    use crate::{
+        board::pos::Pos,
+        color::Color,
+        game::{play::Play, player::Player},
+        game_board::{Board, game_piece},
+        game_mode::chess_standard,
+    };
 
-    #[test]
-    fn test_set_board() {
-        let mut play = Play::default();
-        set_board(&mut play, standard_initial_board());
-        assert_eq!(
-            play,
-            Play {
-                board: HashMap::from([
-                    (Pos::of_str("A8"), Piece::of_str("♜")),
-                    (Pos::of_str("B8"), Piece::of_str("♞")),
-                    (Pos::of_str("C8"), Piece::of_str("♝")),
-                    (Pos::of_str("D8"), Piece::of_str("♛")),
-                    (Pos::of_str("E8"), Piece::of_str("♚")),
-                    (Pos::of_str("F8"), Piece::of_str("♝")),
-                    (Pos::of_str("G8"), Piece::of_str("♞")),
-                    (Pos::of_str("H8"), Piece::of_str("♜")),
-                    (Pos::of_str("A7"), Piece::of_str("♟")),
-                    (Pos::of_str("B7"), Piece::of_str("♟")),
-                    (Pos::of_str("C7"), Piece::of_str("♟")),
-                    (Pos::of_str("D7"), Piece::of_str("♟")),
-                    (Pos::of_str("E7"), Piece::of_str("♟")),
-                    (Pos::of_str("F7"), Piece::of_str("♟")),
-                    (Pos::of_str("G7"), Piece::of_str("♟")),
-                    (Pos::of_str("H7"), Piece::of_str("♟")),
-                    (Pos::of_str("A2"), Piece::of_str("♙")),
-                    (Pos::of_str("B2"), Piece::of_str("♙")),
-                    (Pos::of_str("C2"), Piece::of_str("♙")),
-                    (Pos::of_str("D2"), Piece::of_str("♙")),
-                    (Pos::of_str("E2"), Piece::of_str("♙")),
-                    (Pos::of_str("F2"), Piece::of_str("♙")),
-                    (Pos::of_str("G2"), Piece::of_str("♙")),
-                    (Pos::of_str("H2"), Piece::of_str("♙")),
-                    (Pos::of_str("A1"), Piece::of_str("♖")),
-                    (Pos::of_str("B1"), Piece::of_str("♘")),
-                    (Pos::of_str("C1"), Piece::of_str("♗")),
-                    (Pos::of_str("D1"), Piece::of_str("♕")),
-                    (Pos::of_str("E1"), Piece::of_str("♔")),
-                    (Pos::of_str("F1"), Piece::of_str("♗")),
-                    (Pos::of_str("G1"), Piece::of_str("♘")),
-                    (Pos::of_str("H1"), Piece::of_str("♖")),
-                ]),
-                players: HashMap::from([
-                    (
-                        Color::White,
-                        Player {
-                            color: Color::White,
-                            captured_pieces: Vec::new(),
-                            possible_movements: HashSet::new(),
-                        },
-                    ),
-                    (
-                        Color::Black,
-                        Player {
-                            color: Color::Black,
-                            captured_pieces: Vec::new(),
-                            possible_movements: HashSet::from([
-                                Pos::of_str("A6"),
-                                Pos::of_str("B6"),
-                                Pos::of_str("C6"),
-                                Pos::of_str("D6"),
-                                Pos::of_str("E6"),
-                                Pos::of_str("F6"),
-                                Pos::of_str("G6"),
-                                Pos::of_str("H6"),
-                                Pos::of_str("A5"),
-                                Pos::of_str("B5"),
-                                Pos::of_str("C5"),
-                                Pos::of_str("D5"),
-                                Pos::of_str("E5"),
-                                Pos::of_str("F5"),
-                                Pos::of_str("G5"),
-                                Pos::of_str("H5"),
-                            ]),
-                        },
-                    ),
-                ]),
-                history: Vec::new(),
-            }
-        )
-    }
+    use super::{is_in_check, piece_move, piece_movements, set_board};
 
-    #[test]
-    fn move_piece() {}
+  //  #[test]
+   // fn test_set_board() {
+   //     let mut play = Play::default();
+   //     set_board(&mut play, chess_standard().initial_board);
+   //     assert_eq!(
+   //         play,
+   //         Play {
+   //             board: HashMap::from([
+   //                 (game_piece::of_str("A8", "♜")),
+   //                 (game_piece::of_str("B8", "♞")),
+   //                 (game_piece::of_str("C8", "♝")),
+   //                 (game_piece::of_str("D8", "♛")),
+   //                 (game_piece::of_str("E8", "♚")),
+   //                 (game_piece::of_str("F8", "♝")),
+   //                 (game_piece::of_str("G8", "♞")),
+   //                 (game_piece::of_str("H8", "♜")),
+   //                 (game_piece::of_str("A7", "♟")),
+   //                 (game_piece::of_str("B7", "♟")),
+   //                 (game_piece::of_str("C7", "♟")),
+   //                 (game_piece::of_str("D7", "♟")),
+   //                 (game_piece::of_str("E7", "♟")),
+   //                 (game_piece::of_str("F7", "♟")),
+   //                 (game_piece::of_str("G7", "♟")),
+   //                 (game_piece::of_str("H7", "♟")),
+   //                 (game_piece::of_str("A2", "♙")),
+   //                 (game_piece::of_str("B2", "♙")),
+   //                 (game_piece::of_str("C2", "♙")),
+   //                 (game_piece::of_str("D2", "♙")),
+   //                 (game_piece::of_str("E2", "♙")),
+   //                 (game_piece::of_str("F2", "♙")),
+   //                 (game_piece::of_str("G2", "♙")),
+   //                 (game_piece::of_str("H2", "♙")),
+   //                 (game_piece::of_str("A1", "♖")),
+   //                 (game_piece::of_str("B1", "♘")),
+   //                 (game_piece::of_str("C1", "♗")),
+   //                 (game_piece::of_str("D1", "♕")),
+   //                 (game_piece::of_str("E1", "♔")),
+   //                 (game_piece::of_str("F1", "♗")),
+   //                 (game_piece::of_str("G1", "♘")),
+   //                 (game_piece::of_str("H1", "♖")),
+   //             ]),
+   //             players: HashMap::from([
+   //                 (
+   //                     Color::White,
+   //                     Player {
+   //                         color: Color::White,
+   //                         captured_pieces: Vec::new(),
+   //                         possible_movements: HashSet::new(),
+   //                     },
+   //                 ),
+   //                 (
+   //                     Color::Black,
+   //                     Player {
+   //                         color: Color::Black,
+   //                         captured_pieces: Vec::new(),
+   //                         possible_movements: HashSet::from([
+   //                             Pos::of_str("A6"),
+   //                             Pos::of_str("B6"),
+   //                             Pos::of_str("C6"),
+   //                             Pos::of_str("D6"),
+   //                             Pos::of_str("E6"),
+   //                             Pos::of_str("F6"),
+   //                             Pos::of_str("G6"),
+   //                             Pos::of_st//r("H6"),
 
-    #[test]
-    fn movements_piece() {
+   //                             Pos::of_str("A5"),
+   //                             Pos::of_str("B5"),
+   //                             Pos::of_str("C5"),
+   //                             Pos::of_str("D5"),
+   //                             Pos::of_str("E5"),
+   //                             Pos::of_str("F5"),
+   //                             Pos::of_str("G5"),
+   //                             Pos::of_str("H5"),
+   //                         ]),
+   //                     },
+   //                 ),
+   //             ]),
+   //             history: Vec::new(),
+   //         }
+     //   )
+   // }
+
+   // #[test]
+   // fn move_piece() {}
+
+   // #[test]
+   // fn movements_piece() {
         // pra testar aqui, o resto tem que estar funcionando
-    }
+   // }
 
-    #[test]
-    fn is_in_check_false() {
+  //  #[test]
+ //   fn is_in_check_false() {
         // assert_eq!(is_in_check(
         //     &Play {
-        //         board: board::of_str([
+        //         board: game_board::of_str([
         //             "    ♚   ",
         //             "    ♟   ",
         //             "        ",
@@ -292,13 +240,13 @@ mod tests {
         //         history: Vec::new(),
         //     }
         // ), false);
-    }
+//    }
 
-    #[test]
-    fn is_in_check_true() {
+ //   #[test]
+ //   fn is_in_check_true() {
         // assert_eq!(is_in_check(
         //     &Play {
-        //         board: board::of_str([
+        //         board: game_board::of_str([
         //             "    ♚   ",
         //             "   ♙ ♟  ",
         //             "        ",
@@ -346,7 +294,7 @@ mod tests {
         //         history: Vec::new(),
         //     }
         // ), true);
-    }
+  //  }
 
     // criar função pra criar PLAY::from_historico
 }

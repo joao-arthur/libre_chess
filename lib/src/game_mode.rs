@@ -2,9 +2,9 @@ use crate::game_board::{Board, of_str};
 
 #[derive(Debug, PartialEq)]
 pub struct GameMode {
-    row_len: u8,
-    col_len: u8,
-    initial_board: Board,
+    pub row_len: u8,
+    pub col_len: u8,
+    pub initial_board: Board,
 }
 
 pub fn chess_standard() -> GameMode {
