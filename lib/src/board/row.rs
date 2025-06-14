@@ -11,17 +11,13 @@ pub fn try_of_str(s: &str) -> Option<u8> {
     }
 }
 
-pub fn of_str(s: &str) -> u8 {
-    try_of_str(s).unwrap()
-}
-
 pub fn to_str(value: u8) -> String {
     ((value as u16) + 1).to_string()
 }
 
 #[cfg(test)]
 mod tests {
-    use super::{of_str, to_str, try_of_str};
+    use super::{to_str, try_of_str};
 
     #[test]
     fn test_try_of_str() {
@@ -51,19 +47,6 @@ mod tests {
     fn try_of_str_none() {
         assert_eq!(try_of_str(""), None);
         assert_eq!(try_of_str("a"), None);
-    }
-
-    #[test]
-    fn test_of_str() {
-        assert_eq!(of_str("1"), 0);
-        assert_eq!(of_str("2"), 1);
-        assert_eq!(of_str("3"), 2);
-        assert_eq!(of_str("4"), 3);
-        assert_eq!(of_str("5"), 4);
-        assert_eq!(of_str("6"), 5);
-        assert_eq!(of_str("7"), 6);
-        assert_eq!(of_str("8"), 7);
-        assert_eq!(of_str("9"), 8);
     }
 
     #[test]

@@ -1,3 +1,5 @@
+use std::fmt;
+
 use crate::color::Color;
 
 #[derive(Debug, PartialEq, Eq, Clone, Copy, Hash)]
@@ -38,26 +40,32 @@ impl Piece {
     pub fn of_str(s: &str) -> Self {
         Self::try_of_str(s).unwrap()
     }
+}
 
-    pub fn to_str(&self) -> &'static str {
-        match self.color {
-            Color::White => match self.t {
-                Type::Rook => "♖",
-                Type::Knight => "♘",
-                Type::Bishop => "♗",
-                Type::Queen => "♕",
-                Type::King => "♔",
-                Type::Pawn => "♙",
-            },
-            Color::Black => match self.t {
-                Type::Rook => "♜",
-                Type::Knight => "♞",
-                Type::Bishop => "♝",
-                Type::Queen => "♛",
-                Type::King => "♚",
-                Type::Pawn => "♟",
-            },
-        }
+impl fmt::Display for Piece {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(
+            f,
+            "{}",
+            match self.color {
+                Color::White => match self.t {
+                    Type::Rook => "♖",
+                    Type::Knight => "♘",
+                    Type::Bishop => "♗",
+                    Type::Queen => "♕",
+                    Type::King => "♔",
+                    Type::Pawn => "♙",
+                },
+                Color::Black => match self.t {
+                    Type::Rook => "♜",
+                    Type::Knight => "♞",
+                    Type::Bishop => "♝",
+                    Type::Queen => "♛",
+                    Type::King => "♚",
+                    Type::Pawn => "♟",
+                },
+            }
+        )
     }
 }
 
@@ -109,18 +117,18 @@ mod tests {
     }
 
     #[test]
-    fn to_str() {
-        assert_eq!(Piece { t: Type::Rook, color: Color::White }.to_str(), "♖");
-        assert_eq!(Piece { t: Type::Knight, color: Color::White }.to_str(), "♘");
-        assert_eq!(Piece { t: Type::Bishop, color: Color::White }.to_str(), "♗");
-        assert_eq!(Piece { t: Type::Queen, color: Color::White }.to_str(), "♕");
-        assert_eq!(Piece { t: Type::King, color: Color::White }.to_str(), "♔");
-        assert_eq!(Piece { t: Type::Pawn, color: Color::White }.to_str(), "♙");
-        assert_eq!(Piece { t: Type::Rook, color: Color::Black }.to_str(), "♜");
-        assert_eq!(Piece { t: Type::Knight, color: Color::Black }.to_str(), "♞");
-        assert_eq!(Piece { t: Type::Bishop, color: Color::Black }.to_str(), "♝");
-        assert_eq!(Piece { t: Type::Queen, color: Color::Black }.to_str(), "♛");
-        assert_eq!(Piece { t: Type::King, color: Color::Black }.to_str(), "♚");
-        assert_eq!(Piece { t: Type::Pawn, color: Color::Black }.to_str(), "♟");
+    fn to_string() {
+        assert_eq!(Piece { t: Type::Rook, color: Color::White }.to_string(), "♖");
+        assert_eq!(Piece { t: Type::Knight, color: Color::White }.to_string(), "♘");
+        assert_eq!(Piece { t: Type::Bishop, color: Color::White }.to_string(), "♗");
+        assert_eq!(Piece { t: Type::Queen, color: Color::White }.to_string(), "♕");
+        assert_eq!(Piece { t: Type::King, color: Color::White }.to_string(), "♔");
+        assert_eq!(Piece { t: Type::Pawn, color: Color::White }.to_string(), "♙");
+        assert_eq!(Piece { t: Type::Rook, color: Color::Black }.to_string(), "♜");
+        assert_eq!(Piece { t: Type::Knight, color: Color::Black }.to_string(), "♞");
+        assert_eq!(Piece { t: Type::Bishop, color: Color::Black }.to_string(), "♝");
+        assert_eq!(Piece { t: Type::Queen, color: Color::Black }.to_string(), "♛");
+        assert_eq!(Piece { t: Type::King, color: Color::Black }.to_string(), "♚");
+        assert_eq!(Piece { t: Type::Pawn, color: Color::Black }.to_string(), "♟");
     }
 }

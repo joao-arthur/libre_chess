@@ -1,3 +1,5 @@
+use std::fmt;
+
 use super::{col, row};
 
 #[derive(Debug, PartialEq, Eq, Clone, Hash)]
@@ -49,9 +51,11 @@ impl Pos {
     pub fn of_str(s: &str) -> Self {
         Self::try_of_str(s).unwrap()
     }
+}
 
-    pub fn to_string(&self) -> String {
-        col::to_str(self.col) + &row::to_str(self.row)
+impl fmt::Display for Pos {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", col::to_str(self.col) + &row::to_str(self.row))
     }
 }
 
@@ -178,21 +182,21 @@ mod tests {
 
     #[test]
     fn to_string() {
-        assert_eq!(Pos { row: 0, col: 0 }.to_string(), "A1".to_string());
-        assert_eq!(Pos { row: 1, col: 0 }.to_string(), "A2".to_string());
-        assert_eq!(Pos { row: 2, col: 0 }.to_string(), "A3".to_string());
-        assert_eq!(Pos { row: 3, col: 0 }.to_string(), "A4".to_string());
-        assert_eq!(Pos { row: 4, col: 0 }.to_string(), "A5".to_string());
-        assert_eq!(Pos { row: 5, col: 0 }.to_string(), "A6".to_string());
-        assert_eq!(Pos { row: 6, col: 0 }.to_string(), "A7".to_string());
-        assert_eq!(Pos { row: 7, col: 0 }.to_string(), "A8".to_string());
-        assert_eq!(Pos { row: 7, col: 1 }.to_string(), "B8".to_string());
-        assert_eq!(Pos { row: 7, col: 2 }.to_string(), "C8".to_string());
-        assert_eq!(Pos { row: 7, col: 3 }.to_string(), "D8".to_string());
-        assert_eq!(Pos { row: 7, col: 4 }.to_string(), "E8".to_string());
-        assert_eq!(Pos { row: 7, col: 5 }.to_string(), "F8".to_string());
-        assert_eq!(Pos { row: 7, col: 6 }.to_string(), "G8".to_string());
-        assert_eq!(Pos { row: 7, col: 7 }.to_string(), "H8".to_string());
-        assert_eq!(Pos { row: 100, col: 100 }.to_string(), "CW101".to_string());
+        assert_eq!(&Pos { row: 0, col: 0 }.to_string(), "A1");
+        assert_eq!(&Pos { row: 1, col: 0 }.to_string(), "A2");
+        assert_eq!(&Pos { row: 2, col: 0 }.to_string(), "A3");
+        assert_eq!(&Pos { row: 3, col: 0 }.to_string(), "A4");
+        assert_eq!(&Pos { row: 4, col: 0 }.to_string(), "A5");
+        assert_eq!(&Pos { row: 5, col: 0 }.to_string(), "A6");
+        assert_eq!(&Pos { row: 6, col: 0 }.to_string(), "A7");
+        assert_eq!(&Pos { row: 7, col: 0 }.to_string(), "A8");
+        assert_eq!(&Pos { row: 7, col: 1 }.to_string(), "B8");
+        assert_eq!(&Pos { row: 7, col: 2 }.to_string(), "C8");
+        assert_eq!(&Pos { row: 7, col: 3 }.to_string(), "D8");
+        assert_eq!(&Pos { row: 7, col: 4 }.to_string(), "E8");
+        assert_eq!(&Pos { row: 7, col: 5 }.to_string(), "F8");
+        assert_eq!(&Pos { row: 7, col: 6 }.to_string(), "G8");
+        assert_eq!(&Pos { row: 7, col: 7 }.to_string(), "H8");
+        assert_eq!(&Pos { row: 100, col: 100 }.to_string(), "CW101");
     }
 }

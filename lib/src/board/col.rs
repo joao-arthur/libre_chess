@@ -12,10 +12,6 @@ pub fn try_of_str(s: &str) -> Option<u8> {
     }
 }
 
-pub fn of_str(s: &str) -> u8 {
-    try_of_str(s).unwrap()
-}
-
 pub fn to_str(value: u8) -> String {
     if value < 26 {
         let c = (b'A' + value) as char;
@@ -34,7 +30,7 @@ pub fn to_str(value: u8) -> String {
 
 #[cfg(test)]
 mod tests {
-    use super::{of_str, to_str, try_of_str};
+    use super::{to_str, try_of_str};
 
     #[test]
     fn try_of_str_a_z() {
@@ -103,25 +99,18 @@ mod tests {
     }
 
     #[test]
-    fn test_of_str() {
-        assert_eq!(of_str("A"), 0);
-        assert_eq!(of_str("B"), 1);
-        assert_eq!(of_str("C"), 2);
-    }
-
-    #[test]
     fn test_to_str() {
-        assert_eq!(to_str(0), "A".to_string());
-        assert_eq!(to_str(25), "Z".to_string());
-        assert_eq!(to_str(26), "AA".to_string());
-        assert_eq!(to_str(51), "AZ".to_string());
-        assert_eq!(to_str(52), "BA".to_string());
-        assert_eq!(to_str(78), "CA".to_string());
-        assert_eq!(to_str(104), "DA".to_string());
-        assert_eq!(to_str(130), "EA".to_string());
-        assert_eq!(to_str(156), "FA".to_string());
-        assert_eq!(to_str(182), "GA".to_string());
-        assert_eq!(to_str(208), "HA".to_string());
-        assert_eq!(to_str(234), "IA".to_string());
+        assert_eq!(&to_str(0), "A");
+        assert_eq!(&to_str(25), "Z");
+        assert_eq!(&to_str(26), "AA");
+        assert_eq!(&to_str(51), "AZ");
+        assert_eq!(&to_str(52), "BA");
+        assert_eq!(&to_str(78), "CA");
+        assert_eq!(&to_str(104), "DA");
+        assert_eq!(&to_str(130), "EA");
+        assert_eq!(&to_str(156), "FA");
+        assert_eq!(&to_str(182), "GA");
+        assert_eq!(&to_str(208), "HA");
+        assert_eq!(&to_str(234), "IA");
     }
 }
