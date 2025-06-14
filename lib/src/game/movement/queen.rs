@@ -1,4 +1,4 @@
-use crate::board::{pos::Pos, Board};
+use crate::{board::pos::Pos, game_board::Board};
 
 use super::{bishop::naive_movements_bishop, rook::naive_movements_rook};
 
@@ -11,35 +11,20 @@ pub fn naive_movements_queen(board: &Board, pos: &Pos) -> Vec<Pos> {
 
 #[cfg(test)]
 mod tests {
-    use crate::board;
+    use crate::{board::pos::Pos, game_board};
 
-    use super::*;
-
-    #[test]
-    fn naive_movements_queen_none() {
-        assert_eq!(
-            naive_movements_queen(
-                &board::of_str([
-                    "        ",
-                    "        ",
-                    "        ",
-                    "  ♛     ",
-                    "        ",
-                    "        ",
-                    "        ",
-                    "        ",
-                ]),
-                &Pos::of_str("A1"),
-            ),
-            []
-        );
-    }
+    use super::naive_movements_queen;
 
     #[test]
     fn naive_movements_queen_empty_board() {
+        assert_eq!(naive_movements_queen(&game_board::empty(), &Pos::of_str("A1")), []);
+    }
+
+    #[test]
+    fn naive_movements_queen_lonely_piece() {
         assert_eq!(
             naive_movements_queen(
-                &board::of_str([
+                &game_board::of_str([
                     "        ",
                     "        ",
                     "        ",
@@ -67,9 +52,6 @@ mod tests {
                 Pos::of_str("B6"),
                 Pos::of_str("A7"),
                 //
-                Pos::of_str("C6"),
-                Pos::of_str("C7"),
-                Pos::of_str("C8"),
                 //
                 Pos::of_str("D5"),
                 Pos::of_str("E5"),
@@ -84,6 +66,10 @@ mod tests {
                 //
                 Pos::of_str("B5"),
                 Pos::of_str("A5"),
+                //
+                Pos::of_str("C6"),
+                Pos::of_str("C7"),
+                Pos::of_str("C8"),
             ]
         );
     }
@@ -92,7 +78,7 @@ mod tests {
     fn naive_movements_queen_edge() {
         assert_eq!(
             naive_movements_queen(
-                &board::of_str([
+                &game_board::of_str([
                     "♛       ",
                     "        ",
                     "        ",
@@ -112,6 +98,7 @@ mod tests {
                 Pos::of_str("F3"),
                 Pos::of_str("G2"),
                 Pos::of_str("H1"),
+                //
                 //
                 Pos::of_str("B8"),
                 Pos::of_str("C8"),
@@ -136,7 +123,7 @@ mod tests {
     fn naive_movements_queen_with_capture() {
         assert_eq!(
             naive_movements_queen(
-                &board::of_str([
+                &game_board::of_str([
                     "        ",
                     "  ♝     ",
                     "   ♖    ",
@@ -159,7 +146,6 @@ mod tests {
                 Pos::of_str("B6"),
                 Pos::of_str("A7"),
                 //
-                Pos::of_str("C6"),
                 //
                 Pos::of_str("D5"),
                 Pos::of_str("E5"),
@@ -172,11 +158,13 @@ mod tests {
                 //
                 Pos::of_str("B5"),
                 Pos::of_str("A5"),
+                //
+                Pos::of_str("C6"),
             ]
         );
         assert_eq!(
             naive_movements_queen(
-                &board::of_str([
+                &game_board::of_str([
                     "        ",
                     "  ♗     ",
                     "   ♜    ",
@@ -199,7 +187,6 @@ mod tests {
                 Pos::of_str("B6"),
                 Pos::of_str("A7"),
                 //
-                Pos::of_str("C6"),
                 //
                 Pos::of_str("D5"),
                 Pos::of_str("E5"),
@@ -212,6 +199,8 @@ mod tests {
                 //
                 Pos::of_str("B5"),
                 Pos::of_str("A5"),
+                //
+                Pos::of_str("C6"),
             ]
         );
     }

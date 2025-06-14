@@ -1,9 +1,9 @@
-use crate::board::{pos::Pos, Board};
+use crate::{board::pos::Pos, game_board::Board};
 
 pub fn naive_movements_bishop(board: &Board, pos: &Pos) -> Vec<Pos> {
     let mut result: Vec<Pos> = Vec::new();
     if let Some(piece) = board.get(&pos) {
-        let modifiers: [[i8; 2]; 4] = [[-1, 1], [1, 1], [1, -1], [-1, -1]];
+        let modifiers: [[i8; 2]; 4] = [[1, 1], [-1, 1], [-1, -1], [1, -1]];
         for modifier in modifiers {
             let mut rel_row: i8 = 0;
             let mut rel_col: i8 = 0;
@@ -11,8 +11,12 @@ pub fn naive_movements_bishop(board: &Board, pos: &Pos) -> Vec<Pos> {
                 rel_row += modifier[0];
                 rel_col += modifier[1];
                 if let Some(curr_pos) = pos.try_of_rel_idx(rel_row, rel_col) {
+                    // fix
+                    if curr_pos.col > 7 || curr_pos.row > 7 {
+                        break;
+                    }
                     if let Some(curr_piece) = board.get(&curr_pos) {
-                        if &curr_piece.c == &piece.c {
+                        if &curr_piece.color == &piece.color {
                             break;
                         } else {
                             result.push(curr_pos);
@@ -32,35 +36,23 @@ pub fn naive_movements_bishop(board: &Board, pos: &Pos) -> Vec<Pos> {
 
 #[cfg(test)]
 mod tests {
-    use crate::board;
+    use crate::{
+        board::pos::Pos,
+        game_board::{self, game_piece},
+    };
 
-    use super::*;
-
-    #[test]
-    fn naive_movements_bishop_none() {
-        assert_eq!(
-            naive_movements_bishop(
-                &board::of_str([
-                    "        ",
-                    "        ",
-                    "        ",
-                    "  ♝     ",
-                    "        ",
-                    "        ",
-                    "        ",
-                    "        ",
-                ]),
-                &Pos::of_str("A1"),
-            ),
-            []
-        );
-    }
+    use super::naive_movements_bishop;
 
     #[test]
     fn naive_movements_bishop_empty_board() {
+        assert_eq!(naive_movements_bishop(&game_board::empty(), &Pos::of_str("A1")), []);
+    }
+
+    #[test]
+    fn naive_movements_bishop_lonely_piece() {
         assert_eq!(
             naive_movements_bishop(
-                &board::of_str([
+                &game_board::of_str([
                     "        ",
                     "        ",
                     "        ",
@@ -95,7 +87,7 @@ mod tests {
     fn naive_movements_bishop_edge() {
         assert_eq!(
             naive_movements_bishop(
-                &board::of_str([
+                &game_board::of_str([
                     "♝       ",
                     "        ",
                     "        ",
@@ -123,7 +115,7 @@ mod tests {
     fn naive_movements_bishop_with_capture() {
         assert_eq!(
             naive_movements_bishop(
-                &board::of_str([
+                &game_board::of_str([
                     "        ",
                     "        ",
                     "   ♖    ",
@@ -149,7 +141,7 @@ mod tests {
         );
         assert_eq!(
             naive_movements_bishop(
-                &board::of_str([
+                &game_board::of_str([
                     "        ",
                     "        ",
                     "   ♜    ",

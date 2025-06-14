@@ -1,33 +1,29 @@
-use crate::{
-    board::{pos::Pos, row::Row, Board},
-    color::Color,
-    piece::Piece,
-};
+use crate::{board::pos::Pos, color::Color, game_board::Board, piece::Piece};
 
-use super::Movement;
+//use super::Movement;
 
 pub fn naive_movements_pawn(board: &Board, pos: &Pos) -> Vec<Pos> {
     let mut result: Vec<Pos> = Vec::new();
     if let Some(piece) = board.get(&pos) {
-        let base = match &piece.c {
+        let base = match &piece.color {
             Color::White => {
-                if pos.row == Row::_2 {
-                    vec![pos.try_of_rel_idx(-1, 0), pos.try_of_rel_idx(-2, 0)]
-                } else {
-                    vec![pos.try_of_rel_idx(-1, 0)]
-                }
-            }
-            Color::Black => {
-                if pos.row == Row::_7 {
+                if pos.row == 1 {
                     vec![pos.try_of_rel_idx(1, 0), pos.try_of_rel_idx(2, 0)]
                 } else {
                     vec![pos.try_of_rel_idx(1, 0)]
                 }
             }
+            Color::Black => {
+                if pos.row == 6 {
+                    vec![pos.try_of_rel_idx(-1, 0), pos.try_of_rel_idx(-2, 0)]
+                } else {
+                    vec![pos.try_of_rel_idx(-1, 0)]
+                }
+            }
         };
-        let capture_base = match &piece.c {
-            Color::White => [pos.try_of_rel_idx(-1, -1), pos.try_of_rel_idx(-1, 1)],
-            Color::Black => [pos.try_of_rel_idx(1, -1), pos.try_of_rel_idx(1, 1)],
+        let capture_base = match &piece.color {
+            Color::White => [pos.try_of_rel_idx(1, -1), pos.try_of_rel_idx(1, 1)],
+            Color::Black => [pos.try_of_rel_idx(-1, -1), pos.try_of_rel_idx(-1, 1)],
         };
         for curr_pos in base {
             if let Some(curr_pos) = curr_pos {
@@ -39,7 +35,7 @@ pub fn naive_movements_pawn(board: &Board, pos: &Pos) -> Vec<Pos> {
         for curr_pos in capture_base {
             if let Some(curr_pos) = curr_pos {
                 if let Some(curr_piece) = board.get(&curr_pos) {
-                    if &curr_piece.c != &piece.c {
+                    if &curr_piece.color != &piece.color {
                         result.push(curr_pos);
                     }
                 }
@@ -49,62 +45,47 @@ pub fn naive_movements_pawn(board: &Board, pos: &Pos) -> Vec<Pos> {
     result
 }
 
-fn white_pawn_en_passant(board: &Board, history: Vec<Movement>, pos: &Pos) -> Vec<Pos> {
-    let mut result: Vec<Pos> = Vec::new();
-    if pos.row == Row::_5 {
-        if let Some(mov) = history.last() {
-            if mov.piece == Piece::of_str("♟") {
-                if Some(mov.from.clone()) == pos.try_of_rel_idx(-2, -1)
-                    && Some(mov.to.clone()) == pos.try_of_rel_idx(0, -1)
-                {
-                    if let Some(capture_pos) = pos.try_of_rel_idx(-1, -1) {
-                        result.push(capture_pos);
-                    }
-                }
-                if Some(mov.from.clone()) == pos.try_of_rel_idx(-2, 1)
-                    && Some(mov.to.clone()) == pos.try_of_rel_idx(0, 1)
-                {
-                    if let Some(capture_pos) = pos.try_of_rel_idx(-1, 1) {
-                        result.push(capture_pos);
-                    }
-                }
-            }
-        }
-    }
-    result
-}
+//fn white_pawn_en_passant(board: &Board, history: Vec<Movement>, pos: &Pos) -> Vec<Pos> {
+//    let mut result: Vec<Pos> = Vec::new();
+//    if pos.row == Row::_5 {
+//        if let Some(mov) = history.last() {
+//            if mov.piece == Piece::of_str("♟") {
+//                if Some(mov.from.clone()) == pos.try_of_rel_idx(-2, -1)
+//                    && Some(mov.to.clone()) == pos.try_of_rel_idx(0, -1)
+//                {
+//                    if let Some(capture_pos) = pos.try_of_rel_idx(-1, -1) {
+//                        result.push(capture_pos);
+//                    }
+//                }
+//                if Some(mov.from.clone()) == pos.try_of_rel_idx(-2, 1)
+//                    && Some(mov.to.clone()) == pos.try_of_rel_idx(0, 1)
+//                {
+//                    if let Some(capture_pos) = pos.try_of_rel_idx(-1, 1) {
+//                        result.push(capture_pos);
+//                    }
+//                }
+//            }
+//        }
+//    }
+//    result
+//}
 
 #[cfg(test)]
 mod tests {
-    use crate::board;
+    use crate::{board::pos::Pos, game_board};
 
-    use super::*;
-
-    #[test]
-    fn pawn_movements_none() {
-        assert_eq!(
-            naive_movements_pawn(
-                &board::of_str([
-                    "        ",
-                    "        ",
-                    "        ",
-                    "  ♙     ",
-                    "        ",
-                    "        ",
-                    "        ",
-                    "        ",
-                ]),
-                &Pos::of_str("A1"),
-            ),
-            []
-        );
-    }
+    use super::naive_movements_pawn;
 
     #[test]
     fn pawn_movements_empty_board() {
+        assert_eq!(naive_movements_pawn(&game_board::empty(), &Pos::of_str("A1")), []);
+    }
+
+    #[test]
+    fn pawn_movements_lonely_piece() {
         assert_eq!(
             naive_movements_pawn(
-                &board::of_str([
+                &game_board::of_str([
                     "        ",
                     "        ",
                     "        ",
@@ -120,7 +101,7 @@ mod tests {
         );
         assert_eq!(
             naive_movements_pawn(
-                &board::of_str([
+                &game_board::of_str([
                     "        ",
                     "        ",
                     "        ",
@@ -140,7 +121,7 @@ mod tests {
     fn pawn_movements_first_move() {
         assert_eq!(
             naive_movements_pawn(
-                &board::of_str([
+                &game_board::of_str([
                     "        ",
                     "        ",
                     "        ",
@@ -156,7 +137,7 @@ mod tests {
         );
         assert_eq!(
             naive_movements_pawn(
-                &board::of_str([
+                &game_board::of_str([
                     "        ",
                     "       ♟",
                     "        ",
@@ -176,7 +157,7 @@ mod tests {
     fn pawn_movements_blocked() {
         assert_eq!(
             naive_movements_pawn(
-                &board::of_str([
+                &game_board::of_str([
                     "        ",
                     "        ",
                     "  ♟     ",
@@ -192,7 +173,7 @@ mod tests {
         );
         assert_eq!(
             naive_movements_pawn(
-                &board::of_str([
+                &game_board::of_str([
                     "        ",
                     "        ",
                     "        ",
@@ -212,7 +193,7 @@ mod tests {
     fn pawn_movements_capture() {
         assert_eq!(
             naive_movements_pawn(
-                &board::of_str([
+                &game_board::of_str([
                     "        ",
                     "        ",
                     " ♟ ♟    ",
@@ -228,7 +209,7 @@ mod tests {
         );
         assert_eq!(
             naive_movements_pawn(
-                &board::of_str([
+                &game_board::of_str([
                     "        ",
                     "        ",
                     "        ",
@@ -244,28 +225,28 @@ mod tests {
         );
     }
 
-    #[test]
-    fn test_white_pawn_en_passant() {
-        assert_eq!(
-            white_pawn_en_passant(
-                &board::of_str([
-                    "        ",
-                    "        ",
-                    "        ",
-                    " ♟♙     ",
-                    "        ",
-                    "        ",
-                    "        ",
-                    "        ",
-                ]),
-                Vec::from([Movement {
-                    piece: Piece::of_str("♟"),
-                    from: Pos::of_str("B7"),
-                    to: Pos::of_str("B5"),
-                }]),
-                &Pos::of_str("C5"),
-            ),
-            [Pos::of_str("B6")]
-        );
-    }
+    //    #[test]
+    //    fn test_white_pawn_en_passant() {
+    //        assert_eq!(
+    //            white_pawn_en_passant(
+    //                &game_board::of_str([
+    //                    "        ",
+    //                    "        ",
+    //                    "        ",
+    //                    " ♟♙     ",
+    //                    "        ",
+    //                    "        ",
+    //                    "        ",
+    //                    "        ",
+    //                ]),
+    //                Vec::from([Movement {
+    //                    piece: Piece::of_str("♟"),
+    //                    from: Pos::of_str("B7"),
+    //                    to: Pos::of_str("B5"),
+    //                }]),
+    //                &Pos::of_str("C5"),
+    //            ),
+    //            [Pos::of_str("B6")]
+    //        );
+    //    }
 }

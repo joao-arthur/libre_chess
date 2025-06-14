@@ -1,8 +1,8 @@
-use std::{collections::HashMap, fmt};
+use std::{collections::HashMap, fmt, hash::Hash};
 
 use crate::{board::pos::Pos, piece::Piece};
 
-mod game_piece;
+pub mod game_piece;
 
 #[derive(Debug, PartialEq)]
 pub struct InvalidCharacterErr;
@@ -29,6 +29,10 @@ pub enum FromStringErr {
 }
 
 pub type Board = HashMap<Pos, Piece>;
+
+pub fn empty() -> Board {
+    HashMap::new()
+}
 
 fn try_of_str<const N: usize>(rows: [&str; N]) -> Result<Board, FromStringErr> {
     if !rows
@@ -85,7 +89,6 @@ fn to_string(board: &Board) -> String {
         }
         res.push_str("\n")
     }
-
     res
 }
 
@@ -93,10 +96,7 @@ fn to_string(board: &Board) -> String {
 mod tests {
     use std::collections::HashMap;
 
-    use super::{
-        FromStringErr, InvalidCharacterErr, game_piece, of_str, to_string,
-        try_of_str,
-    };
+    use super::{FromStringErr, InvalidCharacterErr, game_piece, of_str, to_string, try_of_str};
 
     #[test]
     fn try_of_str_ok() {

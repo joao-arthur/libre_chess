@@ -1,9 +1,9 @@
-use crate::board::{pos::Pos, Board};
+use crate::{board::pos::Pos, game_board::Board};
 
 pub fn naive_movements_rook(board: &Board, pos: &Pos) -> Vec<Pos> {
     let mut result: Vec<Pos> = Vec::new();
     if let Some(piece) = board.get(&pos) {
-        let modifiers: [[i8; 2]; 4] = [[-1, 0], [0, 1], [1, 0], [0, -1]];
+        let modifiers: [[i8; 2]; 4] = [[0, 1], [-1, 0], [0, -1], [1, 0]];
         for modifier in modifiers {
             let mut rel_row: i8 = 0;
             let mut rel_col: i8 = 0;
@@ -11,8 +11,12 @@ pub fn naive_movements_rook(board: &Board, pos: &Pos) -> Vec<Pos> {
                 rel_row += modifier[0];
                 rel_col += modifier[1];
                 if let Some(curr_pos) = pos.try_of_rel_idx(rel_row, rel_col) {
+                    // fix
+                    if curr_pos.col > 7 || curr_pos.row > 7 {
+                        break;
+                    }
                     if let Some(curr_piece) = board.get(&curr_pos) {
-                        if &curr_piece.c == &piece.c {
+                        if &curr_piece.color == &piece.color {
                             break;
                         } else {
                             result.push(curr_pos);
@@ -32,35 +36,20 @@ pub fn naive_movements_rook(board: &Board, pos: &Pos) -> Vec<Pos> {
 
 #[cfg(test)]
 mod tests {
-    use crate::board;
+    use crate::{board::pos::Pos, game_board};
 
-    use super::*;
-
-    #[test]
-    fn naive_movements_rook_none() {
-        assert_eq!(
-            naive_movements_rook(
-                &board::of_str([
-                    "        ",
-                    "        ",
-                    "        ",
-                    "        ",
-                    "   ♜    ",
-                    "        ",
-                    "        ",
-                    "        ",
-                ]),
-                &Pos::of_str("A1"),
-            ),
-            []
-        );
-    }
+    use super::naive_movements_rook;
 
     #[test]
     fn naive_movements_rook_empty_board() {
+        assert_eq!(naive_movements_rook(&game_board::empty(), &Pos::of_str("A1")), []);
+    }
+
+    #[test]
+    fn naive_movements_rook_lonely_piece() {
         assert_eq!(
             naive_movements_rook(
-                &board::of_str([
+                &game_board::of_str([
                     "        ",
                     "        ",
                     "        ",
@@ -73,11 +62,6 @@ mod tests {
                 &Pos::of_str("D4"),
             ),
             [
-                Pos::of_str("D5"),
-                Pos::of_str("D6"),
-                Pos::of_str("D7"),
-                Pos::of_str("D8"),
-                //
                 Pos::of_str("E4"),
                 Pos::of_str("F4"),
                 Pos::of_str("G4"),
@@ -90,6 +74,11 @@ mod tests {
                 Pos::of_str("C4"),
                 Pos::of_str("B4"),
                 Pos::of_str("A4"),
+                //
+                Pos::of_str("D5"),
+                Pos::of_str("D6"),
+                Pos::of_str("D7"),
+                Pos::of_str("D8"),
             ]
         );
     }
@@ -98,7 +87,7 @@ mod tests {
     fn naive_movements_rook_edge() {
         assert_eq!(
             naive_movements_rook(
-                &board::of_str([
+                &game_board::of_str([
                     "♜       ",
                     "        ",
                     "        ",
@@ -134,7 +123,7 @@ mod tests {
     fn naive_movements_rook_with_capture() {
         assert_eq!(
             naive_movements_rook(
-                &board::of_str([
+                &game_board::of_str([
                     "        ",
                     "   ♗    ",
                     "        ",
@@ -147,10 +136,6 @@ mod tests {
                 &Pos::of_str("D4"),
             ),
             [
-                Pos::of_str("D5"),
-                Pos::of_str("D6"),
-                Pos::of_str("D7"),
-                //
                 Pos::of_str("E4"),
                 Pos::of_str("F4"),
                 //
@@ -161,11 +146,15 @@ mod tests {
                 Pos::of_str("C4"),
                 Pos::of_str("B4"),
                 Pos::of_str("A4"),
+                //
+                Pos::of_str("D5"),
+                Pos::of_str("D6"),
+                Pos::of_str("D7"),
             ]
         );
         assert_eq!(
             naive_movements_rook(
-                &board::of_str([
+                &game_board::of_str([
                     "        ",
                     "   ♝    ",
                     "        ",
@@ -178,10 +167,6 @@ mod tests {
                 &Pos::of_str("D4"),
             ),
             [
-                Pos::of_str("D5"),
-                Pos::of_str("D6"),
-                Pos::of_str("D7"),
-                //
                 Pos::of_str("E4"),
                 Pos::of_str("F4"),
                 //
@@ -192,6 +177,10 @@ mod tests {
                 Pos::of_str("C4"),
                 Pos::of_str("B4"),
                 Pos::of_str("A4"),
+                //
+                Pos::of_str("D5"),
+                Pos::of_str("D6"),
+                Pos::of_str("D7"),
             ]
         );
     }

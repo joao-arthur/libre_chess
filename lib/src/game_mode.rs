@@ -1,4 +1,4 @@
-use crate::game_board::{of_str, Board};
+use crate::game_board::{Board, of_str};
 
 #[derive(Debug, PartialEq)]
 pub struct GameMode {
@@ -20,8 +20,8 @@ pub fn chess_standard() -> GameMode {
             "        ",
             "♙♙♙♙♙♙♙♙",
             "♖♘♗♕♔♗♘♖",
-        ])
-    }    
+        ]),
+    }
 }
 
 pub fn chess_960() {
@@ -31,13 +31,13 @@ pub fn chess_960() {
 #[cfg(test)]
 mod tests {
     use crate::game_board::of_str;
-    
-    use super::{chess_standard, chess_960, GameMode};
+
+    use super::{GameMode, chess_960, chess_standard};
 
     #[test]
     fn test_chess_standard() {
         assert_eq!(
-            chess_standard(), 
+            chess_standard(),
             GameMode {
                 row_len: 8,
                 col_len: 8,
@@ -52,6 +52,6 @@ mod tests {
                     "♖♘♗♕♔♗♘♖",
                 ])
             }
-        );   
+        );
     }
 }
