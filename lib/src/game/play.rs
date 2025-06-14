@@ -2,8 +2,8 @@ use std::collections::{HashMap, HashSet};
 
 use crate::{
     color::Color,
+    game::board::Board,
     game::{movement::Movement, player::Player},
-    game_board::Board,
 };
 
 #[derive(Debug, PartialEq)]
@@ -45,7 +45,7 @@ mod tests {
 
     use std::collections::{HashMap, HashSet};
 
-    use crate::{color::Color, game::player::Player, game_board::Board};
+    use crate::{color::Color, game::board::Board, game::player::Player};
 
     use super::Play;
 

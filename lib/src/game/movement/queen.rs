@@ -1,4 +1,4 @@
-use crate::{board::pos::Pos, game_board::Board};
+use crate::{board::pos::Pos, game::board::Board};
 
 use super::{bishop::naive_movements_bishop, rook::naive_movements_rook};
 
@@ -11,20 +11,20 @@ pub fn naive_movements_queen(board: &Board, pos: &Pos) -> Vec<Pos> {
 
 #[cfg(test)]
 mod tests {
-    use crate::{board::pos::Pos, game_board};
+    use crate::{board::pos::Pos, game::board};
 
     use super::naive_movements_queen;
 
     #[test]
     fn naive_movements_queen_empty_board() {
-        assert_eq!(naive_movements_queen(&game_board::empty(), &Pos::of_str("A1")), []);
+        assert_eq!(naive_movements_queen(&board::empty(), &Pos::of_str("A1")), []);
     }
 
     #[test]
     fn naive_movements_queen_lonely_piece() {
         assert_eq!(
             naive_movements_queen(
-                &game_board::of_str([
+                &board::of_str([
                     "        ",
                     "        ",
                     "        ",
@@ -78,7 +78,7 @@ mod tests {
     fn naive_movements_queen_edge() {
         assert_eq!(
             naive_movements_queen(
-                &game_board::of_str([
+                &board::of_str([
                     "♛       ",
                     "        ",
                     "        ",
@@ -123,7 +123,7 @@ mod tests {
     fn naive_movements_queen_with_capture() {
         assert_eq!(
             naive_movements_queen(
-                &game_board::of_str([
+                &board::of_str([
                     "        ",
                     "  ♝     ",
                     "   ♖    ",
@@ -164,7 +164,7 @@ mod tests {
         );
         assert_eq!(
             naive_movements_queen(
-                &game_board::of_str([
+                &board::of_str([
                     "        ",
                     "  ♗     ",
                     "   ♜    ",

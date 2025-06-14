@@ -1,4 +1,4 @@
-use crate::{board::pos::Pos, game_board::Board};
+use crate::{board::pos::Pos, game::board::Board};
 
 pub fn naive_movements_knight(board: &Board, pos: &Pos) -> Vec<Pos> {
     let mut result: Vec<Pos> = Vec::new();
@@ -30,20 +30,20 @@ pub fn naive_movements_knight(board: &Board, pos: &Pos) -> Vec<Pos> {
 
 #[cfg(test)]
 mod tests {
-    use crate::{board::pos::Pos, game_board};
+    use crate::{board::pos::Pos, game::board};
 
     use super::naive_movements_knight;
 
     #[test]
     fn naive_movements_knight_empty_board() {
-        assert_eq!(naive_movements_knight(&game_board::empty(), &Pos::of_str("A1")), []);
+        assert_eq!(naive_movements_knight(&board::empty(), &Pos::of_str("A1")), []);
     }
 
     #[test]
     fn naive_movements_knight_lonely_piece() {
         assert_eq!(
             naive_movements_knight(
-                &game_board::of_str([
+                &board::of_str([
                     "        ",
                     "        ",
                     "        ",
@@ -72,7 +72,7 @@ mod tests {
     fn naive_movements_knight_edge() {
         assert_eq!(
             naive_movements_knight(
-                &game_board::of_str([
+                &board::of_str([
                     "        ",
                     "        ",
                     "        ",
@@ -92,7 +92,7 @@ mod tests {
     fn naive_movements_knight_with_capture() {
         assert_eq!(
             naive_movements_knight(
-                &game_board::of_str([
+                &board::of_str([
                     "        ",
                     "        ",
                     "    ♖   ",
@@ -116,7 +116,7 @@ mod tests {
         );
         assert_eq!(
             naive_movements_knight(
-                &game_board::of_str([
+                &board::of_str([
                     "        ",
                     "        ",
                     "    ♜   ",

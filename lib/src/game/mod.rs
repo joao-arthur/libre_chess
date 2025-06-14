@@ -1,4 +1,7 @@
+mod board;
+mod mode;
 mod movement;
+mod piece;
 mod play;
 mod player;
 mod rule;

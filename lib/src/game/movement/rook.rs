@@ -1,4 +1,4 @@
-use crate::{board::pos::Pos, game_board::Board};
+use crate::{board::pos::Pos, game::board::Board};
 
 pub fn naive_movements_rook(board: &Board, pos: &Pos) -> Vec<Pos> {
     let mut result: Vec<Pos> = Vec::new();
@@ -36,20 +36,20 @@ pub fn naive_movements_rook(board: &Board, pos: &Pos) -> Vec<Pos> {
 
 #[cfg(test)]
 mod tests {
-    use crate::{board::pos::Pos, game_board};
+    use crate::{board::pos::Pos, game::board};
 
     use super::naive_movements_rook;
 
     #[test]
     fn naive_movements_rook_empty_board() {
-        assert_eq!(naive_movements_rook(&game_board::empty(), &Pos::of_str("A1")), []);
+        assert_eq!(naive_movements_rook(&board::empty(), &Pos::of_str("A1")), []);
     }
 
     #[test]
     fn naive_movements_rook_lonely_piece() {
         assert_eq!(
             naive_movements_rook(
-                &game_board::of_str([
+                &board::of_str([
                     "        ",
                     "        ",
                     "        ",
@@ -87,7 +87,7 @@ mod tests {
     fn naive_movements_rook_edge() {
         assert_eq!(
             naive_movements_rook(
-                &game_board::of_str([
+                &board::of_str([
                     "♜       ",
                     "        ",
                     "        ",
@@ -123,7 +123,7 @@ mod tests {
     fn naive_movements_rook_with_capture() {
         assert_eq!(
             naive_movements_rook(
-                &game_board::of_str([
+                &board::of_str([
                     "        ",
                     "   ♗    ",
                     "        ",
@@ -154,7 +154,7 @@ mod tests {
         );
         assert_eq!(
             naive_movements_rook(
-                &game_board::of_str([
+                &board::of_str([
                     "        ",
                     "   ♝    ",
                     "        ",

@@ -1,6 +1,6 @@
 use std::collections::HashSet;
 
-use crate::{board::pos::Pos, color::Color, game_board::Board, piece::Type};
+use crate::{board::pos::Pos, color::Color, game::board::Board, piece::Type};
 
 use super::{
     bishop::naive_movements_bishop, king::naive_movements_king, knight::naive_movements_knight,
@@ -34,7 +34,7 @@ pub fn naive_movements_board(board: &Board, color: &Color) -> HashSet<Pos> {
 #[cfg(test)]
 mod tests {
 
-    use crate::{board::pos::Pos, game_board};
+    use crate::{board::pos::Pos, game::board};
 
     use super::{naive_movements_board, naive_movements_piece};
 
@@ -42,7 +42,7 @@ mod tests {
     fn naive_movements_piece_some() {
         assert_eq!(
             naive_movements_piece(
-                &game_board::of_str([
+                &board::of_str([
                     "        ",
                     "        ",
                     "        ",
@@ -77,7 +77,7 @@ mod tests {
         );
         assert_eq!(
             naive_movements_piece(
-                &game_board::of_str([
+                &board::of_str([
                     "        ",
                     "        ",
                     "        ",
@@ -102,7 +102,7 @@ mod tests {
         );
         assert_eq!(
             naive_movements_piece(
-                &game_board::of_str([
+                &board::of_str([
                     "        ",
                     "        ",
                     "        ",
@@ -133,7 +133,7 @@ mod tests {
         );
         assert_eq!(
             naive_movements_piece(
-                &game_board::of_str([
+                &board::of_str([
                     "        ",
                     "        ",
                     "        ",
@@ -183,7 +183,7 @@ mod tests {
         );
         assert_eq!(
             naive_movements_piece(
-                &game_board::of_str([
+                &board::of_str([
                     "        ",
                     "        ",
                     "        ",
@@ -208,7 +208,7 @@ mod tests {
         );
         assert_eq!(
             naive_movements_piece(
-                &game_board::of_str([
+                &board::of_str([
                     "        ",
                     "        ",
                     "        ",
@@ -228,7 +228,7 @@ mod tests {
     fn naive_movements_piece_none() {
         assert_eq!(
             naive_movements_piece(
-                &game_board::of_str([
+                &board::of_str([
                     "        ",
                     "        ",
                     "        ",

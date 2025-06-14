@@ -1,6 +1,6 @@
 use std::collections::HashSet;
 
-use crate::{board::pos::Pos, color::Color, game_board::Board, piece::Type};
+use crate::{board::pos::Pos, color::Color, game::board::Board, piece::Type};
 
 use super::{
     movement::{
@@ -91,210 +91,208 @@ mod tests {
     use crate::{
         board::pos::Pos,
         color::Color,
-        game::{play::Play, player::Player},
-        game_board::{Board, game_piece},
-        game_mode::chess_standard,
+        game::{mode::chess_standard, play::Play, player::Player},
     };
 
     use super::{is_in_check, piece_move, piece_movements, set_board};
 
-  //  #[test]
-   // fn test_set_board() {
-   //     let mut play = Play::default();
-   //     set_board(&mut play, chess_standard().initial_board);
-   //     assert_eq!(
-   //         play,
-   //         Play {
-   //             board: HashMap::from([
-   //                 (game_piece::of_str("A8", "♜")),
-   //                 (game_piece::of_str("B8", "♞")),
-   //                 (game_piece::of_str("C8", "♝")),
-   //                 (game_piece::of_str("D8", "♛")),
-   //                 (game_piece::of_str("E8", "♚")),
-   //                 (game_piece::of_str("F8", "♝")),
-   //                 (game_piece::of_str("G8", "♞")),
-   //                 (game_piece::of_str("H8", "♜")),
-   //                 (game_piece::of_str("A7", "♟")),
-   //                 (game_piece::of_str("B7", "♟")),
-   //                 (game_piece::of_str("C7", "♟")),
-   //                 (game_piece::of_str("D7", "♟")),
-   //                 (game_piece::of_str("E7", "♟")),
-   //                 (game_piece::of_str("F7", "♟")),
-   //                 (game_piece::of_str("G7", "♟")),
-   //                 (game_piece::of_str("H7", "♟")),
-   //                 (game_piece::of_str("A2", "♙")),
-   //                 (game_piece::of_str("B2", "♙")),
-   //                 (game_piece::of_str("C2", "♙")),
-   //                 (game_piece::of_str("D2", "♙")),
-   //                 (game_piece::of_str("E2", "♙")),
-   //                 (game_piece::of_str("F2", "♙")),
-   //                 (game_piece::of_str("G2", "♙")),
-   //                 (game_piece::of_str("H2", "♙")),
-   //                 (game_piece::of_str("A1", "♖")),
-   //                 (game_piece::of_str("B1", "♘")),
-   //                 (game_piece::of_str("C1", "♗")),
-   //                 (game_piece::of_str("D1", "♕")),
-   //                 (game_piece::of_str("E1", "♔")),
-   //                 (game_piece::of_str("F1", "♗")),
-   //                 (game_piece::of_str("G1", "♘")),
-   //                 (game_piece::of_str("H1", "♖")),
-   //             ]),
-   //             players: HashMap::from([
-   //                 (
-   //                     Color::White,
-   //                     Player {
-   //                         color: Color::White,
-   //                         captured_pieces: Vec::new(),
-   //                         possible_movements: HashSet::new(),
-   //                     },
-   //                 ),
-   //                 (
-   //                     Color::Black,
-   //                     Player {
-   //                         color: Color::Black,
-   //                         captured_pieces: Vec::new(),
-   //                         possible_movements: HashSet::from([
-   //                             Pos::of_str("A6"),
-   //                             Pos::of_str("B6"),
-   //                             Pos::of_str("C6"),
-   //                             Pos::of_str("D6"),
-   //                             Pos::of_str("E6"),
-   //                             Pos::of_str("F6"),
-   //                             Pos::of_str("G6"),
-   //                             Pos::of_st//r("H6"),
+    //  #[test]
+    // fn test_set_board() {
+    //     let mut play = Play::default();
+    //     set_board(&mut play, chess_standard().initial_board);
+    //     assert_eq!(
+    //         play,
+    //         Play {
+    //             board: HashMap::from([
+    //                 (piece::of_str("A8", "♜")),
+    //                 (piece::of_str("B8", "♞")),
+    //                 (piece::of_str("C8", "♝")),
+    //                 (piece::of_str("D8", "♛")),
+    //                 (piece::of_str("E8", "♚")),
+    //                 (piece::of_str("F8", "♝")),
+    //                 (piece::of_str("G8", "♞")),
+    //                 (piece::of_str("H8", "♜")),
+    //                 (piece::of_str("A7", "♟")),
+    //                 (piece::of_str("B7", "♟")),
+    //                 (piece::of_str("C7", "♟")),
+    //                 (piece::of_str("D7", "♟")),
+    //                 (piece::of_str("E7", "♟")),
+    //                 (piece::of_str("F7", "♟")),
+    //                 (piece::of_str("G7", "♟")),
+    //                 (piece::of_str("H7", "♟")),
+    //                 (piece::of_str("A2", "♙")),
+    //                 (piece::of_str("B2", "♙")),
+    //                 (piece::of_str("C2", "♙")),
+    //                 (piece::of_str("D2", "♙")),
+    //                 (piece::of_str("E2", "♙")),
+    //                 (piece::of_str("F2", "♙")),
+    //                 (piece::of_str("G2", "♙")),
+    //                 (piece::of_str("H2", "♙")),
+    //                 (piece::of_str("A1", "♖")),
+    //                 (piece::of_str("B1", "♘")),
+    //                 (piece::of_str("C1", "♗")),
+    //                 (piece::of_str("D1", "♕")),
+    //                 (piece::of_str("E1", "♔")),
+    //                 (piece::of_str("F1", "♗")),
+    //                 (piece::of_str("G1", "♘")),
+    //                 (piece::of_str("H1", "♖")),
+    //             ]),
+    //             players: HashMap::from([
+    //                 (
+    //                     Color::White,
+    //                     Player {
+    //                         color: Color::White,
+    //                         captured_pieces: Vec::new(),
+    //                         possible_movements: HashSet::new(),
+    //                     },
+    //                 ),
+    //                 (
+    //                     Color::Black,
+    //                     Player {
+    //                         color: Color::Black,
+    //                         captured_pieces: Vec::new(),
+    //                         possible_movements: HashSet::from([
+    //                             Pos::of_str("A6"),
+    //                             Pos::of_str("B6"),
+    //                             Pos::of_str("C6"),
+    //                             Pos::of_str("D6"),
+    //                             Pos::of_str("E6"),
+    //                             Pos::of_str("F6"),
+    //                             Pos::of_str("G6"),
+    //                             Pos::of_st//r("H6"),
 
-   //                             Pos::of_str("A5"),
-   //                             Pos::of_str("B5"),
-   //                             Pos::of_str("C5"),
-   //                             Pos::of_str("D5"),
-   //                             Pos::of_str("E5"),
-   //                             Pos::of_str("F5"),
-   //                             Pos::of_str("G5"),
-   //                             Pos::of_str("H5"),
-   //                         ]),
-   //                     },
-   //                 ),
-   //             ]),
-   //             history: Vec::new(),
-   //         }
-     //   )
-   // }
+    //                             Pos::of_str("A5"),
+    //                             Pos::of_str("B5"),
+    //                             Pos::of_str("C5"),
+    //                             Pos::of_str("D5"),
+    //                             Pos::of_str("E5"),
+    //                             Pos::of_str("F5"),
+    //                             Pos::of_str("G5"),
+    //                             Pos::of_str("H5"),
+    //                         ]),
+    //                     },
+    //                 ),
+    //             ]),
+    //             history: Vec::new(),
+    //         }
+    //   )
+    // }
 
-   // #[test]
-   // fn move_piece() {}
+    // #[test]
+    // fn move_piece() {}
 
-   // #[test]
-   // fn movements_piece() {
-        // pra testar aqui, o resto tem que estar funcionando
-   // }
+    // #[test]
+    // fn movements_piece() {
+    // pra testar aqui, o resto tem que estar funcionando
+    // }
 
-  //  #[test]
- //   fn is_in_check_false() {
-        // assert_eq!(is_in_check(
-        //     &Play {
-        //         board: game_board::of_str([
-        //             "    ♚   ",
-        //             "    ♟   ",
-        //             "        ",
-        //             "        ",
-        //             "        ",
-        //             "    ♖   ",
-        //             "        ",
-        //             "    ♔   ",
-        //         ]),
-        //         players: HashMap::from([
-        //             (
-        //                 Color::White,
-        //                 Player {
-        //                     color: Color::White,
-        //                     captured_pieces: Vec::new(),
-        //                     possible_movements: HashSet::new(),
-        //                 },
-        //             ),
-        //             (
-        //                 Color::Black,
-        //                 Player {
-        //                     color: Color::Black,
-        //                     captured_pieces: Vec::new(),
-        //                     possible_movements: HashSet::from([
-        //                         Pos::of_str(""),
-        //                         Pos::of_str(""),
-        //                         Pos::of_str(""),
-        //                         Pos::of_str(""),
-        //                         Pos::of_str(""),
-        //                         Pos::of_str(""),
-        //                         Pos::of_str(""),
-        //                         Pos::of_str(""),
-        //                         Pos::of_str(""),
-        //                         Pos::of_str(""),
-        //                         Pos::of_str(""),
-        //                         Pos::of_str(""),
-        //                         Pos::of_str(""),
-        //                         Pos::of_str(""),
-        //                         Pos::of_str(""),
-        //                         Pos::of_str(""),
-        //                     ]),
-        //                 },
-        //             ),
-        //         ]),
-        //         history: Vec::new(),
-        //     }
-        // ), false);
-//    }
+    //  #[test]
+    //   fn is_in_check_false() {
+    // assert_eq!(is_in_check(
+    //     &Play {
+    //         board: game::board::of_str([
+    //             "    ♚   ",
+    //             "    ♟   ",
+    //             "        ",
+    //             "        ",
+    //             "        ",
+    //             "    ♖   ",
+    //             "        ",
+    //             "    ♔   ",
+    //         ]),
+    //         players: HashMap::from([
+    //             (
+    //                 Color::White,
+    //                 Player {
+    //                     color: Color::White,
+    //                     captured_pieces: Vec::new(),
+    //                     possible_movements: HashSet::new(),
+    //                 },
+    //             ),
+    //             (
+    //                 Color::Black,
+    //                 Player {
+    //                     color: Color::Black,
+    //                     captured_pieces: Vec::new(),
+    //                     possible_movements: HashSet::from([
+    //                         Pos::of_str(""),
+    //                         Pos::of_str(""),
+    //                         Pos::of_str(""),
+    //                         Pos::of_str(""),
+    //                         Pos::of_str(""),
+    //                         Pos::of_str(""),
+    //                         Pos::of_str(""),
+    //                         Pos::of_str(""),
+    //                         Pos::of_str(""),
+    //                         Pos::of_str(""),
+    //                         Pos::of_str(""),
+    //                         Pos::of_str(""),
+    //                         Pos::of_str(""),
+    //                         Pos::of_str(""),
+    //                         Pos::of_str(""),
+    //                         Pos::of_str(""),
+    //                     ]),
+    //                 },
+    //             ),
+    //         ]),
+    //         history: Vec::new(),
+    //     }
+    // ), false);
+    //    }
 
- //   #[test]
- //   fn is_in_check_true() {
-        // assert_eq!(is_in_check(
-        //     &Play {
-        //         board: game_board::of_str([
-        //             "    ♚   ",
-        //             "   ♙ ♟  ",
-        //             "        ",
-        //             "        ",
-        //             "        ",
-        //             "        ",
-        //             "        ",
-        //             "    ♔   ",
-        //         ]),
-        //         players: HashMap::from([
-        //             (
-        //                 Color::White,
-        //                 Player {
-        //                     color: Color::White,
-        //                     captured_pieces: Vec::new(),
-        //                     possible_movements: HashSet::new(),
-        //                 },
-        //             ),
-        //             (
-        //                 Color::Black,
-        //                 Player {
-        //                     color: Color::Black,
-        //                     captured_pieces: Vec::new(),
-        //                     possible_movements: HashSet::from([
-        //                         Pos::of_str("A6"),
-        //                         Pos::of_str("B6"),
-        //                         Pos::of_str("C6"),
-        //                         Pos::of_str("D6"),
-        //                         Pos::of_str("E6"),
-        //                         Pos::of_str("F6"),
-        //                         Pos::of_str("G6"),
-        //                         Pos::of_str("H6"),
-        //                         Pos::of_str("A5"),
-        //                         Pos::of_str("B5"),
-        //                         Pos::of_str("C5"),
-        //                         Pos::of_str("D5"),
-        //                         Pos::of_str("E5"),
-        //                         Pos::of_str("F5"),
-        //                         Pos::of_str("G5"),
-        //                         Pos::of_str("H5"),
-        //                     ]),
-        //                 },
-        //             ),
-        //         ]),
-        //         history: Vec::new(),
-        //     }
-        // ), true);
-  //  }
+    //   #[test]
+    //   fn is_in_check_true() {
+    // assert_eq!(is_in_check(
+    //     &Play {
+    //         board: game::board::of_str([
+    //             "    ♚   ",
+    //             "   ♙ ♟  ",
+    //             "        ",
+    //             "        ",
+    //             "        ",
+    //             "        ",
+    //             "        ",
+    //             "    ♔   ",
+    //         ]),
+    //         players: HashMap::from([
+    //             (
+    //                 Color::White,
+    //                 Player {
+    //                     color: Color::White,
+    //                     captured_pieces: Vec::new(),
+    //                     possible_movements: HashSet::new(),
+    //                 },
+    //             ),
+    //             (
+    //                 Color::Black,
+    //                 Player {
+    //                     color: Color::Black,
+    //                     captured_pieces: Vec::new(),
+    //                     possible_movements: HashSet::from([
+    //                         Pos::of_str("A6"),
+    //                         Pos::of_str("B6"),
+    //                         Pos::of_str("C6"),
+    //                         Pos::of_str("D6"),
+    //                         Pos::of_str("E6"),
+    //                         Pos::of_str("F6"),
+    //                         Pos::of_str("G6"),
+    //                         Pos::of_str("H6"),
+    //                         Pos::of_str("A5"),
+    //                         Pos::of_str("B5"),
+    //                         Pos::of_str("C5"),
+    //                         Pos::of_str("D5"),
+    //                         Pos::of_str("E5"),
+    //                         Pos::of_str("F5"),
+    //                         Pos::of_str("G5"),
+    //                         Pos::of_str("H5"),
+    //                     ]),
+    //                 },
+    //             ),
+    //         ]),
+    //         history: Vec::new(),
+    //     }
+    // ), true);
+    //  }
 
     // criar função pra criar PLAY::from_historico
 }

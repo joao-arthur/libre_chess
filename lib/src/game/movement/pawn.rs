@@ -1,4 +1,4 @@
-use crate::{board::pos::Pos, color::Color, game_board::Board, piece::Piece};
+use crate::{board::pos::Pos, color::Color, game::board::Board, piece::Piece};
 
 //use super::Movement;
 
@@ -72,20 +72,20 @@ pub fn naive_movements_pawn(board: &Board, pos: &Pos) -> Vec<Pos> {
 
 #[cfg(test)]
 mod tests {
-    use crate::{board::pos::Pos, game_board};
+    use crate::{board::pos::Pos, game::board};
 
     use super::naive_movements_pawn;
 
     #[test]
     fn pawn_movements_empty_board() {
-        assert_eq!(naive_movements_pawn(&game_board::empty(), &Pos::of_str("A1")), []);
+        assert_eq!(naive_movements_pawn(&board::empty(), &Pos::of_str("A1")), []);
     }
 
     #[test]
     fn pawn_movements_lonely_piece() {
         assert_eq!(
             naive_movements_pawn(
-                &game_board::of_str([
+                &board::of_str([
                     "        ",
                     "        ",
                     "        ",
@@ -101,7 +101,7 @@ mod tests {
         );
         assert_eq!(
             naive_movements_pawn(
-                &game_board::of_str([
+                &board::of_str([
                     "        ",
                     "        ",
                     "        ",
@@ -121,7 +121,7 @@ mod tests {
     fn pawn_movements_first_move() {
         assert_eq!(
             naive_movements_pawn(
-                &game_board::of_str([
+                &board::of_str([
                     "        ",
                     "        ",
                     "        ",
@@ -137,7 +137,7 @@ mod tests {
         );
         assert_eq!(
             naive_movements_pawn(
-                &game_board::of_str([
+                &board::of_str([
                     "        ",
                     "       ♟",
                     "        ",
@@ -157,7 +157,7 @@ mod tests {
     fn pawn_movements_blocked() {
         assert_eq!(
             naive_movements_pawn(
-                &game_board::of_str([
+                &board::of_str([
                     "        ",
                     "        ",
                     "  ♟     ",
@@ -173,7 +173,7 @@ mod tests {
         );
         assert_eq!(
             naive_movements_pawn(
-                &game_board::of_str([
+                &board::of_str([
                     "        ",
                     "        ",
                     "        ",
@@ -193,7 +193,7 @@ mod tests {
     fn pawn_movements_capture() {
         assert_eq!(
             naive_movements_pawn(
-                &game_board::of_str([
+                &board::of_str([
                     "        ",
                     "        ",
                     " ♟ ♟    ",
@@ -209,7 +209,7 @@ mod tests {
         );
         assert_eq!(
             naive_movements_pawn(
-                &game_board::of_str([
+                &board::of_str([
                     "        ",
                     "        ",
                     "        ",
@@ -229,7 +229,7 @@ mod tests {
     //    fn test_white_pawn_en_passant() {
     //        assert_eq!(
     //            white_pawn_en_passant(
-    //                &game_board::of_str([
+    //                &board::of_str([
     //                    "        ",
     //                    "        ",
     //                    "        ",

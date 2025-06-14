@@ -1,8 +1,6 @@
-use std::{collections::HashMap, fmt, hash::Hash};
+use std::{collections::HashMap, fmt};
 
 use crate::{board::pos::Pos, piece::Piece};
-
-pub mod game_piece;
 
 #[derive(Debug, PartialEq)]
 pub struct InvalidCharacterErr;
@@ -96,7 +94,9 @@ fn to_string(board: &Board) -> String {
 mod tests {
     use std::collections::HashMap;
 
-    use super::{FromStringErr, InvalidCharacterErr, game_piece, of_str, to_string, try_of_str};
+    use crate::game::piece;
+
+    use super::{FromStringErr, InvalidCharacterErr, of_str, to_string, try_of_str};
 
     #[test]
     fn try_of_str_ok() {
@@ -113,38 +113,38 @@ mod tests {
             ])
             .unwrap(),
             HashMap::from([
-                (game_piece::of_str("A8", "♜")),
-                (game_piece::of_str("B8", "♞")),
-                (game_piece::of_str("C8", "♝")),
-                (game_piece::of_str("D8", "♛")),
-                (game_piece::of_str("E8", "♚")),
-                (game_piece::of_str("F8", "♝")),
-                (game_piece::of_str("G8", "♞")),
-                (game_piece::of_str("H8", "♜")),
-                (game_piece::of_str("A7", "♟")),
-                (game_piece::of_str("B7", "♟")),
-                (game_piece::of_str("C7", "♟")),
-                (game_piece::of_str("D7", "♟")),
-                (game_piece::of_str("E7", "♟")),
-                (game_piece::of_str("F7", "♟")),
-                (game_piece::of_str("G7", "♟")),
-                (game_piece::of_str("H7", "♟")),
-                (game_piece::of_str("A2", "♙")),
-                (game_piece::of_str("B2", "♙")),
-                (game_piece::of_str("C2", "♙")),
-                (game_piece::of_str("D2", "♙")),
-                (game_piece::of_str("E2", "♙")),
-                (game_piece::of_str("F2", "♙")),
-                (game_piece::of_str("G2", "♙")),
-                (game_piece::of_str("H2", "♙")),
-                (game_piece::of_str("A1", "♖")),
-                (game_piece::of_str("B1", "♘")),
-                (game_piece::of_str("C1", "♗")),
-                (game_piece::of_str("D1", "♕")),
-                (game_piece::of_str("E1", "♔")),
-                (game_piece::of_str("F1", "♗")),
-                (game_piece::of_str("G1", "♘")),
-                (game_piece::of_str("H1", "♖")),
+                (piece::of_str("A8", "♜")),
+                (piece::of_str("B8", "♞")),
+                (piece::of_str("C8", "♝")),
+                (piece::of_str("D8", "♛")),
+                (piece::of_str("E8", "♚")),
+                (piece::of_str("F8", "♝")),
+                (piece::of_str("G8", "♞")),
+                (piece::of_str("H8", "♜")),
+                (piece::of_str("A7", "♟")),
+                (piece::of_str("B7", "♟")),
+                (piece::of_str("C7", "♟")),
+                (piece::of_str("D7", "♟")),
+                (piece::of_str("E7", "♟")),
+                (piece::of_str("F7", "♟")),
+                (piece::of_str("G7", "♟")),
+                (piece::of_str("H7", "♟")),
+                (piece::of_str("A2", "♙")),
+                (piece::of_str("B2", "♙")),
+                (piece::of_str("C2", "♙")),
+                (piece::of_str("D2", "♙")),
+                (piece::of_str("E2", "♙")),
+                (piece::of_str("F2", "♙")),
+                (piece::of_str("G2", "♙")),
+                (piece::of_str("H2", "♙")),
+                (piece::of_str("A1", "♖")),
+                (piece::of_str("B1", "♘")),
+                (piece::of_str("C1", "♗")),
+                (piece::of_str("D1", "♕")),
+                (piece::of_str("E1", "♔")),
+                (piece::of_str("F1", "♗")),
+                (piece::of_str("G1", "♘")),
+                (piece::of_str("H1", "♖")),
             ])
         );
     }
@@ -198,38 +198,38 @@ mod tests {
                 "♖♘♗♕♔♗♘♖",
             ]),
             HashMap::from([
-                (game_piece::of_str("A8", "♜")),
-                (game_piece::of_str("B8", "♞")),
-                (game_piece::of_str("C8", "♝")),
-                (game_piece::of_str("D8", "♛")),
-                (game_piece::of_str("E8", "♚")),
-                (game_piece::of_str("F8", "♝")),
-                (game_piece::of_str("G8", "♞")),
-                (game_piece::of_str("H8", "♜")),
-                (game_piece::of_str("A7", "♟")),
-                (game_piece::of_str("B7", "♟")),
-                (game_piece::of_str("C7", "♟")),
-                (game_piece::of_str("D7", "♟")),
-                (game_piece::of_str("E7", "♟")),
-                (game_piece::of_str("F7", "♟")),
-                (game_piece::of_str("G7", "♟")),
-                (game_piece::of_str("H7", "♟")),
-                (game_piece::of_str("A2", "♙")),
-                (game_piece::of_str("B2", "♙")),
-                (game_piece::of_str("C2", "♙")),
-                (game_piece::of_str("D2", "♙")),
-                (game_piece::of_str("E2", "♙")),
-                (game_piece::of_str("F2", "♙")),
-                (game_piece::of_str("G2", "♙")),
-                (game_piece::of_str("H2", "♙")),
-                (game_piece::of_str("A1", "♖")),
-                (game_piece::of_str("B1", "♘")),
-                (game_piece::of_str("C1", "♗")),
-                (game_piece::of_str("D1", "♕")),
-                (game_piece::of_str("E1", "♔")),
-                (game_piece::of_str("F1", "♗")),
-                (game_piece::of_str("G1", "♘")),
-                (game_piece::of_str("H1", "♖")),
+                (piece::of_str("A8", "♜")),
+                (piece::of_str("B8", "♞")),
+                (piece::of_str("C8", "♝")),
+                (piece::of_str("D8", "♛")),
+                (piece::of_str("E8", "♚")),
+                (piece::of_str("F8", "♝")),
+                (piece::of_str("G8", "♞")),
+                (piece::of_str("H8", "♜")),
+                (piece::of_str("A7", "♟")),
+                (piece::of_str("B7", "♟")),
+                (piece::of_str("C7", "♟")),
+                (piece::of_str("D7", "♟")),
+                (piece::of_str("E7", "♟")),
+                (piece::of_str("F7", "♟")),
+                (piece::of_str("G7", "♟")),
+                (piece::of_str("H7", "♟")),
+                (piece::of_str("A2", "♙")),
+                (piece::of_str("B2", "♙")),
+                (piece::of_str("C2", "♙")),
+                (piece::of_str("D2", "♙")),
+                (piece::of_str("E2", "♙")),
+                (piece::of_str("F2", "♙")),
+                (piece::of_str("G2", "♙")),
+                (piece::of_str("H2", "♙")),
+                (piece::of_str("A1", "♖")),
+                (piece::of_str("B1", "♘")),
+                (piece::of_str("C1", "♗")),
+                (piece::of_str("D1", "♕")),
+                (piece::of_str("E1", "♔")),
+                (piece::of_str("F1", "♗")),
+                (piece::of_str("G1", "♘")),
+                (piece::of_str("H1", "♖")),
             ])
         );
     }
