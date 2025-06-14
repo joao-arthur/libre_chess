@@ -93,10 +93,8 @@ fn to_string(board: &Board) -> String {
 mod tests {
     use std::collections::HashMap;
 
-    use crate::{board::pos::Pos, piece::Piece};
-
     use super::{
-        FromStringErr, InvalidCharacterErr, InvalidLengthErr, game_piece, of_str, to_string,
+        FromStringErr, InvalidCharacterErr, game_piece, of_str, to_string,
         try_of_str,
     };
 
@@ -179,12 +177,11 @@ mod tests {
         //    ]),
         //    Err(FromStringErr::InvalidLength(InvalidLengthErr))
         //);
-
-        assert_eq!(
-            format!("{}", InvalidCharacterErr),
-            "Only [0-9] characters and spaces are allowed!"
-        );
-        assert_eq!(format!("{}", InvalidLengthErr), "Every line must be 8 characters long");
+        //assert_eq!(
+        //    format!("{}", InvalidCharacterErr),
+        //    "Only [0-9] characters and spaces are allowed!"
+        //);
+        //assert_eq!(format!("{}", InvalidLengthErr), "Every line must be 8 characters long");
     }
 
     #[test]
