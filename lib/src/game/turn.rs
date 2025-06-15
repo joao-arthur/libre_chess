@@ -8,7 +8,6 @@ pub fn get_turn(play: &Play) -> Color {
 
 #[cfg(test)]
 mod tests {
-
     use crate::{
         color::Color,
         game::{movement::Movement, play::Play},

@@ -85,7 +85,6 @@ pub fn is_in_check(play: &Play) -> bool {
 
 #[cfg(test)]
 mod tests {
-
     use std::collections::{HashMap, HashSet};
 
     use crate::{
@@ -104,38 +103,38 @@ mod tests {
     //         play,
     //         Play {
     //             board: HashMap::from([
-    //                 (piece::of_str("A8", "♜")),
-    //                 (piece::of_str("B8", "♞")),
-    //                 (piece::of_str("C8", "♝")),
-    //                 (piece::of_str("D8", "♛")),
-    //                 (piece::of_str("E8", "♚")),
-    //                 (piece::of_str("F8", "♝")),
-    //                 (piece::of_str("G8", "♞")),
-    //                 (piece::of_str("H8", "♜")),
-    //                 (piece::of_str("A7", "♟")),
-    //                 (piece::of_str("B7", "♟")),
-    //                 (piece::of_str("C7", "♟")),
-    //                 (piece::of_str("D7", "♟")),
-    //                 (piece::of_str("E7", "♟")),
-    //                 (piece::of_str("F7", "♟")),
-    //                 (piece::of_str("G7", "♟")),
-    //                 (piece::of_str("H7", "♟")),
-    //                 (piece::of_str("A2", "♙")),
-    //                 (piece::of_str("B2", "♙")),
-    //                 (piece::of_str("C2", "♙")),
-    //                 (piece::of_str("D2", "♙")),
-    //                 (piece::of_str("E2", "♙")),
-    //                 (piece::of_str("F2", "♙")),
-    //                 (piece::of_str("G2", "♙")),
-    //                 (piece::of_str("H2", "♙")),
-    //                 (piece::of_str("A1", "♖")),
-    //                 (piece::of_str("B1", "♘")),
-    //                 (piece::of_str("C1", "♗")),
-    //                 (piece::of_str("D1", "♕")),
-    //                 (piece::of_str("E1", "♔")),
-    //                 (piece::of_str("F1", "♗")),
-    //                 (piece::of_str("G1", "♘")),
-    //                 (piece::of_str("H1", "♖")),
+    //                 piece::of_str("A8", "♜"),
+    //                 piece::of_str("B8", "♞"),
+    //                 piece::of_str("C8", "♝"),
+    //                 piece::of_str("D8", "♛"),
+    //                 piece::of_str("E8", "♚"),
+    //                 piece::of_str("F8", "♝"),
+    //                 piece::of_str("G8", "♞"),
+    //                 piece::of_str("H8", "♜"),
+    //                 piece::of_str("A7", "♟"),
+    //                 piece::of_str("B7", "♟"),
+    //                 piece::of_str("C7", "♟"),
+    //                 piece::of_str("D7", "♟"),
+    //                 piece::of_str("E7", "♟"),
+    //                 piece::of_str("F7", "♟"),
+    //                 piece::of_str("G7", "♟"),
+    //                 piece::of_str("H7", "♟"),
+    //                 piece::of_str("A2", "♙"),
+    //                 piece::of_str("B2", "♙"),
+    //                 piece::of_str("C2", "♙"),
+    //                 piece::of_str("D2", "♙"),
+    //                 piece::of_str("E2", "♙"),
+    //                 piece::of_str("F2", "♙"),
+    //                 piece::of_str("G2", "♙"),
+    //                 piece::of_str("H2", "♙"),
+    //                 piece::of_str("A1", "♖"),
+    //                 piece::of_str("B1", "♘"),
+    //                 piece::of_str("C1", "♗"),
+    //                 piece::of_str("D1", "♕"),
+    //                 piece::of_str("E1", "♔"),
+    //                 piece::of_str("F1", "♗"),
+    //                 piece::of_str("G1", "♘"),
+    //                 piece::of_str("H1", "♖"),
     //             ]),
     //             players: HashMap::from([
     //                 (
@@ -293,6 +292,4 @@ mod tests {
     //     }
     // ), true);
     //  }
-
-    // criar função pra criar PLAY::from_historico
 }

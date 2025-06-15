@@ -33,214 +33,70 @@ pub fn naive_movements_board(board: &Board, color: &Color) -> HashSet<Pos> {
 
 #[cfg(test)]
 mod tests {
+    use std::collections::HashMap;
 
-    use crate::{board::pos::Pos, game::board};
+    use crate::{
+        board::pos::{Pos, pos_of_str_slice},
+        game::{board, piece},
+    };
 
     use super::{naive_movements_board, naive_movements_piece};
 
     #[test]
-    fn naive_movements_piece_some() {
+    fn naive_movements_piece_rook() {
         assert_eq!(
-            naive_movements_piece(
-                &board::of_str([
-                    "        ",
-                    "        ",
-                    "        ",
-                    "        ",
-                    "   ♜    ",
-                    "        ",
-                    "        ",
-                    "        ",
-                ]),
-                &Pos::of_str("D4"),
-            ),
-            [
-                //
-                Pos::of_str("E4"),
-                Pos::of_str("F4"),
-                Pos::of_str("G4"),
-                Pos::of_str("H4"),
-                //
-                Pos::of_str("D3"),
-                Pos::of_str("D2"),
-                Pos::of_str("D1"),
-                //
-                Pos::of_str("C4"),
-                Pos::of_str("B4"),
-                Pos::of_str("A4"),
-                //
-                Pos::of_str("D5"),
-                Pos::of_str("D6"),
-                Pos::of_str("D7"),
-                Pos::of_str("D8"),
-            ]
+            naive_movements_piece(&HashMap::from([piece::of_str("D4", "♜")]), &Pos::of_str("D4")),
+            pos_of_str_slice([
+                "E4", "F4", "G4", "H4", "D3", "D2", "D1", "C4", "B4", "A4", "D5", "D6", "D7", "D8",
+            ])
         );
+    }
+
+    #[test]
+    fn naive_movements_piece_knight() {
         assert_eq!(
-            naive_movements_piece(
-                &board::of_str([
-                    "        ",
-                    "        ",
-                    "        ",
-                    "        ",
-                    "   ♞    ",
-                    "        ",
-                    "        ",
-                    "        ",
-                ]),
-                &Pos::of_str("D4"),
-            ),
-            [
-                Pos::of_str("E6"),
-                Pos::of_str("F5"),
-                Pos::of_str("F3"),
-                Pos::of_str("E2"),
-                Pos::of_str("C2"),
-                Pos::of_str("B3"),
-                Pos::of_str("B5"),
-                Pos::of_str("C6"),
-            ]
+            naive_movements_piece(&HashMap::from([piece::of_str("D4", "♞")]), &Pos::of_str("D4")),
+            pos_of_str_slice(["E6", "F5", "F3", "E2", "C2", "B3", "B5", "C6"])
         );
+    }
+
+    #[test]
+    fn naive_movements_piece_bishop() {
         assert_eq!(
-            naive_movements_piece(
-                &board::of_str([
-                    "        ",
-                    "        ",
-                    "        ",
-                    "  ♝     ",
-                    "        ",
-                    "        ",
-                    "        ",
-                    "        ",
-                ]),
-                &Pos::of_str("C5"),
-            ),
-            [
-                Pos::of_str("D6"),
-                Pos::of_str("E7"),
-                Pos::of_str("F8"),
-                //
-                Pos::of_str("D4"),
-                Pos::of_str("E3"),
-                Pos::of_str("F2"),
-                Pos::of_str("G1"),
-                //
-                Pos::of_str("B4"),
-                Pos::of_str("A3"),
-                //
-                Pos::of_str("B6"),
-                Pos::of_str("A7"),
-            ]
+            naive_movements_piece(&HashMap::from([piece::of_str("C5", "♝")]), &Pos::of_str("C5")),
+            pos_of_str_slice(["D6", "E7", "F8", "D4", "E3", "F2", "G1", "B4", "A3", "B6", "A7"])
         );
+    }
+
+    #[test]
+    fn naive_movements_piece_queen() {
         assert_eq!(
-            naive_movements_piece(
-                &board::of_str([
-                    "        ",
-                    "        ",
-                    "        ",
-                    "  ♛     ",
-                    "        ",
-                    "        ",
-                    "        ",
-                    "        ",
-                ]),
-                &Pos::of_str("C5"),
-            ),
-            [
-                Pos::of_str("D6"),
-                Pos::of_str("E7"),
-                Pos::of_str("F8"),
-                //
-                Pos::of_str("D4"),
-                Pos::of_str("E3"),
-                Pos::of_str("F2"),
-                Pos::of_str("G1"),
-                //
-                Pos::of_str("B4"),
-                Pos::of_str("A3"),
-                //
-                Pos::of_str("B6"),
-                Pos::of_str("A7"),
-                //
-                //
-                Pos::of_str("D5"),
-                Pos::of_str("E5"),
-                Pos::of_str("F5"),
-                Pos::of_str("G5"),
-                Pos::of_str("H5"),
-                //
-                Pos::of_str("C4"),
-                Pos::of_str("C3"),
-                Pos::of_str("C2"),
-                Pos::of_str("C1"),
-                //
-                Pos::of_str("B5"),
-                Pos::of_str("A5"),
-                //
-                Pos::of_str("C6"),
-                Pos::of_str("C7"),
-                Pos::of_str("C8"),
-            ]
+            naive_movements_piece(&HashMap::from([piece::of_str("C5", "♛")]), &Pos::of_str("C5")),
+            pos_of_str_slice([
+                "D6", "E7", "F8", "D4", "E3", "F2", "G1", "B4", "A3", "B6", "A7", "D5", "E5", "F5",
+                "G5", "H5", "C4", "C3", "C2", "C1", "B5", "A5", "C6", "C7", "C8",
+            ])
         );
+    }
+
+    #[test]
+    fn naive_movements_piece_king() {
         assert_eq!(
-            naive_movements_piece(
-                &board::of_str([
-                    "        ",
-                    "        ",
-                    "        ",
-                    "        ",
-                    "   ♚    ",
-                    "        ",
-                    "        ",
-                    "        ",
-                ]),
-                &Pos::of_str("D4"),
-            ),
-            [
-                Pos::of_str("E5"),
-                Pos::of_str("E4"),
-                Pos::of_str("E3"),
-                Pos::of_str("D3"),
-                Pos::of_str("C3"),
-                Pos::of_str("C4"),
-                Pos::of_str("C5"),
-                Pos::of_str("D5"),
-            ]
+            naive_movements_piece(&HashMap::from([piece::of_str("D4", "♚")]), &Pos::of_str("D4")),
+            pos_of_str_slice(["E5", "E4", "E3", "D3", "C3", "C4", "C5", "D5"])
         );
+    }
+
+    #[test]
+    fn naive_movements_piece_pawn() {
         assert_eq!(
-            naive_movements_piece(
-                &board::of_str([
-                    "        ",
-                    "        ",
-                    "        ",
-                    "  ♙     ",
-                    "        ",
-                    "        ",
-                    "        ",
-                    "        ",
-                ]),
-                &Pos::of_str("C5"),
-            ),
+            naive_movements_piece(&HashMap::from([piece::of_str("C5", "♙")]), &Pos::of_str("C5")),
             [Pos::of_str("C6")]
         );
     }
 
     #[test]
-    fn naive_movements_piece_none() {
-        assert_eq!(
-            naive_movements_piece(
-                &board::of_str([
-                    "        ",
-                    "        ",
-                    "        ",
-                    "  ♙     ",
-                    "        ",
-                    "        ",
-                    "        ",
-                    "        ",
-                ]),
-                &Pos::of_str("A1"),
-            ),
-            []
-        );
+    fn naive_movements_piece_empty_board() {
+        assert_eq!(naive_movements_piece(&board::empty(), &Pos::of_str("A1")), []);
     }
 }

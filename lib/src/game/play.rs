@@ -42,7 +42,6 @@ impl Default for Play {
 
 #[cfg(test)]
 mod tests {
-
     use std::collections::{HashMap, HashSet};
 
     use crate::{color::Color, game::board::Board, game::player::Player};

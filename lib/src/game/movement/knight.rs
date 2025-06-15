@@ -15,6 +15,9 @@ pub fn naive_movements_knight(board: &Board, pos: &Pos) -> Vec<Pos> {
         ];
         for curr_pos in base {
             if let Some(curr_pos) = curr_pos {
+                if curr_pos.col > 7 || curr_pos.row > 7 {
+                    continue;
+                }
                 if let Some(curr_piece) = board.get(&curr_pos) {
                     if &curr_piece.color != &piece.color {
                         result.push(curr_pos);
@@ -30,7 +33,12 @@ pub fn naive_movements_knight(board: &Board, pos: &Pos) -> Vec<Pos> {
 
 #[cfg(test)]
 mod tests {
-    use crate::{board::pos::Pos, game::board};
+    use std::collections::HashMap;
+
+    use crate::{
+        board::pos::{Pos, pos_of_str_slice},
+        game::{board, piece},
+    };
 
     use super::naive_movements_knight;
 
@@ -42,49 +50,28 @@ mod tests {
     #[test]
     fn naive_movements_knight_lonely_piece() {
         assert_eq!(
-            naive_movements_knight(
-                &board::of_str([
-                    "        ",
-                    "        ",
-                    "        ",
-                    "        ",
-                    "   ♞    ",
-                    "        ",
-                    "        ",
-                    "        ",
-                ]),
-                &Pos::of_str("D4"),
-            ),
-            [
-                Pos::of_str("E6"),
-                Pos::of_str("F5"),
-                Pos::of_str("F3"),
-                Pos::of_str("E2"),
-                Pos::of_str("C2"),
-                Pos::of_str("B3"),
-                Pos::of_str("B5"),
-                Pos::of_str("C6"),
-            ]
+            naive_movements_knight(&HashMap::from([piece::of_str("D4", "♞")]), &Pos::of_str("D4")),
+            pos_of_str_slice(["E6", "F5", "F3", "E2", "C2", "B3", "B5", "C6"])
         );
     }
 
     #[test]
     fn naive_movements_knight_edge() {
         assert_eq!(
-            naive_movements_knight(
-                &board::of_str([
-                    "        ",
-                    "        ",
-                    "        ",
-                    "        ",
-                    "        ",
-                    "        ",
-                    "        ",
-                    "♞       ",
-                ]),
-                &Pos::of_str("A1"),
-            ),
-            [Pos::of_str("B3"), Pos::of_str("C2")]
+            naive_movements_knight(&HashMap::from([piece::of_str("H8", "♞")]), &Pos::of_str("H8")),
+            pos_of_str_slice(["G6", "F7"])
+        );
+        assert_eq!(
+            naive_movements_knight(&HashMap::from([piece::of_str("H1", "♞")]), &Pos::of_str("H1")),
+            pos_of_str_slice(["F2", "G3"])
+        );
+        assert_eq!(
+            naive_movements_knight(&HashMap::from([piece::of_str("A1", "♞")]), &Pos::of_str("A1")),
+            pos_of_str_slice(["B3", "C2"])
+        );
+        assert_eq!(
+            naive_movements_knight(&HashMap::from([piece::of_str("A8", "♞")]), &Pos::of_str("A8")),
+            pos_of_str_slice(["C7", "B6"])
         );
     }
 
@@ -104,15 +91,7 @@ mod tests {
                 ]),
                 &Pos::of_str("D4"),
             ),
-            [
-                Pos::of_str("E6"),
-                Pos::of_str("F5"),
-                Pos::of_str("F3"),
-                Pos::of_str("E2"),
-                Pos::of_str("C2"),
-                Pos::of_str("B5"),
-                Pos::of_str("C6"),
-            ]
+            pos_of_str_slice(["E6", "F5", "F3", "E2", "C2", "B5", "C6"])
         );
         assert_eq!(
             naive_movements_knight(
@@ -128,15 +107,7 @@ mod tests {
                 ]),
                 &Pos::of_str("D4"),
             ),
-            [
-                Pos::of_str("E6"),
-                Pos::of_str("F5"),
-                Pos::of_str("F3"),
-                Pos::of_str("E2"),
-                Pos::of_str("C2"),
-                Pos::of_str("B5"),
-                Pos::of_str("C6"),
-            ]
+            pos_of_str_slice(["E6", "F5", "F3", "E2", "C2", "B5", "C6"])
         );
     }
 }

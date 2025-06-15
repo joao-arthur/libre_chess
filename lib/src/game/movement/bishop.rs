@@ -11,7 +11,6 @@ pub fn naive_movements_bishop(board: &Board, pos: &Pos) -> Vec<Pos> {
                 rel_row += modifier[0];
                 rel_col += modifier[1];
                 if let Some(curr_pos) = pos.try_of_rel_idx(rel_row, rel_col) {
-                    // fix
                     if curr_pos.col > 7 || curr_pos.row > 7 {
                         break;
                     }
@@ -36,7 +35,12 @@ pub fn naive_movements_bishop(board: &Board, pos: &Pos) -> Vec<Pos> {
 
 #[cfg(test)]
 mod tests {
-    use crate::{board::pos::Pos, game::board};
+    use std::collections::HashMap;
+
+    use crate::{
+        board::pos::{Pos, pos_of_str_slice},
+        game::{board, piece},
+    };
 
     use super::naive_movements_bishop;
 
@@ -48,63 +52,28 @@ mod tests {
     #[test]
     fn naive_movements_bishop_lonely_piece() {
         assert_eq!(
-            naive_movements_bishop(
-                &board::of_str([
-                    "        ",
-                    "        ",
-                    "        ",
-                    "  ♝     ",
-                    "        ",
-                    "        ",
-                    "        ",
-                    "        ",
-                ]),
-                &Pos::of_str("C5"),
-            ),
-            [
-                Pos::of_str("D6"),
-                Pos::of_str("E7"),
-                Pos::of_str("F8"),
-                //
-                Pos::of_str("D4"),
-                Pos::of_str("E3"),
-                Pos::of_str("F2"),
-                Pos::of_str("G1"),
-                //
-                Pos::of_str("B4"),
-                Pos::of_str("A3"),
-                //
-                Pos::of_str("B6"),
-                Pos::of_str("A7"),
-            ]
+            naive_movements_bishop(&HashMap::from([piece::of_str("C5", "♝")]), &Pos::of_str("C5")),
+            pos_of_str_slice(["D6", "E7", "F8", "D4", "E3", "F2", "G1", "B4", "A3", "B6", "A7"])
         );
     }
 
     #[test]
     fn naive_movements_bishop_edge() {
         assert_eq!(
-            naive_movements_bishop(
-                &board::of_str([
-                    "♝       ",
-                    "        ",
-                    "        ",
-                    "        ",
-                    "        ",
-                    "        ",
-                    "        ",
-                    "        ",
-                ]),
-                &Pos::of_str("A8"),
-            ),
-            [
-                Pos::of_str("B7"),
-                Pos::of_str("C6"),
-                Pos::of_str("D5"),
-                Pos::of_str("E4"),
-                Pos::of_str("F3"),
-                Pos::of_str("G2"),
-                Pos::of_str("H1"),
-            ]
+            naive_movements_bishop(&HashMap::from([piece::of_str("H8", "♝")]), &Pos::of_str("H8")),
+            pos_of_str_slice(["G7", "F6", "E5", "D4", "C3", "B2", "A1"])
+        );
+        assert_eq!(
+            naive_movements_bishop(&HashMap::from([piece::of_str("H1", "♝")]), &Pos::of_str("H1")),
+            pos_of_str_slice(["G2", "F3", "E4", "D5", "C6", "B7", "A8"])
+        );
+        assert_eq!(
+            naive_movements_bishop(&HashMap::from([piece::of_str("A1", "♝")]), &Pos::of_str("A1")),
+            pos_of_str_slice(["B2", "C3", "D4", "E5", "F6", "G7", "H8"])
+        );
+        assert_eq!(
+            naive_movements_bishop(&HashMap::from([piece::of_str("A8", "♝")]), &Pos::of_str("A8")),
+            pos_of_str_slice(["B7", "C6", "D5", "E4", "F3", "G2", "H1"])
         );
     }
 
@@ -124,17 +93,7 @@ mod tests {
                 ]),
                 &Pos::of_str("C5"),
             ),
-            [
-                Pos::of_str("D6"),
-                //
-                Pos::of_str("D4"),
-                //
-                Pos::of_str("B4"),
-                Pos::of_str("A3"),
-                //
-                Pos::of_str("B6"),
-                Pos::of_str("A7"),
-            ]
+            pos_of_str_slice(["D6", "D4", "B4", "A3", "B6", "A7"])
         );
         assert_eq!(
             naive_movements_bishop(
@@ -150,17 +109,7 @@ mod tests {
                 ]),
                 &Pos::of_str("C5"),
             ),
-            [
-                Pos::of_str("D6"),
-                //
-                Pos::of_str("D4"),
-                //
-                Pos::of_str("B4"),
-                Pos::of_str("A3"),
-                //
-                Pos::of_str("B6"),
-                Pos::of_str("A7"),
-            ]
+            pos_of_str_slice(["D6", "D4", "B4", "A3", "B6", "A7"])
         );
     }
 }

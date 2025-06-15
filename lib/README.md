@@ -12,6 +12,7 @@
     - [ ] En passant
     - [ ] Check
     - [ ] Castling
+    - [ ] Promotion
 
 - [ ] Game result
     - [ ] Stalemate

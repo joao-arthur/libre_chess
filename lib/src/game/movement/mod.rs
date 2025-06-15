@@ -23,8 +23,8 @@ impl Movement {
         Some(Movement { piece, from, to })
     }
 
-    pub fn of_str(p: &str, from: &str, to: &str) -> Self {
-        Self::try_of_str(p, from, to).unwrap()
+    pub fn of_str(piece: &str, from: &str, to: &str) -> Self {
+        Self::try_of_str(piece, from, to).unwrap()
     }
 }
 
@@ -35,7 +35,7 @@ mod tests {
     use super::Movement;
 
     #[test]
-    fn play_move_try_of_str_some() {
+    fn try_from_str() {
         assert_eq!(
             Movement::try_of_str("♟", "D2", "D4"),
             Some(Movement {
@@ -47,14 +47,14 @@ mod tests {
     }
 
     #[test]
-    fn play_move_try_of_str_none() {
+    fn try_of_str_none() {
         assert_eq!(Movement::try_of_str("P", "D2", "D4"), None);
         assert_eq!(Movement::try_of_str("♟", "ZZ9", "D4"), None);
         assert_eq!(Movement::try_of_str("♟", "D2", "ZZ9"), None);
     }
 
     #[test]
-    fn play_move_of_str() {
+    fn of_str() {
         assert_eq!(
             Movement::of_str("♟", "D2", "D4"),
             Movement {

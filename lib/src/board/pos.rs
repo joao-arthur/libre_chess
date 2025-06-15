@@ -53,6 +53,10 @@ impl Pos {
     }
 }
 
+pub fn pos_of_str_slice<const N: usize>(values: [&str; N]) -> Vec<Pos> {
+    values.to_vec().iter().map(|value| Pos::of_str(value)).collect()
+}
+
 impl fmt::Display for Pos {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{}", col::to_str(self.col) + &row::to_str(self.row))
