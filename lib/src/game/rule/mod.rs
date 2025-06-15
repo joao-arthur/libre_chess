@@ -7,11 +7,11 @@ use super::{
         Movement,
         naive::{naive_movements_board, naive_movements_piece},
     },
-    play::Play,
+    game::Game,
     turn::get_turn,
 };
 
-fn set_board(play: &mut Play, board: Board) {
+fn set_board(play: &mut Game, board: Board) {
     play.board = board;
     for (color, player) in play.players.iter_mut() {
         if color != &Color::White {
@@ -20,7 +20,7 @@ fn set_board(play: &mut Play, board: Board) {
     }
 }
 
-pub fn piece_move(play: &mut Play, movement: Movement) {
+pub fn piece_move(play: &mut Game, movement: Movement) {
     let curr_turn = get_turn(play);
     if movement.piece.color != curr_turn {
         return;
@@ -39,7 +39,7 @@ pub fn piece_move(play: &mut Play, movement: Movement) {
     // if 50 moves with no capture return MoveResult::Stalemate
 }
 
-pub fn piece_movements(play: &Play, pos: &Pos) -> Vec<Pos> {
+pub fn piece_movements(play: &Game, pos: &Pos) -> Vec<Pos> {
     if let Some(piece) = play.board.get(&pos) {
         let curr_turn = get_turn(play);
         if piece.color != curr_turn {
@@ -68,7 +68,7 @@ pub fn piece_movements(play: &Play, pos: &Pos) -> Vec<Pos> {
     }
 }
 
-pub fn is_in_check(play: &Play) -> bool {
+pub fn is_in_check(play: &Game) -> bool {
     let curr_turn = get_turn(play);
     for (pos, piece) in play.board.iter() {
         if piece.t == Type::King && piece.color == curr_turn {
@@ -90,18 +90,18 @@ mod tests {
     use crate::{
         board::pos::Pos,
         color::Color,
-        game::{mode::chess_standard, play::Play, player::Player},
+        game::{mode::chess_standard, game::Game, player::Player},
     };
 
     use super::{is_in_check, piece_move, piece_movements, set_board};
 
     //  #[test]
     // fn test_set_board() {
-    //     let mut play = Play::default();
+    //     let mut play = Game::default();
     //     set_board(&mut play, chess_standard().initial_board);
     //     assert_eq!(
     //         play,
-    //         Play {
+    //         Game {
     //             board: HashMap::from([
     //                 piece::of_str("A8", "♜"),
     //                 piece::of_str("B8", "♞"),
@@ -188,7 +188,7 @@ mod tests {
     //  #[test]
     //   fn is_in_check_false() {
     // assert_eq!(is_in_check(
-    //     &Play {
+    //     &Game {
     //         board: game::board::of_str([
     //             "    ♚   ",
     //             "    ♟   ",
@@ -242,7 +242,7 @@ mod tests {
     //   #[test]
     //   fn is_in_check_true() {
     // assert_eq!(is_in_check(
-    //     &Play {
+    //     &Game {
     //         board: game::board::of_str([
     //             "    ♚   ",
     //             "   ♙ ♟  ",

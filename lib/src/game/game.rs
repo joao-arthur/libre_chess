@@ -7,15 +7,15 @@ use crate::{
 };
 
 #[derive(Debug, PartialEq)]
-pub struct Play {
+pub struct Game {
     pub board: Board,
     pub players: HashMap<Color, Player>,
     pub history: Vec<Movement>,
 }
 
-impl Default for Play {
+impl Default for Game {
     fn default() -> Self {
-        Play {
+        Game {
             board: Board::default(),
             players: HashMap::from([
                 (
@@ -46,13 +46,13 @@ mod tests {
 
     use crate::{color::Color, game::board::Board, game::player::Player};
 
-    use super::Play;
+    use super::Game;
 
     #[test]
     fn play() {
         assert_eq!(
-            Play::default(),
-            Play {
+            Game::default(),
+            Game {
                 board: Board::default(),
                 players: HashMap::from([
                     (
