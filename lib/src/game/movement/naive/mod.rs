@@ -12,12 +12,12 @@ mod rook;
 pub fn naive_movements_piece(board: &Board, pos: &Pos) -> Vec<Pos> {
     if let Some(piece) = board.get(&pos) {
         return match piece.t {
-            Type::Rook => naive_movements_rook(&board, pos),
-            Type::Knight => naive_movements_knight(&board, pos),
-            Type::Bishop => naive_movements_bishop(&board, pos),
-            Type::Queen => naive_movements_queen(&board, pos),
-            Type::King => naive_movements_king(&board, pos),
-            Type::Pawn => naive_movements_pawn(&board, pos),
+            Type::Rook => rook::movements(&board, pos),
+            Type::Knight => knight::movements(&board, pos),
+            Type::Bishop => bishop::movements(&board, pos),
+            Type::Queen => queen::movements(&board, pos),
+            Type::King => king::movements(&board, pos),
+            Type::Pawn => pawn::movements(&board, pos),
         };
     }
     return Vec::new();
@@ -42,7 +42,7 @@ mod tests {
         game::{board, piece},
     };
 
-    use super::{naive_movements_board, naive_movements_piece};
+    use super::naive_movements_piece;
 
     #[test]
     fn naive_movements_piece_rook() {

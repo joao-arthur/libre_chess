@@ -1,6 +1,6 @@
 use crate::{board::pos::Pos, game::board::Board};
 
-pub fn naive_movements_knight(board: &Board, pos: &Pos) -> Vec<Pos> {
+pub fn movements(board: &Board, pos: &Pos) -> Vec<Pos> {
     let mut result: Vec<Pos> = Vec::new();
     if let Some(piece) = board.get(&pos) {
         let base = [
@@ -40,45 +40,45 @@ mod tests {
         game::{board, piece},
     };
 
-    use super::naive_movements_knight;
+    use super::movements;
 
     #[test]
-    fn naive_movements_knight_empty_board() {
-        assert_eq!(naive_movements_knight(&board::empty(), &Pos::of_str("A1")), []);
+    fn movements_empty_board() {
+        assert_eq!(movements(&board::empty(), &Pos::of_str("A1")), []);
     }
 
     #[test]
-    fn naive_movements_knight_lonely_piece() {
+    fn movements_lonely_piece() {
         assert_eq!(
-            naive_movements_knight(&HashMap::from([piece::of_str("D4", "♞")]), &Pos::of_str("D4")),
+            movements(&HashMap::from([piece::of_str("D4", "♞")]), &Pos::of_str("D4")),
             pos_of_str_slice(["E6", "F5", "F3", "E2", "C2", "B3", "B5", "C6"])
         );
     }
 
     #[test]
-    fn naive_movements_knight_edge() {
+    fn movements_edge() {
         assert_eq!(
-            naive_movements_knight(&HashMap::from([piece::of_str("H8", "♞")]), &Pos::of_str("H8")),
+            movements(&HashMap::from([piece::of_str("H8", "♞")]), &Pos::of_str("H8")),
             pos_of_str_slice(["G6", "F7"])
         );
         assert_eq!(
-            naive_movements_knight(&HashMap::from([piece::of_str("H1", "♞")]), &Pos::of_str("H1")),
+            movements(&HashMap::from([piece::of_str("H1", "♞")]), &Pos::of_str("H1")),
             pos_of_str_slice(["F2", "G3"])
         );
         assert_eq!(
-            naive_movements_knight(&HashMap::from([piece::of_str("A1", "♞")]), &Pos::of_str("A1")),
+            movements(&HashMap::from([piece::of_str("A1", "♞")]), &Pos::of_str("A1")),
             pos_of_str_slice(["B3", "C2"])
         );
         assert_eq!(
-            naive_movements_knight(&HashMap::from([piece::of_str("A8", "♞")]), &Pos::of_str("A8")),
+            movements(&HashMap::from([piece::of_str("A8", "♞")]), &Pos::of_str("A8")),
             pos_of_str_slice(["C7", "B6"])
         );
     }
 
     #[test]
-    fn naive_movements_knight_with_capture() {
+    fn movements_with_capture() {
         assert_eq!(
-            naive_movements_knight(
+            movements(
                 &board::of_str([
                     "        ",
                     "        ",
@@ -94,7 +94,7 @@ mod tests {
             pos_of_str_slice(["E6", "F5", "F3", "E2", "C2", "B5", "C6"])
         );
         assert_eq!(
-            naive_movements_knight(
+            movements(
                 &board::of_str([
                     "        ",
                     "        ",
