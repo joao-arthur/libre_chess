@@ -1,12 +1,9 @@
 ## TODO
 
 - [-] Pieces naive movements limited to the bounds of the board
-- [ ] Game helper method from game mode and movements history
+- [ ] Naive momements should return the attacking positions for pawn
 
-- [ ] Board selection
-    - [ ] Neutral
-    - [ ] Selected movemented
-    - [ ] Selected square
+- [ ] Game helper method from game mode and movements history
 
 - [ ] Special movements
     - [-] En passant
@@ -18,10 +15,12 @@
     - [ ] Stalemate
     - [ ] Checkmate
     - [ ] Draw
-    - [ ] Resign    
+    - [ ] Resign
 
-- [ ] Segregation of move zone and attacking zone for pieces
-- [ ] Segregate rules
+- [ ] Board selection
+    - [ ] Neutral
+    - [ ] Selected movemented
+    - [ ] Selected square
 
 - [ ] Game modes
     - [ ] Standard Chess

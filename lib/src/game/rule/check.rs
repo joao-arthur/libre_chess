@@ -20,112 +20,105 @@ pub fn is_in_check(play: &Game) -> bool {
 
 #[cfg(test)]
 mod tests {
+    use std::collections::{HashMap, HashSet};
+
+    use crate::{
+        board::pos::pos_of_str_slice,
+        color::Color,
+        game::{Game, board::of_str, movement::Movement, player::Player},
+    };
+
+    use super::is_in_check;
 
     #[test]
     fn is_in_check_false() {
-        // assert_eq!(is_in_check(
-        //     &Game {
-        //         board: game::board::of_str([
-        //             "    ♚   ",
-        //             "    ♟   ",
-        //             "        ",
-        //             "        ",
-        //             "        ",
-        //             "    ♖   ",
-        //             "        ",
-        //             "    ♔   ",
-        //         ]),
-        //         players: HashMap::from([
-        //             (
-        //                 Color::White,
-        //                 Player {
-        //                     color: Color::White,
-        //                     captured_pieces: Vec::new(),
-        //                     possible_movements: HashSet::new(),
-        //                 },
-        //             ),
-        //             (
-        //                 Color::Black,
-        //                 Player {
-        //                     color: Color::Black,
-        //                     captured_pieces: Vec::new(),
-        //                     possible_movements: HashSet::from([
-        //                         Pos::of_str(""),
-        //                         Pos::of_str(""),
-        //                         Pos::of_str(""),
-        //                         Pos::of_str(""),
-        //                         Pos::of_str(""),
-        //                         Pos::of_str(""),
-        //                         Pos::of_str(""),
-        //                         Pos::of_str(""),
-        //                         Pos::of_str(""),
-        //                         Pos::of_str(""),
-        //                         Pos::of_str(""),
-        //                         Pos::of_str(""),
-        //                         Pos::of_str(""),
-        //                         Pos::of_str(""),
-        //                         Pos::of_str(""),
-        //                         Pos::of_str(""),
-        //                     ]),
-        //                 },
-        //             ),
-        //         ]),
-        //         history: Vec::new(),
-        //     }
-        // ), false);
+        assert_eq!(
+            is_in_check(&Game {
+                board: of_str([
+                    "    ♚   ",
+                    "    ♟   ",
+                    "        ",
+                    "        ",
+                    "        ",
+                    "        ",
+                    "    ♙   ",
+                    "    ♔   ",
+                ]),
+                players: HashMap::from([
+                    (
+                        Color::White,
+                        Player {
+                            color: Color::White,
+                            captured_pieces: Vec::new(),
+                            possible_movements: pos_of_str_slice([
+                                "D1", "D2", "F1", "F2", "E3", "E4"
+                            ])
+                            .into_iter()
+                            .collect(),
+                        },
+                    ),
+                    (
+                        Color::Black,
+                        Player {
+                            color: Color::Black,
+                            captured_pieces: Vec::new(),
+                            possible_movements: pos_of_str_slice([
+                                "D8", "D7", "F8", "F7", "E6", "E5"
+                            ])
+                            .into_iter()
+                            .collect(),
+                        },
+                    ),
+                ]),
+                history: Vec::new(),
+            }),
+            false
+        );
     }
 
     #[test]
     fn is_in_check_true() {
-        // assert_eq!(is_in_check(
-        //     &Game {
-        //         board: game::board::of_str([
-        //             "    ♚   ",
-        //             "   ♙ ♟  ",
-        //             "        ",
-        //             "        ",
-        //             "        ",
-        //             "        ",
-        //             "        ",
-        //             "    ♔   ",
-        //         ]),
-        //         players: HashMap::from([
-        //             (
-        //                 Color::White,
-        //                 Player {
-        //                     color: Color::White,
-        //                     captured_pieces: Vec::new(),
-        //                     possible_movements: HashSet::new(),
-        //                 },
-        //             ),
-        //             (
-        //                 Color::Black,
-        //                 Player {
-        //                     color: Color::Black,
-        //                     captured_pieces: Vec::new(),
-        //                     possible_movements: HashSet::from([
-        //                         Pos::of_str("A6"),
-        //                         Pos::of_str("B6"),
-        //                         Pos::of_str("C6"),
-        //                         Pos::of_str("D6"),
-        //                         Pos::of_str("E6"),
-        //                         Pos::of_str("F6"),
-        //                         Pos::of_str("G6"),
-        //                         Pos::of_str("H6"),
-        //                         Pos::of_str("A5"),
-        //                         Pos::of_str("B5"),
-        //                         Pos::of_str("C5"),
-        //                         Pos::of_str("D5"),
-        //                         Pos::of_str("E5"),
-        //                         Pos::of_str("F5"),
-        //                         Pos::of_str("G5"),
-        //                         Pos::of_str("H5"),
-        //                     ]),
-        //                 },
-        //             ),
-        //         ]),
-        //         history: Vec::new(),
-        //     }
-        // ), true);
+        assert_eq!(
+            is_in_check(&Game {
+                board: of_str([
+                    "    ♚   ",
+                    "   ♙♟   ",
+                    "        ",
+                    "        ",
+                    "        ",
+                    "        ",
+                    "        ",
+                    "    ♔   ",
+                ]),
+                players: HashMap::from([
+                    (
+                        Color::White,
+                        Player {
+                            color: Color::White,
+                            captured_pieces: Vec::new(),
+                            possible_movements: pos_of_str_slice([
+                                "D1", "D2", "E2", "F1", "F2", "D8", "E8", "F8"
+                            ])
+                            .into_iter()
+                            .collect(),
+                        },
+                    ),
+                    (
+                        Color::Black,
+                        Player {
+                            color: Color::Black,
+                            captured_pieces: Vec::new(),
+                            possible_movements: pos_of_str_slice([
+                                "D8", "D7", "F8", "F7", "E6", "E5"
+                            ])
+                            .into_iter()
+                            .collect(),
+                        },
+                    ),
+                ]),
+                history: vec![Movement::of_str("♙", "D6", "D7")],
+            }),
+            true
+        );
     }
 }

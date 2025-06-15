@@ -34,14 +34,12 @@ mod tests {
     use crate::{
         board::pos::pos_of_str_slice,
         color::Color,
-        game::{
-            mode::standard_chess, piece, player::Player, Game
-        },
+        game::{Game, mode::standard_chess, piece, player::Player},
     };
 
     use super::init_game;
 
-   #[test]
+    #[test]
     fn test_init_game_standard_chess() {
         assert_eq!(
             init_game(standard_chess().initial_board),
@@ -86,7 +84,10 @@ mod tests {
                         Player {
                             color: Color::White,
                             captured_pieces: Vec::new(),
-                            possible_movements: pos_of_str_slice([ "A3", "B3", "C3", "D3", "E3", "F3", "G3", "H3", "A4", "B4", "C4", "D4", "E4", "F4", "G4", "H4", ])
+                            possible_movements: pos_of_str_slice([
+                                "A3", "B3", "C3", "D3", "E3", "F3", "G3", "H3", "A4", "B4", "C4",
+                                "D4", "E4", "F4", "G4", "H4",
+                            ])
                             .into_iter()
                             .collect(),
                         },
@@ -96,7 +97,10 @@ mod tests {
                         Player {
                             color: Color::Black,
                             captured_pieces: Vec::new(),
-                            possible_movements: pos_of_str_slice([ "A6", "B6", "C6", "D6", "E6", "F6", "G6", "H6", "A5", "B5", "C5", "D5", "E5", "F5", "G5", "H5", ])
+                            possible_movements: pos_of_str_slice([
+                                "A6", "B6", "C6", "D6", "E6", "F6", "G6", "H6", "A5", "B5", "C5",
+                                "D5", "E5", "F5", "G5", "H5",
+                            ])
                             .into_iter()
                             .collect(),
                         },
