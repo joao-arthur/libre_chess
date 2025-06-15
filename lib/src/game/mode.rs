@@ -2,6 +2,10 @@ use crate::game::board::{Board, of_str};
 
 #[derive(Debug, PartialEq)]
 pub struct Mode {
+    //pub row_0: u8,
+    //pub row_1: u8,
+    //pub col_0: u8,
+    //pub col_1: u8,
     pub row_len: u8,
     pub col_len: u8,
     pub initial_board: Board,
