@@ -1,35 +1,46 @@
 use crate::{color::Color, game::Game};
 
-pub fn get_turn(play: &Game) -> Color {
+pub fn evaluate_turn(play: &Game) -> Color {
     if play.history.len() % 2 == 0 { Color::White } else { Color::Black }
 }
 
 #[cfg(test)]
 mod tests {
+    use std::collections::HashMap;
+
     use crate::{
         color::Color,
-        game::{movement::Movement, Game},
+        game::{Game, board::Board, movement::Movement},
     };
 
-    use super::get_turn;
+    use super::evaluate_turn;
 
     #[test]
     fn test_get_turn() {
-        assert_eq!(get_turn(&Game { history: Vec::new(), ..Default::default() }), Color::White);
         assert_eq!(
-            get_turn(&Game {
-                history: Vec::from([Movement::of_str("♟", "D2", "D4")]),
-                ..Default::default()
+            evaluate_turn(&Game {
+                board: Board::default(),
+                players: HashMap::new(),
+                history: Vec::new(),
+            }),
+            Color::White
+        );
+        assert_eq!(
+            evaluate_turn(&Game {
+                board: Board::default(),
+                players: HashMap::new(),
+                history: Vec::from([Movement::of_str("♙", "D2", "D4")]),
             }),
             Color::Black
         );
         assert_eq!(
-            get_turn(&Game {
+            evaluate_turn(&Game {
+                board: Board::default(),
+                players: HashMap::new(),
                 history: Vec::from([
-                    Movement::of_str("♟", "D2", "D4"),
-                    Movement::of_str("♟", "A2", "A3")
+                    Movement::of_str("♙", "D2", "D4"),
+                    Movement::of_str("♟", "A7", "A5")
                 ]),
-                ..Default::default()
             }),
             Color::White
         );

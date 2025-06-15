@@ -1,7 +1,11 @@
-use crate::game::{movement::{naive::naive_movements_board, Movement}, rule::turn::get_turn, Game};
+use crate::game::{
+    Game,
+    movement::{Movement, naive::naive_movements_board},
+    rule::turn::evaluate_turn,
+};
 
 pub fn move_piece(play: &mut Game, movement: Movement) {
-    let curr_turn = get_turn(play);
+    let curr_turn = evaluate_turn(play);
     if movement.piece.color != curr_turn {
         return;
     }
@@ -20,7 +24,4 @@ pub fn move_piece(play: &mut Game, movement: Movement) {
 }
 
 #[cfg(test)]
-mod tests {
-
-
-}
+mod tests {}

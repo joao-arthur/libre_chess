@@ -56,17 +56,13 @@ mod tests {
         game::{movement::Movement, piece},
     };
 
-    use super::{white_pawn_en_passant, black_pawn_en_passant};
+    use super::{black_pawn_en_passant, white_pawn_en_passant};
 
     #[test]
     fn test_white_pawn_en_passant() {
         assert_eq!(
             white_pawn_en_passant(
-                &HashMap::from([
-                    piece::of_str("A5", "♟"),
-                    piece::of_str("B5", "♙"),
-                ]
-                ),
+                &HashMap::from([piece::of_str("A5", "♟"), piece::of_str("B5", "♙"),]),
                 Vec::from([Movement::of_str("♟", "A7", "A5")]),
                 &Pos::of_str("B5"),
             ),
@@ -74,11 +70,7 @@ mod tests {
         );
         assert_eq!(
             white_pawn_en_passant(
-                &HashMap::from([
-                    piece::of_str("H5", "♟"),
-                    piece::of_str("G5", "♙"),
-                ]
-                ),
+                &HashMap::from([piece::of_str("H5", "♟"), piece::of_str("G5", "♙"),]),
                 Vec::from([Movement::of_str("♟", "H7", "H5")]),
                 &Pos::of_str("G5"),
             ),
@@ -90,11 +82,7 @@ mod tests {
     fn test_black_pawn_en_passant() {
         assert_eq!(
             black_pawn_en_passant(
-                &HashMap::from([
-                    piece::of_str("A4", "♙"),
-                    piece::of_str("B4", "♟"),
-                ]
-                ),
+                &HashMap::from([piece::of_str("A4", "♙"), piece::of_str("B4", "♟"),]),
                 Vec::from([Movement::of_str("♙", "A2", "A4")]),
                 &Pos::of_str("B4"),
             ),
@@ -102,11 +90,7 @@ mod tests {
         );
         assert_eq!(
             black_pawn_en_passant(
-                &HashMap::from([
-                    piece::of_str("H4", "♙"),
-                    piece::of_str("G4", "♟"),
-                ]
-                ),
+                &HashMap::from([piece::of_str("H4", "♙"), piece::of_str("G4", "♟"),]),
                 Vec::from([Movement::of_str("♙", "H2", "H4")]),
                 &Pos::of_str("G4"),
             ),

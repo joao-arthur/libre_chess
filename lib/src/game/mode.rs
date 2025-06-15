@@ -11,7 +11,7 @@ pub struct Mode {
     pub initial_board: Board,
 }
 
-pub fn chess_standard() -> Mode {
+pub fn standard_chess() -> Mode {
     Mode {
         row_len: 8,
         col_len: 8,
@@ -36,12 +36,12 @@ pub fn chess_960() {
 mod tests {
     use crate::game::board::of_str;
 
-    use super::{Mode, chess_960, chess_standard};
+    use super::{Mode, chess_960, standard_chess};
 
     #[test]
     fn test_chess_standard() {
         assert_eq!(
-            chess_standard(),
+            standard_chess(),
             Mode {
                 row_len: 8,
                 col_len: 8,

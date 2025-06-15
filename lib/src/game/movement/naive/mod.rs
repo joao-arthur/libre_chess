@@ -25,9 +25,9 @@ pub fn naive_movements_piece(board: &Board, pos: &Pos) -> Vec<Pos> {
 
 pub fn naive_movements_board(board: &Board, color: &Color) -> HashSet<Pos> {
     let mut result: Vec<Pos> = Vec::new();
-    for entry in board.iter() {
-        if &entry.1.color == color {
-            result.append(&mut naive_movements_piece(board, &entry.0));
+    for (pos, piece) in board.iter() {
+        if &piece.color == color {
+            result.append(&mut naive_movements_piece(board, &pos));
         }
     }
     result.into_iter().collect()

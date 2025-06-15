@@ -1,10 +1,14 @@
 use std::collections::HashSet;
 
-use crate::{board::pos::Pos, game::{movement::naive::naive_movements_piece, rule::turn::get_turn, Game}, piece::Type};
+use crate::{
+    board::pos::Pos,
+    game::{Game, movement::naive::naive_movements_piece, rule::turn::evaluate_turn},
+    piece::Type,
+};
 
 pub fn allowed_movements(play: &Game, pos: &Pos) -> Vec<Pos> {
     if let Some(piece) = play.board.get(&pos) {
-        let curr_turn = get_turn(play);
+        let curr_turn = evaluate_turn(play);
         if piece.color != curr_turn {
             return Vec::new();
         }
@@ -31,11 +35,10 @@ pub fn allowed_movements(play: &Game, pos: &Pos) -> Vec<Pos> {
 #[cfg(test)]
 mod tests {
 
-
     //  #[test]
     // fn test_set_board() {
     //     let mut play = Game::default();
-    //     set_board(&mut play, chess_standard().initial_board);
+    //     init_game(&mut play, standard_chess().initial_board);
     //     assert_eq!(
     //         play,
     //         Game {

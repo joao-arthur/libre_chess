@@ -1,15 +1,15 @@
 ## TODO
 
-- [ ] Pieces naive movements limited to the bounds of the board
-- [ ] Play helper method from game mode and movements history
+- [-] Pieces naive movements limited to the bounds of the board
+- [ ] Game helper method from game mode and movements history
 
 - [ ] Board selection
     - [ ] Neutral
     - [ ] Selected movemented
     - [ ] Selected square
 
-- Special movements
-    - [ ] En passant
+- [ ] Special movements
+    - [-] En passant
     - [ ] Check
     - [ ] Castling
     - [ ] Promotion
