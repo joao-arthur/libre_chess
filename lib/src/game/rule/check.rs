@@ -20,7 +20,7 @@ pub fn is_in_check(play: &Game) -> bool {
 
 #[cfg(test)]
 mod tests {
-    use std::collections::{HashMap, HashSet};
+    use std::collections::HashMap;
 
     use crate::{
         board::pos::pos_of_str_slice,
@@ -32,8 +32,8 @@ mod tests {
 
     #[test]
     fn is_in_check_false() {
-        assert_eq!(
-            is_in_check(&Game {
+        assert!(
+            !is_in_check(&Game {
                 board: of_str([
                     "    ♚   ",
                     "    ♟   ",
@@ -71,14 +71,13 @@ mod tests {
                     ),
                 ]),
                 history: Vec::new(),
-            }),
-            false
+            })
         );
     }
 
     #[test]
     fn is_in_check_true() {
-        assert_eq!(
+        assert!(
             is_in_check(&Game {
                 board: of_str([
                     "    ♚   ",
@@ -117,8 +116,7 @@ mod tests {
                     ),
                 ]),
                 history: vec![Movement::of_str("♙", "D6", "D7")],
-            }),
-            true
+            })
         );
     }
 }

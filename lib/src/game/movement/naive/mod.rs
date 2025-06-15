@@ -10,24 +10,24 @@ mod queen;
 mod rook;
 
 pub fn naive_movements_piece(board: &Board, pos: &Pos) -> Vec<Pos> {
-    if let Some(piece) = board.get(&pos) {
+    if let Some(piece) = board.get(pos) {
         return match piece.t {
-            Type::Rook => rook::movements(&board, pos),
-            Type::Knight => knight::movements(&board, pos),
-            Type::Bishop => bishop::movements(&board, pos),
-            Type::Queen => queen::movements(&board, pos),
-            Type::King => king::movements(&board, pos),
-            Type::Pawn => pawn::movements(&board, pos),
+            Type::Rook => rook::movements(board, pos),
+            Type::Knight => knight::movements(board, pos),
+            Type::Bishop => bishop::movements(board, pos),
+            Type::Queen => queen::movements(board, pos),
+            Type::King => king::movements(board, pos),
+            Type::Pawn => pawn::movements(board, pos),
         };
     }
-    return Vec::new();
+    Vec::new()
 }
 
 pub fn naive_movements_board(board: &Board, color: &Color) -> HashSet<Pos> {
     let mut result: Vec<Pos> = Vec::new();
     for (pos, piece) in board.iter() {
         if &piece.color == color {
-            result.append(&mut naive_movements_piece(board, &pos));
+            result.append(&mut naive_movements_piece(board, pos));
         }
     }
     result.into_iter().collect()

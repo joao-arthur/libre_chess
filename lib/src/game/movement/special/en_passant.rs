@@ -1,6 +1,5 @@
 use crate::{
     board::pos::Pos,
-    color::Color,
     game::{board::Board, movement::Movement},
     piece::Piece,
 };

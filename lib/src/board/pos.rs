@@ -10,10 +10,10 @@ pub struct Pos {
 
 impl Pos {
     pub fn try_of_rel_idx(&self, row: i8, col: i8) -> Option<Self> {
-        if row < 0 && (row.abs() as u8) > self.row {
+        if row < 0 && row.unsigned_abs() > self.row {
             return None;
         }
-        if col < 0 && (col.abs() as u8) > self.col {
+        if col < 0 && col.unsigned_abs() > self.col {
             return None;
         }
         if row > 0 && (row as u8) > u8::MAX - self.row {

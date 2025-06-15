@@ -7,7 +7,7 @@ use crate::{
 };
 
 pub fn allowed_movements(play: &Game, pos: &Pos) -> Vec<Pos> {
-    if let Some(piece) = play.board.get(&pos) {
+    if let Some(piece) = play.board.get(pos) {
         let curr_turn = evaluate_turn(play);
         if piece.color != curr_turn {
             return Vec::new();
@@ -22,13 +22,12 @@ pub fn allowed_movements(play: &Game, pos: &Pos) -> Vec<Pos> {
                     }
                 }
             }
-            naive_movements =
-                naive_movements.into_iter().filter(|mov| !other_pos.contains(&mov)).collect();
+            naive_movements.retain(|mov| !other_pos.contains(mov));
         }
         // add special movements (check, en passant, castling) here
-        return naive_movements;
+        naive_movements
     } else {
-        return Vec::new();
+        Vec::new()
     }
 }
 

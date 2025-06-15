@@ -2,7 +2,7 @@ use crate::{board::pos::Pos, game::board::Board};
 
 pub fn movements(board: &Board, pos: &Pos) -> Vec<Pos> {
     let mut result: Vec<Pos> = Vec::new();
-    if let Some(piece) = board.get(&pos) {
+    if let Some(piece) = board.get(pos) {
         let modifiers: [[i8; 2]; 4] = [[1, 1], [-1, 1], [-1, -1], [1, -1]];
         for modifier in modifiers {
             let mut rel_row: i8 = 0;
@@ -15,7 +15,7 @@ pub fn movements(board: &Board, pos: &Pos) -> Vec<Pos> {
                         break;
                     }
                     if let Some(curr_piece) = board.get(&curr_pos) {
-                        if &curr_piece.color == &piece.color {
+                        if curr_piece.color == piece.color {
                             break;
                         } else {
                             result.push(curr_pos);

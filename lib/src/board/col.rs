@@ -1,8 +1,8 @@
 pub fn try_of_str(s: &str) -> Option<u8> {
     let bytes = s.as_bytes();
     match bytes {
-        [c] if (b'A'..=b'Z').contains(c) => Some(c - b'A'),
-        [hi, lo] if (b'A'..=b'Z').contains(hi) && (b'A'..=b'Z').contains(lo) => {
+        [c] if c.is_ascii_uppercase() => Some(c - b'A'),
+        [hi, lo] if hi.is_ascii_uppercase() && lo.is_ascii_uppercase() => {
             let hi_index = hi - b'A';
             let lo_index = lo - b'A';
             let value = ((hi_index as u16 + 1) * 26) + lo_index as u16;

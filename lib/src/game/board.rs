@@ -82,10 +82,10 @@ fn to_string(board: &Board) -> String {
         for col in 0..8 {
             match board.get(&Pos { row, col }) {
                 Some(p) => res.push_str(&p.to_string()),
-                None => res.push_str(" "),
+                None => res.push(' '),
             }
         }
-        res.push_str("\n")
+        res.push('\n')
     }
     res
 }

@@ -2,7 +2,7 @@ use crate::{board::pos::Pos, game::board::Board};
 
 pub fn movements(board: &Board, pos: &Pos) -> Vec<Pos> {
     let mut result: Vec<Pos> = Vec::new();
-    if let Some(piece) = board.get(&pos) {
+    if let Some(piece) = board.get(pos) {
         let base = [
             pos.try_of_rel_idx(1, 1),
             pos.try_of_rel_idx(0, 1),
@@ -19,7 +19,7 @@ pub fn movements(board: &Board, pos: &Pos) -> Vec<Pos> {
                     continue;
                 }
                 if let Some(curr_piece) = board.get(&curr_pos) {
-                    if &curr_piece.color != &piece.color {
+                    if curr_piece.color != piece.color {
                         result.push(curr_pos);
                     }
                 } else {

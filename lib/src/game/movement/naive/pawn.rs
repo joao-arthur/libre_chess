@@ -1,8 +1,8 @@
-use crate::{board::pos::Pos, color::Color, game::board::Board, piece::Piece};
+use crate::{board::pos::Pos, color::Color, game::board::Board};
 
 pub fn movements(board: &Board, pos: &Pos) -> Vec<Pos> {
     let mut result: Vec<Pos> = Vec::new();
-    if let Some(piece) = board.get(&pos) {
+    if let Some(piece) = board.get(pos) {
         let base = match &piece.color {
             Color::White => {
                 if pos.row == 1 {
@@ -33,7 +33,7 @@ pub fn movements(board: &Board, pos: &Pos) -> Vec<Pos> {
         for curr_pos in capture_base {
             if let Some(curr_pos) = curr_pos {
                 if let Some(curr_piece) = board.get(&curr_pos) {
-                    if &curr_piece.color != &piece.color {
+                    if curr_piece.color != piece.color {
                         result.push(curr_pos);
                     }
                 }

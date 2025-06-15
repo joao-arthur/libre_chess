@@ -36,7 +36,7 @@ pub fn chess_960() {
 mod tests {
     use crate::game::board::of_str;
 
-    use super::{Mode, chess_960, standard_chess};
+    use super::{Mode, standard_chess};
 
     #[test]
     fn test_chess_standard() {
