@@ -2,10 +2,12 @@ use std::collections::HashSet;
 
 use crate::{board::pos::Pos, color::Color, game::board::Board, piece::Type};
 
-use super::{
-    bishop::naive_movements_bishop, king::naive_movements_king, knight::naive_movements_knight,
-    pawn::naive_movements_pawn, queen::naive_movements_queen, rook::naive_movements_rook,
-};
+mod bishop;
+mod king;
+mod knight;
+mod pawn;
+mod queen;
+mod rook;
 
 pub fn naive_movements_piece(board: &Board, pos: &Pos) -> Vec<Pos> {
     if let Some(piece) = board.get(&pos) {
