@@ -1,6 +1,7 @@
 use crate::{board::pos::Pos, piece::Piece};
 
 pub mod naive;
+pub mod special;
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct Movement {

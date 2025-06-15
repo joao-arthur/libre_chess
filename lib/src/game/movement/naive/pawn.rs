@@ -1,7 +1,5 @@
 use crate::{board::pos::Pos, color::Color, game::board::Board, piece::Piece};
 
-//use super::Movement;
-
 pub fn movements(board: &Board, pos: &Pos) -> Vec<Pos> {
     let mut result: Vec<Pos> = Vec::new();
     if let Some(piece) = board.get(&pos) {
@@ -44,31 +42,6 @@ pub fn movements(board: &Board, pos: &Pos) -> Vec<Pos> {
     }
     result
 }
-
-//fn white_pawn_en_passant(board: &Board, history: Vec<Movement>, pos: &Pos) -> Vec<Pos> {
-//    let mut result: Vec<Pos> = Vec::new();
-//    if pos.row == Row::_5 {
-//        if let Some(mov) = history.last() {
-//            if mov.piece == Piece::of_str("♟") {
-//                if Some(mov.from.clone()) == pos.try_of_rel_idx(-2, -1)
-//                    && Some(mov.to.clone()) == pos.try_of_rel_idx(0, -1)
-//                {
-//                    if let Some(capture_pos) = pos.try_of_rel_idx(-1, -1) {
-//                        result.push(capture_pos);
-//                    }
-//                }
-//                if Some(mov.from.clone()) == pos.try_of_rel_idx(-2, 1)
-//                    && Some(mov.to.clone()) == pos.try_of_rel_idx(0, 1)
-//                {
-//                    if let Some(capture_pos) = pos.try_of_rel_idx(-1, 1) {
-//                        result.push(capture_pos);
-//                    }
-//                }
-//            }
-//        }
-//    }
-//    result
-//}
 
 #[cfg(test)]
 mod tests {
@@ -163,29 +136,4 @@ mod tests {
             pos_of_str_slice(["C4", "B4", "D4"])
         );
     }
-
-    //    #[test]
-    //    fn test_white_pawn_en_passant() {
-    //        assert_eq!(
-    //            white_pawn_en_passant(
-    //                &board::of_str([
-    //                    "        ",
-    //                    "        ",
-    //                    "        ",
-    //                    " ♟♙     ",
-    //                    "        ",
-    //                    "        ",
-    //                    "        ",
-    //                    "        ",
-    //                ]),
-    //                Vec::from([Movement {
-    //                    piece: Piece::of_str("♟"),
-    //                    from: Pos::of_str("B7"),
-    //                    to: Pos::of_str("B5"),
-    //                }]),
-    //                &Pos::of_str("C5"),
-    //            ),
-    //            [Pos::of_str("B6")]
-    //        );
-    //    }
 }
