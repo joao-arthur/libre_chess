@@ -1,20 +1,17 @@
-use crate::game::board::{Board, of_str};
+use crate::{
+    game::board::{Board, of_str},
+    geometry::poligon::rect::RectU8,
+};
 
 #[derive(Debug, PartialEq)]
 pub struct Mode {
-    //pub row_0: u8,
-    //pub row_1: u8,
-    //pub col_0: u8,
-    //pub col_1: u8,
-    pub row_len: u8,
-    pub col_len: u8,
+    pub bounds: RectU8,
     pub initial_board: Board,
 }
 
 pub fn standard_chess() -> Mode {
     Mode {
-        row_len: 8,
-        col_len: 8,
+        bounds: RectU8 { x1: 0, y1: 0, x2: 7, y2: 7 },
         initial_board: of_str([
             "♜♞♝♛♚♝♞♜",
             "♟♟♟♟♟♟♟♟",
@@ -34,7 +31,7 @@ pub fn chess_960() {
 
 #[cfg(test)]
 mod tests {
-    use crate::game::board::of_str;
+    use crate::{game::board::of_str, geometry::poligon::rect::RectU8};
 
     use super::{Mode, standard_chess};
 
@@ -43,8 +40,7 @@ mod tests {
         assert_eq!(
             standard_chess(),
             Mode {
-                row_len: 8,
-                col_len: 8,
+                bounds: RectU8 { x1: 0, y1: 0, x2: 7, y2: 7 },
                 initial_board: of_str([
                     "♜♞♝♛♚♝♞♜",
                     "♟♟♟♟♟♟♟♟",

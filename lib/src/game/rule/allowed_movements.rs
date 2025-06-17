@@ -2,17 +2,20 @@ use std::collections::HashSet;
 
 use crate::{
     board::pos::Pos,
-    game::{Game, movement::naive::naive_movements_piece, rule::turn::evaluate_turn},
+    game::{Game, movement::naive, rule::turn::evaluate_turn},
     piece::Type,
 };
 
+// in the next iteration, this will be pre calculated for each piece
+// but ill need to make sure it doesnot break for king
 pub fn allowed_movements(play: &Game, pos: &Pos) -> Vec<Pos> {
     if let Some(piece) = play.board.get(pos) {
         let curr_turn = evaluate_turn(play);
         if piece.color != curr_turn {
             return Vec::new();
         }
-        let mut naive_movements = naive_movements_piece(&play.board, pos);
+        // if check keep only the movements that avoid check
+        let mut naive_movements = naive::movements_of_piece(&play.board, pos);
         if piece.t == Type::King {
             let mut other_pos: HashSet<Pos> = HashSet::new();
             for player in play.players.values() {
@@ -23,8 +26,14 @@ pub fn allowed_movements(play: &Game, pos: &Pos) -> Vec<Pos> {
                 }
             }
             naive_movements.retain(|mov| !other_pos.contains(mov));
+            // if short_castling add
+            // if long_castling add
         }
-        // add special movements (check, en passant, castling) here
+        if piece.t == Type::Pawn {
+            // if  cant capture left, remove
+            // if cant capture right, remove
+            // if en_passantm, keep
+        }
         naive_movements
     } else {
         Vec::new()
@@ -32,95 +41,4 @@ pub fn allowed_movements(play: &Game, pos: &Pos) -> Vec<Pos> {
 }
 
 #[cfg(test)]
-mod tests {
-
-    //  #[test]
-    // fn test_set_board() {
-    //     let mut play = Game::default();
-    //     init_game(&mut play, standard_chess().initial_board);
-    //     assert_eq!(
-    //         play,
-    //         Game {
-    //             board: HashMap::from([
-    //                 piece::of_str("A8", "♜"),
-    //                 piece::of_str("B8", "♞"),
-    //                 piece::of_str("C8", "♝"),
-    //                 piece::of_str("D8", "♛"),
-    //                 piece::of_str("E8", "♚"),
-    //                 piece::of_str("F8", "♝"),
-    //                 piece::of_str("G8", "♞"),
-    //                 piece::of_str("H8", "♜"),
-    //                 piece::of_str("A7", "♟"),
-    //                 piece::of_str("B7", "♟"),
-    //                 piece::of_str("C7", "♟"),
-    //                 piece::of_str("D7", "♟"),
-    //                 piece::of_str("E7", "♟"),
-    //                 piece::of_str("F7", "♟"),
-    //                 piece::of_str("G7", "♟"),
-    //                 piece::of_str("H7", "♟"),
-    //                 piece::of_str("A2", "♙"),
-    //                 piece::of_str("B2", "♙"),
-    //                 piece::of_str("C2", "♙"),
-    //                 piece::of_str("D2", "♙"),
-    //                 piece::of_str("E2", "♙"),
-    //                 piece::of_str("F2", "♙"),
-    //                 piece::of_str("G2", "♙"),
-    //                 piece::of_str("H2", "♙"),
-    //                 piece::of_str("A1", "♖"),
-    //                 piece::of_str("B1", "♘"),
-    //                 piece::of_str("C1", "♗"),
-    //                 piece::of_str("D1", "♕"),
-    //                 piece::of_str("E1", "♔"),
-    //                 piece::of_str("F1", "♗"),
-    //                 piece::of_str("G1", "♘"),
-    //                 piece::of_str("H1", "♖"),
-    //             ]),
-    //             players: HashMap::from([
-    //                 (
-    //                     Color::White,
-    //                     Player {
-    //                         color: Color::White,
-    //                         captured_pieces: Vec::new(),
-    //                         possible_movements: HashSet::new(),
-    //                     },
-    //                 ),
-    //                 (
-    //                     Color::Black,
-    //                     Player {
-    //                         color: Color::Black,
-    //                         captured_pieces: Vec::new(),
-    //                         possible_movements: HashSet::from([
-    //                             Pos::of_str("A6"),
-    //                             Pos::of_str("B6"),
-    //                             Pos::of_str("C6"),
-    //                             Pos::of_str("D6"),
-    //                             Pos::of_str("E6"),
-    //                             Pos::of_str("F6"),
-    //                             Pos::of_str("G6"),
-    //                             Pos::of_st//r("H6"),
-
-    //                             Pos::of_str("A5"),
-    //                             Pos::of_str("B5"),
-    //                             Pos::of_str("C5"),
-    //                             Pos::of_str("D5"),
-    //                             Pos::of_str("E5"),
-    //                             Pos::of_str("F5"),
-    //                             Pos::of_str("G5"),
-    //                             Pos::of_str("H5"),
-    //                         ]),
-    //                     },
-    //                 ),
-    //             ]),
-    //             history: Vec::new(),
-    //         }
-    //   )
-    // }
-
-    // #[test]
-    // fn move_piece() {}
-
-    // #[test]
-    // fn movements_piece() {
-    // pra testar aqui, o resto tem que estar funcionando
-    // }
-}
+mod tests {}

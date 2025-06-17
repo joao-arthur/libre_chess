@@ -2,17 +2,17 @@ use std::collections::HashMap;
 
 use crate::{
     color::Color,
-    game::{Game, board::Board, movement::naive::naive_movements_board, player::Player},
+    game::{Game, mode::Mode, movement::naive, player::Player},
 };
 
-pub fn init_game(board: Board) -> Game {
+pub fn init_game(mode: Mode) -> Game {
     let players = HashMap::from([
         (
             Color::White,
             Player {
                 color: Color::White,
                 captured_pieces: Vec::new(),
-                possible_movements: naive_movements_board(&board, &Color::White),
+                possible_movements: naive::movements_of_player(&mode.initial_board, &Color::White),
             },
         ),
         (
@@ -20,11 +20,11 @@ pub fn init_game(board: Board) -> Game {
             Player {
                 color: Color::Black,
                 captured_pieces: Vec::new(),
-                possible_movements: naive_movements_board(&board, &Color::Black),
+                possible_movements: naive::movements_of_player(&mode.initial_board, &Color::Black),
             },
         ),
     ]);
-    Game { board, players, history: Vec::new() }
+    Game { board: mode.initial_board, bounds: mode.bounds, players, history: Vec::new() }
 }
 
 #[cfg(test)]
@@ -35,6 +35,7 @@ mod tests {
         board::pos::pos_of_str_slice,
         color::Color,
         game::{Game, mode::standard_chess, piece, player::Player},
+        geometry::poligon::rect::RectU8,
     };
 
     use super::init_game;
@@ -42,7 +43,7 @@ mod tests {
     #[test]
     fn test_init_game_standard_chess() {
         assert_eq!(
-            init_game(standard_chess().initial_board),
+            init_game(standard_chess()),
             Game {
                 board: HashMap::from([
                     piece::of_str("A8", "♜"),
@@ -78,6 +79,7 @@ mod tests {
                     piece::of_str("G1", "♘"),
                     piece::of_str("H1", "♖"),
                 ]),
+                bounds: RectU8 { x1: 0, y1: 0, x2: 7, y2: 7 },
                 players: HashMap::from([
                     (
                         Color::White,
