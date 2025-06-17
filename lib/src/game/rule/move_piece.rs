@@ -17,7 +17,8 @@ pub fn move_piece(play: &mut Game, movement: Movement) {
         if let Some(captured) = play.board.insert(movement.to.clone(), movement.piece) {
             player.captured_pieces.push(captured);
         }
-        player.possible_movements = naive::movements_of_player(&play.board, &player.color);
+        player.possible_movements =
+            naive::movements_of_player(&play.board, &play.bounds, &player.color);
     }
     play.history.push(movement);
     // if 50 moves with no capture return MoveResult::Stalemate

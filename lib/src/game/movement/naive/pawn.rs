@@ -1,6 +1,6 @@
-use crate::{board::pos::Pos, color::Color, game::board::Board};
+use crate::{board::pos::Pos, color::Color, game::board::Board, geometry::poligon::rect::RectU8};
 
-pub fn movements(board: &Board, pos: &Pos) -> Vec<Pos> {
+pub fn movements(board: &Board, bounds: &RectU8, pos: &Pos) -> Vec<Pos> {
     let mut result: Vec<Pos> = Vec::new();
     if let Some(piece) = board.get(pos) {
         let base = match &piece.color {
@@ -49,91 +49,80 @@ mod tests {
 
     use crate::{
         board::pos::{Pos, pos_of_str_slice},
-        game::{board, piece},
+        game::{board, mode::standard_chess, piece},
     };
 
     use super::movements;
 
     #[test]
     fn pawn_movements_empty_board() {
-        assert_eq!(movements(&board::empty(), &Pos::of_str("A1")), []);
+        let bounds = standard_chess().bounds;
+        assert_eq!(movements(&board::empty(), &bounds, &Pos::of_str("A1")), []);
     }
 
     #[test]
     fn pawn_movements_lonely_piece() {
-        assert_eq!(
-            movements(&HashMap::from([piece::of_str("C5", "♙")]), &Pos::of_str("C5")),
-            [Pos::of_str("C6")]
-        );
-        assert_eq!(
-            movements(&HashMap::from([piece::of_str("C5", "♟")]), &Pos::of_str("C5")),
-            [Pos::of_str("C4")]
-        );
+        let board_white_pawn = HashMap::from([piece::of_str("C5", "♙")]);
+        let board_black_pawn = HashMap::from([piece::of_str("C5", "♟")]);
+        let bounds = standard_chess().bounds;
+        assert_eq!(movements(&board_white_pawn, &bounds, &Pos::of_str("C5")), [Pos::of_str("C6")]);
+        assert_eq!(movements(&board_black_pawn, &bounds, &Pos::of_str("C5")), [Pos::of_str("C4")]);
     }
 
     #[test]
     fn pawn_movements_first_move() {
+        let board_white_pawn = HashMap::from([piece::of_str("A2", "♙")]);
+        let board_black_pawn = HashMap::from([piece::of_str("H7", "♟")]);
+        let bounds = standard_chess().bounds;
         assert_eq!(
-            movements(&HashMap::from([piece::of_str("A2", "♙")]), &Pos::of_str("A2")),
+            movements(&board_white_pawn, &bounds, &Pos::of_str("A2")),
             pos_of_str_slice(["A3", "A4"])
         );
         assert_eq!(
-            movements(&HashMap::from([piece::of_str("H7", "♟")]), &Pos::of_str("H7")),
+            movements(&board_black_pawn, &bounds, &Pos::of_str("H7")),
             pos_of_str_slice(["H6", "H5"])
         );
     }
 
     #[test]
     fn pawn_movements_blocked() {
-        assert_eq!(
-            movements(
-                &HashMap::from([piece::of_str("C5", "♙"), piece::of_str("C6", "♟")]),
-                &Pos::of_str("C5"),
-            ),
-            []
-        );
-        assert_eq!(
-            movements(
-                &HashMap::from([piece::of_str("C5", "♟"), piece::of_str("C4", "♙")]),
-                &Pos::of_str("C5"),
-            ),
-            []
-        );
+        let board_white_pawn = HashMap::from([piece::of_str("C5", "♙"), piece::of_str("C6", "♟")]);
+        let board_black_pawn = HashMap::from([piece::of_str("C5", "♟"), piece::of_str("C4", "♙")]);
+        let bounds = standard_chess().bounds;
+        assert_eq!(movements(&board_white_pawn, &bounds, &Pos::of_str("C5")), []);
+        assert_eq!(movements(&board_black_pawn, &bounds, &Pos::of_str("C5")), []);
     }
 
     #[test]
     fn pawn_movements_capture() {
+        let board_white_pawn = &board::of_str([
+            "        ",
+            "        ",
+            " ♟ ♙    ",
+            "  ♙     ",
+            "        ",
+            "        ",
+            "        ",
+            "        ",
+        ]);
+        let board_black_pawn = &board::of_str([
+            "        ",
+            "        ",
+            "        ",
+            "  ♟     ",
+            " ♟ ♙    ",
+            "        ",
+            "        ",
+            "        ",
+        ]);
+        let bounds = standard_chess().bounds;
         assert_eq!(
-            movements(
-                &board::of_str([
-                    "        ",
-                    "        ",
-                    " ♟ ♟    ",
-                    "  ♙     ",
-                    "        ",
-                    "        ",
-                    "        ",
-                    "        ",
-                ]),
-                &Pos::of_str("C5"),
-            ),
-            pos_of_str_slice(["C6", "B6", "D6"])
+            movements(&board_white_pawn, &bounds, &Pos::of_str("C5")),
+            pos_of_str_slice(["C6", "B6"])
         );
         assert_eq!(
-            movements(
-                &board::of_str([
-                    "        ",
-                    "        ",
-                    "        ",
-                    "  ♟     ",
-                    " ♙ ♙    ",
-                    "        ",
-                    "        ",
-                    "        ",
-                ]),
-                &Pos::of_str("C5"),
-            ),
-            pos_of_str_slice(["C4", "B4", "D4"])
+            movements(&board_black_pawn, &bounds, &Pos::of_str("C5")),
+            pos_of_str_slice(["C4", "D4"])
         );
     }
 }

@@ -15,7 +15,7 @@ pub fn allowed_movements(play: &Game, pos: &Pos) -> Vec<Pos> {
             return Vec::new();
         }
         // if check keep only the movements that avoid check
-        let mut naive_movements = naive::movements_of_piece(&play.board, pos);
+        let mut naive_movements = naive::movements_of_piece(&play.board, &play.bounds, pos);
         if piece.t == Type::King {
             let mut other_pos: HashSet<Pos> = HashSet::new();
             for player in play.players.values() {

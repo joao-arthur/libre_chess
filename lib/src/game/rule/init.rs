@@ -12,7 +12,11 @@ pub fn init_game(mode: Mode) -> Game {
             Player {
                 color: Color::White,
                 captured_pieces: Vec::new(),
-                possible_movements: naive::movements_of_player(&mode.initial_board, &Color::White),
+                possible_movements: naive::movements_of_player(
+                    &mode.initial_board,
+                    &mode.bounds,
+                    &Color::White,
+                ),
             },
         ),
         (
@@ -20,7 +24,11 @@ pub fn init_game(mode: Mode) -> Game {
             Player {
                 color: Color::Black,
                 captured_pieces: Vec::new(),
-                possible_movements: naive::movements_of_player(&mode.initial_board, &Color::Black),
+                possible_movements: naive::movements_of_player(
+                    &mode.initial_board,
+                    &mode.bounds,
+                    &Color::Black,
+                ),
             },
         ),
     ]);
