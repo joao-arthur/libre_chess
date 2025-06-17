@@ -11,7 +11,11 @@ pub fn movements(board: &Board, bounds: &RectU8, pos: &Pos) -> Vec<Pos> {
                 rel_row += modifier[0];
                 rel_col += modifier[1];
                 if let Some(curr_pos) = pos.try_of_rel_idx(rel_row, rel_col) {
-                    if curr_pos.col > 7 || curr_pos.row > 7 {
+                    if curr_pos.col < bounds.x1
+                        || curr_pos.col > bounds.x2
+                        || curr_pos.row < bounds.y1
+                        || curr_pos.row > bounds.y2
+                    {
                         break;
                     }
                     if let Some(curr_piece) = board.get(&curr_pos) {
@@ -40,6 +44,7 @@ mod tests {
     use crate::{
         board::pos::{Pos, pos_of_str_slice},
         game::{board, mode::standard_chess, piece},
+        geometry::poligon::rect::RectU8,
     };
 
     use super::movements;
@@ -92,6 +97,16 @@ mod tests {
             pos_of_str_slice([
                 "B8", "C8", "D8", "E8", "F8", "G8", "H8", "A7", "A6", "A5", "A4", "A3", "A2", "A1",
             ])
+        );
+    }
+
+    #[test]
+    fn movements_small_bounds() {
+        let board = HashMap::from([piece::of_str("F6", "♜")]);
+        let bounds = RectU8 { x1: 3, y1: 3, x2: 7, y2: 7 };
+        assert_eq!(
+            movements(&board, &bounds, &Pos::of_str("F6")),
+            pos_of_str_slice(["G6", "H6", "F5", "F4", "E6", "D6", "F7", "F8"])
         );
     }
 

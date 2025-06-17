@@ -44,6 +44,7 @@ mod tests {
     use crate::{
         board::pos::{Pos, pos_of_str_slice},
         game::{board, mode::standard_chess, piece},
+        geometry::poligon::rect::RectU8,
     };
 
     use super::movements;
@@ -86,6 +87,16 @@ mod tests {
         assert_eq!(
             movements(&top_left, &bounds, &Pos::of_str("A8")),
             pos_of_str_slice(["B7", "C6", "D5", "E4", "F3", "G2", "H1"])
+        );
+    }
+
+    #[test]
+    fn movements_small_bounds() {
+        let board = HashMap::from([piece::of_str("F6", "♝")]);
+        let bounds = RectU8 { x1: 3, y1: 3, x2: 7, y2: 7 };
+        assert_eq!(
+            movements(&board, &bounds, &Pos::of_str("F6")),
+            pos_of_str_slice(["G7", "H8", "G5", "H4", "E5", "D4", "E7", "D8"])
         );
     }
 

@@ -1,7 +1,7 @@
 ## TODO
 
-- [-] Pieces naive movements limited to the bounds of the board
-- [ ] Naive momements should return the attacking positions for pawn
+- [x] Pieces naive movements limited to the bounds of the board
+- [x] Naive momements should return the attacking positions for pawn
 
 - [ ] Game helper method from game mode and movements history
 

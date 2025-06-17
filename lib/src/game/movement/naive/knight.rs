@@ -15,7 +15,11 @@ pub fn movements(board: &Board, bounds: &RectU8, pos: &Pos) -> Vec<Pos> {
         ];
         for curr_pos in base {
             if let Some(curr_pos) = curr_pos {
-                if curr_pos.col > 7 || curr_pos.row > 7 {
+                if curr_pos.col < bounds.x1
+                    || curr_pos.col > bounds.x2
+                    || curr_pos.row < bounds.y1
+                    || curr_pos.row > bounds.y2
+                {
                     continue;
                 }
                 if let Some(curr_piece) = board.get(&curr_pos) {
@@ -38,6 +42,7 @@ mod tests {
     use crate::{
         board::pos::{Pos, pos_of_str_slice},
         game::{board, mode::standard_chess, piece},
+        geometry::poligon::rect::RectU8,
     };
 
     use super::movements;
@@ -80,6 +85,31 @@ mod tests {
         assert_eq!(
             movements(&top_left, &bounds, &Pos::of_str("A8")),
             pos_of_str_slice(["C7", "B6"])
+        );
+    }
+
+    #[test]
+    fn movements_small_bounds() {
+        let top_right = HashMap::from([piece::of_str("G7", "♞")]);
+        let bottom_right = HashMap::from([piece::of_str("G5", "♞")]);
+        let bottom_left = HashMap::from([piece::of_str("E5", "♞")]);
+        let top_left = HashMap::from([piece::of_str("E7", "♞")]);
+        let bounds = RectU8 { x1: 3, y1: 3, x2: 7, y2: 7 };
+        assert_eq!(
+            movements(&top_right, &bounds, &Pos::of_str("G7")),
+            pos_of_str_slice(["H5", "F5", "E6", "E8"])
+        );
+        assert_eq!(
+            movements(&bottom_right, &bounds, &Pos::of_str("G5")),
+            pos_of_str_slice(["H7", "E4", "E6", "F7",])
+        );
+        assert_eq!(
+            movements(&bottom_left, &bounds, &Pos::of_str("E5")),
+            pos_of_str_slice(["F7", "G6", "G4", "D7"])
+        );
+        assert_eq!(
+            movements(&top_left, &bounds, &Pos::of_str("E7")),
+            pos_of_str_slice(["G8", "G6", "F5", "D5"])
         );
     }
 
