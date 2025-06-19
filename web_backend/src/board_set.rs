@@ -144,10 +144,10 @@ pub fn board_set_spatial() -> BoardSet {
 
 static PRESETS: LazyLock<HashMap<String, BoardSet>> = LazyLock::new(|| {
     HashMap::from([
-        ("normal_1", board_set_normal_1()),
-        ("normal_2", board_set_normal_2()),
-        ("fantasy", board_set_fantasy()),
-        ("spatial", board_set_spatial()),
+        ("normal_1".into(), board_set_normal_1()),
+        ("normal_2".into(), board_set_normal_2()),
+        ("fantasy".into(), board_set_fantasy()),
+        ("spatial".into(), board_set_spatial()),
     ])
 });
 

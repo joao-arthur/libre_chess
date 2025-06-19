@@ -1,10 +1,11 @@
 pub use game::Game;
+pub use board::Board;
 
 mod board;
 mod game;
-mod mode;
-mod movement;
+pub mod mode;
+pub mod movement;
 mod piece;
 mod player;
-mod rule;
+pub mod rule;
 mod selection;

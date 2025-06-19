@@ -2,8 +2,13 @@ use core::f64;
 use libre_chess_lib::{
     board::pos::Pos,
     color::Color,
+    game::{
+        mode::standard_chess,
+        movement::Movement,
+        rule::{allowed_movements::allowed_movements, check::is_in_check, init::init_game, move_piece::move_piece},
+        Game,
+    },
     piece::Type,
-    play::{initial_board, is_in_check, move_piece, movement::Movement, movements_piece, Play},
 };
 use std::{cell::RefCell, collections::HashSet, rc::Rc};
 use wasm_bindgen::{prelude::Closure, JsCast, JsValue};
@@ -14,7 +19,7 @@ use web_sys::{
 };
 
 use crate::{
-    board_color::{self, board_color_purple, try_get_board_color, BoardColor},
+    board_color::{board_color_purple, try_get_board_color, BoardColor},
     board_set::{board_set_normal_1, try_get_board_set, BoardSet},
     render::{get_values_to_render, RenderSettings},
 };
@@ -33,7 +38,7 @@ pub struct AppSettings {
 
 #[derive(Debug, PartialEq)]
 pub struct Model {
-    pub play: Play,
+    pub game: Game,
     pub settings: AppSettings,
     pub context: Option<CanvasRenderingContext2d>,
 }
@@ -41,13 +46,13 @@ pub struct Model {
 impl Default for Model {
     fn default() -> Self {
         Model {
-            play: Play::default(),
+            game: init_game(standard_chess()),
             settings: AppSettings {
                 render_settings: RenderSettings { dim: 0 },
                 board_set: board_set_normal_1(),
-                board_set_id: "normal_1".into() ,
+                board_set_id: "normal_1".into(),
                 board_color: board_color_purple(),
-                board_color_id: "purple".into() ,
+                board_color_id: "purple".into(),
                 selected_squares: HashSet::new(),
                 selected_piece: None,
                 selected_piece_movements: HashSet::new(),
@@ -106,7 +111,7 @@ pub fn app_init(context: CanvasRenderingContext2d) {
     MODEL.with(|i| {
         let mut model = i.borrow_mut();
         model.context = Some(context);
-        model.play.board = initial_board();
+        model.game.board = standard_chess().initial_board;
     });
     app_add_on_change_listener({
         move |prop| {
@@ -149,7 +154,7 @@ pub fn app_set_board_set(board_set: &str) {
 pub fn app_render() {
     MODEL.with(|i| {
         let m = i.borrow();
-        let board = &m.play.board;
+        let board = &m.game.board;
         let settings = &m.settings;
         let context = &m.context;
         if let Some(context) = context {
@@ -176,8 +181,8 @@ pub fn app_render() {
             let values_to_render = get_values_to_render(board, &settings.render_settings);
             let window = window().unwrap();
             for v in values_to_render {
-                let piece_str = match v.p.c {
-                    Color::White => match v.p.t {
+                let piece_str = match v.piece.color {
+                    Color::White => match v.piece.t {
                         Type::Rook => &settings.board_set.wr,
                         Type::Knight => &settings.board_set.wn,
                         Type::Bishop => &settings.board_set.wb,
@@ -185,7 +190,7 @@ pub fn app_render() {
                         Type::King => &settings.board_set.wk,
                         Type::Pawn => &settings.board_set.wp,
                     },
-                    Color::Black => match v.p.t {
+                    Color::Black => match v.piece.t {
                         Type::Rook => &settings.board_set.br,
                         Type::Knight => &settings.board_set.bn,
                         Type::Bishop => &settings.board_set.bb,
@@ -226,8 +231,8 @@ pub fn app_render() {
                 context.set_fill_style(&"#f0ec0088".into());
                 settings.selected_squares.iter().for_each(|pos| {
                     context.fill_rect(
-                        pos.col.to_idx() as f64 * cell_size,
-                        pos.row.to_idx() as f64 * cell_size,
+                        pos.col as f64 * cell_size,
+                        pos.row as f64 * cell_size,
                         cell_size,
                         cell_size,
                     );
@@ -238,8 +243,8 @@ pub fn app_render() {
                 settings.selected_piece_movements.iter().for_each(|pos| {
                     context.begin_path();
                     let _ = context.arc(
-                        pos.col.to_idx() as f64 * cell_size + cell_size / 2.0,
-                        pos.row.to_idx() as f64 * cell_size + cell_size / 2.0,
+                        pos.col as f64 * cell_size + cell_size / 2.0,
+                        pos.row as f64 * cell_size + cell_size / 2.0,
                         cell_size / (2.0 * f64::consts::PI),
                         0.0,
                         2.0 * f64::consts::PI,
@@ -258,37 +263,37 @@ pub fn app_click(row: u16, col: u16) {
         let cell_size = dim / 8.0;
         let cell_row = ((row as f64) / cell_size).floor() as u8;
         let cell_col = ((col as f64) / cell_size).floor() as u8;
-        if let Some(pos) = Pos::try_of_idx(cell_row, cell_col) {
-            if m.settings.selected_piece_movements.contains(&pos) {
-                let piece = m.play.board.get(m.settings.selected_piece.as_ref().unwrap()).unwrap().clone();
-                let from = m.settings.selected_piece.clone().unwrap();
-                let to = pos;
-                console::log_1(&format!("is in check {}", is_in_check(&m.play)).into());
-                move_piece(&mut m.play, Movement { piece: piece.clone(), from, to });
-                m.settings.selected_piece = None;
-                m.settings.selected_piece_movements = HashSet::new();
-                m.settings.selected_squares = HashSet::new()
-            } else {
-                if let Some(piece) = m.play.board.get(&pos.clone()) {
-                    if m.settings.selected_piece == Some(pos.clone()) {
-                        m.settings.selected_piece = None;
-                        m.settings.selected_piece_movements = HashSet::new();
-                    } else {
-                        m.settings.selected_squares.clear();
-                        let movements = movements_piece(&m.play, &pos);
-                        m.settings.selected_piece = Some(pos.clone());
-                        m.settings.selected_piece_movements = movements.into_iter().collect();
-                    }
+        let pos = Pos { row: cell_row, col: cell_col };
+        if m.settings.selected_piece_movements.contains(&pos) {
+            let piece =
+                m.game.board.get(m.settings.selected_piece.as_ref().unwrap()).unwrap().clone();
+            let from = m.settings.selected_piece.clone().unwrap();
+            let to = pos;
+            console::log_1(&format!("is in check {}", is_in_check(&m.game)).into());
+            move_piece(&mut m.game, Movement { piece: piece.clone(), from, to });
+            m.settings.selected_piece = None;
+            m.settings.selected_piece_movements = HashSet::new();
+            m.settings.selected_squares = HashSet::new()
+        } else {
+            if let Some(piece) = m.game.board.get(&pos.clone()) {
+                if m.settings.selected_piece == Some(pos.clone()) {
+                    m.settings.selected_piece = None;
+                    m.settings.selected_piece_movements = HashSet::new();
                 } else {
-                    if m.settings.selected_piece.is_some() {
-                        m.settings.selected_piece = None;
-                        m.settings.selected_piece_movements = HashSet::new();
+                    m.settings.selected_squares.clear();
+                    let movements = allowed_movements(&m.game, &pos);
+                    m.settings.selected_piece = Some(pos.clone());
+                    m.settings.selected_piece_movements = movements.into_iter().collect();
+                }
+            } else {
+                if m.settings.selected_piece.is_some() {
+                    m.settings.selected_piece = None;
+                    m.settings.selected_piece_movements = HashSet::new();
+                } else {
+                    if m.settings.selected_squares.contains(&pos) {
+                        m.settings.selected_squares.remove(&pos);
                     } else {
-                        if m.settings.selected_squares.contains(&pos) {
-                            m.settings.selected_squares.remove(&pos);
-                        } else {
-                            m.settings.selected_squares.insert(pos);
-                        }
+                        m.settings.selected_squares.insert(pos);
                     }
                 }
             }

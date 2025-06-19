@@ -1,5 +1,5 @@
-mod allowed_movements;
-mod check;
-mod init;
-mod move_piece;
-mod turn;
+pub mod allowed_movements;
+pub mod check;
+pub mod init;
+pub mod move_piece;
+pub mod turn;
