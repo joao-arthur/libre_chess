@@ -29,11 +29,6 @@ pub fn allowed_movements(play: &Game, pos: &Pos) -> Vec<Pos> {
             // if short_castling add
             // if long_castling add
         }
-        if piece.t == Type::Pawn {
-            // if can't capture left, remove
-            // if can't capture right, remove
-            // if en_passantm, keep
-        }
         naive_movements
     } else {
         Vec::new()
