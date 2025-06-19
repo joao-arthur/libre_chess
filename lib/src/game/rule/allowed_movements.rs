@@ -14,7 +14,7 @@ pub fn allowed_movements(play: &Game, pos: &Pos) -> Vec<Pos> {
         if piece.color != curr_turn {
             return Vec::new();
         }
-        // if check keep only the movements that avoid check
+        // if check, keep only the movements that avoid check
         let mut naive_movements = naive::movements_of_piece(&play.board, &play.bounds, pos);
         if piece.t == Type::King {
             let mut other_pos: HashSet<Pos> = HashSet::new();
@@ -30,8 +30,8 @@ pub fn allowed_movements(play: &Game, pos: &Pos) -> Vec<Pos> {
             // if long_castling add
         }
         if piece.t == Type::Pawn {
-            // if  cant capture left, remove
-            // if cant capture right, remove
+            // if can't capture left, remove
+            // if can't capture right, remove
             // if en_passantm, keep
         }
         naive_movements

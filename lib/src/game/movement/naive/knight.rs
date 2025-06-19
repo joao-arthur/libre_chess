@@ -101,7 +101,7 @@ mod tests {
         );
         assert_eq!(
             movements(&bottom_right, &bounds, &Pos::of_str("G5")),
-            pos_of_str_slice(["H7", "E4", "E6", "F7",])
+            pos_of_str_slice(["H7", "E4", "E6", "F7"])
         );
         assert_eq!(
             movements(&bottom_left, &bounds, &Pos::of_str("E5")),
