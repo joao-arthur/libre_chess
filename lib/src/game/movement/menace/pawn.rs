@@ -32,8 +32,14 @@ mod tests {
         let board_white_pawn = HashMap::from([piece::of_str("C5", "♙")]);
         let board_black_pawn = HashMap::from([piece::of_str("C5", "♟")]);
         let bounds = standard_chess().bounds;
-        assert_eq!(menace(&board_white_pawn, &bounds, &Pos::of_str("C5")), pos_of_str_slice(["B6", "D6"]));
-        assert_eq!(menace(&board_black_pawn, &bounds, &Pos::of_str("C5")), pos_of_str_slice(["B4", "D4"]));
+        assert_eq!(
+            menace(&board_white_pawn, &bounds, &Pos::of_str("C5")),
+            pos_of_str_slice(["B6", "D6"])
+        );
+        assert_eq!(
+            menace(&board_black_pawn, &bounds, &Pos::of_str("C5")),
+            pos_of_str_slice(["B4", "D4"])
+        );
     }
 
     #[test]
@@ -59,7 +65,13 @@ mod tests {
             "        ",
         ]);
         let bounds = standard_chess().bounds;
-        assert_eq!(menace(&board_white_pawn, &bounds, &Pos::of_str("C5")), pos_of_str_slice(["B6", "D6"]));
-        assert_eq!(menace(&board_black_pawn, &bounds, &Pos::of_str("C5")), pos_of_str_slice(["B4", "D4"]));
+        assert_eq!(
+            menace(&board_white_pawn, &bounds, &Pos::of_str("C5")),
+            pos_of_str_slice(["B6", "D6"])
+        );
+        assert_eq!(
+            menace(&board_black_pawn, &bounds, &Pos::of_str("C5")),
+            pos_of_str_slice(["B4", "D4"])
+        );
     }
 }

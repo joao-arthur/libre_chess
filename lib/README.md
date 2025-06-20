@@ -8,7 +8,7 @@
 - [ ] Special movements
     - [-] En passant
     - [ ] Check
-    - [ ] Castling
+    - [-] Castling
     - [ ] Promotion
 
 - [ ] Game result

@@ -1,7 +1,12 @@
-use crate::game::{
-    Game,
-    movement::{Movement, naive},
-    rule::turn::evaluate_turn,
+use crate::{
+    board::pos::Pos,
+    game::{
+        Game,
+        capture::Capture,
+        movement::{Movement, naive},
+        rule::turn::evaluate_turn,
+    },
+    piece::Piece,
 };
 
 pub fn move_piece(game: &mut Game, movement: Movement) {
@@ -9,28 +14,39 @@ pub fn move_piece(game: &mut Game, movement: Movement) {
     if movement.piece.color != curr_turn {
         return;
     }
-    // if (is_in_check() && is_check_after_move()) {
-    //     return;
-    // }
     game.board.remove(&movement.from);
     if let Some(player) = game.players.get_mut(&movement.piece.color) {
         if let Some(captured) = game.board.insert(movement.to.clone(), movement.piece) {
-            player.captured_pieces.push(captured);
+            player.captures.push(Capture { piece: captured, at: game.history.len() as u16 });
         }
-        player.menace =
-            naive::movements_of_player(&game.board, &game.bounds, &player.color);
+        player.menace = naive::movements_of_player(&game.board, &game.bounds, &player.color);
     }
+    if movement.piece == Piece::of_str("♔") {
+        if movement.to == Pos::of_str("G1") {
+            if let Some(rook) = game.board.remove(&Pos::of_str("H1")) {
+                game.board.insert(Pos::of_str("F1"), rook);
+            }
+        }
+        if movement.to == Pos::of_str("B1") {
+            if let Some(rook) = game.board.remove(&Pos::of_str("A1")) {
+                game.board.insert(Pos::of_str("C1"), rook);
+            }
+        }
+    }
+    if movement.piece == Piece::of_str("♚") {
+        if movement.to == Pos::of_str("G8") {
+            if let Some(rook) = game.board.remove(&Pos::of_str("H8")) {
+                game.board.insert(Pos::of_str("F1"), rook);
+            }
+        }
+        if movement.to == Pos::of_str("B8") {
+            if let Some(rook) = game.board.remove(&Pos::of_str("A8")) {
+                game.board.insert(Pos::of_str("C8"), rook);
+            }
+        }
+    }
+
     game.history.push(movement);
-
-
-   // if game.board.get() {
-   //     piece.king {
-   //         // if castling
-   //          move king and move rook
-   //     }
-   // }
-
-
 
     // if 50 moves with no capture return MoveResult::Stalemate
 }

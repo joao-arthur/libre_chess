@@ -122,11 +122,15 @@ mod tests {
         let bounds = standard_chess().bounds;
         assert_eq!(
             menace(&board_white_rook, &bounds, &Pos::of_str("D4")),
-            pos_of_str_slice(["E4", "F4", "G4", "D3", "D2", "D1", "C4", "B4", "A4", "D5", "D6", "D7"])
+            pos_of_str_slice([
+                "E4", "F4", "G4", "D3", "D2", "D1", "C4", "B4", "A4", "D5", "D6", "D7"
+            ])
         );
         assert_eq!(
             menace(&board_black_rook, &bounds, &Pos::of_str("D4")),
-            pos_of_str_slice(["E4", "F4", "G4","D3", "D2", "D1", "C4", "B4", "A4", "D5", "D6", "D7"])
+            pos_of_str_slice([
+                "E4", "F4", "G4", "D3", "D2", "D1", "C4", "B4", "A4", "D5", "D6", "D7"
+            ])
         );
     }
 }

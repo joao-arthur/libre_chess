@@ -3,11 +3,11 @@ use crate::{
     piece::Type,
 };
 
-pub fn is_in_check(play: &Game) -> bool {
-    let curr_turn = evaluate_turn(play);
-    for (pos, piece) in play.board.iter() {
+pub fn is_in_check(game: &Game) -> bool {
+    let curr_turn = evaluate_turn(game);
+    for (pos, piece) in game.board.iter() {
         if piece.t == Type::King && piece.color == curr_turn {
-            for player in play.players.values() {
+            for player in game.players.values() {
                 if player.color != curr_turn && player.menace.contains(pos) {
                     return true;
                 }
@@ -50,7 +50,7 @@ mod tests {
                     Color::White,
                     Player {
                         color: Color::White,
-                        captured_pieces: Vec::new(),
+                        captures: Vec::new(),
                         menace: pos_of_str_slice(["D1", "D2", "F1", "F2", "E3", "E4"])
                             .into_iter()
                             .collect(),
@@ -60,7 +60,7 @@ mod tests {
                     Color::Black,
                     Player {
                         color: Color::Black,
-                        captured_pieces: Vec::new(),
+                        captures: Vec::new(),
                         menace: pos_of_str_slice(["D8", "D7", "F8", "F7", "E6", "E5"])
                             .into_iter()
                             .collect(),
@@ -90,19 +90,17 @@ mod tests {
                     Color::White,
                     Player {
                         color: Color::White,
-                        captured_pieces: Vec::new(),
-                        menace: pos_of_str_slice([
-                            "D1", "D2", "E2", "F1", "F2", "D8", "E8", "F8"
-                        ])
-                        .into_iter()
-                        .collect(),
+                        captures: Vec::new(),
+                        menace: pos_of_str_slice(["D1", "D2", "E2", "F1", "F2", "D8", "E8", "F8"])
+                            .into_iter()
+                            .collect(),
                     },
                 ),
                 (
                     Color::Black,
                     Player {
                         color: Color::Black,
-                        captured_pieces: Vec::new(),
+                        captures: Vec::new(),
                         menace: pos_of_str_slice(["D8", "D7", "F8", "F7", "E6", "E5"])
                             .into_iter()
                             .collect(),

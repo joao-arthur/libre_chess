@@ -128,7 +128,7 @@ mod tests {
         );
         assert_eq!(
             menace(&board_black_king, &bounds, &Pos::of_str("D4")),
-            pos_of_str_slice(["E5", "E4", "E3", "D3","C3", "C4", "C5", "D5"])
+            pos_of_str_slice(["E5", "E4", "E3", "D3", "C3", "C4", "C5", "D5"])
         );
     }
 }

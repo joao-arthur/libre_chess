@@ -1,2 +1,2 @@
-mod en_passant;
-mod castling;
+pub mod castling;
+pub mod en_passant;

@@ -110,15 +110,15 @@ mod tests {
         assert_eq!(
             menace(&board_white_queen, &bounds, &Pos::of_str("C5")),
             pos_of_str_slice([
-                "D6", "D4", "E3", "B4", "A3", "B6", "A7", "D5", "E5", "F5", "G5", "C4", "C3", "C2", "B5",
-                "A5", "C6", "C7"
+                "D6", "D4", "E3", "B4", "A3", "B6", "A7", "D5", "E5", "F5", "G5", "C4", "C3", "C2",
+                "B5", "A5", "C6", "C7"
             ])
         );
         assert_eq!(
             menace(&board_black_queen, &bounds, &Pos::of_str("C5")),
             pos_of_str_slice([
-                   "D6", "D4", "E3", "B4", "A3", "B6", "A7", "D5", "E5", "F5", "G5", "C4", "C3", "C2", "B5",
-                "A5", "C6", "C7"
+                "D6", "D4", "E3", "B4", "A3", "B6", "A7", "D5", "E5", "F5", "G5", "C4", "C3", "C2",
+                "B5", "A5", "C6", "C7"
             ])
         );
     }

@@ -1,7 +1,7 @@
 use crate::{color::Color, game::Game};
 
-pub fn evaluate_turn(play: &Game) -> Color {
-    if play.history.len() % 2 == 0 { Color::White } else { Color::Black }
+pub fn evaluate_turn(game: &Game) -> Color {
+    if game.history.len() % 2 == 0 { Color::White } else { Color::Black }
 }
 
 #[cfg(test)]

@@ -1,38 +1,68 @@
-use std::collections::HashSet;
-
 use crate::{
     board::pos::Pos,
-    game::{Game, movement::naive, rule::turn::evaluate_turn},
+    color::Color,
+    game::{
+        Game,
+        movement::{
+            naive,
+            special::{
+                castling::{
+                    black_king_can_long_castling, black_king_can_short_castling,
+                    white_king_can_long_castling, white_king_can_short_castling,
+                },
+                en_passant::en_passant,
+            },
+        },
+        rule::turn::evaluate_turn,
+    },
     piece::Type,
 };
 
-// in the next iteration, this will be pre calculated for each piece
-// but ill need to make sure it doesnot break for king
-pub fn allowed_movements(play: &Game, pos: &Pos) -> Vec<Pos> {
-    if let Some(piece) = play.board.get(pos) {
-        let curr_turn = evaluate_turn(play);
+pub fn allowed_movements_of_piece(game: &Game, pos: &Pos) -> Vec<Pos> {
+    if let Some(piece) = game.board.get(pos) {
+        let curr_turn = evaluate_turn(game);
         if piece.color != curr_turn {
             return Vec::new();
         }
-        // if check, keep only the movements that avoid check
-        let mut naive_movements = naive::movements_of_piece(&play.board, &play.bounds, pos);
+        let mut naive_movements = naive::movements_of_piece(&game.board, &game.bounds, pos);
         if piece.t == Type::King {
-            let mut other_pos: HashSet<Pos> = HashSet::new();
-            for player in play.players.values() {
+            for player in game.players.values() {
                 if player.color != curr_turn {
-                    for mov in player.menace.iter() {
-                        other_pos.insert(mov.clone());
+                    naive_movements.retain(|mov| !player.menace.contains(mov));
+                }
+            }
+            match piece.color {
+                Color::White => {
+                    if white_king_can_short_castling(&game.board, &game.history) {
+                        naive_movements.push(Pos::of_str("G1"));
+                    }
+                    if white_king_can_long_castling(&game.board, &game.history) {
+                        naive_movements.push(Pos::of_str("B1"));
+                    }
+                }
+                Color::Black => {
+                    if black_king_can_short_castling(&game.board, &game.history) {
+                        naive_movements.push(Pos::of_str("G8"));
+                    }
+                    if black_king_can_long_castling(&game.board, &game.history) {
+                        naive_movements.push(Pos::of_str("B8"));
                     }
                 }
             }
-            naive_movements.retain(|mov| !other_pos.contains(mov));
-            // if short_castling add
-            // if long_castling add
+        }
+        if piece.t == Type::Pawn {
+            naive_movements.extend(en_passant(&game.board, &game.history, &pos));
         }
         naive_movements
     } else {
         Vec::new()
     }
+}
+
+pub fn allowed_movements_of_player() {
+    // if (is_in_check()) {
+    // keep only the movements that avoid check
+    // }
 }
 
 #[cfg(test)]

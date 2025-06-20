@@ -111,6 +111,9 @@ mod tests {
     fn menace_of_piece_pawn() {
         let board = HashMap::from([piece::of_str("C5", "♙")]);
         let bounds = standard_chess().bounds;
-        assert_eq!(menace_of_piece(&board, &bounds, &Pos::of_str("C5")), pos_of_str_slice(["B6", "D6"]));
+        assert_eq!(
+            menace_of_piece(&board, &bounds, &Pos::of_str("C5")),
+            pos_of_str_slice(["B6", "D6"])
+        );
     }
 }

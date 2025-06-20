@@ -1,7 +1,8 @@
-pub use game::Game;
 pub use board::Board;
+pub use game::Game;
 
 mod board;
+mod capture;
 mod game;
 pub mod mode;
 pub mod movement;

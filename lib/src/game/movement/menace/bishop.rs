@@ -116,7 +116,7 @@ mod tests {
         );
         assert_eq!(
             menace(&board_black_bishop, &bounds, &Pos::of_str("C5")),
-            pos_of_str_slice(["D6", "D4", "E3","B4", "A3", "B6", "A7"])
+            pos_of_str_slice(["D6", "D4", "E3", "B4", "A3", "B6", "A7"])
         );
     }
 }
