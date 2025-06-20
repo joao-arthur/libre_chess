@@ -6,5 +6,5 @@ use crate::{board::pos::Pos, color::Color, piece::Piece};
 pub struct Player {
     pub color: Color,
     pub captured_pieces: Vec<Piece>,
-    pub possible_movements: HashSet<Pos>,
+    pub menace: HashSet<Pos>,
 }

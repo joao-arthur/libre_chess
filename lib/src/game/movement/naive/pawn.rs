@@ -3,7 +3,7 @@ use crate::{board::pos::Pos, color::Color, game::board::Board, geometry::poligon
 pub fn movements(board: &Board, bounds: &RectU8, pos: &Pos) -> Vec<Pos> {
     let mut result: Vec<Pos> = Vec::new();
     if let Some(piece) = board.get(pos) {
-        let base = match &piece.color {
+        let move_base = match &piece.color {
             Color::White => {
                 if pos.row == 1 {
                     vec![pos.try_of_rel_idx(1, 0), pos.try_of_rel_idx(2, 0)]
@@ -23,7 +23,7 @@ pub fn movements(board: &Board, bounds: &RectU8, pos: &Pos) -> Vec<Pos> {
             Color::White => [pos.try_of_rel_idx(1, -1), pos.try_of_rel_idx(1, 1)],
             Color::Black => [pos.try_of_rel_idx(-1, -1), pos.try_of_rel_idx(-1, 1)],
         };
-        for curr_pos in base {
+        for curr_pos in move_base {
             if let Some(curr_pos) = curr_pos {
                 if board.get(&curr_pos).is_none() {
                     result.push(curr_pos);
@@ -55,13 +55,13 @@ mod tests {
     use super::movements;
 
     #[test]
-    fn pawn_movements_empty_board() {
+    fn movements_empty_board() {
         let bounds = standard_chess().bounds;
         assert_eq!(movements(&board::empty(), &bounds, &Pos::of_str("A1")), []);
     }
 
     #[test]
-    fn pawn_movements_lonely_piece() {
+    fn movements_lonely_piece() {
         let board_white_pawn = HashMap::from([piece::of_str("C5", "♙")]);
         let board_black_pawn = HashMap::from([piece::of_str("C5", "♟")]);
         let bounds = standard_chess().bounds;
@@ -70,7 +70,7 @@ mod tests {
     }
 
     #[test]
-    fn pawn_movements_first_move() {
+    fn movements_first_move() {
         let board_white_pawn = HashMap::from([piece::of_str("A2", "♙")]);
         let board_black_pawn = HashMap::from([piece::of_str("H7", "♟")]);
         let bounds = standard_chess().bounds;
@@ -85,7 +85,7 @@ mod tests {
     }
 
     #[test]
-    fn pawn_movements_blocked() {
+    fn movements_blocked() {
         let board_white_pawn = HashMap::from([piece::of_str("C5", "♙"), piece::of_str("C6", "♟")]);
         let board_black_pawn = HashMap::from([piece::of_str("C5", "♟"), piece::of_str("C4", "♙")]);
         let bounds = standard_chess().bounds;
@@ -94,7 +94,7 @@ mod tests {
     }
 
     #[test]
-    fn pawn_movements_capture() {
+    fn movements_capture() {
         let board_white_pawn = &board::of_str([
             "        ",
             "        ",

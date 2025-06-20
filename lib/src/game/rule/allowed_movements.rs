@@ -20,7 +20,7 @@ pub fn allowed_movements(play: &Game, pos: &Pos) -> Vec<Pos> {
             let mut other_pos: HashSet<Pos> = HashSet::new();
             for player in play.players.values() {
                 if player.color != curr_turn {
-                    for mov in player.possible_movements.iter() {
+                    for mov in player.menace.iter() {
                         other_pos.insert(mov.clone());
                     }
                 }

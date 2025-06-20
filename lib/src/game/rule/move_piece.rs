@@ -17,7 +17,7 @@ pub fn move_piece(game: &mut Game, movement: Movement) {
         if let Some(captured) = game.board.insert(movement.to.clone(), movement.piece) {
             player.captured_pieces.push(captured);
         }
-        player.possible_movements =
+        player.menace =
             naive::movements_of_player(&game.board, &game.bounds, &player.color);
     }
     game.history.push(movement);

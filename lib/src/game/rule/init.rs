@@ -12,7 +12,7 @@ pub fn init_game(mode: Mode) -> Game {
             Player {
                 color: Color::White,
                 captured_pieces: Vec::new(),
-                possible_movements: naive::movements_of_player(
+                menace: naive::movements_of_player(
                     &mode.initial_board,
                     &mode.bounds,
                     &Color::White,
@@ -24,7 +24,7 @@ pub fn init_game(mode: Mode) -> Game {
             Player {
                 color: Color::Black,
                 captured_pieces: Vec::new(),
-                possible_movements: naive::movements_of_player(
+                menace: naive::movements_of_player(
                     &mode.initial_board,
                     &mode.bounds,
                     &Color::Black,
@@ -94,7 +94,7 @@ mod tests {
                         Player {
                             color: Color::White,
                             captured_pieces: Vec::new(),
-                            possible_movements: pos_of_str_slice([
+                            menace: pos_of_str_slice([
                                 "A3", "B3", "C3", "D3", "E3", "F3", "G3", "H3", "A4", "B4", "C4",
                                 "D4", "E4", "F4", "G4", "H4",
                             ])
@@ -107,7 +107,7 @@ mod tests {
                         Player {
                             color: Color::Black,
                             captured_pieces: Vec::new(),
-                            possible_movements: pos_of_str_slice([
+                            menace: pos_of_str_slice([
                                 "A6", "B6", "C6", "D6", "E6", "F6", "G6", "H6", "A5", "B5", "C5",
                                 "D5", "E5", "F5", "G5", "H5",
                             ])

@@ -8,7 +8,7 @@ pub fn is_in_check(play: &Game) -> bool {
     for (pos, piece) in play.board.iter() {
         if piece.t == Type::King && piece.color == curr_turn {
             for player in play.players.values() {
-                if player.color != curr_turn && player.possible_movements.contains(pos) {
+                if player.color != curr_turn && player.menace.contains(pos) {
                     return true;
                 }
             }
@@ -51,7 +51,7 @@ mod tests {
                     Player {
                         color: Color::White,
                         captured_pieces: Vec::new(),
-                        possible_movements: pos_of_str_slice(["D1", "D2", "F1", "F2", "E3", "E4"])
+                        menace: pos_of_str_slice(["D1", "D2", "F1", "F2", "E3", "E4"])
                             .into_iter()
                             .collect(),
                     },
@@ -61,7 +61,7 @@ mod tests {
                     Player {
                         color: Color::Black,
                         captured_pieces: Vec::new(),
-                        possible_movements: pos_of_str_slice(["D8", "D7", "F8", "F7", "E6", "E5"])
+                        menace: pos_of_str_slice(["D8", "D7", "F8", "F7", "E6", "E5"])
                             .into_iter()
                             .collect(),
                     },
@@ -91,7 +91,7 @@ mod tests {
                     Player {
                         color: Color::White,
                         captured_pieces: Vec::new(),
-                        possible_movements: pos_of_str_slice([
+                        menace: pos_of_str_slice([
                             "D1", "D2", "E2", "F1", "F2", "D8", "E8", "F8"
                         ])
                         .into_iter()
@@ -103,7 +103,7 @@ mod tests {
                     Player {
                         color: Color::Black,
                         captured_pieces: Vec::new(),
-                        possible_movements: pos_of_str_slice(["D8", "D7", "F8", "F7", "E6", "E5"])
+                        menace: pos_of_str_slice(["D8", "D7", "F8", "F7", "E6", "E5"])
                             .into_iter()
                             .collect(),
                     },
