@@ -2,7 +2,7 @@ use crate::{
     board::pos::Pos,
     game::{
         Game,
-        capture::Capture,
+        capture::GameCapture,
         movement::{Movement, naive},
         rule::turn::evaluate_turn,
     },
@@ -17,7 +17,7 @@ pub fn move_piece(game: &mut Game, movement: Movement) {
     game.board.remove(&movement.from);
     if let Some(player) = game.players.get_mut(&movement.piece.color) {
         if let Some(captured) = game.board.insert(movement.to.clone(), movement.piece) {
-            player.captures.push(Capture { piece: captured, at: game.history.len() as u16 });
+            player.captures.push(GameCapture { piece: captured, at: game.history.len() as u16 });
         }
         player.menace = naive::movements_of_player(&game.board, &game.bounds, &player.color);
     }
@@ -45,6 +45,15 @@ pub fn move_piece(game: &mut Game, movement: Movement) {
             }
         }
     }
+    if movement.piece == Piece::of_str("♟") {
+
+    }
+    if movement.piece == Piece::of_str("♙") {
+
+    }
+
+
+    // en passand captire
 
     game.history.push(movement);
 

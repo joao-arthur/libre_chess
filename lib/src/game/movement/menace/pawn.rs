@@ -1,6 +1,6 @@
-use crate::{board::pos::Pos, color::Color, game::board::Board, geometry::poligon::rect::RectU8};
+use crate::{board::pos::Pos, color::Color, game::board::GameBoard, geometry::poligon::rect::RectU8};
 
-pub fn menace(board: &Board, bounds: &RectU8, pos: &Pos) -> Vec<Pos> {
+pub fn menace(board: &GameBoard, bounds: &RectU8, pos: &Pos) -> Vec<Pos> {
     let mut result: Vec<Pos> = Vec::new();
     if let Some(piece) = board.get(pos) {
         let capture_base = match &piece.color {

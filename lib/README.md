@@ -20,7 +20,7 @@
 - [ ] Stalemate by no capture
 - [ ] Stalemate by repetition
 
-- [ ] Board selection
+- [ ] GameBoard selection
     - [ ] Neutral
     - [ ] Selected movemented
     - [ ] Selected square

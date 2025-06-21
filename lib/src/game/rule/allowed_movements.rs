@@ -1,8 +1,9 @@
+use std::collections::HashMap;
+
 use crate::{
     board::pos::Pos,
     color::Color,
     game::{
-        Game,
         movement::{
             naive,
             special::{
@@ -11,9 +12,8 @@ use crate::{
                     white_king_can_long_castling, white_king_can_short_castling,
                 },
                 en_passant::en_passant,
-            },
-        },
-        rule::turn::evaluate_turn,
+            }, Movement,
+        }, rule::turn::evaluate_turn, Game
     },
     piece::Type,
 };
@@ -59,10 +59,19 @@ pub fn allowed_movements_of_piece(game: &Game, pos: &Pos) -> Vec<Pos> {
     }
 }
 
-pub fn allowed_movements_of_player() {
+struct GamePieceMovement {
+    movement: Movement,
+    capture: Option<Pos>,
+    aditional_movement: Option<Movement>
+}
+
+pub fn allowed_movements_of_player() -> HashMap<Pos, Vec<GamePieceMovement>> {
     // if (is_in_check()) {
     // keep only the movements that avoid check
     // }
+
+
+    HashMap::new()
 }
 
 #[cfg(test)]

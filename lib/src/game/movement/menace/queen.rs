@@ -1,8 +1,8 @@
-use crate::{board::pos::Pos, game::board::Board, geometry::poligon::rect::RectU8};
+use crate::{board::pos::Pos, game::board::GameBoard, geometry::poligon::rect::RectU8};
 
 use super::{bishop, rook};
 
-pub fn menace(board: &Board, bounds: &RectU8, pos: &Pos) -> Vec<Pos> {
+pub fn menace(board: &GameBoard, bounds: &RectU8, pos: &Pos) -> Vec<Pos> {
     let mut result: Vec<Pos> = Vec::new();
     result.append(&mut bishop::menace(board, bounds, pos));
     result.append(&mut rook::menace(board, bounds, pos));

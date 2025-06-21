@@ -2,11 +2,11 @@ use std::collections::HashSet;
 
 use crate::{board::pos::Pos, color::Color};
 
-use super::capture::Capture;
+use super::capture::GameCapture;
 
 #[derive(Debug, PartialEq)]
-pub struct Player {
+pub struct GamePlayer {
     pub color: Color,
-    pub captures: Vec<Capture>,
+    pub captures: Vec<GameCapture>,
     pub menace: HashSet<Pos>,
 }

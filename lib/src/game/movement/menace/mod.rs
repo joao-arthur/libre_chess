@@ -1,7 +1,7 @@
 use std::collections::HashSet;
 
 use crate::{
-    board::pos::Pos, color::Color, game::board::Board, geometry::poligon::rect::RectU8, piece::Type,
+    board::pos::Pos, color::Color, game::board::GameBoard, geometry::poligon::rect::RectU8, piece::Type,
 };
 
 mod bishop;
@@ -11,7 +11,7 @@ mod pawn;
 mod queen;
 mod rook;
 
-pub fn menace_of_piece(board: &Board, bounds: &RectU8, pos: &Pos) -> Vec<Pos> {
+pub fn menace_of_piece(board: &GameBoard, bounds: &RectU8, pos: &Pos) -> Vec<Pos> {
     if let Some(piece) = board.get(pos) {
         return match piece.t {
             Type::Rook => rook::menace(board, bounds, pos),
@@ -25,7 +25,7 @@ pub fn menace_of_piece(board: &Board, bounds: &RectU8, pos: &Pos) -> Vec<Pos> {
     Vec::new()
 }
 
-pub fn menace_of_player(board: &Board, bounds: &RectU8, color: &Color) -> HashSet<Pos> {
+pub fn menace_of_player(board: &GameBoard, bounds: &RectU8, color: &Color) -> HashSet<Pos> {
     let mut result: Vec<Pos> = Vec::new();
     for (pos, piece) in board.iter() {
         if &piece.color == color {

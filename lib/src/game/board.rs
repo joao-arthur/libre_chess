@@ -26,13 +26,13 @@ pub enum FromStringErr {
     InvalidLength(InvalidLengthErr),
 }
 
-pub type Board = HashMap<Pos, Piece>;
+pub type GameBoard = HashMap<Pos, Piece>;
 
-pub fn empty() -> Board {
+pub fn empty() -> GameBoard {
     HashMap::new()
 }
 
-fn try_of_str<const N: usize>(rows: [&str; N]) -> Result<Board, FromStringErr> {
+fn try_of_str<const N: usize>(rows: [&str; N]) -> Result<GameBoard, FromStringErr> {
     if !rows
         .join("")
         .replace("♖", "")
@@ -70,11 +70,11 @@ fn try_of_str<const N: usize>(rows: [&str; N]) -> Result<Board, FromStringErr> {
     Ok(board)
 }
 
-pub fn of_str(rows: [&str; 8]) -> Board {
+pub fn of_str(rows: [&str; 8]) -> GameBoard {
     try_of_str(rows).unwrap()
 }
 
-fn to_string(board: &Board) -> String {
+fn to_string(board: &GameBoard) -> String {
     let mut res = "".to_string();
     let mut row = 8;
     while row > 0 {

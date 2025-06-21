@@ -2,14 +2,14 @@ use std::collections::HashMap;
 
 use crate::{
     color::Color,
-    game::{board::Board, movement::Movement, player::Player},
+    game::{board::GameBoard, movement::Movement, player::GamePlayer},
     geometry::poligon::rect::RectU8,
 };
 
 #[derive(Debug, PartialEq)]
 pub struct Game {
-    pub board: Board,
+    pub board: GameBoard,
     pub bounds: RectU8,
-    pub players: HashMap<Color, Player>,
+    pub players: HashMap<Color, GamePlayer>,
     pub history: Vec<Movement>,
 }

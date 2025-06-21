@@ -1,6 +1,6 @@
-use crate::{board::pos::Pos, game::board::Board, geometry::poligon::rect::RectU8};
+use crate::{board::pos::Pos, game::board::GameBoard, geometry::poligon::rect::RectU8};
 
-pub fn movements(board: &Board, bounds: &RectU8, pos: &Pos) -> Vec<Pos> {
+pub fn movements(board: &GameBoard, bounds: &RectU8, pos: &Pos) -> Vec<Pos> {
     let mut result: Vec<Pos> = Vec::new();
     if let Some(piece) = board.get(pos) {
         let base = [

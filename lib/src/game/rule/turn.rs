@@ -10,7 +10,7 @@ mod tests {
 
     use crate::{
         color::Color,
-        game::{Game, board::Board, movement::Movement},
+        game::{Game, board::GameBoard, movement::Movement},
         geometry::poligon::rect::RectU8,
     };
 
@@ -20,7 +20,7 @@ mod tests {
     fn test_get_turn() {
         assert_eq!(
             evaluate_turn(&Game {
-                board: Board::default(),
+                board: GameBoard::default(),
                 bounds: RectU8 { x1: 0, y1: 0, x2: 7, y2: 7 },
                 players: HashMap::new(),
                 history: Vec::new(),
@@ -29,7 +29,7 @@ mod tests {
         );
         assert_eq!(
             evaluate_turn(&Game {
-                board: Board::default(),
+                board: GameBoard::default(),
                 bounds: RectU8 { x1: 0, y1: 0, x2: 7, y2: 7 },
                 players: HashMap::new(),
                 history: Vec::from([Movement::of_str("♙", "D2", "D4")]),
@@ -38,7 +38,7 @@ mod tests {
         );
         assert_eq!(
             evaluate_turn(&Game {
-                board: Board::default(),
+                board: GameBoard::default(),
                 bounds: RectU8 { x1: 0, y1: 0, x2: 7, y2: 7 },
                 players: HashMap::new(),
                 history: Vec::from([

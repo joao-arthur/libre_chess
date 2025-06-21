@@ -1,8 +1,8 @@
-use crate::{board::pos::Pos, game::board::Board, geometry::poligon::rect::RectU8};
+use crate::{board::pos::Pos, game::board::GameBoard, geometry::poligon::rect::RectU8};
 
 use super::{bishop, rook};
 
-pub fn movements(board: &Board, bounds: &RectU8, pos: &Pos) -> Vec<Pos> {
+pub fn movements(board: &GameBoard, bounds: &RectU8, pos: &Pos) -> Vec<Pos> {
     let mut result: Vec<Pos> = Vec::new();
     result.append(&mut bishop::movements(board, bounds, pos));
     result.append(&mut rook::movements(board, bounds, pos));

@@ -1,6 +1,6 @@
-use crate::{board::pos::Pos, game::board::Board, geometry::poligon::rect::RectU8};
+use crate::{board::pos::Pos, game::board::GameBoard, geometry::poligon::rect::RectU8};
 
-pub fn menace(board: &Board, bounds: &RectU8, pos: &Pos) -> Vec<Pos> {
+pub fn menace(board: &GameBoard, bounds: &RectU8, pos: &Pos) -> Vec<Pos> {
     let mut result: Vec<Pos> = Vec::new();
     let base = [
         pos.try_of_rel_idx(1, 1),

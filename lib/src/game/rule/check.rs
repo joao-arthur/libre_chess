@@ -25,7 +25,7 @@ mod tests {
     use crate::{
         board::pos::pos_of_str_slice,
         color::Color,
-        game::{Game, board::of_str, movement::Movement, player::Player},
+        game::{Game, board::of_str, movement::Movement, player::GamePlayer},
         geometry::poligon::rect::RectU8,
     };
 
@@ -48,7 +48,7 @@ mod tests {
             players: HashMap::from([
                 (
                     Color::White,
-                    Player {
+                    GamePlayer {
                         color: Color::White,
                         captures: Vec::new(),
                         menace: pos_of_str_slice(["D1", "D2", "F1", "F2", "E3", "E4"])
@@ -58,7 +58,7 @@ mod tests {
                 ),
                 (
                     Color::Black,
-                    Player {
+                    GamePlayer {
                         color: Color::Black,
                         captures: Vec::new(),
                         menace: pos_of_str_slice(["D8", "D7", "F8", "F7", "E6", "E5"])
@@ -88,7 +88,7 @@ mod tests {
             players: HashMap::from([
                 (
                     Color::White,
-                    Player {
+                    GamePlayer {
                         color: Color::White,
                         captures: Vec::new(),
                         menace: pos_of_str_slice(["D1", "D2", "E2", "F1", "F2", "D8", "E8", "F8"])
@@ -98,7 +98,7 @@ mod tests {
                 ),
                 (
                     Color::Black,
-                    Player {
+                    GamePlayer {
                         color: Color::Black,
                         captures: Vec::new(),
                         menace: pos_of_str_slice(["D8", "D7", "F8", "F7", "E6", "E5"])

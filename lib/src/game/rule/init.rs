@@ -2,14 +2,14 @@ use std::collections::HashMap;
 
 use crate::{
     color::Color,
-    game::{Game, mode::Mode, movement::menace, player::Player},
+    game::{Game, mode::GameMode, movement::menace, player::GamePlayer},
 };
 
-pub fn init_game(mode: Mode) -> Game {
+pub fn init_game(mode: GameMode) -> Game {
     let players = HashMap::from([
         (
             Color::White,
-            Player {
+            GamePlayer {
                 color: Color::White,
                 captures: Vec::new(),
                 menace: menace::menace_of_player(&mode.initial_board, &mode.bounds, &Color::White),
@@ -17,7 +17,7 @@ pub fn init_game(mode: Mode) -> Game {
         ),
         (
             Color::Black,
-            Player {
+            GamePlayer {
                 color: Color::Black,
                 captures: Vec::new(),
                 menace: menace::menace_of_player(&mode.initial_board, &mode.bounds, &Color::Black),
@@ -34,7 +34,7 @@ mod tests {
     use crate::{
         board::pos::pos_of_str_slice,
         color::Color,
-        game::{Game, mode::standard_chess, piece, player::Player},
+        game::{Game, mode::standard_chess, piece, player::GamePlayer},
         geometry::poligon::rect::RectU8,
     };
 
@@ -83,7 +83,7 @@ mod tests {
                 players: HashMap::from([
                     (
                         Color::White,
-                        Player {
+                        GamePlayer {
                             color: Color::White,
                             captures: Vec::new(),
                             menace: pos_of_str_slice([
@@ -96,7 +96,7 @@ mod tests {
                     ),
                     (
                         Color::Black,
-                        Player {
+                        GamePlayer {
                             color: Color::Black,
                             captures: Vec::new(),
                             menace: pos_of_str_slice([

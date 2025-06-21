@@ -1,4 +1,4 @@
-pub use board::Board;
+pub use board::GameBoard;
 pub use game::Game;
 
 mod board;
