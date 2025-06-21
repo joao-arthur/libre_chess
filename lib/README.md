@@ -17,6 +17,9 @@
     - [ ] Draw
     - [ ] Resign
 
+- [ ] Stalemate by no capture
+- [ ] Stalemate by repetition
+
 - [ ] Board selection
     - [ ] Neutral
     - [ ] Selected movemented
