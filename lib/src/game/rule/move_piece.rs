@@ -5,6 +5,39 @@ use crate::{
     piece::Piece,
 };
 
+fn default_move(game: &mut Game, movement: Movement) {
+    game.board.remove(&movement.from);
+    if let Some(player) = game.players.get_mut(&movement.piece.color) {
+        if let Some(captured) = game.board.insert(movement.to.clone(), movement.piece) {
+            player.captures.push(GameCapture { piece: captured, at: game.history.len() as u16 });
+        }
+    }
+    game.history.push(movement);
+}
+
+fn en_passant_move(game: &mut Game, movement: Movement) {
+    game.board.remove(&movement.from);
+    if let Some(player) = game.players.get_mut(&movement.piece.color) {
+        game.board.insert(movement.to.clone(), movement.piece);
+        if let Some(captured) = game.board.remove(&Pos { col: movement.to.col, row: movement.from.row }) {
+            player.captures.push(GameCapture { piece: captured, at: game.history.len() as u16 });
+        }
+    }
+    game.history.push(movement);
+}
+
+fn castling_move(game: &mut Game, movement: Movement) {
+    game.board.remove(&movement.from);
+    if let Some(player) = game.players.get_mut(&movement.piece.color) {
+        game.board.insert(movement.to.clone(), movement.piece);
+        if let Some(captured) = game.board.remove(&Pos { col: movement.to.col, row: movement.from.row }) {
+            player.captures.push(GameCapture { piece: captured, at: game.history.len() as u16 });
+        }
+    }
+    game.history.push(movement);
+}
+
+
 pub fn move_piece(game: &mut Game, movement: Movement) {
     let curr_turn = evaluate_turn(game);
     if movement.piece.color != curr_turn {
@@ -15,7 +48,7 @@ pub fn move_piece(game: &mut Game, movement: Movement) {
         if let Some(captured) = game.board.insert(movement.to.clone(), movement.piece) {
             player.captures.push(GameCapture { piece: captured, at: game.history.len() as u16 });
         }
-        player.menace = naive::movements_of_player(&game.board, &game.bounds, &player.color);
+   //     player.menace = naive::movements_of_player(&game.board, &game.bounds, &player.color);
     }
     if movement.piece == Piece::of_str("♔") {
         if movement.to == Pos::of_str("G1") {

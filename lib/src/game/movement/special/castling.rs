@@ -1,7 +1,4 @@
-use crate::{
-    board::pos::Pos,
-    game::{board::GameBoard, movement::Movement},
-};
+use crate::{board::pos::Pos, game::board::GameBoard, movement::Movement};
 
 pub fn white_king_can_short_castling(board: &GameBoard, history: &Vec<Movement>) -> bool {
     board.get(&Pos::of_str("F1")).is_none()
