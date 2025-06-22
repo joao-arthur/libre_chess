@@ -2,9 +2,9 @@ use std::collections::HashMap;
 
 use crate::{
     color::Color,
-    movement::Movement,
     game::{board::GameBoard, player::GamePlayer},
     geometry::poligon::rect::RectU8,
+    movement::Movement,
 };
 
 #[derive(Debug, PartialEq)]

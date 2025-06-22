@@ -1,7 +1,8 @@
 use std::collections::HashSet;
 
 use crate::{
-    board::pos::Pos, color::Color, game::board::GameBoard, geometry::poligon::rect::RectU8, piece::Type,
+    board::pos::Pos, color::Color, game::board::GameBoard, geometry::poligon::rect::RectU8,
+    piece::Type,
 };
 
 mod bishop;

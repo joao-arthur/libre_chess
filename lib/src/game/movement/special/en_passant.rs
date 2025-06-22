@@ -1,12 +1,8 @@
 use crate::{
-    board::pos::Pos,
-    color::Color,
-    movement::Movement,
-    game::{board::GameBoard},
-    piece::Piece,
+    board::pos::Pos, color::Color, game::board::GameBoard, movement::Movement, piece::Piece,
 };
 
-pub fn  en_passant(board: &GameBoard, history: &Vec<Movement>, pos: &Pos) -> Vec<Pos> {
+pub fn en_passant(board: &GameBoard, history: &Vec<Movement>, pos: &Pos) -> Vec<Pos> {
     if let Some(piece) = board.get(pos) {
         return match piece.color {
             Color::White => white_pawn_en_passant(board, history, pos),
@@ -62,11 +58,7 @@ fn black_pawn_en_passant(board: &GameBoard, history: &Vec<Movement>, pos: &Pos) 
 mod tests {
     use std::collections::HashMap;
 
-    use crate::{
-        board::pos::Pos,
-        movement::Movement,
-        game::piece,
-    };
+    use crate::{board::pos::Pos, game::piece, movement::Movement};
 
     use super::en_passant;
 

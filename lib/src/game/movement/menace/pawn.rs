@@ -1,4 +1,6 @@
-use crate::{board::pos::Pos, color::Color, game::board::GameBoard, geometry::poligon::rect::RectU8};
+use crate::{
+    board::pos::Pos, color::Color, game::board::GameBoard, geometry::poligon::rect::RectU8,
+};
 
 pub fn menace(board: &GameBoard, bounds: &RectU8, pos: &Pos) -> Vec<Pos> {
     let mut result: Vec<Pos> = Vec::new();
@@ -44,7 +46,7 @@ mod tests {
 
     #[test]
     fn menace_capture() {
-        let board_white_pawn = &board::of_str([
+        let board_white_pawn = board::of_str([
             "        ",
             "        ",
             " ♟ ♙    ",
@@ -54,7 +56,7 @@ mod tests {
             "        ",
             "        ",
         ]);
-        let board_black_pawn = &board::of_str([
+        let board_black_pawn = board::of_str([
             "        ",
             "        ",
             "        ",

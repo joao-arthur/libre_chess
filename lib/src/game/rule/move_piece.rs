@@ -1,12 +1,7 @@
 use crate::{
     board::pos::Pos,
+    game::{Game, capture::GameCapture, movement::naive, rule::turn::evaluate_turn},
     movement::Movement,
-    game::{
-        Game,
-        capture::GameCapture,
-        movement::naive,
-        rule::turn::evaluate_turn,
-    },
     piece::Piece,
 };
 
@@ -46,13 +41,8 @@ pub fn move_piece(game: &mut Game, movement: Movement) {
             }
         }
     }
-    if movement.piece == Piece::of_str("♟") {
-
-    }
-    if movement.piece == Piece::of_str("♙") {
-
-    }
-
+    if movement.piece == Piece::of_str("♟") {}
+    if movement.piece == Piece::of_str("♙") {}
 
     // en passand captire
 

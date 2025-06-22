@@ -86,7 +86,7 @@ mod tests {
 
     #[test]
     fn menace_with_capture() {
-        let board_white_queen = &board::of_str([
+        let board_white_queen = board::of_str([
             "        ",
             "  ♗     ",
             "   ♜    ",
@@ -96,7 +96,7 @@ mod tests {
             "  ♝     ",
             "        ",
         ]);
-        let board_black_queen = &board::of_str([
+        let board_black_queen = board::of_str([
             "        ",
             "  ♝     ",
             "   ♖    ",

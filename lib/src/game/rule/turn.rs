@@ -10,9 +10,9 @@ mod tests {
 
     use crate::{
         color::Color,
-        movement::Movement,
         game::{Game, board::GameBoard},
         geometry::poligon::rect::RectU8,
+        movement::Movement,
     };
 
     use super::evaluate_turn;

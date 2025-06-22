@@ -25,9 +25,9 @@ mod tests {
     use crate::{
         board::pos::pos_of_str_slice,
         color::Color,
-        movement::Movement,
         game::{Game, board::of_str, player::GamePlayer},
         geometry::poligon::rect::RectU8,
+        movement::Movement,
     };
 
     use super::is_in_check;
