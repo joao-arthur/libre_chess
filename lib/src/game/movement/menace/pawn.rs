@@ -11,6 +11,13 @@ pub fn menace(board: &GameBoard, bounds: &RectU8, pos: &Pos) -> Vec<Pos> {
         };
         for curr_pos in capture_base {
             if let Some(curr_pos) = curr_pos {
+                if curr_pos.col < bounds.x1
+                    || curr_pos.col > bounds.x2
+                    || curr_pos.row < bounds.y1
+                    || curr_pos.row > bounds.y2
+                {
+                    continue;
+                }
                 result.push(curr_pos);
             }
         }

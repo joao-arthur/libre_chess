@@ -17,6 +17,7 @@ pub struct CastlingMovement {
 
 #[derive(Debug, PartialEq)]
 pub struct PromotionMovement {
+    pub pos: Pos,
     pub piece: Piece,
 }
 
