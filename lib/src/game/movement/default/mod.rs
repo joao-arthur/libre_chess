@@ -1,7 +1,6 @@
-
 use crate::{
     board::pos::Pos,
-    game::{board::GameBoard, movement::movement::GameMovementOld},
+    game::{board::GameBoard, movement::movement::DefaultMovement},
     geometry::poligon::rect::RectU8,
     piece::Type,
 };
@@ -13,7 +12,7 @@ mod pawn;
 mod queen;
 mod rook;
 
-pub fn movements_of_piece(board: &GameBoard, bounds: &RectU8, pos: &Pos) -> Vec<GameMovementOld> {
+pub fn movements_of_piece(board: &GameBoard, bounds: &RectU8, pos: &Pos) -> Vec<DefaultMovement> {
     if let Some(piece) = board.get(pos) {
         return match piece.t {
             Type::Rook => rook::movements(board, bounds, pos),
@@ -27,161 +26,152 @@ pub fn movements_of_piece(board: &GameBoard, bounds: &RectU8, pos: &Pos) -> Vec<
     Vec::new()
 }
 
-//pub fn movements_of_player(board: &GameBoard, bounds: &RectU8, color: &Color) -> HashSet<Pos> {
-//    let mut result: Vec<Pos> = Vec::new();
-//    for (pos, piece) in board.iter() {
-//        if &piece.color == color {
-//            result.append(&mut movements_of_piece(board, bounds, pos));
-//        }
-//    }
-//    result.into_iter().collect()
-//}
-
 #[cfg(test)]
 mod tests {
-    //    use std::collections::HashMap;
-    //
-    //    use crate::{
-    //        board::pos::Pos,
-    //        game::{board, mode::standard_chess, piece},
-    //    };
-    //
-    //    use super::movements_of_piece;
-    //
-    //    #[test]
-    //    fn movements_of_piece_empty_board() {
-    //        let bounds = standard_chess().bounds;
-    //        assert_eq!(movements_of_piece(&board::empty(), &bounds, &Pos::of_str("A1")), []);
-    //    }
-    //
-    //    #[test]
-    //    fn movements_of_piece_rook() {
-    //        let board = HashMap::from([piece::of_str("D4", "♜")]);
-    //        let bounds = standard_chess().bounds;
-    //        assert_eq!(
-    //            movements_of_piece(&board, &bounds, &Pos::of_str("D4")),
-    //            [
-    //                GameMovementOld::from(Movement::of_str("E4")),
-    //                GameMovementOld::from(Movement::of_str("F4")),
-    //                GameMovementOld::from(Movement::of_str("G4")),
-    //                GameMovementOld::from(Movement::of_str("H4")),
-    //                GameMovementOld::from(Movement::of_str("D3")),
-    //                GameMovementOld::from(Movement::of_str("D2")),
-    //                GameMovementOld::from(Movement::of_str("D1")),
-    //                GameMovementOld::from(Movement::of_str("C4")),
-    //                GameMovementOld::from(Movement::of_str("B4")),
-    //                GameMovementOld::from(Movement::of_str("A4")),
-    //                GameMovementOld::from(Movement::of_str("D5")),
-    //                GameMovementOld::from(Movement::of_str("D6")),
-    //                GameMovementOld::from(Movement::of_str("D7")),
-    //                GameMovementOld::from(Movement::of_str("D8")),
-    //            ]
-    //        );
-    //    }
-    //
-    //    #[test]
-    //    fn movements_of_piece_knight() {
-    //        let board = HashMap::from([piece::of_str("D4", "♞")]);
-    //        let bounds = standard_chess().bounds;
-    //        assert_eq!(
-    //            movements_of_piece(&board, &bounds, &Pos::of_str("D4")),
-    //            [
-    //                GameMovementOld::from(Movement::of_str("E6")),
-    //                GameMovementOld::from(Movement::of_str("F5")),
-    //                GameMovementOld::from(Movement::of_str("F3")),
-    //                GameMovementOld::from(Movement::of_str("E2")),
-    //                GameMovementOld::from(Movement::of_str("C2")),
-    //                GameMovementOld::from(Movement::of_str("B3")),
-    //                GameMovementOld::from(Movement::of_str("B5")),
-    //                GameMovementOld::from(Movement::of_str("C6")),
-    //            ]
-    //        );
-    //    }
-    //
-    //    #[test]
-    //    fn movements_of_piece_bishop() {
-    //        let board = HashMap::from([piece::of_str("C5", "♝")]);
-    //        let bounds = standard_chess().bounds;
-    //        assert_eq!(
-    //            movements_of_piece(&board, &bounds, &Pos::of_str("C5")),
-    //            [
-    //                GameMovementOld::from(Movement::of_str("D6")),
-    //                GameMovementOld::from(Movement::of_str("E7")),
-    //                GameMovementOld::from(Movement::of_str("F8")),
-    //                GameMovementOld::from(Movement::of_str("D4")),
-    //                GameMovementOld::from(Movement::of_str("E3")),
-    //                GameMovementOld::from(Movement::of_str("F2")),
-    //                GameMovementOld::from(Movement::of_str("G1")),
-    //                GameMovementOld::from(Movement::of_str("B4")),
-    //                GameMovementOld::from(Movement::of_str("A3")),
-    //                GameMovementOld::from(Movement::of_str("B6")),
-    //                GameMovementOld::from(Movement::of_str("A7")),
-    //            ]
-    //        );
-    //    }
-    //
-    //    #[test]
-    //    fn movements_of_piece_queen() {
-    //        let board = HashMap::from([piece::of_str("C5", "♛")]);
-    //        let bounds = standard_chess().bounds;
-    //        assert_eq!(
-    //            movements_of_piece(&board, &bounds, &Pos::of_str("C5")),
-    //            [
-    //                GameMovementOld::from(Movement::of_str("D6")),
-    //                GameMovementOld::from(Movement::of_str("E7")),
-    //                GameMovementOld::from(Movement::of_str("F8")),
-    //                GameMovementOld::from(Movement::of_str("D4")),
-    //                GameMovementOld::from(Movement::of_str("E3")),
-    //                GameMovementOld::from(Movement::of_str("F2")),
-    //                GameMovementOld::from(Movement::of_str("G1")),
-    //                GameMovementOld::from(Movement::of_str("B4")),
-    //                GameMovementOld::from(Movement::of_str("A3")),
-    //                GameMovementOld::from(Movement::of_str("B6")),
-    //                GameMovementOld::from(Movement::of_str("A7")),
-    //                GameMovementOld::from(Movement::of_str("D5")),
-    //                GameMovementOld::from(Movement::of_str("E5")),
-    //                GameMovementOld::from(Movement::of_str("F5")),
-    //                GameMovementOld::from(Movement::of_str("G5")),
-    //                GameMovementOld::from(Movement::of_str("H5")),
-    //                GameMovementOld::from(Movement::of_str("C4")),
-    //                GameMovementOld::from(Movement::of_str("C3")),
-    //                GameMovementOld::from(Movement::of_str("C2")),
-    //                GameMovementOld::from(Movement::of_str("C1")),
-    //                GameMovementOld::from(Movement::of_str("B5")),
-    //                GameMovementOld::from(Movement::of_str("A5")),
-    //                GameMovementOld::from(Movement::of_str("C6")),
-    //                GameMovementOld::from(Movement::of_str("C7")),
-    //                GameMovementOld::from(Movement::of_str("C8")),
-    //            ]
-    //        );
-    //    }
-    //
-    //    #[test]
-    //    fn movements_of_piece_king() {
-    //        let board = HashMap::from([piece::of_str("D4", "♚")]);
-    //        let bounds = standard_chess().bounds;
-    //        assert_eq!(
-    //            movements_of_piece(&board, &bounds, &Pos::of_str("D4")),
-    //            [
-    //                GameMovementOld::from(Movement::of_str("E5")),
-    //                GameMovementOld::from(Movement::of_str("E4")),
-    //                GameMovementOld::from(Movement::of_str("E3")),
-    //                GameMovementOld::from(Movement::of_str("D3")),
-    //                GameMovementOld::from(Movement::of_str("C3")),
-    //                GameMovementOld::from(Movement::of_str("C4")),
-    //                GameMovementOld::from(Movement::of_str("C5")),
-    //                GameMovementOld::from(Movement::of_str("D5")),
-    //            ]
-    //        );
-    //    }
-    //
-    //    #[test]
-    //    fn movements_of_piece_pawn() {
-    //        let board = HashMap::from([piece::of_str("C5", "♙")]);
-    //        let bounds = standard_chess().bounds;
-    //        assert_eq!(
-    //            movements_of_piece(&board, &bounds, &Pos::of_str("C5")),
-    //            [GameMovementOld::from(Movement::of_str("C6"))]
-    //        );
-    //    }
+    use std::collections::HashMap;
+
+    use crate::{
+        board::pos::Pos,
+        game::{board, mode::standard_chess, movement::movement::DefaultMovement, piece},
+        movement::Movement,
+    };
+
+    use super::movements_of_piece;
+
+    #[test]
+    fn movements_of_piece_empty_board() {
+        let bounds = standard_chess().bounds;
+        assert_eq!(movements_of_piece(&board::empty(), &bounds, &Pos::of_str("A1")), []);
+    }
+
+    #[test]
+    fn movements_of_piece_rook() {
+        let board = HashMap::from([piece::of_str("D4", "♜")]);
+        let bounds = standard_chess().bounds;
+        assert_eq!(
+            movements_of_piece(&board, &bounds, &Pos::of_str("D4")),
+            [
+                DefaultMovement::from(Movement::of_str("♜", "D4", "E4")),
+                DefaultMovement::from(Movement::of_str("♜", "D4", "F4")),
+                DefaultMovement::from(Movement::of_str("♜", "D4", "G4")),
+                DefaultMovement::from(Movement::of_str("♜", "D4", "H4")),
+                DefaultMovement::from(Movement::of_str("♜", "D4", "D3")),
+                DefaultMovement::from(Movement::of_str("♜", "D4", "D2")),
+                DefaultMovement::from(Movement::of_str("♜", "D4", "D1")),
+                DefaultMovement::from(Movement::of_str("♜", "D4", "C4")),
+                DefaultMovement::from(Movement::of_str("♜", "D4", "B4")),
+                DefaultMovement::from(Movement::of_str("♜", "D4", "A4")),
+                DefaultMovement::from(Movement::of_str("♜", "D4", "D5")),
+                DefaultMovement::from(Movement::of_str("♜", "D4", "D6")),
+                DefaultMovement::from(Movement::of_str("♜", "D4", "D7")),
+                DefaultMovement::from(Movement::of_str("♜", "D4", "D8")),
+            ]
+        );
+    }
+
+    #[test]
+    fn movements_of_piece_knight() {
+        let board = HashMap::from([piece::of_str("D4", "♞")]);
+        let bounds = standard_chess().bounds;
+        assert_eq!(
+            movements_of_piece(&board, &bounds, &Pos::of_str("D4")),
+            [
+                DefaultMovement::from(Movement::of_str("♞", "D4", "E6")),
+                DefaultMovement::from(Movement::of_str("♞", "D4", "F5")),
+                DefaultMovement::from(Movement::of_str("♞", "D4", "F3")),
+                DefaultMovement::from(Movement::of_str("♞", "D4", "E2")),
+                DefaultMovement::from(Movement::of_str("♞", "D4", "C2")),
+                DefaultMovement::from(Movement::of_str("♞", "D4", "B3")),
+                DefaultMovement::from(Movement::of_str("♞", "D4", "B5")),
+                DefaultMovement::from(Movement::of_str("♞", "D4", "C6")),
+            ]
+        );
+    }
+
+    #[test]
+    fn movements_of_piece_bishop() {
+        let board = HashMap::from([piece::of_str("C5", "♝")]);
+        let bounds = standard_chess().bounds;
+        assert_eq!(
+            movements_of_piece(&board, &bounds, &Pos::of_str("C5")),
+            [
+                DefaultMovement::from(Movement::of_str("♝", "C5", "D6")),
+                DefaultMovement::from(Movement::of_str("♝", "C5", "E7")),
+                DefaultMovement::from(Movement::of_str("♝", "C5", "F8")),
+                DefaultMovement::from(Movement::of_str("♝", "C5", "D4")),
+                DefaultMovement::from(Movement::of_str("♝", "C5", "E3")),
+                DefaultMovement::from(Movement::of_str("♝", "C5", "F2")),
+                DefaultMovement::from(Movement::of_str("♝", "C5", "G1")),
+                DefaultMovement::from(Movement::of_str("♝", "C5", "B4")),
+                DefaultMovement::from(Movement::of_str("♝", "C5", "A3")),
+                DefaultMovement::from(Movement::of_str("♝", "C5", "B6")),
+                DefaultMovement::from(Movement::of_str("♝", "C5", "A7")),
+            ]
+        );
+    }
+
+    #[test]
+    fn movements_of_piece_queen() {
+        let board = HashMap::from([piece::of_str("C5", "♛")]);
+        let bounds = standard_chess().bounds;
+        assert_eq!(
+            movements_of_piece(&board, &bounds, &Pos::of_str("C5")),
+            [
+                DefaultMovement::from(Movement::of_str("♛", "C5", "D6")),
+                DefaultMovement::from(Movement::of_str("♛", "C5", "E7")),
+                DefaultMovement::from(Movement::of_str("♛", "C5", "F8")),
+                DefaultMovement::from(Movement::of_str("♛", "C5", "D4")),
+                DefaultMovement::from(Movement::of_str("♛", "C5", "E3")),
+                DefaultMovement::from(Movement::of_str("♛", "C5", "F2")),
+                DefaultMovement::from(Movement::of_str("♛", "C5", "G1")),
+                DefaultMovement::from(Movement::of_str("♛", "C5", "B4")),
+                DefaultMovement::from(Movement::of_str("♛", "C5", "A3")),
+                DefaultMovement::from(Movement::of_str("♛", "C5", "B6")),
+                DefaultMovement::from(Movement::of_str("♛", "C5", "A7")),
+                DefaultMovement::from(Movement::of_str("♛", "C5", "D5")),
+                DefaultMovement::from(Movement::of_str("♛", "C5", "E5")),
+                DefaultMovement::from(Movement::of_str("♛", "C5", "F5")),
+                DefaultMovement::from(Movement::of_str("♛", "C5", "G5")),
+                DefaultMovement::from(Movement::of_str("♛", "C5", "H5")),
+                DefaultMovement::from(Movement::of_str("♛", "C5", "C4")),
+                DefaultMovement::from(Movement::of_str("♛", "C5", "C3")),
+                DefaultMovement::from(Movement::of_str("♛", "C5", "C2")),
+                DefaultMovement::from(Movement::of_str("♛", "C5", "C1")),
+                DefaultMovement::from(Movement::of_str("♛", "C5", "B5")),
+                DefaultMovement::from(Movement::of_str("♛", "C5", "A5")),
+                DefaultMovement::from(Movement::of_str("♛", "C5", "C6")),
+                DefaultMovement::from(Movement::of_str("♛", "C5", "C7")),
+                DefaultMovement::from(Movement::of_str("♛", "C5", "C8")),
+            ]
+        );
+    }
+
+    #[test]
+    fn movements_of_piece_king() {
+        let board = HashMap::from([piece::of_str("D4", "♚")]);
+        let bounds = standard_chess().bounds;
+        assert_eq!(
+            movements_of_piece(&board, &bounds, &Pos::of_str("D4")),
+            [
+                DefaultMovement::from(Movement::of_str("♚", "D4", "E5")),
+                DefaultMovement::from(Movement::of_str("♚", "D4", "E4")),
+                DefaultMovement::from(Movement::of_str("♚", "D4", "E3")),
+                DefaultMovement::from(Movement::of_str("♚", "D4", "D3")),
+                DefaultMovement::from(Movement::of_str("♚", "D4", "C3")),
+                DefaultMovement::from(Movement::of_str("♚", "D4", "C4")),
+                DefaultMovement::from(Movement::of_str("♚", "D4", "C5")),
+                DefaultMovement::from(Movement::of_str("♚", "D4", "D5")),
+            ]
+        );
+    }
+
+    #[test]
+    fn movements_of_piece_pawn() {
+        let board = HashMap::from([piece::of_str("C5", "♙")]);
+        let bounds = standard_chess().bounds;
+        assert_eq!(
+            movements_of_piece(&board, &bounds, &Pos::of_str("C5")),
+            [DefaultMovement::from(Movement::of_str("♙", "C5", "C6"))]
+        );
+    }
 }

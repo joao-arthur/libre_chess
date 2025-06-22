@@ -4,9 +4,8 @@ use crate::{
         Game,
         capture::GameCapture,
         movement::movement::{
-                CastlingMovement, DefaultMovement, EnPassantMovement, GameMovement,
-                PromotionMovement,
-            },
+            CastlingMovement, DefaultMovement, EnPassantMovement, GameMovement, PromotionMovement,
+        },
     },
 };
 

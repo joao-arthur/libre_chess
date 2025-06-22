@@ -5,14 +5,32 @@ pub struct DefaultMovement {
     pub movement: Movement,
 }
 
+impl From<Movement> for DefaultMovement {
+    fn from(movement: Movement) -> Self {
+        DefaultMovement { movement }
+    }
+}
+
 #[derive(Debug, PartialEq)]
 pub struct EnPassantMovement {
     pub movement: Movement,
 }
 
+impl From<Movement> for EnPassantMovement {
+    fn from(movement: Movement) -> Self {
+        EnPassantMovement { movement }
+    }
+}
+
 #[derive(Debug, PartialEq)]
 pub struct CastlingMovement {
     pub movement: Movement,
+}
+
+impl From<Movement> for CastlingMovement {
+    fn from(movement: Movement) -> Self {
+        CastlingMovement { movement }
+    }
 }
 
 #[derive(Debug, PartialEq)]

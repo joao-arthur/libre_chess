@@ -1,12 +1,12 @@
 use crate::{
     board::pos::Pos,
-    game::{board::GameBoard, movement::movement::GameMovementOld},
+    game::{board::GameBoard, movement::movement::DefaultMovement},
     geometry::poligon::rect::RectU8,
     movement::Movement,
 };
 
-pub fn movements(board: &GameBoard, bounds: &RectU8, pos: &Pos) -> Vec<GameMovementOld> {
-    let mut result: Vec<GameMovementOld> = Vec::new();
+pub fn movements(board: &GameBoard, bounds: &RectU8, pos: &Pos) -> Vec<DefaultMovement> {
+    let mut result: Vec<DefaultMovement> = Vec::new();
     if let Some(piece) = board.get(pos) {
         let modifiers: [[i8; 2]; 4] = [[1, 1], [-1, 1], [-1, -1], [1, -1]];
         for modifier in modifiers {
@@ -27,7 +27,7 @@ pub fn movements(board: &GameBoard, bounds: &RectU8, pos: &Pos) -> Vec<GameMovem
                         if curr_piece.color == piece.color {
                             break;
                         } else {
-                            result.push(GameMovementOld::from(Movement {
+                            result.push(DefaultMovement::from(Movement {
                                 piece: *piece,
                                 from: pos.clone(),
                                 to: curr_pos,
@@ -35,7 +35,7 @@ pub fn movements(board: &GameBoard, bounds: &RectU8, pos: &Pos) -> Vec<GameMovem
                             break;
                         }
                     } else {
-                        result.push(GameMovementOld::from(Movement {
+                        result.push(DefaultMovement::from(Movement {
                             piece: *piece,
                             from: pos.clone(),
                             to: curr_pos,
@@ -56,7 +56,7 @@ mod tests {
 
     use crate::{
         board::pos::Pos,
-        game::{board, mode::standard_chess, movement::movement::GameMovementOld, piece},
+        game::{board, mode::standard_chess, movement::movement::DefaultMovement, piece},
         geometry::poligon::rect::RectU8,
         movement::Movement,
     };
@@ -76,17 +76,17 @@ mod tests {
         assert_eq!(
             movements(&board, &bounds, &Pos::of_str("C5")),
             [
-                GameMovementOld::from(Movement::of_str("♝", "C5", "D6")),
-                GameMovementOld::from(Movement::of_str("♝", "C5", "E7")),
-                GameMovementOld::from(Movement::of_str("♝", "C5", "F8")),
-                GameMovementOld::from(Movement::of_str("♝", "C5", "D4")),
-                GameMovementOld::from(Movement::of_str("♝", "C5", "E3")),
-                GameMovementOld::from(Movement::of_str("♝", "C5", "F2")),
-                GameMovementOld::from(Movement::of_str("♝", "C5", "G1")),
-                GameMovementOld::from(Movement::of_str("♝", "C5", "B4")),
-                GameMovementOld::from(Movement::of_str("♝", "C5", "A3")),
-                GameMovementOld::from(Movement::of_str("♝", "C5", "B6")),
-                GameMovementOld::from(Movement::of_str("♝", "C5", "A7")),
+                DefaultMovement::from(Movement::of_str("♝", "C5", "D6")),
+                DefaultMovement::from(Movement::of_str("♝", "C5", "E7")),
+                DefaultMovement::from(Movement::of_str("♝", "C5", "F8")),
+                DefaultMovement::from(Movement::of_str("♝", "C5", "D4")),
+                DefaultMovement::from(Movement::of_str("♝", "C5", "E3")),
+                DefaultMovement::from(Movement::of_str("♝", "C5", "F2")),
+                DefaultMovement::from(Movement::of_str("♝", "C5", "G1")),
+                DefaultMovement::from(Movement::of_str("♝", "C5", "B4")),
+                DefaultMovement::from(Movement::of_str("♝", "C5", "A3")),
+                DefaultMovement::from(Movement::of_str("♝", "C5", "B6")),
+                DefaultMovement::from(Movement::of_str("♝", "C5", "A7")),
             ]
         );
     }
@@ -98,14 +98,14 @@ mod tests {
         assert_eq!(
             movements(&board, &bounds, &Pos::of_str("F6")),
             [
-                GameMovementOld::from(Movement::of_str("♝", "F6", "G7")),
-                GameMovementOld::from(Movement::of_str("♝", "F6", "H8")),
-                GameMovementOld::from(Movement::of_str("♝", "F6", "G5")),
-                GameMovementOld::from(Movement::of_str("♝", "F6", "H4")),
-                GameMovementOld::from(Movement::of_str("♝", "F6", "E5")),
-                GameMovementOld::from(Movement::of_str("♝", "F6", "D4")),
-                GameMovementOld::from(Movement::of_str("♝", "F6", "E7")),
-                GameMovementOld::from(Movement::of_str("♝", "F6", "D8")),
+                DefaultMovement::from(Movement::of_str("♝", "F6", "G7")),
+                DefaultMovement::from(Movement::of_str("♝", "F6", "H8")),
+                DefaultMovement::from(Movement::of_str("♝", "F6", "G5")),
+                DefaultMovement::from(Movement::of_str("♝", "F6", "H4")),
+                DefaultMovement::from(Movement::of_str("♝", "F6", "E5")),
+                DefaultMovement::from(Movement::of_str("♝", "F6", "D4")),
+                DefaultMovement::from(Movement::of_str("♝", "F6", "E7")),
+                DefaultMovement::from(Movement::of_str("♝", "F6", "D8")),
             ]
         );
     }
@@ -117,13 +117,13 @@ mod tests {
         assert_eq!(
             movements(&board, &bounds, &Pos::of_str("H8")),
             [
-                GameMovementOld::from(Movement::of_str("♝", "H8", "G7")),
-                GameMovementOld::from(Movement::of_str("♝", "H8", "F6")),
-                GameMovementOld::from(Movement::of_str("♝", "H8", "E5")),
-                GameMovementOld::from(Movement::of_str("♝", "H8", "D4")),
-                GameMovementOld::from(Movement::of_str("♝", "H8", "C3")),
-                GameMovementOld::from(Movement::of_str("♝", "H8", "B2")),
-                GameMovementOld::from(Movement::of_str("♝", "H8", "A1")),
+                DefaultMovement::from(Movement::of_str("♝", "H8", "G7")),
+                DefaultMovement::from(Movement::of_str("♝", "H8", "F6")),
+                DefaultMovement::from(Movement::of_str("♝", "H8", "E5")),
+                DefaultMovement::from(Movement::of_str("♝", "H8", "D4")),
+                DefaultMovement::from(Movement::of_str("♝", "H8", "C3")),
+                DefaultMovement::from(Movement::of_str("♝", "H8", "B2")),
+                DefaultMovement::from(Movement::of_str("♝", "H8", "A1")),
             ]
         );
     }
@@ -135,13 +135,13 @@ mod tests {
         assert_eq!(
             movements(&board, &bounds, &Pos::of_str("H1")),
             [
-                GameMovementOld::from(Movement::of_str("♝", "H1", "G2")),
-                GameMovementOld::from(Movement::of_str("♝", "H1", "F3")),
-                GameMovementOld::from(Movement::of_str("♝", "H1", "E4")),
-                GameMovementOld::from(Movement::of_str("♝", "H1", "D5")),
-                GameMovementOld::from(Movement::of_str("♝", "H1", "C6")),
-                GameMovementOld::from(Movement::of_str("♝", "H1", "B7")),
-                GameMovementOld::from(Movement::of_str("♝", "H1", "A8")),
+                DefaultMovement::from(Movement::of_str("♝", "H1", "G2")),
+                DefaultMovement::from(Movement::of_str("♝", "H1", "F3")),
+                DefaultMovement::from(Movement::of_str("♝", "H1", "E4")),
+                DefaultMovement::from(Movement::of_str("♝", "H1", "D5")),
+                DefaultMovement::from(Movement::of_str("♝", "H1", "C6")),
+                DefaultMovement::from(Movement::of_str("♝", "H1", "B7")),
+                DefaultMovement::from(Movement::of_str("♝", "H1", "A8")),
             ]
         );
     }
@@ -153,13 +153,13 @@ mod tests {
         assert_eq!(
             movements(&board, &bounds, &Pos::of_str("A1")),
             [
-                GameMovementOld::from(Movement::of_str("♝", "A1", "B2")),
-                GameMovementOld::from(Movement::of_str("♝", "A1", "C3")),
-                GameMovementOld::from(Movement::of_str("♝", "A1", "D4")),
-                GameMovementOld::from(Movement::of_str("♝", "A1", "E5")),
-                GameMovementOld::from(Movement::of_str("♝", "A1", "F6")),
-                GameMovementOld::from(Movement::of_str("♝", "A1", "G7")),
-                GameMovementOld::from(Movement::of_str("♝", "A1", "H8")),
+                DefaultMovement::from(Movement::of_str("♝", "A1", "B2")),
+                DefaultMovement::from(Movement::of_str("♝", "A1", "C3")),
+                DefaultMovement::from(Movement::of_str("♝", "A1", "D4")),
+                DefaultMovement::from(Movement::of_str("♝", "A1", "E5")),
+                DefaultMovement::from(Movement::of_str("♝", "A1", "F6")),
+                DefaultMovement::from(Movement::of_str("♝", "A1", "G7")),
+                DefaultMovement::from(Movement::of_str("♝", "A1", "H8")),
             ]
         );
     }
@@ -171,13 +171,13 @@ mod tests {
         assert_eq!(
             movements(&board, &bounds, &Pos::of_str("A8")),
             [
-                GameMovementOld::from(Movement::of_str("♝", "A8", "B7")),
-                GameMovementOld::from(Movement::of_str("♝", "A8", "C6")),
-                GameMovementOld::from(Movement::of_str("♝", "A8", "D5")),
-                GameMovementOld::from(Movement::of_str("♝", "A8", "E4")),
-                GameMovementOld::from(Movement::of_str("♝", "A8", "F3")),
-                GameMovementOld::from(Movement::of_str("♝", "A8", "G2")),
-                GameMovementOld::from(Movement::of_str("♝", "A8", "H1")),
+                DefaultMovement::from(Movement::of_str("♝", "A8", "B7")),
+                DefaultMovement::from(Movement::of_str("♝", "A8", "C6")),
+                DefaultMovement::from(Movement::of_str("♝", "A8", "D5")),
+                DefaultMovement::from(Movement::of_str("♝", "A8", "E4")),
+                DefaultMovement::from(Movement::of_str("♝", "A8", "F3")),
+                DefaultMovement::from(Movement::of_str("♝", "A8", "G2")),
+                DefaultMovement::from(Movement::of_str("♝", "A8", "H1")),
             ]
         );
     }
@@ -198,12 +198,12 @@ mod tests {
         assert_eq!(
             movements(&board, &bounds, &Pos::of_str("C5")),
             [
-                GameMovementOld::from(Movement::of_str("♗", "C5", "D6")),
-                GameMovementOld::from(Movement::of_str("♗", "C5", "D4")),
-                GameMovementOld::from(Movement::of_str("♗", "C5", "B4")),
-                GameMovementOld::from(Movement::of_str("♗", "C5", "A3")),
-                GameMovementOld::from(Movement::of_str("♗", "C5", "B6")),
-                GameMovementOld::from(Movement::of_str("♗", "C5", "A7")),
+                DefaultMovement::from(Movement::of_str("♗", "C5", "D6")),
+                DefaultMovement::from(Movement::of_str("♗", "C5", "D4")),
+                DefaultMovement::from(Movement::of_str("♗", "C5", "B4")),
+                DefaultMovement::from(Movement::of_str("♗", "C5", "A3")),
+                DefaultMovement::from(Movement::of_str("♗", "C5", "B6")),
+                DefaultMovement::from(Movement::of_str("♗", "C5", "A7")),
             ]
         );
     }
@@ -224,12 +224,12 @@ mod tests {
         assert_eq!(
             movements(&board, &bounds, &Pos::of_str("C5")),
             [
-                GameMovementOld::from(Movement::of_str("♝", "C5", "D6")),
-                GameMovementOld::from(Movement::of_str("♝", "C5", "D4")),
-                GameMovementOld::from(Movement::of_str("♝", "C5", "B4")),
-                GameMovementOld::from(Movement::of_str("♝", "C5", "A3")),
-                GameMovementOld::from(Movement::of_str("♝", "C5", "B6")),
-                GameMovementOld::from(Movement::of_str("♝", "C5", "A7")),
+                DefaultMovement::from(Movement::of_str("♝", "C5", "D6")),
+                DefaultMovement::from(Movement::of_str("♝", "C5", "D4")),
+                DefaultMovement::from(Movement::of_str("♝", "C5", "B4")),
+                DefaultMovement::from(Movement::of_str("♝", "C5", "A3")),
+                DefaultMovement::from(Movement::of_str("♝", "C5", "B6")),
+                DefaultMovement::from(Movement::of_str("♝", "C5", "A7")),
             ]
         );
     }
