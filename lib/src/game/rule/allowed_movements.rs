@@ -6,7 +6,7 @@ use crate::{
     game::{
         Game,
         movement::{
-            naive,
+            default,
             special::{
                 castling::{
                     black_king_can_long_castling, black_king_can_short_castling,

@@ -8,7 +8,7 @@ use crate::{
                 CastlingMovement, DefaultMovement, EnPassantMovement, GameMovement,
                 PromotionMovement,
             },
-            naive,
+            default,
         },
         rule::turn::evaluate_turn,
     },
