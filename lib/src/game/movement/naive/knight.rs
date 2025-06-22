@@ -1,7 +1,12 @@
-use crate::{board::pos::Pos, game::board::GameBoard, geometry::poligon::rect::RectU8};
+use crate::{
+    board::pos::Pos,
+    game::{board::GameBoard, movement::movement::GameMovement},
+    geometry::poligon::rect::RectU8,
+    movement::Movement,
+};
 
-pub fn movements(board: &GameBoard, bounds: &RectU8, pos: &Pos) -> Vec<Pos> {
-    let mut result: Vec<Pos> = Vec::new();
+pub fn movements(board: &GameBoard, bounds: &RectU8, pos: &Pos) -> Vec<GameMovement> {
+    let mut result: Vec<GameMovement> = Vec::new();
     if let Some(piece) = board.get(pos) {
         let base = [
             pos.try_of_rel_idx(2, 1),
@@ -24,10 +29,18 @@ pub fn movements(board: &GameBoard, bounds: &RectU8, pos: &Pos) -> Vec<Pos> {
                 }
                 if let Some(curr_piece) = board.get(&curr_pos) {
                     if curr_piece.color != piece.color {
-                        result.push(curr_pos);
+                        result.push(GameMovement::from(Movement {
+                            piece: piece.clone(),
+                            from: pos.clone(),
+                            to: curr_pos,
+                        }));
                     }
                 } else {
-                    result.push(curr_pos);
+                    result.push(GameMovement::from(Movement {
+                        piece: piece.clone(),
+                        from: pos.clone(),
+                        to: curr_pos,
+                    }));
                 }
             }
         }
@@ -40,9 +53,10 @@ mod tests {
     use std::collections::HashMap;
 
     use crate::{
-        board::pos::{Pos, pos_of_str_slice},
-        game::{board, mode::standard_chess, piece},
+        board::pos::Pos,
+        game::{board, mode::standard_chess, movement::movement::GameMovement, piece},
         geometry::poligon::rect::RectU8,
+        movement::Movement,
     };
 
     use super::movements;
@@ -59,63 +73,134 @@ mod tests {
         let bounds = standard_chess().bounds;
         assert_eq!(
             movements(&board, &bounds, &Pos::of_str("D4")),
-            pos_of_str_slice(["E6", "F5", "F3", "E2", "C2", "B3", "B5", "C6"])
+            [
+                GameMovement::from(Movement::of_str("♞", "D4", "E6")),
+                GameMovement::from(Movement::of_str("♞", "D4", "F5")),
+                GameMovement::from(Movement::of_str("♞", "D4", "F3")),
+                GameMovement::from(Movement::of_str("♞", "D4", "E2")),
+                GameMovement::from(Movement::of_str("♞", "D4", "C2")),
+                GameMovement::from(Movement::of_str("♞", "D4", "B3")),
+                GameMovement::from(Movement::of_str("♞", "D4", "B5")),
+                GameMovement::from(Movement::of_str("♞", "D4", "C6")),
+            ]
         );
     }
 
     #[test]
-    fn movements_edge() {
-        let top_right = HashMap::from([piece::of_str("H8", "♞")]);
-        let bottom_right = HashMap::from([piece::of_str("H1", "♞")]);
-        let bottom_left = HashMap::from([piece::of_str("A1", "♞")]);
-        let top_left = HashMap::from([piece::of_str("A8", "♞")]);
+    fn movements_top_right_edge() {
+        let board = HashMap::from([piece::of_str("H8", "♞")]);
         let bounds = standard_chess().bounds;
         assert_eq!(
-            movements(&top_right, &bounds, &Pos::of_str("H8")),
-            pos_of_str_slice(["G6", "F7"])
-        );
-        assert_eq!(
-            movements(&bottom_right, &bounds, &Pos::of_str("H1")),
-            pos_of_str_slice(["F2", "G3"])
-        );
-        assert_eq!(
-            movements(&bottom_left, &bounds, &Pos::of_str("A1")),
-            pos_of_str_slice(["B3", "C2"])
-        );
-        assert_eq!(
-            movements(&top_left, &bounds, &Pos::of_str("A8")),
-            pos_of_str_slice(["C7", "B6"])
+            movements(&board, &bounds, &Pos::of_str("H8")),
+            [
+                GameMovement::from(Movement::of_str("♞", "H8", "G6")),
+                GameMovement::from(Movement::of_str("♞", "H8", "F7"))
+            ]
         );
     }
 
     #[test]
-    fn movements_small_bounds() {
-        let top_right = HashMap::from([piece::of_str("G7", "♞")]);
-        let bottom_right = HashMap::from([piece::of_str("G5", "♞")]);
-        let bottom_left = HashMap::from([piece::of_str("E5", "♞")]);
-        let top_left = HashMap::from([piece::of_str("E7", "♞")]);
+    fn movements_bottom_right_edge() {
+        let board = HashMap::from([piece::of_str("H1", "♞")]);
+        let bounds = standard_chess().bounds;
+        assert_eq!(
+            movements(&board, &bounds, &Pos::of_str("H1")),
+            [
+                GameMovement::from(Movement::of_str("♞", "H1", "F2")),
+                GameMovement::from(Movement::of_str("♞", "H1", "G3"))
+            ]
+        );
+    }
+
+    #[test]
+    fn movements_bottom_left_edge() {
+        let board = HashMap::from([piece::of_str("A1", "♞")]);
+        let bounds = standard_chess().bounds;
+        assert_eq!(
+            movements(&board, &bounds, &Pos::of_str("A1")),
+            [
+                GameMovement::from(Movement::of_str("♞", "A1", "B3")),
+                GameMovement::from(Movement::of_str("♞", "A1", "C2"))
+            ]
+        );
+    }
+
+    #[test]
+    fn movements_top_left_edge() {
+        let board = HashMap::from([piece::of_str("A8", "♞")]);
+        let bounds = standard_chess().bounds;
+        assert_eq!(
+            movements(&board, &bounds, &Pos::of_str("A8")),
+            [
+                GameMovement::from(Movement::of_str("♞", "A8", "C7")),
+                GameMovement::from(Movement::of_str("♞", "A8", "B6"))
+            ]
+        );
+    }
+
+    #[test]
+    fn movements_small_bounds_top_right_edge() {
+        let board = HashMap::from([piece::of_str("G7", "♞")]);
         let bounds = RectU8 { x1: 3, y1: 3, x2: 7, y2: 7 };
         assert_eq!(
-            movements(&top_right, &bounds, &Pos::of_str("G7")),
-            pos_of_str_slice(["H5", "F5", "E6", "E8"])
-        );
-        assert_eq!(
-            movements(&bottom_right, &bounds, &Pos::of_str("G5")),
-            pos_of_str_slice(["H7", "E4", "E6", "F7"])
-        );
-        assert_eq!(
-            movements(&bottom_left, &bounds, &Pos::of_str("E5")),
-            pos_of_str_slice(["F7", "G6", "G4", "D7"])
-        );
-        assert_eq!(
-            movements(&top_left, &bounds, &Pos::of_str("E7")),
-            pos_of_str_slice(["G8", "G6", "F5", "D5"])
+            movements(&board, &bounds, &Pos::of_str("G7")),
+            [
+                GameMovement::from(Movement::of_str("♞", "G7", "H5")),
+                GameMovement::from(Movement::of_str("♞", "G7", "F5")),
+                GameMovement::from(Movement::of_str("♞", "G7", "E6")),
+                GameMovement::from(Movement::of_str("♞", "G7", "E8"))
+            ]
         );
     }
 
     #[test]
-    fn movements_with_capture() {
-        let board_white_knight = &board::of_str([
+    fn movements_small_bounds_bottom_right_edge() {
+        let board = HashMap::from([piece::of_str("G5", "♞")]);
+        let bounds = RectU8 { x1: 3, y1: 3, x2: 7, y2: 7 };
+        assert_eq!(
+            movements(&board, &bounds, &Pos::of_str("G5")),
+            [
+                GameMovement::from(Movement::of_str("♞", "G5", "H7")),
+                GameMovement::from(Movement::of_str("♞", "G5", "E4")),
+                GameMovement::from(Movement::of_str("♞", "G5", "E6")),
+                GameMovement::from(Movement::of_str("♞", "G5", "F7"))
+            ]
+        );
+    }
+
+    #[test]
+    fn movements_small_bounds_bottom_left_edge() {
+        let board = HashMap::from([piece::of_str("E5", "♞")]);
+        let bounds = RectU8 { x1: 3, y1: 3, x2: 7, y2: 7 };
+        assert_eq!(
+            movements(&board, &bounds, &Pos::of_str("E5")),
+            [
+                GameMovement::from(Movement::of_str("♞", "E5", "F7")),
+                GameMovement::from(Movement::of_str("♞", "E5", "G6")),
+                GameMovement::from(Movement::of_str("♞", "E5", "G4")),
+                GameMovement::from(Movement::of_str("♞", "E5", "D7"))
+            ]
+        );
+    }
+
+    #[test]
+    fn movements_small_bounds_top_left_edge() {
+        let board = HashMap::from([piece::of_str("E7", "♞")]);
+        let bounds = RectU8 { x1: 3, y1: 3, x2: 7, y2: 7 };
+        assert_eq!(
+            movements(&board, &bounds, &Pos::of_str("E7")),
+            [
+                GameMovement::from(Movement::of_str("♞", "E7", "G8")),
+                GameMovement::from(Movement::of_str("♞", "E7", "G6")),
+                GameMovement::from(Movement::of_str("♞", "E7", "F5")),
+                GameMovement::from(Movement::of_str("♞", "E7", "D5")),
+            ]
+        );
+    }
+
+    #[test]
+    fn movements_white_capture() {
+        let board = board::of_str([
             "        ",
             "        ",
             "    ♜   ",
@@ -125,7 +210,24 @@ mod tests {
             "        ",
             "        ",
         ]);
-        let board_black_knight = &board::of_str([
+        let bounds = standard_chess().bounds;
+        assert_eq!(
+            movements(&board, &bounds, &Pos::of_str("D4")),
+            [
+                GameMovement::from(Movement::of_str("♘", "D4", "E6")),
+                GameMovement::from(Movement::of_str("♘", "D4", "F5")),
+                GameMovement::from(Movement::of_str("♘", "D4", "F3")),
+                GameMovement::from(Movement::of_str("♘", "D4", "E2")),
+                GameMovement::from(Movement::of_str("♘", "D4", "C2")),
+                GameMovement::from(Movement::of_str("♘", "D4", "B5")),
+                GameMovement::from(Movement::of_str("♘", "D4", "C6")),
+            ]
+        );
+    }
+
+    #[test]
+    fn movements_black_capture() {
+        let board = board::of_str([
             "        ",
             "        ",
             "    ♖   ",
@@ -137,12 +239,16 @@ mod tests {
         ]);
         let bounds = standard_chess().bounds;
         assert_eq!(
-            movements(&board_white_knight, &bounds, &Pos::of_str("D4")),
-            pos_of_str_slice(["E6", "F5", "F3", "E2", "C2", "B5", "C6"])
-        );
-        assert_eq!(
-            movements(&board_black_knight, &bounds, &Pos::of_str("D4")),
-            pos_of_str_slice(["E6", "F5", "F3", "E2", "C2", "B5", "C6"])
+            movements(&board, &bounds, &Pos::of_str("D4")),
+            [
+                GameMovement::from(Movement::of_str("♞", "D4", "E6")),
+                GameMovement::from(Movement::of_str("♞", "D4", "F5")),
+                GameMovement::from(Movement::of_str("♞", "D4", "F3")),
+                GameMovement::from(Movement::of_str("♞", "D4", "E2")),
+                GameMovement::from(Movement::of_str("♞", "D4", "C2")),
+                GameMovement::from(Movement::of_str("♞", "D4", "B5")),
+                GameMovement::from(Movement::of_str("♞", "D4", "C6"))
+            ]
         );
     }
 }
