@@ -1,7 +1,13 @@
-use crate::{board::pos::Pos, color::Color, game::board::GameBoard, geometry::poligon::rect::RectU8};
+use crate::{
+    board::pos::Pos,
+    color::Color,
+    game::{board::GameBoard, movement::movement::GameMovement},
+    geometry::poligon::rect::RectU8,
+    movement::Movement,
+};
 
-pub fn movements(board: &GameBoard, bounds: &RectU8, pos: &Pos) -> Vec<Pos> {
-    let mut result: Vec<Pos> = Vec::new();
+pub fn movements(board: &GameBoard, bounds: &RectU8, pos: &Pos) -> Vec<GameMovement> {
+    let mut result: Vec<GameMovement> = Vec::new();
     if let Some(piece) = board.get(pos) {
         let move_base = match &piece.color {
             Color::White => {
@@ -26,7 +32,11 @@ pub fn movements(board: &GameBoard, bounds: &RectU8, pos: &Pos) -> Vec<Pos> {
         for curr_pos in move_base {
             if let Some(curr_pos) = curr_pos {
                 if board.get(&curr_pos).is_none() {
-                    result.push(curr_pos);
+                    result.push(GameMovement::from(Movement {
+                        piece: piece.clone(),
+                        from: pos.clone(),
+                        to: curr_pos,
+                    }));
                 }
             }
         }
@@ -34,7 +44,11 @@ pub fn movements(board: &GameBoard, bounds: &RectU8, pos: &Pos) -> Vec<Pos> {
             if let Some(curr_pos) = curr_pos {
                 if let Some(curr_piece) = board.get(&curr_pos) {
                     if curr_piece.color != piece.color {
-                        result.push(curr_pos);
+                        result.push(GameMovement::from(Movement {
+                            piece: piece.clone(),
+                            from: pos.clone(),
+                            to: curr_pos,
+                        }));
                     }
                 }
             }
@@ -48,8 +62,9 @@ mod tests {
     use std::collections::HashMap;
 
     use crate::{
-        board::pos::{Pos, pos_of_str_slice},
-        game::{board, mode::standard_chess, piece},
+        board::pos::Pos,
+        game::{board, mode::standard_chess, movement::movement::GameMovement, piece},
+        movement::Movement,
     };
 
     use super::movements;
@@ -61,41 +76,68 @@ mod tests {
     }
 
     #[test]
-    fn movements_lonely_piece() {
-        let board_white_pawn = HashMap::from([piece::of_str("C5", "♙")]);
-        let board_black_pawn = HashMap::from([piece::of_str("C5", "♟")]);
-        let bounds = standard_chess().bounds;
-        assert_eq!(movements(&board_white_pawn, &bounds, &Pos::of_str("C5")), [Pos::of_str("C6")]);
-        assert_eq!(movements(&board_black_pawn, &bounds, &Pos::of_str("C5")), [Pos::of_str("C4")]);
-    }
-
-    #[test]
-    fn movements_first_move() {
-        let board_white_pawn = HashMap::from([piece::of_str("A2", "♙")]);
-        let board_black_pawn = HashMap::from([piece::of_str("H7", "♟")]);
+    fn movements_lonely_white_pawn() {
+        let board = HashMap::from([piece::of_str("C5", "♙")]);
         let bounds = standard_chess().bounds;
         assert_eq!(
-            movements(&board_white_pawn, &bounds, &Pos::of_str("A2")),
-            pos_of_str_slice(["A3", "A4"])
-        );
-        assert_eq!(
-            movements(&board_black_pawn, &bounds, &Pos::of_str("H7")),
-            pos_of_str_slice(["H6", "H5"])
+            movements(&board, &bounds, &Pos::of_str("C5")),
+            [GameMovement::from(Movement::of_str("♙", "C5", "C6"))]
         );
     }
 
     #[test]
-    fn movements_blocked() {
-        let board_white_pawn = HashMap::from([piece::of_str("C5", "♙"), piece::of_str("C6", "♟")]);
-        let board_black_pawn = HashMap::from([piece::of_str("C5", "♟"), piece::of_str("C4", "♙")]);
+    fn movements_lonely_black_pawn() {
+        let board = HashMap::from([piece::of_str("C5", "♟")]);
         let bounds = standard_chess().bounds;
-        assert_eq!(movements(&board_white_pawn, &bounds, &Pos::of_str("C5")), []);
-        assert_eq!(movements(&board_black_pawn, &bounds, &Pos::of_str("C5")), []);
+        assert_eq!(
+            movements(&board, &bounds, &Pos::of_str("C5")),
+            [GameMovement::from(Movement::of_str("♟", "C5", "C4"))]
+        );
     }
 
     #[test]
-    fn movements_capture() {
-        let board_white_pawn = &board::of_str([
+    fn movements_first_move_white_pawn() {
+        let board = HashMap::from([piece::of_str("A2", "♙")]);
+        let bounds = standard_chess().bounds;
+        assert_eq!(
+            movements(&board, &bounds, &Pos::of_str("A2")),
+            [
+                GameMovement::from(Movement::of_str("♙", "A2", "A3")),
+                GameMovement::from(Movement::of_str("♙", "A2", "A4"))
+            ]
+        );
+    }
+
+    #[test]
+    fn movements_first_move_black_pawn() {
+        let board = HashMap::from([piece::of_str("H7", "♟")]);
+        let bounds = standard_chess().bounds;
+        assert_eq!(
+            movements(&board, &bounds, &Pos::of_str("H7")),
+            [
+                GameMovement::from(Movement::of_str("♟", "H7", "H6")),
+                GameMovement::from(Movement::of_str("♟", "H7", "H5"))
+            ]
+        );
+    }
+
+    #[test]
+    fn movements_blocked_white_pawn() {
+        let board = HashMap::from([piece::of_str("C5", "♙"), piece::of_str("C6", "♟")]);
+        let bounds = standard_chess().bounds;
+        assert_eq!(movements(&board, &bounds, &Pos::of_str("C5")), []);
+    }
+
+    #[test]
+    fn movements_blocked_black_pawn() {
+        let board = HashMap::from([piece::of_str("C5", "♟"), piece::of_str("C4", "♙")]);
+        let bounds = standard_chess().bounds;
+        assert_eq!(movements(&board, &bounds, &Pos::of_str("C5")), []);
+    }
+
+    #[test]
+    fn movements_white_capture() {
+        let board = board::of_str([
             "        ",
             "        ",
             " ♟ ♙    ",
@@ -105,7 +147,19 @@ mod tests {
             "        ",
             "        ",
         ]);
-        let board_black_pawn = &board::of_str([
+        let bounds = standard_chess().bounds;
+        assert_eq!(
+            movements(&board, &bounds, &Pos::of_str("C5")),
+            [
+                GameMovement::from(Movement::of_str("♙", "C5", "C6")),
+                GameMovement::from(Movement::of_str("♙", "C5", "B6"))
+            ]
+        );
+    }
+
+    #[test]
+    fn movements_black_capture() {
+        let board = board::of_str([
             "        ",
             "        ",
             "        ",
@@ -117,12 +171,11 @@ mod tests {
         ]);
         let bounds = standard_chess().bounds;
         assert_eq!(
-            movements(&board_white_pawn, &bounds, &Pos::of_str("C5")),
-            pos_of_str_slice(["C6", "B6"])
-        );
-        assert_eq!(
-            movements(&board_black_pawn, &bounds, &Pos::of_str("C5")),
-            pos_of_str_slice(["C4", "D4"])
+            movements(&board, &bounds, &Pos::of_str("C5")),
+            [
+                GameMovement::from(Movement::of_str("♟", "C5", "C4")),
+                GameMovement::from(Movement::of_str("♟", "C5", "D4"))
+            ]
         );
     }
 }
