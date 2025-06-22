@@ -3,7 +3,7 @@ use std::collections::HashSet;
 use crate::{
     board::pos::Pos,
     color::Color,
-    game::{board::GameBoard, movement::movement::GameMovement},
+    game::{board::GameBoard, movement::movement::GameMovementOld},
     geometry::poligon::rect::RectU8,
     piece::Type,
 };
@@ -15,7 +15,7 @@ mod pawn;
 mod queen;
 mod rook;
 
-pub fn movements_of_piece(board: &GameBoard, bounds: &RectU8, pos: &Pos) -> Vec<GameMovement> {
+pub fn movements_of_piece(board: &GameBoard, bounds: &RectU8, pos: &Pos) -> Vec<GameMovementOld> {
     if let Some(piece) = board.get(pos) {
         return match piece.t {
             Type::Rook => rook::movements(board, bounds, pos),
@@ -63,20 +63,20 @@ mod tests {
     //        assert_eq!(
     //            movements_of_piece(&board, &bounds, &Pos::of_str("D4")),
     //            [
-    //                GameMovement::from(Movement::of_str("E4")),
-    //                GameMovement::from(Movement::of_str("F4")),
-    //                GameMovement::from(Movement::of_str("G4")),
-    //                GameMovement::from(Movement::of_str("H4")),
-    //                GameMovement::from(Movement::of_str("D3")),
-    //                GameMovement::from(Movement::of_str("D2")),
-    //                GameMovement::from(Movement::of_str("D1")),
-    //                GameMovement::from(Movement::of_str("C4")),
-    //                GameMovement::from(Movement::of_str("B4")),
-    //                GameMovement::from(Movement::of_str("A4")),
-    //                GameMovement::from(Movement::of_str("D5")),
-    //                GameMovement::from(Movement::of_str("D6")),
-    //                GameMovement::from(Movement::of_str("D7")),
-    //                GameMovement::from(Movement::of_str("D8")),
+    //                GameMovementOld::from(Movement::of_str("E4")),
+    //                GameMovementOld::from(Movement::of_str("F4")),
+    //                GameMovementOld::from(Movement::of_str("G4")),
+    //                GameMovementOld::from(Movement::of_str("H4")),
+    //                GameMovementOld::from(Movement::of_str("D3")),
+    //                GameMovementOld::from(Movement::of_str("D2")),
+    //                GameMovementOld::from(Movement::of_str("D1")),
+    //                GameMovementOld::from(Movement::of_str("C4")),
+    //                GameMovementOld::from(Movement::of_str("B4")),
+    //                GameMovementOld::from(Movement::of_str("A4")),
+    //                GameMovementOld::from(Movement::of_str("D5")),
+    //                GameMovementOld::from(Movement::of_str("D6")),
+    //                GameMovementOld::from(Movement::of_str("D7")),
+    //                GameMovementOld::from(Movement::of_str("D8")),
     //            ]
     //        );
     //    }
@@ -88,14 +88,14 @@ mod tests {
     //        assert_eq!(
     //            movements_of_piece(&board, &bounds, &Pos::of_str("D4")),
     //            [
-    //                GameMovement::from(Movement::of_str("E6")),
-    //                GameMovement::from(Movement::of_str("F5")),
-    //                GameMovement::from(Movement::of_str("F3")),
-    //                GameMovement::from(Movement::of_str("E2")),
-    //                GameMovement::from(Movement::of_str("C2")),
-    //                GameMovement::from(Movement::of_str("B3")),
-    //                GameMovement::from(Movement::of_str("B5")),
-    //                GameMovement::from(Movement::of_str("C6")),
+    //                GameMovementOld::from(Movement::of_str("E6")),
+    //                GameMovementOld::from(Movement::of_str("F5")),
+    //                GameMovementOld::from(Movement::of_str("F3")),
+    //                GameMovementOld::from(Movement::of_str("E2")),
+    //                GameMovementOld::from(Movement::of_str("C2")),
+    //                GameMovementOld::from(Movement::of_str("B3")),
+    //                GameMovementOld::from(Movement::of_str("B5")),
+    //                GameMovementOld::from(Movement::of_str("C6")),
     //            ]
     //        );
     //    }
@@ -107,17 +107,17 @@ mod tests {
     //        assert_eq!(
     //            movements_of_piece(&board, &bounds, &Pos::of_str("C5")),
     //            [
-    //                GameMovement::from(Movement::of_str("D6")),
-    //                GameMovement::from(Movement::of_str("E7")),
-    //                GameMovement::from(Movement::of_str("F8")),
-    //                GameMovement::from(Movement::of_str("D4")),
-    //                GameMovement::from(Movement::of_str("E3")),
-    //                GameMovement::from(Movement::of_str("F2")),
-    //                GameMovement::from(Movement::of_str("G1")),
-    //                GameMovement::from(Movement::of_str("B4")),
-    //                GameMovement::from(Movement::of_str("A3")),
-    //                GameMovement::from(Movement::of_str("B6")),
-    //                GameMovement::from(Movement::of_str("A7")),
+    //                GameMovementOld::from(Movement::of_str("D6")),
+    //                GameMovementOld::from(Movement::of_str("E7")),
+    //                GameMovementOld::from(Movement::of_str("F8")),
+    //                GameMovementOld::from(Movement::of_str("D4")),
+    //                GameMovementOld::from(Movement::of_str("E3")),
+    //                GameMovementOld::from(Movement::of_str("F2")),
+    //                GameMovementOld::from(Movement::of_str("G1")),
+    //                GameMovementOld::from(Movement::of_str("B4")),
+    //                GameMovementOld::from(Movement::of_str("A3")),
+    //                GameMovementOld::from(Movement::of_str("B6")),
+    //                GameMovementOld::from(Movement::of_str("A7")),
     //            ]
     //        );
     //    }
@@ -129,31 +129,31 @@ mod tests {
     //        assert_eq!(
     //            movements_of_piece(&board, &bounds, &Pos::of_str("C5")),
     //            [
-    //                GameMovement::from(Movement::of_str("D6")),
-    //                GameMovement::from(Movement::of_str("E7")),
-    //                GameMovement::from(Movement::of_str("F8")),
-    //                GameMovement::from(Movement::of_str("D4")),
-    //                GameMovement::from(Movement::of_str("E3")),
-    //                GameMovement::from(Movement::of_str("F2")),
-    //                GameMovement::from(Movement::of_str("G1")),
-    //                GameMovement::from(Movement::of_str("B4")),
-    //                GameMovement::from(Movement::of_str("A3")),
-    //                GameMovement::from(Movement::of_str("B6")),
-    //                GameMovement::from(Movement::of_str("A7")),
-    //                GameMovement::from(Movement::of_str("D5")),
-    //                GameMovement::from(Movement::of_str("E5")),
-    //                GameMovement::from(Movement::of_str("F5")),
-    //                GameMovement::from(Movement::of_str("G5")),
-    //                GameMovement::from(Movement::of_str("H5")),
-    //                GameMovement::from(Movement::of_str("C4")),
-    //                GameMovement::from(Movement::of_str("C3")),
-    //                GameMovement::from(Movement::of_str("C2")),
-    //                GameMovement::from(Movement::of_str("C1")),
-    //                GameMovement::from(Movement::of_str("B5")),
-    //                GameMovement::from(Movement::of_str("A5")),
-    //                GameMovement::from(Movement::of_str("C6")),
-    //                GameMovement::from(Movement::of_str("C7")),
-    //                GameMovement::from(Movement::of_str("C8")),
+    //                GameMovementOld::from(Movement::of_str("D6")),
+    //                GameMovementOld::from(Movement::of_str("E7")),
+    //                GameMovementOld::from(Movement::of_str("F8")),
+    //                GameMovementOld::from(Movement::of_str("D4")),
+    //                GameMovementOld::from(Movement::of_str("E3")),
+    //                GameMovementOld::from(Movement::of_str("F2")),
+    //                GameMovementOld::from(Movement::of_str("G1")),
+    //                GameMovementOld::from(Movement::of_str("B4")),
+    //                GameMovementOld::from(Movement::of_str("A3")),
+    //                GameMovementOld::from(Movement::of_str("B6")),
+    //                GameMovementOld::from(Movement::of_str("A7")),
+    //                GameMovementOld::from(Movement::of_str("D5")),
+    //                GameMovementOld::from(Movement::of_str("E5")),
+    //                GameMovementOld::from(Movement::of_str("F5")),
+    //                GameMovementOld::from(Movement::of_str("G5")),
+    //                GameMovementOld::from(Movement::of_str("H5")),
+    //                GameMovementOld::from(Movement::of_str("C4")),
+    //                GameMovementOld::from(Movement::of_str("C3")),
+    //                GameMovementOld::from(Movement::of_str("C2")),
+    //                GameMovementOld::from(Movement::of_str("C1")),
+    //                GameMovementOld::from(Movement::of_str("B5")),
+    //                GameMovementOld::from(Movement::of_str("A5")),
+    //                GameMovementOld::from(Movement::of_str("C6")),
+    //                GameMovementOld::from(Movement::of_str("C7")),
+    //                GameMovementOld::from(Movement::of_str("C8")),
     //            ]
     //        );
     //    }
@@ -165,14 +165,14 @@ mod tests {
     //        assert_eq!(
     //            movements_of_piece(&board, &bounds, &Pos::of_str("D4")),
     //            [
-    //                GameMovement::from(Movement::of_str("E5")),
-    //                GameMovement::from(Movement::of_str("E4")),
-    //                GameMovement::from(Movement::of_str("E3")),
-    //                GameMovement::from(Movement::of_str("D3")),
-    //                GameMovement::from(Movement::of_str("C3")),
-    //                GameMovement::from(Movement::of_str("C4")),
-    //                GameMovement::from(Movement::of_str("C5")),
-    //                GameMovement::from(Movement::of_str("D5")),
+    //                GameMovementOld::from(Movement::of_str("E5")),
+    //                GameMovementOld::from(Movement::of_str("E4")),
+    //                GameMovementOld::from(Movement::of_str("E3")),
+    //                GameMovementOld::from(Movement::of_str("D3")),
+    //                GameMovementOld::from(Movement::of_str("C3")),
+    //                GameMovementOld::from(Movement::of_str("C4")),
+    //                GameMovementOld::from(Movement::of_str("C5")),
+    //                GameMovementOld::from(Movement::of_str("D5")),
     //            ]
     //        );
     //    }
@@ -183,7 +183,7 @@ mod tests {
     //        let bounds = standard_chess().bounds;
     //        assert_eq!(
     //            movements_of_piece(&board, &bounds, &Pos::of_str("C5")),
-    //            [GameMovement::from(Movement::of_str("C6"))]
+    //            [GameMovementOld::from(Movement::of_str("C6"))]
     //        );
     //    }
 }

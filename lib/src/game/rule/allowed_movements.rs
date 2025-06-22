@@ -66,7 +66,7 @@ use crate::{
 //pub fn allowed_movements_of_player(
 //    game: &Game,
 //    player: &GamePlayer,
-//) -> HashMap<Pos, Vec<GameMovement>> {
+//) -> HashMap<Pos, Vec<GameMovementOld>> {
 //    let mut result = HashMap::new();
 //
 //    let board = game.board.iter();
@@ -82,7 +82,7 @@ use crate::{
 //                match piece.color {
 //                    Color::White => {
 //                        if white_king_can_short_castling(&game.board, &game.history) {
-//                            naive_movements.push(GameMovement {
+//                            naive_movements.push(GameMovementOld {
 //                                movement: Movement {
 //                                    piece: piece.clone(),
 //                                    from: pos,
@@ -131,7 +131,7 @@ mod tests {
 //        piece::Piece,
 //    };
 
-//    use super::{GameMovement, allowed_movements_of_player};
+//    use super::{GameMovementOld, allowed_movements_of_player};
 
 //    #[test]
 //    fn test_allowed_movements_of_player() {
@@ -142,71 +142,71 @@ mod tests {
 //                (
 //                    Pos::of_str("A2"),
 //                    vec![
-//                        GameMovement::from(Movement::of_str("♙", "A2", "A3")),
-//                        GameMovement::from(Movement::of_str("♙", "A2", "A4")),
+//                        GameMovementOld::from(Movement::of_str("♙", "A2", "A3")),
+//                        GameMovementOld::from(Movement::of_str("♙", "A2", "A4")),
 //                    ]
 //                ),
 //                (
 //                    Pos::of_str("B2"),
 //                    vec![
-//                        GameMovement::from(Movement::of_str("♙", "B2", "B3")),
-//                        GameMovement::from(Movement::of_str("♙", "B2", "B4")),
+//                        GameMovementOld::from(Movement::of_str("♙", "B2", "B3")),
+//                        GameMovementOld::from(Movement::of_str("♙", "B2", "B4")),
 //                    ]
 //                ),
 //                (
 //                    Pos::of_str("C2"),
 //                    vec![
-//                        GameMovement::from(Movement::of_str("♙", "C2", "C3")),
-//                        GameMovement::from(Movement::of_str("♙", "C2", "C4")),
+//                        GameMovementOld::from(Movement::of_str("♙", "C2", "C3")),
+//                        GameMovementOld::from(Movement::of_str("♙", "C2", "C4")),
 //                    ]
 //                ),
 //                (
 //                    Pos::of_str("D2"),
 //                    vec![
-//                        GameMovement::from(Movement::of_str("♙", "D2", "D3")),
-//                        GameMovement::from(Movement::of_str("♙", "D2", "D4")),
+//                        GameMovementOld::from(Movement::of_str("♙", "D2", "D3")),
+//                        GameMovementOld::from(Movement::of_str("♙", "D2", "D4")),
 //                    ]
 //                ),
 //                (
 //                    Pos::of_str("E2"),
 //                    vec![
-//                        GameMovement::from(Movement::of_str("♙", "E2", "E3")),
-//                        GameMovement::from(Movement::of_str("♙", "E2", "E4")),
+//                        GameMovementOld::from(Movement::of_str("♙", "E2", "E3")),
+//                        GameMovementOld::from(Movement::of_str("♙", "E2", "E4")),
 //                    ]
 //                ),
 //                (
 //                    Pos::of_str("F2"),
 //                    vec![
-//                        GameMovement::from(Movement::of_str("♙", "F2", "F3")),
-//                        GameMovement::from(Movement::of_str("♙", "F2", "F4")),
+//                        GameMovementOld::from(Movement::of_str("♙", "F2", "F3")),
+//                        GameMovementOld::from(Movement::of_str("♙", "F2", "F4")),
 //                    ]
 //                ),
 //                (
 //                    Pos::of_str("G2"),
 //                    vec![
-//                        GameMovement::from(Movement::of_str("♙", "G2", "G3")),
-//                        GameMovement::from(Movement::of_str("♙", "G2", "G4")),
+//                        GameMovementOld::from(Movement::of_str("♙", "G2", "G3")),
+//                        GameMovementOld::from(Movement::of_str("♙", "G2", "G4")),
 //                    ]
 //                ),
 //                (
 //                    Pos::of_str("H2"),
 //                    vec![
-//                        GameMovement::from(Movement::of_str("♙", "H2", "H3")),
-//                        GameMovement::from(Movement::of_str("♙", "H2", "H4")),
+//                        GameMovementOld::from(Movement::of_str("♙", "H2", "H3")),
+//                        GameMovementOld::from(Movement::of_str("♙", "H2", "H4")),
 //                    ]
 //                ),
 //                (
 //                    Pos::of_str("B1"),
 //                    vec![
-//                        GameMovement::from(Movement::of_str("♘", "B1", "A3")),
-//                        GameMovement::from(Movement::of_str("♘", "B1", "C3")),
+//                        GameMovementOld::from(Movement::of_str("♘", "B1", "A3")),
+//                        GameMovementOld::from(Movement::of_str("♘", "B1", "C3")),
 //                    ]
 //                ),
 //                (
 //                    Pos::of_str("G1"),
 //                    vec![
-//                        GameMovement::from(Movement::of_str("♘", "G1", "F3")),
-//                        GameMovement::from(Movement::of_str("♘", "G1", "H3")),
+//                        GameMovementOld::from(Movement::of_str("♘", "G1", "F3")),
+//                        GameMovementOld::from(Movement::of_str("♘", "G1", "H3")),
 //                    ]
 //                ),
 //            ])

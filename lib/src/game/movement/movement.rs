@@ -1,34 +1,41 @@
-use crate::{board::pos::Pos, movement::Movement};
+use crate::{board::pos::Pos, movement::Movement, piece::Piece};
 
 #[derive(Debug, PartialEq)]
-pub struct BasicMovement {
+pub struct DefaultMovement {
     pub movement: Movement,
 }
 
 #[derive(Debug, PartialEq)]
-pub struct EnPassant {
+pub struct EnPassantMovement {
     pub movement: Movement,
 }
 
 #[derive(Debug, PartialEq)]
-pub struct Castling {
+pub struct CastlingMovement {
     pub movement: Movement,
 }
 
 #[derive(Debug, PartialEq)]
-pub struct Promotion {
-    pub movement: Movement,
+pub struct PromotionMovement {
+    pub piece: Piece,
+}
+
+pub enum GameMovement {
+    Default(DefaultMovement),
+    EnPassant(EnPassantMovement),
+    Castling(CastlingMovement),
+    Promotion(PromotionMovement),
 }
 
 #[derive(Debug, PartialEq)]
-pub struct GameMovement {
+pub struct GameMovementOld {
     pub movement: Movement,
     pub capture: Option<Pos>,
     pub secondary_movement: Option<Movement>,
 }
 
-impl From<Movement> for GameMovement {
+impl From<Movement> for GameMovementOld {
     fn from(movement: Movement) -> Self {
-        GameMovement { movement, capture: None, secondary_movement: None }
+        GameMovementOld { movement, capture: None, secondary_movement: None }
     }
 }
