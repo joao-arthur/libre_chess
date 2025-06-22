@@ -3,6 +3,7 @@ use std::collections::HashMap;
 use crate::{
     board::pos::Pos,
     color::Color,
+    movement::Movement,
     game::{
         movement::{
             naive,
@@ -12,8 +13,8 @@ use crate::{
                     white_king_can_long_castling, white_king_can_short_castling,
                 },
                 en_passant::en_passant,
-            }, Movement,
-        }, rule::turn::evaluate_turn, Game
+            },
+        }, player::GamePlayer, rule::turn::evaluate_turn, Game
     },
     piece::Type,
 };

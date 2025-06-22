@@ -1,7 +1,8 @@
 use crate::{
     board::pos::Pos,
     color::Color,
-    game::{board::GameBoard, movement::Movement},
+    movement::Movement,
+    game::{board::GameBoard},
     piece::Piece,
 };
 
@@ -63,7 +64,8 @@ mod tests {
 
     use crate::{
         board::pos::Pos,
-        game::{movement::Movement, piece},
+        movement::Movement,
+        game::piece,
     };
 
     use super::en_passant;

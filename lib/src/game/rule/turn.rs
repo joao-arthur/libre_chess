@@ -10,7 +10,8 @@ mod tests {
 
     use crate::{
         color::Color,
-        game::{Game, board::GameBoard, movement::Movement},
+        movement::Movement,
+        game::{Game, board::GameBoard},
         geometry::poligon::rect::RectU8,
     };
 

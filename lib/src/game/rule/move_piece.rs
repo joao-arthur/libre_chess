@@ -1,9 +1,10 @@
 use crate::{
     board::pos::Pos,
+    movement::Movement,
     game::{
         Game,
         capture::GameCapture,
-        movement::{Movement, naive},
+        movement::naive,
         rule::turn::evaluate_turn,
     },
     piece::Piece,

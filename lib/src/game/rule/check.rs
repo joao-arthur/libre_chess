@@ -25,7 +25,8 @@ mod tests {
     use crate::{
         board::pos::pos_of_str_slice,
         color::Color,
-        game::{Game, board::of_str, movement::Movement, player::GamePlayer},
+        movement::Movement,
+        game::{Game, board::of_str, player::GamePlayer},
         geometry::poligon::rect::RectU8,
     };
 

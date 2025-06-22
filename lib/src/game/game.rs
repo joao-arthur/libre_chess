@@ -2,7 +2,8 @@ use std::collections::HashMap;
 
 use crate::{
     color::Color,
-    game::{board::GameBoard, movement::Movement, player::GamePlayer},
+    movement::Movement,
+    game::{board::GameBoard, player::GamePlayer},
     geometry::poligon::rect::RectU8,
 };
 
