@@ -28,7 +28,7 @@ pub fn movements(board: &GameBoard, bounds: &RectU8, pos: &Pos) -> Vec<GameMovem
                             break;
                         } else {
                             result.push(GameMovementOld::from(Movement {
-                                piece: piece.clone(),
+                                piece: *piece,
                                 from: pos.clone(),
                                 to: curr_pos,
                             }));
@@ -36,7 +36,7 @@ pub fn movements(board: &GameBoard, bounds: &RectU8, pos: &Pos) -> Vec<GameMovem
                         }
                     } else {
                         result.push(GameMovementOld::from(Movement {
-                            piece: piece.clone(),
+                            piece: *piece,
                             from: pos.clone(),
                             to: curr_pos,
                         }));

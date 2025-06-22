@@ -33,7 +33,7 @@ pub fn movements(board: &GameBoard, bounds: &RectU8, pos: &Pos) -> Vec<GameMovem
             if let Some(curr_pos) = curr_pos {
                 if board.get(&curr_pos).is_none() {
                     result.push(GameMovementOld::from(Movement {
-                        piece: piece.clone(),
+                        piece: *piece,
                         from: pos.clone(),
                         to: curr_pos,
                     }));
@@ -45,7 +45,7 @@ pub fn movements(board: &GameBoard, bounds: &RectU8, pos: &Pos) -> Vec<GameMovem
                 if let Some(curr_piece) = board.get(&curr_pos) {
                     if curr_piece.color != piece.color {
                         result.push(GameMovementOld::from(Movement {
-                            piece: piece.clone(),
+                            piece: *piece,
                             from: pos.clone(),
                             to: curr_pos,
                         }));

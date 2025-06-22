@@ -1,8 +1,6 @@
-use std::collections::HashSet;
 
 use crate::{
     board::pos::Pos,
-    color::Color,
     game::{board::GameBoard, movement::movement::GameMovementOld},
     geometry::poligon::rect::RectU8,
     piece::Type,

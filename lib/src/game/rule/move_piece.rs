@@ -3,14 +3,10 @@ use crate::{
     game::{
         Game,
         capture::GameCapture,
-        movement::{
-            movement::{
+        movement::movement::{
                 CastlingMovement, DefaultMovement, EnPassantMovement, GameMovement,
                 PromotionMovement,
             },
-            default,
-        },
-        rule::turn::evaluate_turn,
     },
 };
 
@@ -57,16 +53,14 @@ fn castling_move(game: &mut Game, castling: CastlingMovement) {
                     rook,
                 );
             }
-        } else {
-            if let Some(rook) = game
-                .board
-                .remove(&Pos { col: castling.movement.to.col - 1, row: castling.movement.to.row })
-            {
-                game.board.insert(
-                    Pos { col: castling.movement.to.col + 1, row: castling.movement.to.row },
-                    rook,
-                );
-            }
+        } else if let Some(rook) = game
+            .board
+            .remove(&Pos { col: castling.movement.to.col - 1, row: castling.movement.to.row })
+        {
+            game.board.insert(
+                Pos { col: castling.movement.to.col + 1, row: castling.movement.to.row },
+                rook,
+            );
         }
     }
     game.history.push(castling.movement);
