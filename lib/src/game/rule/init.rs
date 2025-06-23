@@ -2,7 +2,10 @@ use std::collections::HashMap;
 
 use crate::{
     color::Color,
-    game::{Game, mode::GameMode, movement::menace, player::GamePlayer},
+    game::{
+        Game, mode::GameMode, movement::menace, player::GamePlayer,
+        rule::allowed_movements::allowed_movements_of_player,
+    },
 };
 
 pub fn init_game(mode: GameMode) -> Game {
@@ -13,6 +16,7 @@ pub fn init_game(mode: GameMode) -> Game {
                 color: Color::Black,
                 captures: Vec::new(),
                 menace: menace::menace_of_player(&mode.initial_board, &mode.bounds, &Color::Black),
+                moves: HashMap::new(),
             },
         ),
         (
@@ -21,10 +25,16 @@ pub fn init_game(mode: GameMode) -> Game {
                 color: Color::White,
                 captures: Vec::new(),
                 menace: menace::menace_of_player(&mode.initial_board, &mode.bounds, &Color::White),
+                moves: HashMap::new(),
             },
         ),
     ]);
-    Game { board: mode.initial_board, bounds: mode.bounds, players, history: Vec::new() }
+    let mut game =
+        Game { board: mode.initial_board, bounds: mode.bounds, players, history: Vec::new() };
+    let mut player = game.players.get_mut(&Color::White).unwrap();
+    let moves = allowed_movements_of_player(&game.board, &game.bounds, &game.history, &Color::White);
+    player.moves = moves;
+    game
 }
 
 #[cfg(test)]
@@ -93,6 +103,7 @@ mod tests {
                             ])
                             .into_iter()
                             .collect(),
+                            moves: HashMap::new(),
                         },
                     ),
                     (
@@ -107,6 +118,7 @@ mod tests {
                             ])
                             .into_iter()
                             .collect(),
+                            moves: HashMap::new(),
                         },
                     ),
                 ]),

@@ -20,7 +20,7 @@ pub fn is_in_check(game: &Game) -> bool {
 
 #[cfg(test)]
 mod tests {
-    use std::collections::HashMap;
+    use std::{collections::HashMap, hash::Hash};
 
     use crate::{
         board::pos::pos_of_str_slice,
@@ -55,6 +55,7 @@ mod tests {
                         menace: pos_of_str_slice(["D1", "D2", "F1", "F2", "E3", "E4"])
                             .into_iter()
                             .collect(),
+                        moves: HashMap::new()
                     },
                 ),
                 (
@@ -65,6 +66,7 @@ mod tests {
                         menace: pos_of_str_slice(["D8", "D7", "F8", "F7", "E6", "E5"])
                             .into_iter()
                             .collect(),
+                        moves: HashMap::new()
                     },
                 ),
             ]),
@@ -95,6 +97,7 @@ mod tests {
                         menace: pos_of_str_slice(["D1", "D2", "E2", "F1", "F2", "D8", "E8", "F8"])
                             .into_iter()
                             .collect(),
+                        moves: HashMap::new(),
                     },
                 ),
                 (
@@ -105,6 +108,7 @@ mod tests {
                         menace: pos_of_str_slice(["D8", "D7", "F8", "F7", "E6", "E5"])
                             .into_iter()
                             .collect(),
+                        moves: HashMap::new(),
                     },
                 ),
             ]),

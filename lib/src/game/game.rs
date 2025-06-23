@@ -7,10 +7,14 @@ use crate::{
     movement::Movement,
 };
 
+pub type GameBounds = RectU8;
+pub type GamePlayers = HashMap<Color, GamePlayer>;
+pub type GameHistory = Vec<Movement>;
+
 #[derive(Debug, PartialEq)]
 pub struct Game {
     pub board: GameBoard,
-    pub bounds: RectU8,
-    pub players: HashMap<Color, GamePlayer>,
+    pub bounds: GameBounds,
+    pub players: GamePlayers,
     pub history: Vec<Movement>,
 }

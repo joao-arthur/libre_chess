@@ -39,6 +39,7 @@ pub struct PromotionMovement {
     pub piece: Piece,
 }
 
+#[derive(Debug, PartialEq)]
 pub enum GameMovement {
     Default(DefaultMovement),
     EnPassant(EnPassantMovement),

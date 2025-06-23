@@ -1,14 +1,14 @@
 use core::f64;
 use libre_chess_lib::{
-    board::pos::Pos,
-    color::Color,
-    game::{
+    board::pos::Pos, color::Color, game::{
         mode::standard_chess,
-        movement::Movement,
-        rule::{allowed_movements::{allowed_movements_of_piece, allowed_movements_of_player}, check::is_in_check, init::init_game, move_piece::move_piece},
-        Game,
+        rule::{allowed_movements::{allowed_movements_of_piece, allowed_movements_of_player},
+        check::is_in_check,
+        init::init_game,
+        move_piece::move_piece, turn::evaluate_turn
     },
-    piece::Type,
+        Game,
+    }, movement::Movement, piece::Type
 };
 use std::{cell::RefCell, collections::HashSet, rc::Rc};
 use wasm_bindgen::{prelude::Closure, JsCast, JsValue};
@@ -258,9 +258,9 @@ pub fn app_render() {
 
 pub fn app_click(row: u16, col: u16) {
     MODEL.with(|i| {
-        console::log_1(&format!("row {} col {}", row, col).into());
-
         let mut m = i.borrow_mut();
+        let turn = evaluate_turn(&m.game.history);
+        let player = &m.game.players.get(&turn).unwrap();
         let dim = m.settings.render_settings.dim as f64;
         let cell_size = dim / 8.0;
         let cell_row = (8 - ((((row as f64) / cell_size).floor() as u8) as i16)) as u8 -1;
@@ -271,7 +271,6 @@ pub fn app_click(row: u16, col: u16) {
                 m.game.board.get(m.settings.selected_piece.as_ref().unwrap()).unwrap().clone();
             let from = m.settings.selected_piece.clone().unwrap();
             let to = pos;
-           // console::log_1(&format!("is in check {}", is_in_check(&m.game)).into());
             move_piece(&mut m.game, Movement { piece: piece.clone(), from, to });
             m.settings.selected_piece = None;
             m.settings.selected_piece_movements = HashSet::new();
@@ -283,7 +282,7 @@ pub fn app_click(row: u16, col: u16) {
                     m.settings.selected_piece_movements = HashSet::new();
                 } else {
                     m.settings.selected_squares.clear();
-                    let movements = allowed_movements_of_piece(&m.game, &pos);
+                    let movements = player.moves;
                     m.settings.selected_piece = Some(pos.clone());
                     m.settings.selected_piece_movements = movements.into_iter().collect();
                 }

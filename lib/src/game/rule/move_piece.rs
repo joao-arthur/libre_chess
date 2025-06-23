@@ -1,11 +1,9 @@
 use crate::{
     board::pos::Pos,
     game::{
-        Game,
-        capture::GameCapture,
-        movement::movement::{
+        capture::GameCapture, movement::movement::{
             CastlingMovement, DefaultMovement, EnPassantMovement, GameMovement, PromotionMovement,
-        },
+        }, rule::{allowed_movements::allowed_movements_of_player, turn::evaluate_turn}, Game
     },
 };
 
@@ -70,7 +68,7 @@ fn promotion_move(game: &mut Game, promotion: PromotionMovement) {
     // edit the pawn move
 }
 
-pub fn move_piece(game: &mut Game, movement: GameMovement) {
+fn move_piece(game: &mut Game, movement: GameMovement) {
     match movement {
         GameMovement::Default(movement) => default_move(game, movement),
         GameMovement::EnPassant(en_passant) => en_passant_move(game, en_passant),
@@ -79,5 +77,20 @@ pub fn move_piece(game: &mut Game, movement: GameMovement) {
     }
 }
 
+pub fn app_move_piece(game: &mut Game, movement: GameMovement) {
+    let turn = evaluate_turn(&game.history);
+    move_piece(game, movement);
+    for (color, player) in game.players.iter_mut() {
+        if &turn == color {
+            player.moves.drain();
+        } else {
+           player.moves.extend(allowed_movements_of_player(&game.board, &game.bounds, &game.history, &color));
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {}
+
+
+// work on selection
