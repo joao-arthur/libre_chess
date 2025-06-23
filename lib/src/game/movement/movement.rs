@@ -46,15 +46,26 @@ pub enum GameMovement {
     Promotion(PromotionMovement),
 }
 
-#[derive(Debug, PartialEq)]
-pub struct GameMovementOld {
-    pub movement: Movement,
-    pub capture: Option<Pos>,
-    pub secondary_movement: Option<Movement>,
+impl From<DefaultMovement> for GameMovement {
+    fn from(movement: DefaultMovement) -> Self {
+        GameMovement::Default(movement)
+    }
 }
 
-impl From<Movement> for GameMovementOld {
-    fn from(movement: Movement) -> Self {
-        GameMovementOld { movement, capture: None, secondary_movement: None }
+impl From<EnPassantMovement> for GameMovement {
+    fn from(movement: EnPassantMovement) -> Self {
+        GameMovement::EnPassant(movement)
+    }
+}
+
+impl From<CastlingMovement> for GameMovement {
+    fn from(movement: CastlingMovement) -> Self {
+        GameMovement::Castling(movement)
+    }
+}
+
+impl From<PromotionMovement> for GameMovement {
+    fn from(movement: PromotionMovement) -> Self {
+        GameMovement::Promotion(movement)
     }
 }
