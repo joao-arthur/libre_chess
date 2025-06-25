@@ -4,7 +4,7 @@ use crate::{
 };
 
 pub fn is_in_check(game: &Game) -> bool {
-    let curr_turn = evaluate_turn(game);
+    let curr_turn = evaluate_turn(&game.history);
     for (pos, piece) in game.board.iter() {
         if piece.t == Type::King && piece.color == curr_turn {
             for player in game.players.values() {

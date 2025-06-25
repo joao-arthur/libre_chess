@@ -1,4 +1,4 @@
-use libre_chess_lib::{board::pos::Pos, game::Board, piece::Piece};
+use libre_chess_lib::{board::pos::Pos, game::GameBoard, piece::Piece};
 
 #[derive(Debug, PartialEq)]
 pub struct RectF64 {
@@ -19,7 +19,7 @@ pub struct ValueToRender {
     pub rect: RectF64,
 }
 
-pub fn get_values_to_render(board: &Board, settings: &RenderSettings) -> Vec<ValueToRender> {
+pub fn get_values_to_render(board: &GameBoard, settings: &RenderSettings) -> Vec<ValueToRender> {
     let mut values_to_render: Vec<ValueToRender> = Vec::new();
     let cell_size = settings.dim as f64 / 8.0;
     for row in 0..8 {

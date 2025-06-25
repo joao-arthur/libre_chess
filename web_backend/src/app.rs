@@ -1,66 +1,30 @@
 use core::f64;
-use libre_chess_lib::{
-    board::pos::Pos, color::Color, game::{
-        mode::standard_chess,
-        rule::{allowed_movements::{allowed_movements_of_piece, allowed_movements_of_player},
-        check::is_in_check,
-        init::init_game,
-        move_piece::move_piece, turn::evaluate_turn
-    },
-        Game,
-    }, movement::Movement, piece::Type
-};
 use std::{cell::RefCell, collections::HashSet, rc::Rc};
 use wasm_bindgen::{prelude::Closure, JsCast, JsValue};
 use web_sys::{
-    console,
-    js_sys::{self, Math},
+    js_sys,
     window, Blob, BlobPropertyBag, CanvasRenderingContext2d, HtmlImageElement, Url,
 };
 
-use crate::{
-    board_color::{board_color_purple, try_get_board_color, BoardColor},
-    board_set::{board_set_normal_1, try_get_board_set, BoardSet},
-    render::{get_values_to_render, RenderSettings},
+use libre_chess_lib::{
+    board::pos::Pos,
+    color::Color,
+    game::{
+        mode::standard_chess,
+        rule::{
+            move_piece::app_move_piece,
+            turn::evaluate_turn,
+        },
+    },
+    movement::Movement,
+    piece::Type
 };
 
-#[derive(Debug, PartialEq)]
-pub struct AppSettings {
-    pub render_settings: RenderSettings,
-    pub board_set: BoardSet,
-    pub board_set_id: String,
-    pub board_color: BoardColor,
-    pub board_color_id: String,
-    pub selected_squares: HashSet<Pos>,
-    pub selected_piece: Option<Pos>,
-    pub selected_piece_movements: HashSet<Pos>,
-}
-
-#[derive(Debug, PartialEq)]
-pub struct Model {
-    pub game: Game,
-    pub settings: AppSettings,
-    pub context: Option<CanvasRenderingContext2d>,
-}
-
-impl Default for Model {
-    fn default() -> Self {
-        Model {
-            game: init_game(standard_chess()),
-            settings: AppSettings {
-                render_settings: RenderSettings { dim: 0 },
-                board_set: board_set_normal_1(),
-                board_set_id: "normal_1".into(),
-                board_color: board_color_purple(),
-                board_color_id: "purple".into(),
-                selected_squares: HashSet::new(),
-                selected_piece: None,
-                selected_piece_movements: HashSet::new(),
-            },
-            context: None,
-        }
-    }
-}
+use crate::{
+    board_color::try_get_board_color,
+    board_set::try_get_board_set,
+    model::Model, render::get_values_to_render,
+};
 
 #[derive(Debug, PartialEq, Clone)]
 pub enum Prop {
@@ -256,6 +220,7 @@ pub fn app_render() {
     });
 }
 
+
 pub fn app_click(row: u16, col: u16) {
     MODEL.with(|i| {
         let mut m = i.borrow_mut();
@@ -267,11 +232,10 @@ pub fn app_click(row: u16, col: u16) {
         let cell_col = ((col as f64) / cell_size).floor() as u8;
         let pos = Pos { row: cell_row, col: cell_col };
         if m.settings.selected_piece_movements.contains(&pos) {
-            let piece =
-                m.game.board.get(m.settings.selected_piece.as_ref().unwrap()).unwrap().clone();
+            let piece = m.game.board.get(m.settings.selected_piece.as_ref().unwrap()).unwrap().clone();
             let from = m.settings.selected_piece.clone().unwrap();
             let to = pos;
-            move_piece(&mut m.game, Movement { piece: piece.clone(), from, to });
+            app_move_piece(&mut m.game, Movement { piece: piece.clone(), from, to });
             m.settings.selected_piece = None;
             m.settings.selected_piece_movements = HashSet::new();
             m.settings.selected_squares = HashSet::new()
@@ -284,7 +248,7 @@ pub fn app_click(row: u16, col: u16) {
                     m.settings.selected_squares.clear();
                     let movements = player.moves;
                     m.settings.selected_piece = Some(pos.clone());
-                    m.settings.selected_piece_movements = movements.into_iter().collect();
+                    m.settings.selected_piece_movements = movements;
                 }
             } else {
                 if m.settings.selected_piece.is_some() {

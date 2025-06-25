@@ -15,6 +15,9 @@ mod app;
 mod board_color;
 mod board_set;
 mod render;
+mod settings;
+mod model;
+mod state;
 
 #[derive(Serialize)]
 pub struct Preset {
