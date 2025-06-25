@@ -2,8 +2,7 @@ use core::f64;
 use std::{cell::RefCell, collections::HashSet, rc::Rc};
 use wasm_bindgen::{prelude::Closure, JsCast, JsValue};
 use web_sys::{
-    js_sys,
-    window, Blob, BlobPropertyBag, CanvasRenderingContext2d, HtmlImageElement, Url,
+    js_sys, window, Blob, BlobPropertyBag, CanvasRenderingContext2d, HtmlImageElement, Url,
 };
 
 use libre_chess_lib::{
@@ -11,27 +10,16 @@ use libre_chess_lib::{
     color::Color,
     game::{
         mode::standard_chess,
-        rule::{
-            move_piece::app_move_piece,
-            turn::evaluate_turn,
-        },
+        rule::{move_piece::app_move_piece, turn::evaluate_turn},
     },
     movement::Movement,
-    piece::Type
+    piece::Type,
 };
 
 use crate::{
-    board_color::try_get_board_color,
-    board_set::try_get_board_set,
-    model::Model, render::get_values_to_render,
+    app_info::AppInfo, board_color::try_get_board_color, board_set::try_get_board_set,
+    model::Model, prop::Prop, render::get_values_to_render,
 };
-
-#[derive(Debug, PartialEq, Clone)]
-pub enum Prop {
-    BoardColor,
-    BoardSet,
-    Dim,
-}
 
 thread_local! {
     static MODEL: RefCell<Model> = RefCell::new(Model::default());
@@ -56,12 +44,6 @@ fn on_change(param: Prop) {
     });
 }
 
-#[derive(Debug, PartialEq)]
-pub struct AppInfo {
-    pub board_set: String,
-    pub board_color: String,
-}
-
 pub fn app_get_settings() -> AppInfo {
     MODEL.with(|i| {
         let m = i.borrow();
@@ -71,6 +53,7 @@ pub fn app_get_settings() -> AppInfo {
         }
     })
 }
+
 pub fn app_init(context: CanvasRenderingContext2d) {
     MODEL.with(|i| {
         let mut model = i.borrow_mut();
@@ -196,7 +179,9 @@ pub fn app_render() {
                 settings.selected_squares.iter().for_each(|pos| {
                     context.fill_rect(
                         pos.col as f64 * cell_size,
-                        (settings.render_settings.dim as f64) - (pos.row as f64) * cell_size - cell_size,
+                        (settings.render_settings.dim as f64)
+                            - (pos.row as f64) * cell_size
+                            - cell_size,
                         cell_size,
                         cell_size,
                     );
@@ -208,7 +193,10 @@ pub fn app_render() {
                     context.begin_path();
                     let _ = context.arc(
                         pos.col as f64 * cell_size + cell_size / 2.0,
-                        ((settings.render_settings.dim as f64) - (pos.row as f64) * cell_size - cell_size) + cell_size / 2.0,
+                        ((settings.render_settings.dim as f64)
+                            - (pos.row as f64) * cell_size
+                            - cell_size)
+                            + cell_size / 2.0,
                         cell_size / (2.0 * f64::consts::PI),
                         0.0,
                         2.0 * f64::consts::PI,
@@ -220,7 +208,6 @@ pub fn app_render() {
     });
 }
 
-
 pub fn app_click(row: u16, col: u16) {
     MODEL.with(|i| {
         let mut m = i.borrow_mut();
@@ -228,11 +215,12 @@ pub fn app_click(row: u16, col: u16) {
         let player = &m.game.players.get(&turn).unwrap();
         let dim = m.settings.render_settings.dim as f64;
         let cell_size = dim / 8.0;
-        let cell_row = (8 - ((((row as f64) / cell_size).floor() as u8) as i16)) as u8 -1;
+        let cell_row = (8 - ((((row as f64) / cell_size).floor() as u8) as i16)) as u8 - 1;
         let cell_col = ((col as f64) / cell_size).floor() as u8;
         let pos = Pos { row: cell_row, col: cell_col };
         if m.settings.selected_piece_movements.contains(&pos) {
-            let piece = m.game.board.get(m.settings.selected_piece.as_ref().unwrap()).unwrap().clone();
+            let piece =
+                m.game.board.get(m.settings.selected_piece.as_ref().unwrap()).unwrap().clone();
             let from = m.settings.selected_piece.clone().unwrap();
             let to = pos;
             app_move_piece(&mut m.game, Movement { piece: piece.clone(), from, to });

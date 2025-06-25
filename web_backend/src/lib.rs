@@ -12,11 +12,13 @@ use wasm_bindgen::{
 use web_sys::{js_sys::Function, CanvasRenderingContext2d, HtmlCanvasElement, MouseEvent};
 
 mod app;
+mod app_info;
 mod board_color;
 mod board_set;
+mod model;
+mod prop;
 mod render;
 mod settings;
-mod model;
 mod state;
 
 #[derive(Serialize)]

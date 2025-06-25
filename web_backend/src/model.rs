@@ -5,7 +5,8 @@ use web_sys::CanvasRenderingContext2d;
 use libre_chess_lib::game::{mode::standard_chess, rule::init::init_game, Game};
 
 use crate::{
-    board_color::board_color_purple, board_set::board_set_normal_1, render::RenderSettings, settings::AppSettings
+    board_color::board_color_purple, board_set::board_set_normal_1, render::RenderSettings,
+    settings::AppSettings,
 };
 
 #[derive(Debug, PartialEq)]
@@ -33,4 +34,3 @@ impl Default for Model {
         }
     }
 }
-

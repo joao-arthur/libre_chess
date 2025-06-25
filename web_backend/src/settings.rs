@@ -2,7 +2,7 @@ use std::collections::HashSet;
 
 use libre_chess_lib::board::pos::Pos;
 
-use crate::{ board_color::BoardColor, board_set::BoardSet, render::RenderSettings};
+use crate::{board_color::BoardColor, board_set::BoardSet, render::RenderSettings};
 
 #[derive(Debug, PartialEq)]
 pub struct AppSettings {
