@@ -1,9 +1,12 @@
 use crate::{
     board::pos::Pos,
     game::{
-        capture::GameCapture, movement::movement::{
+        Game,
+        capture::GameCapture,
+        movement::movement::{
             CastlingMovement, DefaultMovement, EnPassantMovement, GameMovement, PromotionMovement,
-        }, rule::{allowed_movements::allowed_movements_of_player, turn::evaluate_turn}, Game
+        },
+        rule::{allowed_movements::allowed_movements_of_player, turn::evaluate_turn},
     },
 };
 
@@ -84,13 +87,17 @@ pub fn app_move_piece(game: &mut Game, movement: GameMovement) {
         if &turn == color {
             player.moves.drain();
         } else {
-           player.moves.extend(allowed_movements_of_player(&game.board, &game.bounds, &game.history, &color));
+            player.moves.extend(allowed_movements_of_player(
+                &game.board,
+                &game.bounds,
+                &game.history,
+                &color,
+            ));
         }
     }
 }
 
 #[cfg(test)]
 mod tests {}
-
 
 // work on selection

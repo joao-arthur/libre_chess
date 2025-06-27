@@ -1,6 +1,9 @@
 use std::collections::HashSet;
 
-use crate::{board::pos::Pos, game::{movement::movement::GameMovement, GameBoard}};
+use crate::{
+    board::pos::Pos,
+    game::{GameBoard, movement::movement::GameMovement},
+};
 
 #[derive(Debug, PartialEq)]
 struct Selection {
@@ -10,7 +13,11 @@ struct Selection {
 }
 
 pub fn toggle(selection: &mut Selection, board: &GameBoard, pos: Pos) {
-    selection.selected_squares.insert(pos);
+    if selection.selected_squares.contains(&pos) {
+        selection.selected_squares.remove(&pos);
+    } else {
+        selection.selected_squares.insert(pos);
+    }
 }
 
 #[cfg(test)]
@@ -19,7 +26,7 @@ mod tests {
 
     use crate::{board::pos::Pos, game::mode::standard_chess};
 
-    use super::{toggle, Selection};
+    use super::{Selection, toggle};
 
     #[test]
     fn toggle_select_square() {
@@ -30,11 +37,33 @@ mod tests {
         };
         let board = standard_chess().initial_board;
         toggle(&mut selection, &board, Pos::of_str("D4"));
-        assert_eq!(selection, Selection {
+        assert_eq!(
+            selection,
+            Selection {
+                selected_squares: HashSet::from([Pos::of_str("D4")]),
+                selected_piece: None,
+                selected_piece_movements: Vec::new(),
+            }
+        )
+    }
+
+    #[test]
+    fn toggle_unselect_square() {
+        let mut selection = Selection {
             selected_squares: HashSet::from([Pos::of_str("D4")]),
             selected_piece: None,
             selected_piece_movements: Vec::new(),
-        })
+        };
+        let board = standard_chess().initial_board;
+        toggle(&mut selection, &board, Pos::of_str("D4"));
+        assert_eq!(
+            selection,
+            Selection {
+                selected_squares: HashSet::new(),
+                selected_piece: None,
+                selected_piece_movements: Vec::new(),
+            }
+        )
     }
 }
 
@@ -62,4 +91,3 @@ SelectedPiece => {
         se foi peça de outra cor, limpa seleçao, estado vai ser neutro
 }
 */
- 

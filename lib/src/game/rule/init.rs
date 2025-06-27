@@ -32,7 +32,8 @@ pub fn init_game(mode: GameMode) -> Game {
     let mut game =
         Game { board: mode.initial_board, bounds: mode.bounds, players, history: Vec::new() };
     let mut player = game.players.get_mut(&Color::White).unwrap();
-    let moves = allowed_movements_of_player(&game.board, &game.bounds, &game.history, &Color::White);
+    let moves =
+        allowed_movements_of_player(&game.board, &game.bounds, &game.history, &Color::White);
     player.moves = moves;
     game
 }
