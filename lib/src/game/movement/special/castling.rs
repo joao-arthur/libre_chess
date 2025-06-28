@@ -1,6 +1,6 @@
 use crate::{
     board::pos::Pos,
-    game::{board::GameBoard, movement::movement::CastlingMovement},
+    game::{board::GameBoard, game::GameHistory, movement::movement::CastlingMovement},
     geometry::poligon::rect::RectU8,
     movement::Movement,
     piece::Type,
@@ -9,7 +9,7 @@ use crate::{
 pub fn movements(
     board: &GameBoard,
     bounds: &RectU8,
-    history: &Vec<Movement>,
+    history: &GameHistory,
     pos: &Pos,
 ) -> Vec<CastlingMovement> {
     let mut result: Vec<CastlingMovement> = Vec::new();

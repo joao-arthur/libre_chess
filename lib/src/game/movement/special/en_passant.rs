@@ -1,12 +1,12 @@
 use crate::{
     board::pos::Pos,
     color::Color,
-    game::{board::GameBoard, movement::movement::EnPassantMovement},
+    game::{board::GameBoard, game::GameHistory, movement::movement::EnPassantMovement},
     movement::Movement,
     piece::Type,
 };
 
-pub fn movements(board: &GameBoard, history: &Vec<Movement>, pos: &Pos) -> Vec<EnPassantMovement> {
+pub fn movements(board: &GameBoard, history: &GameHistory, pos: &Pos) -> Vec<EnPassantMovement> {
     if let Some(piece) = board.get(pos) {
         return match piece.color {
             Color::White => white_pawn_en_passant(board, history, pos),
@@ -18,7 +18,7 @@ pub fn movements(board: &GameBoard, history: &Vec<Movement>, pos: &Pos) -> Vec<E
 
 fn white_pawn_en_passant(
     board: &GameBoard,
-    history: &Vec<Movement>,
+    history: &GameHistory,
     pos: &Pos,
 ) -> Vec<EnPassantMovement> {
     let mut result: Vec<EnPassantMovement> = Vec::new();
@@ -57,7 +57,7 @@ fn white_pawn_en_passant(
 
 fn black_pawn_en_passant(
     board: &GameBoard,
-    history: &Vec<Movement>,
+    history: &GameHistory,
     pos: &Pos,
 ) -> Vec<EnPassantMovement> {
     let mut result: Vec<EnPassantMovement> = Vec::new();

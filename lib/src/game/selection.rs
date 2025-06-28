@@ -13,10 +13,14 @@ struct Selection {
 }
 
 pub fn toggle(selection: &mut Selection, board: &GameBoard, pos: Pos) {
-    if selection.selected_squares.contains(&pos) {
-        selection.selected_squares.remove(&pos);
+    if let Some(piece) = board.get(&pos) {
+        selection.selected_squares.clear();
     } else {
-        selection.selected_squares.insert(pos);
+        if selection.selected_squares.contains(&pos) {
+            selection.selected_squares.remove(&pos);
+        } else {
+            selection.selected_squares.insert(pos);
+        }
     }
 }
 
@@ -24,7 +28,7 @@ pub fn toggle(selection: &mut Selection, board: &GameBoard, pos: Pos) {
 mod tests {
     use std::collections::HashSet;
 
-    use crate::{board::pos::Pos, game::mode::standard_chess};
+    use crate::{board::pos::Pos, game::mode::standard_chess, piece::Piece};
 
     use super::{Selection, toggle};
 
@@ -44,7 +48,7 @@ mod tests {
                 selected_piece: None,
                 selected_piece_movements: Vec::new(),
             }
-        )
+        );
     }
 
     #[test]
@@ -63,7 +67,45 @@ mod tests {
                 selected_piece: None,
                 selected_piece_movements: Vec::new(),
             }
-        )
+        );
+    }
+
+    #[test]
+    fn select_user_piece() {
+        let mut selection = Selection {
+            selected_squares: HashSet::from([Pos::of_str("D4")]),
+            selected_piece: None,
+            selected_piece_movements: Vec::new(),
+        };
+        let board = standard_chess().initial_board;
+        toggle(&mut selection, &board, Pos::of_str("B2"));
+        assert_eq!(
+            selection,
+            Selection {
+                selected_squares: HashSet::new(),
+                selected_piece: Some(Pos::of_str("B2")),
+                selected_piece_movements: Vec::new(),
+            }
+        );
+    }
+
+    #[test]
+    fn select_other_user_piece() {
+        let mut selection = Selection {
+            selected_squares: HashSet::from([Pos::of_str("D4")]),
+            selected_piece: None,
+            selected_piece_movements: Vec::new(),
+        };
+        let board = standard_chess().initial_board;
+        toggle(&mut selection, &board, Pos::of_str("G7"));
+        assert_eq!(
+            selection,
+            Selection {
+                selected_squares: HashSet::new(),
+                selected_piece: None,
+                selected_piece_movements: Vec::new(),
+            }
+        );
     }
 }
 

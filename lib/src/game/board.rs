@@ -33,23 +33,21 @@ pub fn empty() -> GameBoard {
 }
 
 fn try_of_str<const N: usize>(rows: [&str; N]) -> Result<GameBoard, FromStringErr> {
-    if !rows
-        .join("")
-        .replace("♖", "")
-        .replace("♘", "")
-        .replace("♗", "")
-        .replace("♕", "")
-        .replace("♔", "")
-        .replace("♙", "")
-        .replace("♜", "")
-        .replace("♞", "")
-        .replace("♝", "")
-        .replace("♛", "")
-        .replace("♚", "")
-        .replace("♟", "")
-        .replace(" ", "")
-        .is_empty()
-    {
+    if !rows.join("").contains(|c| {
+        c != ' '
+            && c != '♖'
+            && c != '♘'
+            && c != '♗'
+            && c != '♕'
+            && c != '♔'
+            && c != '♙'
+            && c != '♜'
+            && c != '♞'
+            && c != '♝'
+            && c != '♛'
+            && c != '♚'
+            && c != '♟'
+    }) {
         return Err(FromStringErr::InvalidCharacter(InvalidCharacterErr));
     }
     //for line in rows {
