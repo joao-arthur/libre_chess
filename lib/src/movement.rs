@@ -9,7 +9,7 @@ pub struct Movement {
 
 impl Movement {
     pub fn try_of_str(piece: char, from: &str, to: &str) -> Option<Self> {
-        let piece = Piece::try_of_str(piece)?;
+        let piece = Piece::try_of(piece)?;
         let from = Pos::try_of_str(from)?;
         let to = Pos::try_of_str(to)?;
         Some(Movement { piece, from, to })
@@ -31,7 +31,7 @@ mod tests {
         assert_eq!(
             Movement::try_of_str('♟', "D2", "D4"),
             Some(Movement {
-                piece: Piece::of_str('♟'),
+                piece: Piece::of('♟'),
                 from: Pos::of_str("D2"),
                 to: Pos::of_str("D4")
             })
@@ -49,9 +49,7 @@ mod tests {
     fn of_str() {
         assert_eq!(
             Movement::of_str('♟', "D2", "D4"),
-            Movement {
-                piece: Piece::of_str('♟'), from: Pos::of_str("D2"), to: Pos::of_str("D4")
-            }
+            Movement { piece: Piece::of('♟'), from: Pos::of_str("D2"), to: Pos::of_str("D4") }
         );
     }
 }

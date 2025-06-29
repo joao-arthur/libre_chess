@@ -33,7 +33,7 @@ pub fn empty() -> GameBoard {
 }
 
 fn try_of_str<const N: usize>(rows: [&str; N]) -> Result<GameBoard, FromStringErr> {
-    if rows.join("").find(|c: char| c != ' ' && Piece::try_of_str(c.into()).is_none()).is_some() {
+    if rows.join("").find(|c: char| c != ' ' && Piece::try_of(c.into()).is_none()).is_some() {
         return Err(FromStringErr::InvalidCharacter(InvalidCharacterErr));
     }
     //for line in rows {
@@ -46,7 +46,7 @@ fn try_of_str<const N: usize>(rows: [&str; N]) -> Result<GameBoard, FromStringEr
     for row in 0..8 {
         for col in 0..8 {
             let pos_str = rows[7 - row as usize].chars().nth(col.into()).unwrap();
-            if let Some(piece) = Piece::try_of_str(pos_str) {
+            if let Some(piece) = Piece::try_of(pos_str) {
                 board.insert(Pos { row, col }, piece);
             }
         }
