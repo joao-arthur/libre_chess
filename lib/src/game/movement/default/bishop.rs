@@ -71,113 +71,113 @@ mod tests {
 
     #[test]
     fn movements_lonely_piece() {
-        let board = HashMap::from([piece::of_str("C5", "♝")]);
+        let board = HashMap::from([piece::of_str("C5", '♝')]);
         let bounds = standard_chess().bounds;
         assert_eq!(
             movements(&board, &bounds, &Pos::of_str("C5")),
             [
-                DefaultMovement::from(Movement::of_str("♝", "C5", "D6")),
-                DefaultMovement::from(Movement::of_str("♝", "C5", "E7")),
-                DefaultMovement::from(Movement::of_str("♝", "C5", "F8")),
-                DefaultMovement::from(Movement::of_str("♝", "C5", "D4")),
-                DefaultMovement::from(Movement::of_str("♝", "C5", "E3")),
-                DefaultMovement::from(Movement::of_str("♝", "C5", "F2")),
-                DefaultMovement::from(Movement::of_str("♝", "C5", "G1")),
-                DefaultMovement::from(Movement::of_str("♝", "C5", "B4")),
-                DefaultMovement::from(Movement::of_str("♝", "C5", "A3")),
-                DefaultMovement::from(Movement::of_str("♝", "C5", "B6")),
-                DefaultMovement::from(Movement::of_str("♝", "C5", "A7")),
+                DefaultMovement::from(Movement::of_str('♝', "C5", "D6")),
+                DefaultMovement::from(Movement::of_str('♝', "C5", "E7")),
+                DefaultMovement::from(Movement::of_str('♝', "C5", "F8")),
+                DefaultMovement::from(Movement::of_str('♝', "C5", "D4")),
+                DefaultMovement::from(Movement::of_str('♝', "C5", "E3")),
+                DefaultMovement::from(Movement::of_str('♝', "C5", "F2")),
+                DefaultMovement::from(Movement::of_str('♝', "C5", "G1")),
+                DefaultMovement::from(Movement::of_str('♝', "C5", "B4")),
+                DefaultMovement::from(Movement::of_str('♝', "C5", "A3")),
+                DefaultMovement::from(Movement::of_str('♝', "C5", "B6")),
+                DefaultMovement::from(Movement::of_str('♝', "C5", "A7")),
             ]
         );
     }
 
     #[test]
     fn movements_small_bounds() {
-        let board = HashMap::from([piece::of_str("F6", "♝")]);
+        let board = HashMap::from([piece::of_str("F6", '♝')]);
         let bounds = RectU8 { x1: 3, y1: 3, x2: 7, y2: 7 };
         assert_eq!(
             movements(&board, &bounds, &Pos::of_str("F6")),
             [
-                DefaultMovement::from(Movement::of_str("♝", "F6", "G7")),
-                DefaultMovement::from(Movement::of_str("♝", "F6", "H8")),
-                DefaultMovement::from(Movement::of_str("♝", "F6", "G5")),
-                DefaultMovement::from(Movement::of_str("♝", "F6", "H4")),
-                DefaultMovement::from(Movement::of_str("♝", "F6", "E5")),
-                DefaultMovement::from(Movement::of_str("♝", "F6", "D4")),
-                DefaultMovement::from(Movement::of_str("♝", "F6", "E7")),
-                DefaultMovement::from(Movement::of_str("♝", "F6", "D8")),
+                DefaultMovement::from(Movement::of_str('♝', "F6", "G7")),
+                DefaultMovement::from(Movement::of_str('♝', "F6", "H8")),
+                DefaultMovement::from(Movement::of_str('♝', "F6", "G5")),
+                DefaultMovement::from(Movement::of_str('♝', "F6", "H4")),
+                DefaultMovement::from(Movement::of_str('♝', "F6", "E5")),
+                DefaultMovement::from(Movement::of_str('♝', "F6", "D4")),
+                DefaultMovement::from(Movement::of_str('♝', "F6", "E7")),
+                DefaultMovement::from(Movement::of_str('♝', "F6", "D8")),
             ]
         );
     }
 
     #[test]
     fn movements_top_right_edge() {
-        let board = HashMap::from([piece::of_str("H8", "♝")]);
+        let board = HashMap::from([piece::of_str("H8", '♝')]);
         let bounds = standard_chess().bounds;
         assert_eq!(
             movements(&board, &bounds, &Pos::of_str("H8")),
             [
-                DefaultMovement::from(Movement::of_str("♝", "H8", "G7")),
-                DefaultMovement::from(Movement::of_str("♝", "H8", "F6")),
-                DefaultMovement::from(Movement::of_str("♝", "H8", "E5")),
-                DefaultMovement::from(Movement::of_str("♝", "H8", "D4")),
-                DefaultMovement::from(Movement::of_str("♝", "H8", "C3")),
-                DefaultMovement::from(Movement::of_str("♝", "H8", "B2")),
-                DefaultMovement::from(Movement::of_str("♝", "H8", "A1")),
+                DefaultMovement::from(Movement::of_str('♝', "H8", "G7")),
+                DefaultMovement::from(Movement::of_str('♝', "H8", "F6")),
+                DefaultMovement::from(Movement::of_str('♝', "H8", "E5")),
+                DefaultMovement::from(Movement::of_str('♝', "H8", "D4")),
+                DefaultMovement::from(Movement::of_str('♝', "H8", "C3")),
+                DefaultMovement::from(Movement::of_str('♝', "H8", "B2")),
+                DefaultMovement::from(Movement::of_str('♝', "H8", "A1")),
             ]
         );
     }
 
     #[test]
     fn movements_bottom_right_edge() {
-        let board = HashMap::from([piece::of_str("H1", "♝")]);
+        let board = HashMap::from([piece::of_str("H1", '♝')]);
         let bounds = standard_chess().bounds;
         assert_eq!(
             movements(&board, &bounds, &Pos::of_str("H1")),
             [
-                DefaultMovement::from(Movement::of_str("♝", "H1", "G2")),
-                DefaultMovement::from(Movement::of_str("♝", "H1", "F3")),
-                DefaultMovement::from(Movement::of_str("♝", "H1", "E4")),
-                DefaultMovement::from(Movement::of_str("♝", "H1", "D5")),
-                DefaultMovement::from(Movement::of_str("♝", "H1", "C6")),
-                DefaultMovement::from(Movement::of_str("♝", "H1", "B7")),
-                DefaultMovement::from(Movement::of_str("♝", "H1", "A8")),
+                DefaultMovement::from(Movement::of_str('♝', "H1", "G2")),
+                DefaultMovement::from(Movement::of_str('♝', "H1", "F3")),
+                DefaultMovement::from(Movement::of_str('♝', "H1", "E4")),
+                DefaultMovement::from(Movement::of_str('♝', "H1", "D5")),
+                DefaultMovement::from(Movement::of_str('♝', "H1", "C6")),
+                DefaultMovement::from(Movement::of_str('♝', "H1", "B7")),
+                DefaultMovement::from(Movement::of_str('♝', "H1", "A8")),
             ]
         );
     }
 
     #[test]
     fn movements_bottom_left_edge() {
-        let board = HashMap::from([piece::of_str("A1", "♝")]);
+        let board = HashMap::from([piece::of_str("A1", '♝')]);
         let bounds = standard_chess().bounds;
         assert_eq!(
             movements(&board, &bounds, &Pos::of_str("A1")),
             [
-                DefaultMovement::from(Movement::of_str("♝", "A1", "B2")),
-                DefaultMovement::from(Movement::of_str("♝", "A1", "C3")),
-                DefaultMovement::from(Movement::of_str("♝", "A1", "D4")),
-                DefaultMovement::from(Movement::of_str("♝", "A1", "E5")),
-                DefaultMovement::from(Movement::of_str("♝", "A1", "F6")),
-                DefaultMovement::from(Movement::of_str("♝", "A1", "G7")),
-                DefaultMovement::from(Movement::of_str("♝", "A1", "H8")),
+                DefaultMovement::from(Movement::of_str('♝', "A1", "B2")),
+                DefaultMovement::from(Movement::of_str('♝', "A1", "C3")),
+                DefaultMovement::from(Movement::of_str('♝', "A1", "D4")),
+                DefaultMovement::from(Movement::of_str('♝', "A1", "E5")),
+                DefaultMovement::from(Movement::of_str('♝', "A1", "F6")),
+                DefaultMovement::from(Movement::of_str('♝', "A1", "G7")),
+                DefaultMovement::from(Movement::of_str('♝', "A1", "H8")),
             ]
         );
     }
 
     #[test]
     fn movements_top_left_edge() {
-        let board = HashMap::from([piece::of_str("A8", "♝")]);
+        let board = HashMap::from([piece::of_str("A8", '♝')]);
         let bounds = standard_chess().bounds;
         assert_eq!(
             movements(&board, &bounds, &Pos::of_str("A8")),
             [
-                DefaultMovement::from(Movement::of_str("♝", "A8", "B7")),
-                DefaultMovement::from(Movement::of_str("♝", "A8", "C6")),
-                DefaultMovement::from(Movement::of_str("♝", "A8", "D5")),
-                DefaultMovement::from(Movement::of_str("♝", "A8", "E4")),
-                DefaultMovement::from(Movement::of_str("♝", "A8", "F3")),
-                DefaultMovement::from(Movement::of_str("♝", "A8", "G2")),
-                DefaultMovement::from(Movement::of_str("♝", "A8", "H1")),
+                DefaultMovement::from(Movement::of_str('♝', "A8", "B7")),
+                DefaultMovement::from(Movement::of_str('♝', "A8", "C6")),
+                DefaultMovement::from(Movement::of_str('♝', "A8", "D5")),
+                DefaultMovement::from(Movement::of_str('♝', "A8", "E4")),
+                DefaultMovement::from(Movement::of_str('♝', "A8", "F3")),
+                DefaultMovement::from(Movement::of_str('♝', "A8", "G2")),
+                DefaultMovement::from(Movement::of_str('♝', "A8", "H1")),
             ]
         );
     }
@@ -198,12 +198,12 @@ mod tests {
         assert_eq!(
             movements(&board, &bounds, &Pos::of_str("C5")),
             [
-                DefaultMovement::from(Movement::of_str("♗", "C5", "D6")),
-                DefaultMovement::from(Movement::of_str("♗", "C5", "D4")),
-                DefaultMovement::from(Movement::of_str("♗", "C5", "B4")),
-                DefaultMovement::from(Movement::of_str("♗", "C5", "A3")),
-                DefaultMovement::from(Movement::of_str("♗", "C5", "B6")),
-                DefaultMovement::from(Movement::of_str("♗", "C5", "A7")),
+                DefaultMovement::from(Movement::of_str('♗', "C5", "D6")),
+                DefaultMovement::from(Movement::of_str('♗', "C5", "D4")),
+                DefaultMovement::from(Movement::of_str('♗', "C5", "B4")),
+                DefaultMovement::from(Movement::of_str('♗', "C5", "A3")),
+                DefaultMovement::from(Movement::of_str('♗', "C5", "B6")),
+                DefaultMovement::from(Movement::of_str('♗', "C5", "A7")),
             ]
         );
     }
@@ -224,12 +224,12 @@ mod tests {
         assert_eq!(
             movements(&board, &bounds, &Pos::of_str("C5")),
             [
-                DefaultMovement::from(Movement::of_str("♝", "C5", "D6")),
-                DefaultMovement::from(Movement::of_str("♝", "C5", "D4")),
-                DefaultMovement::from(Movement::of_str("♝", "C5", "B4")),
-                DefaultMovement::from(Movement::of_str("♝", "C5", "A3")),
-                DefaultMovement::from(Movement::of_str("♝", "C5", "B6")),
-                DefaultMovement::from(Movement::of_str("♝", "C5", "A7")),
+                DefaultMovement::from(Movement::of_str('♝', "C5", "D6")),
+                DefaultMovement::from(Movement::of_str('♝', "C5", "D4")),
+                DefaultMovement::from(Movement::of_str('♝', "C5", "B4")),
+                DefaultMovement::from(Movement::of_str('♝', "C5", "A3")),
+                DefaultMovement::from(Movement::of_str('♝', "C5", "B6")),
+                DefaultMovement::from(Movement::of_str('♝', "C5", "A7")),
             ]
         );
     }

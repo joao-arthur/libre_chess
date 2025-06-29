@@ -44,7 +44,7 @@ mod tests {
 
     #[test]
     fn menace_lonely_piece() {
-        let board = HashMap::from([piece::of_str("D4", "♜")]);
+        let board = HashMap::from([piece::of_str("D4", '♜')]);
         let bounds = standard_chess().bounds;
         assert_eq!(
             menace(&board, &bounds, &Pos::of_str("D4")),
@@ -56,10 +56,10 @@ mod tests {
 
     #[test]
     fn menace_edge() {
-        let top_right = HashMap::from([piece::of_str("H8", "♜")]);
-        let bottom_right = HashMap::from([piece::of_str("H1", "♜")]);
-        let bottom_left = HashMap::from([piece::of_str("A1", "♜")]);
-        let top_left = HashMap::from([piece::of_str("A8", "♜")]);
+        let top_right = HashMap::from([piece::of_str("H8", '♜')]);
+        let bottom_right = HashMap::from([piece::of_str("H1", '♜')]);
+        let bottom_left = HashMap::from([piece::of_str("A1", '♜')]);
+        let top_left = HashMap::from([piece::of_str("A8", '♜')]);
         let bounds = standard_chess().bounds;
         assert_eq!(
             menace(&top_right, &bounds, &Pos::of_str("H8")),
@@ -89,7 +89,7 @@ mod tests {
 
     #[test]
     fn menace_small_bounds() {
-        let board = HashMap::from([piece::of_str("F6", "♜")]);
+        let board = HashMap::from([piece::of_str("F6", '♜')]);
         let bounds = RectU8 { x1: 3, y1: 3, x2: 7, y2: 7 };
         assert_eq!(
             menace(&board, &bounds, &Pos::of_str("F6")),

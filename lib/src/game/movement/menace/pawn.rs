@@ -38,8 +38,8 @@ mod tests {
 
     #[test]
     fn menace_lonely_piece() {
-        let board_white_pawn = HashMap::from([piece::of_str("C5", "♙")]);
-        let board_black_pawn = HashMap::from([piece::of_str("C5", "♟")]);
+        let board_white_pawn = HashMap::from([piece::of_str("C5", '♙')]);
+        let board_black_pawn = HashMap::from([piece::of_str("C5", '♟')]);
         let bounds = standard_chess().bounds;
         assert_eq!(
             menace(&board_white_pawn, &bounds, &Pos::of_str("C5")),

@@ -20,7 +20,7 @@ pub fn is_in_check(game: &Game) -> bool {
 
 #[cfg(test)]
 mod tests {
-    use std::{collections::HashMap, hash::Hash};
+    use std::collections::HashMap;
 
     use crate::{
         board::pos::pos_of_str_slice,
@@ -112,7 +112,7 @@ mod tests {
                     },
                 ),
             ]),
-            history: vec![Movement::of_str("♙", "D6", "D7")],
+            history: vec![Movement::of_str('♙', "D6", "D7")],
         }));
     }
 }

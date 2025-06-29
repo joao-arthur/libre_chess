@@ -77,60 +77,60 @@ mod tests {
 
     #[test]
     fn movements_lonely_white_pawn() {
-        let board = HashMap::from([piece::of_str("C5", "♙")]);
+        let board = HashMap::from([piece::of_str("C5", '♙')]);
         let bounds = standard_chess().bounds;
         assert_eq!(
             movements(&board, &bounds, &Pos::of_str("C5")),
-            [DefaultMovement::from(Movement::of_str("♙", "C5", "C6"))]
+            [DefaultMovement::from(Movement::of_str('♙', "C5", "C6"))]
         );
     }
 
     #[test]
     fn movements_lonely_black_pawn() {
-        let board = HashMap::from([piece::of_str("C5", "♟")]);
+        let board = HashMap::from([piece::of_str("C5", '♟')]);
         let bounds = standard_chess().bounds;
         assert_eq!(
             movements(&board, &bounds, &Pos::of_str("C5")),
-            [DefaultMovement::from(Movement::of_str("♟", "C5", "C4"))]
+            [DefaultMovement::from(Movement::of_str('♟', "C5", "C4"))]
         );
     }
 
     #[test]
     fn movements_first_move_white_pawn() {
-        let board = HashMap::from([piece::of_str("A2", "♙")]);
+        let board = HashMap::from([piece::of_str("A2", '♙')]);
         let bounds = standard_chess().bounds;
         assert_eq!(
             movements(&board, &bounds, &Pos::of_str("A2")),
             [
-                DefaultMovement::from(Movement::of_str("♙", "A2", "A3")),
-                DefaultMovement::from(Movement::of_str("♙", "A2", "A4"))
+                DefaultMovement::from(Movement::of_str('♙', "A2", "A3")),
+                DefaultMovement::from(Movement::of_str('♙', "A2", "A4"))
             ]
         );
     }
 
     #[test]
     fn movements_first_move_black_pawn() {
-        let board = HashMap::from([piece::of_str("H7", "♟")]);
+        let board = HashMap::from([piece::of_str("H7", '♟')]);
         let bounds = standard_chess().bounds;
         assert_eq!(
             movements(&board, &bounds, &Pos::of_str("H7")),
             [
-                DefaultMovement::from(Movement::of_str("♟", "H7", "H6")),
-                DefaultMovement::from(Movement::of_str("♟", "H7", "H5"))
+                DefaultMovement::from(Movement::of_str('♟', "H7", "H6")),
+                DefaultMovement::from(Movement::of_str('♟', "H7", "H5"))
             ]
         );
     }
 
     #[test]
     fn movements_blocked_white_pawn() {
-        let board = HashMap::from([piece::of_str("C5", "♙"), piece::of_str("C6", "♟")]);
+        let board = HashMap::from([piece::of_str("C5", '♙'), piece::of_str("C6", '♟')]);
         let bounds = standard_chess().bounds;
         assert_eq!(movements(&board, &bounds, &Pos::of_str("C5")), []);
     }
 
     #[test]
     fn movements_blocked_black_pawn() {
-        let board = HashMap::from([piece::of_str("C5", "♟"), piece::of_str("C4", "♙")]);
+        let board = HashMap::from([piece::of_str("C5", '♟'), piece::of_str("C4", '♙')]);
         let bounds = standard_chess().bounds;
         assert_eq!(movements(&board, &bounds, &Pos::of_str("C5")), []);
     }
@@ -151,8 +151,8 @@ mod tests {
         assert_eq!(
             movements(&board, &bounds, &Pos::of_str("C5")),
             [
-                DefaultMovement::from(Movement::of_str("♙", "C5", "C6")),
-                DefaultMovement::from(Movement::of_str("♙", "C5", "B6"))
+                DefaultMovement::from(Movement::of_str('♙', "C5", "C6")),
+                DefaultMovement::from(Movement::of_str('♙', "C5", "B6"))
             ]
         );
     }
@@ -173,8 +173,8 @@ mod tests {
         assert_eq!(
             movements(&board, &bounds, &Pos::of_str("C5")),
             [
-                DefaultMovement::from(Movement::of_str("♟", "C5", "C4")),
-                DefaultMovement::from(Movement::of_str("♟", "C5", "D4"))
+                DefaultMovement::from(Movement::of_str('♟', "C5", "C4")),
+                DefaultMovement::from(Movement::of_str('♟', "C5", "D4"))
             ]
         );
     }
