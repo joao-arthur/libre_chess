@@ -15,6 +15,7 @@ struct Selection {
 pub fn toggle(selection: &mut Selection, board: &GameBoard, pos: Pos) {
     if let Some(piece) = board.get(&pos) {
         selection.selected_squares.clear();
+        selection.selected_piece = Some(pos);
     } else {
         if selection.selected_squares.contains(&pos) {
             selection.selected_squares.remove(&pos);

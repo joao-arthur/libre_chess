@@ -1,8 +1,8 @@
-use std::collections::{HashMap, HashSet};
+use std::collections::HashMap;
 
 use crate::{
     color::Color,
-    game::{board::GameBoard, mode::GameMode, player::GamePlayer},
+    game::{board::GameBoard, player::GamePlayer},
     geometry::poligon::rect::RectU8,
     movement::Movement,
 };
