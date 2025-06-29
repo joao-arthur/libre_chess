@@ -9,13 +9,16 @@ use crate::{
 };
 
 pub fn init_game(mode: GameMode) -> Game {
+    let board = mode.initial_board;
+    let bounds = mode.bounds;
+    let history = Vec::new();
     let players = HashMap::from([
         (
             Color::Black,
             GamePlayer {
                 color: Color::Black,
                 captures: Vec::new(),
-                menace: menace::menace_of_player(&mode.initial_board, &mode.bounds, &Color::Black),
+                menace: menace::menace_of_player(&board, &bounds, &Color::Black),
                 moves: HashMap::new(),
             },
         ),
@@ -24,18 +27,12 @@ pub fn init_game(mode: GameMode) -> Game {
             GamePlayer {
                 color: Color::White,
                 captures: Vec::new(),
-                menace: menace::menace_of_player(&mode.initial_board, &mode.bounds, &Color::White),
-                moves: HashMap::new(),
+                menace: menace::menace_of_player(&board, &bounds, &Color::White),
+                moves: allowed_movements_of_player(&board, &bounds, &history, &Color::White),
             },
         ),
     ]);
-    let mut game =
-        Game { board: mode.initial_board, bounds: mode.bounds, players, history: Vec::new() };
-    let mut player = game.players.get_mut(&Color::White).unwrap();
-    let moves =
-        allowed_movements_of_player(&game.board, &game.bounds, &game.history, &Color::White);
-    player.moves = moves;
-    game
+    Game { board, bounds, players, history }
 }
 
 fn game_of_history(mode: GameMode, history: GameHistory) -> Game {
@@ -84,7 +81,6 @@ mod tests {
             Game, board,
             mode::standard_chess,
             movement::movement::{DefaultMovement, GameMovement},
-            piece,
             player::GamePlayer,
         },
         geometry::poligon::rect::RectU8,

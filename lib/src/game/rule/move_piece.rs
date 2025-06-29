@@ -91,7 +91,7 @@ pub fn app_move_piece(game: &mut Game, movement: GameMovement) {
                 &game.board,
                 &game.bounds,
                 &game.history,
-                &color,
+                color,
             ));
         }
     }

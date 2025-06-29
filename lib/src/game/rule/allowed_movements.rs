@@ -4,14 +4,13 @@ use crate::{
     board::pos::Pos,
     color::Color,
     game::{
-        Game, GameBoard,
+        GameBoard,
         game::{GameBounds, GameHistory},
         movement::{
             default,
             movement::GameMovement,
             special::{castling, en_passant},
         },
-        player::GamePlayer,
     },
     piece::Type,
 };
@@ -25,11 +24,11 @@ fn allowed_movements_of_piece(
     if let Some(piece) = board.get(pos) {
         match piece.t {
             Type::Pawn => [
-                default::movements(&board, &bounds, pos)
+                default::movements(board, bounds, pos)
                     .into_iter()
                     .map(GameMovement::from)
                     .collect::<Vec<GameMovement>>(),
-                en_passant::movements(&board, &history, pos)
+                en_passant::movements(board, history, pos)
                     .into_iter()
                     .map(GameMovement::from)
                     .collect::<Vec<GameMovement>>(),
@@ -38,11 +37,11 @@ fn allowed_movements_of_piece(
             .flatten()
             .collect(),
             Type::King => [
-                default::movements(&board, &bounds, pos)
+                default::movements(board, bounds, pos)
                     .into_iter()
                     .map(GameMovement::from)
                     .collect::<Vec<GameMovement>>(),
-                castling::movements(&board, &bounds, &history, pos)
+                castling::movements(board, bounds, history, pos)
                     .into_iter()
                     .map(GameMovement::from)
                     .collect::<Vec<GameMovement>>(),
@@ -50,7 +49,7 @@ fn allowed_movements_of_piece(
             .into_iter()
             .flatten()
             .collect(),
-            _ => default::movements(&board, &bounds, pos)
+            _ => default::movements(board, bounds, pos)
                 .into_iter()
                 .map(GameMovement::from)
                 .collect::<Vec<GameMovement>>(),
@@ -69,7 +68,7 @@ pub fn allowed_movements_of_player(
     let mut result = HashMap::new();
     for (pos, piece) in board {
         if &piece.color == color {
-            let mut movements = allowed_movements_of_piece(board, bounds, history, pos);
+            let movements = allowed_movements_of_piece(board, bounds, history, pos);
             // if piece.t == Type::King {
             //     for (curr_color, curr_player) in game.players {
             //         if curr_color != player.color {

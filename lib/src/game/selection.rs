@@ -29,7 +29,7 @@ pub fn toggle(selection: &mut Selection, board: &GameBoard, pos: Pos) {
 mod tests {
     use std::collections::HashSet;
 
-    use crate::{board::pos::Pos, game::mode::standard_chess, piece::Piece};
+    use crate::{board::pos::Pos, game::mode::standard_chess};
 
     use super::{Selection, toggle};
 
