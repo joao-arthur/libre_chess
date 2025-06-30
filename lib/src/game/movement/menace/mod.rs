@@ -26,10 +26,10 @@ pub fn menace_of_piece(board: &GameBoard, bounds: &RectU8, pos: &Pos) -> Vec<Pos
     Vec::new()
 }
 
-pub fn menace_of_player(board: &GameBoard, bounds: &RectU8, color: &Color) -> HashSet<Pos> {
+pub fn menace_of_player(board: &GameBoard, bounds: &RectU8, color: Color) -> HashSet<Pos> {
     let mut result: Vec<Pos> = Vec::new();
     for (pos, piece) in board.iter() {
-        if &piece.color == color {
+        if piece.color == color {
             result.append(&mut menace_of_piece(board, bounds, pos));
         }
     }

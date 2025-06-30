@@ -1,14 +1,18 @@
-use std::collections::{HashMap, HashSet};
+use std::collections::HashMap;
 
 use crate::{
     color::Color,
     game::{
-        Game, game::GameHistory, mode::GameMode, movement::menace, player::GamePlayer,
-        rule::allowed_movements::allowed_movements_of_player,
+        Game,
+        game::GameHistory,
+        mode::GameMode,
+        movement::menace::menace_of_player,
+        player::GamePlayer,
+        rule::{allowed_movements::allowed_movements_of_player, turn::evaluate_turn},
     },
 };
 
-pub fn init_game(mode: GameMode) -> Game {
+pub fn game_of_mode(mode: GameMode) -> Game {
     let board = mode.initial_board;
     let bounds = mode.bounds;
     let history = Vec::new();
@@ -18,7 +22,7 @@ pub fn init_game(mode: GameMode) -> Game {
             GamePlayer {
                 color: Color::Black,
                 captures: Vec::new(),
-                menace: menace::menace_of_player(&board, &bounds, &Color::Black),
+                menace: menace_of_player(&board, &bounds, Color::Black),
                 moves: HashMap::new(),
             },
         ),
@@ -27,7 +31,7 @@ pub fn init_game(mode: GameMode) -> Game {
             GamePlayer {
                 color: Color::White,
                 captures: Vec::new(),
-                menace: menace::menace_of_player(&board, &bounds, &Color::White),
+                menace: menace_of_player(&board, &bounds, Color::White),
                 moves: allowed_movements_of_player(&board, &bounds, &history, &Color::White),
             },
         ),
@@ -35,39 +39,45 @@ pub fn init_game(mode: GameMode) -> Game {
     Game { board, bounds, players, history }
 }
 
-fn game_of_history(mode: GameMode, history: GameHistory) -> Game {
+pub fn game_of_mode_and_history(mode: GameMode, history: GameHistory) -> Game {
     let mut board = mode.initial_board;
+    let bounds = mode.bounds;
     let history_iter = history.iter();
     for movement in history_iter {
         if let Some(piece) = board.remove(&movement.from) {
             board.insert(movement.to.clone(), piece);
         }
     }
-    Game {
-        bounds: mode.bounds,
-        board,
-        players: HashMap::from([
-            (
-                Color::Black,
-                GamePlayer {
-                    color: Color::Black,
-                    captures: Vec::new(),
-                    menace: HashSet::new(),
-                    moves: HashMap::new(),
+    let turn = evaluate_turn(&history);
+    let players = HashMap::from([
+        (
+            Color::Black,
+            GamePlayer {
+                color: Color::Black,
+                captures: Vec::new(),
+                menace: menace_of_player(&board, &bounds, Color::Black),
+                moves: if turn == Color::Black {
+                    allowed_movements_of_player(&board, &bounds, &history, &Color::Black)
+                } else {
+                    HashMap::new()
                 },
-            ),
-            (
-                Color::White,
-                GamePlayer {
-                    color: Color::White,
-                    captures: Vec::new(),
-                    menace: HashSet::new(),
-                    moves: HashMap::new(),
+            },
+        ),
+        (
+            Color::White,
+            GamePlayer {
+                color: Color::White,
+                captures: Vec::new(),
+                menace: menace_of_player(&board, &bounds, Color::White),
+                moves: if turn == Color::White {
+                    allowed_movements_of_player(&board, &bounds, &history, &Color::White)
+                } else {
+                    HashMap::new()
                 },
-            ),
-        ]),
-        history,
-    }
+            },
+        ),
+    ]);
+    Game { bounds: mode.bounds, board, players, history }
 }
 
 #[cfg(test)]
@@ -87,12 +97,12 @@ mod tests {
         movement::Movement,
     };
 
-    use super::init_game;
+    use super::{game_of_mode, game_of_mode_and_history};
 
     #[test]
-    fn test_init_game_standard_chess() {
+    fn game_of_mode_standard_chess() {
         assert_eq!(
-            init_game(standard_chess()),
+            game_of_mode(standard_chess()),
             Game {
                 board: board::of_str([
                     "♜♞♝♛♚♝♞♜",
@@ -204,20 +214,221 @@ mod tests {
                                         GameMovement::from(DefaultMovement::from(Movement::of_str('♘', "G1", "F3"))),
                                     ]
                                 ),
-                                (Pos::of_str("A1"), vec![]),
-                                (Pos::of_str("C1"), vec![]),
-                                (Pos::of_str("D1"), vec![]),
-                                (Pos::of_str("E1"), vec![]),
-                                (Pos::of_str("F1"), vec![]),
-                                (Pos::of_str("H1"), vec![]),
                             ]),
                         },
                     ),
                 ]),
                 history: Vec::new(),
             }
-        )
+        );
     }
 
-    fn test_game_of() {}
+    #[test]
+    fn game_of_mode_and_history_standard_chess() {
+        let history = vec![
+            Movement::of_str('♙', "A2", "A4"),
+            Movement::of_str('♟', "A7", "A5"),
+            Movement::of_str('♙', "B2", "B4"),
+            Movement::of_str('♟', "B7", "B5"),
+            Movement::of_str('♙', "C2", "C4"),
+            Movement::of_str('♟', "C7", "C5"),
+            Movement::of_str('♙', "D2", "D4"),
+            Movement::of_str('♟', "D7", "D5"),
+            Movement::of_str('♙', "E2", "E4"),
+            Movement::of_str('♟', "E7", "E5"),
+            Movement::of_str('♙', "F2", "F4"),
+            Movement::of_str('♟', "F7", "F5"),
+            Movement::of_str('♙', "G2", "G4"),
+            Movement::of_str('♟', "G7", "G5"),
+            Movement::of_str('♙', "H2", "H4"),
+            Movement::of_str('♟', "H7", "H5"),
+            //
+            Movement::of_str('♙', "B4", "A5"),
+            Movement::of_str('♟', "B5", "A4"),
+            Movement::of_str('♙', "D4", "C5"),
+            Movement::of_str('♟', "D5", "C4"),
+            Movement::of_str('♙', "E4", "F5"),
+            Movement::of_str('♟', "E5", "F4"),
+            Movement::of_str('♙', "G4", "H5"),
+            Movement::of_str('♟', "G5", "H4"),
+            //
+            Movement::of_str('♖', "A1", "A4"),
+            Movement::of_str('♜', "A8", "A5"),
+            Movement::of_str('♖', "H1", "H4"),
+            Movement::of_str('♜', "H8", "H5"),
+            //
+            Movement::of_str('♗', "C1", "F4"),
+            Movement::of_str('♝', "F8", "C5"),
+            Movement::of_str('♗', "F1", "C4"),
+            Movement::of_str('♝', "C8", "F5"),
+            //
+            Movement::of_str('♗', "F4", "B8"),
+            Movement::of_str('♝', "C5", "G1"),
+            Movement::of_str('♗', "C4", "G8"),
+            Movement::of_str('♝', "F5", "B1"),
+            //
+            Movement::of_str('♖', "A4", "A1"),
+            Movement::of_str('♜', "A5", "A8"),
+            Movement::of_str('♖', "H4", "H1"),
+            Movement::of_str('♜', "H5", "H8"),
+            //
+            Movement::of_str('♖', "A1", "B1"),
+            Movement::of_str('♜', "A8", "B8"),
+            Movement::of_str('♖', "H1", "G1"),
+            Movement::of_str('♜', "H8", "G8"),
+            //
+            Movement::of_str('♔', "E1", "E2"),
+            Movement::of_str('♚', "E8", "E7"),
+            //
+            Movement::of_str('♖', "G1", "G8"),
+            Movement::of_str('♜', "B8", "B1"),
+            Movement::of_str('♖', "G8", "D8"),
+            Movement::of_str('♜', "B1", "D1"),
+        ];
+        assert_eq!(
+            game_of_mode_and_history(standard_chess(), history),
+            Game {
+                board: board::of_str([
+                    "   ♖    ",
+                    "    ♚   ",
+                    "        ",
+                    "        ",
+                    "        ",
+                    "        ",
+                    "    ♔   ",
+                    "   ♜    ",
+                ]),
+                bounds: RectU8 { x1: 0, y1: 0, x2: 7, y2: 7 },
+                players: HashMap::from([
+                    (
+                        Color::Black,
+                        GamePlayer {
+                            color: Color::Black,
+                            captures: Vec::new(),
+                            menace: pos_of_str_slice([
+                                "E1", "F1", "G1", "H1", //
+                                "C1", "B1", "A1", //
+                                "D2", "D3", "D4", "D5", "D6", "D7", "D8", //
+                                "F8", "F7", "F6", "E6", "D6", "D7", "D8", "E8",
+                            ])
+                            .into_iter()
+                            .collect(),
+                            moves: HashMap::new(),
+                        },
+                    ),
+                    (
+                        Color::White,
+                        GamePlayer {
+                            color: Color::White,
+                            captures: Vec::new(),
+                            menace: pos_of_str_slice([
+                                "E8", "F8", "G8", "H8", //
+                                "D7", "D6", "D5", "D4", "D3", "D2", "D1", //
+                                "C8", "B8", "A8", //
+                                "F3", "F2", "F1", "E1", "D1", "D2", "D3", "E3",
+                            ])
+                            .into_iter()
+                            .collect(),
+                            moves: HashMap::from([
+                                (
+                                    Pos::of_str("E2"),
+                                    vec![
+                                        GameMovement::from(DefaultMovement::from(Movement::of_str('♔', "E2", "F3"))),
+                                        GameMovement::from(DefaultMovement::from(Movement::of_str('♔', "E2", "F2"))),
+                                        GameMovement::from(DefaultMovement::from(Movement::of_str('♔', "E2", "F1"))),//////
+                                        GameMovement::from(DefaultMovement::from(Movement::of_str('♔', "E2", "E1"))),//////
+                                        GameMovement::from(DefaultMovement::from(Movement::of_str('♔', "E2", "D1"))),
+                                        GameMovement::from(DefaultMovement::from(Movement::of_str('♔', "E2", "D2"))),//////
+                                        GameMovement::from(DefaultMovement::from(Movement::of_str('♔', "E2", "D3"))),//////
+                                        GameMovement::from(DefaultMovement::from(Movement::of_str('♔', "E2", "E3"))),
+                                    ]
+                                ),
+                                (
+                                    Pos::of_str("D8"),
+                                    vec![
+                                        GameMovement::from(DefaultMovement::from(Movement::of_str('♖', "D8", "E8"))),
+                                        GameMovement::from(DefaultMovement::from(Movement::of_str('♖', "D8", "F8"))),
+                                        GameMovement::from(DefaultMovement::from(Movement::of_str('♖', "D8", "G8"))),
+                                        GameMovement::from(DefaultMovement::from(Movement::of_str('♖', "D8", "H8"))),
+                                        //
+                                        GameMovement::from(DefaultMovement::from(Movement::of_str('♖', "D8", "D7"))),
+                                        GameMovement::from(DefaultMovement::from(Movement::of_str('♖', "D8", "D6"))),
+                                        GameMovement::from(DefaultMovement::from(Movement::of_str('♖', "D8", "D5"))),
+                                        GameMovement::from(DefaultMovement::from(Movement::of_str('♖', "D8", "D4"))),
+                                        GameMovement::from(DefaultMovement::from(Movement::of_str('♖', "D8", "D3"))),
+                                        GameMovement::from(DefaultMovement::from(Movement::of_str('♖', "D8", "D2"))),
+                                        GameMovement::from(DefaultMovement::from(Movement::of_str('♖', "D8", "D1"))),
+                                        //
+                                        GameMovement::from(DefaultMovement::from(Movement::of_str('♖', "D8", "C8"))),
+                                        GameMovement::from(DefaultMovement::from(Movement::of_str('♖', "D8", "B8"))),
+                                        GameMovement::from(DefaultMovement::from(Movement::of_str('♖', "D8", "A8"))),
+                                    ]
+                                ),
+                            ]),
+                        },
+                    ),
+                ]),
+                history: vec![
+                    Movement::of_str('♙', "A2", "A4"),
+                    Movement::of_str('♟', "A7", "A5"),
+                    Movement::of_str('♙', "B2", "B4"),
+                    Movement::of_str('♟', "B7", "B5"),
+                    Movement::of_str('♙', "C2", "C4"),
+                    Movement::of_str('♟', "C7", "C5"),
+                    Movement::of_str('♙', "D2", "D4"),
+                    Movement::of_str('♟', "D7", "D5"),
+                    Movement::of_str('♙', "E2", "E4"),
+                    Movement::of_str('♟', "E7", "E5"),
+                    Movement::of_str('♙', "F2", "F4"),
+                    Movement::of_str('♟', "F7", "F5"),
+                    Movement::of_str('♙', "G2", "G4"),
+                    Movement::of_str('♟', "G7", "G5"),
+                    Movement::of_str('♙', "H2", "H4"),
+                    Movement::of_str('♟', "H7", "H5"),
+                    //
+                    Movement::of_str('♙', "B4", "A5"),
+                    Movement::of_str('♟', "B5", "A4"),
+                    Movement::of_str('♙', "D4", "C5"),
+                    Movement::of_str('♟', "D5", "C4"),
+                    Movement::of_str('♙', "E4", "F5"),
+                    Movement::of_str('♟', "E5", "F4"),
+                    Movement::of_str('♙', "G4", "H5"),
+                    Movement::of_str('♟', "G5", "H4"),
+                    //
+                    Movement::of_str('♖', "A1", "A4"),
+                    Movement::of_str('♜', "A8", "A5"),
+                    Movement::of_str('♖', "H1", "H4"),
+                    Movement::of_str('♜', "H8", "H5"),
+                    //
+                    Movement::of_str('♗', "C1", "F4"),
+                    Movement::of_str('♝', "F8", "C5"),
+                    Movement::of_str('♗', "F1", "C4"),
+                    Movement::of_str('♝', "C8", "F5"),
+                    //
+                    Movement::of_str('♗', "F4", "B8"),
+                    Movement::of_str('♝', "C5", "G1"),
+                    Movement::of_str('♗', "C4", "G8"),
+                    Movement::of_str('♝', "F5", "B1"),
+                    //
+                    Movement::of_str('♖', "A4", "A1"),
+                    Movement::of_str('♜', "A5", "A8"),
+                    Movement::of_str('♖', "H4", "H1"),
+                    Movement::of_str('♜', "H5", "H8"),
+                    //
+                    Movement::of_str('♖', "A1", "B1"),
+                    Movement::of_str('♜', "A8", "B8"),
+                    Movement::of_str('♖', "H1", "G1"),
+                    Movement::of_str('♜', "H8", "G8"),
+                    //
+                    Movement::of_str('♔', "E1", "E2"),
+                    Movement::of_str('♚', "E8", "E7"),
+                    //
+                    Movement::of_str('♖', "G1", "G8"),
+                    Movement::of_str('♜', "B8", "B1"),
+                    Movement::of_str('♖', "G8", "D8"),
+                    Movement::of_str('♜', "B1", "D1"),
+                ],
+            }
+        );
+    }
 }
