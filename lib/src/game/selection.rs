@@ -2,46 +2,98 @@ use std::collections::HashSet;
 
 use crate::{
     board::pos::Pos,
-    game::{GameBoard, movement::movement::GameMovement},
+    game::{
+        game::{GameHistory, GamePlayers}, movement::movement::GameMovement, rule::turn::evaluate_turn, GameBoard
+    },
 };
 
 #[derive(Debug, PartialEq)]
-struct Selection {
-    selected_squares: HashSet<Pos>,
-    selected_piece: Option<Pos>,
-    selected_piece_movements: Vec<GameMovement>,
+pub struct Selection {
+    pub selected_squares: HashSet<Pos>,
+    pub selected_piece: Option<Pos>,
+    pub selected_piece_movements: Vec<GameMovement>,
 }
 
-pub fn toggle(selection: &mut Selection, board: &GameBoard, pos: Pos) {
+pub fn toggle(
+    selection: &mut Selection,
+    board: &GameBoard,
+    players: &GamePlayers,
+    history: &GameHistory,
+    pos: Pos,
+) {
     if let Some(piece) = board.get(&pos) {
-        selection.selected_squares.clear();
-        selection.selected_piece = Some(pos);
-    } else {
-        if selection.selected_squares.contains(&pos) {
-            selection.selected_squares.remove(&pos);
-        } else {
-            selection.selected_squares.insert(pos);
+        if let Some(selected_piece) = &selection.selected_piece {
+            if &pos == selected_piece {
+                selection.selected_piece = None;
+                selection.selected_piece_movements.clear();
+                return;
+            }
         }
+        let turn = evaluate_turn(history);
+        selection.selected_squares.clear();
+        if turn == piece.color {
+            selection.selected_piece = Some(pos.clone());
+            selection.selected_piece_movements.clear();
+            if let Some(player) = players.get(&turn) {
+                if let Some(moves) = player.moves.get(&pos) {
+                    selection.selected_piece_movements = moves.clone();
+                }
+            }
+        } else {
+            selection.selected_piece = None;
+            selection.selected_piece_movements.clear();
+        }
+        return;
+    }
+    if selection.selected_squares.contains(&pos) {
+        selection.selected_squares.remove(&pos);
+    } else {
+        selection.selected_squares.insert(pos);
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use std::collections::HashSet;
+    use std::collections::{HashMap, HashSet};
 
-    use crate::{board::pos::Pos, game::mode::standard_chess};
+    use crate::{
+        board::pos::Pos,
+        color::Color,
+        game::{mode::standard_chess, movement::movement::{DefaultMovement, GameMovement}, player::GamePlayer}, movement::Movement,
+    };
 
     use super::{Selection, toggle};
 
     #[test]
-    fn toggle_select_square() {
+    fn select_empty_square() {
         let mut selection = Selection {
             selected_squares: HashSet::new(),
             selected_piece: None,
             selected_piece_movements: Vec::new(),
         };
         let board = standard_chess().initial_board;
-        toggle(&mut selection, &board, Pos::of_str("D4"));
+        let players = HashMap::from([
+            (
+                Color::Black,
+                GamePlayer {
+                    color: Color::Black,
+                    captures: Vec::new(),
+                    menace: HashSet::new(),
+                    moves: HashMap::new(),
+                },
+            ),
+            (
+                Color::White,
+                GamePlayer {
+                    color: Color::White,
+                    captures: Vec::new(),
+                    menace: HashSet::new(),
+                    moves: HashMap::new(),
+                },
+            ),
+        ]);
+        let history = Vec::new();
+        toggle(&mut selection, &board, &players, &history, Pos::of_str("D4"));
         assert_eq!(
             selection,
             Selection {
@@ -60,7 +112,28 @@ mod tests {
             selected_piece_movements: Vec::new(),
         };
         let board = standard_chess().initial_board;
-        toggle(&mut selection, &board, Pos::of_str("D4"));
+        let players = HashMap::from([
+            (
+                Color::Black,
+                GamePlayer {
+                    color: Color::Black,
+                    captures: Vec::new(),
+                    menace: HashSet::new(),
+                    moves: HashMap::new(),
+                },
+            ),
+            (
+                Color::White,
+                GamePlayer {
+                    color: Color::White,
+                    captures: Vec::new(),
+                    menace: HashSet::new(),
+                    moves: HashMap::new(),
+                },
+            ),
+        ]);
+        let history = Vec::new();
+        toggle(&mut selection, &board, &players, &history, Pos::of_str("D4"));
         assert_eq!(
             selection,
             Selection {
@@ -79,13 +152,42 @@ mod tests {
             selected_piece_movements: Vec::new(),
         };
         let board = standard_chess().initial_board;
-        toggle(&mut selection, &board, Pos::of_str("B2"));
+        let players = HashMap::from([
+            (
+                Color::Black,
+                GamePlayer {
+                    color: Color::Black,
+                    captures: Vec::new(),
+                    menace: HashSet::new(),
+                    moves: HashMap::new(),
+                },
+            ),
+            (
+                Color::White,
+                GamePlayer {
+                    color: Color::White,
+                    captures: Vec::new(),
+                    menace: HashSet::new(),
+                    moves: HashMap::from([
+                        (Pos::of_str("B2"), vec![
+                            GameMovement::from(DefaultMovement::from(Movement::of_str('♟', "B2", "B3"))),
+                            GameMovement::from(DefaultMovement::from(Movement::of_str('♟', "B2", "B4"))),
+                        ])
+                    ]),
+                },
+            ),
+        ]);
+        let history = Vec::new();
+        toggle(&mut selection, &board, &players, &history, Pos::of_str("B2"));
         assert_eq!(
             selection,
             Selection {
                 selected_squares: HashSet::new(),
                 selected_piece: Some(Pos::of_str("B2")),
-                selected_piece_movements: Vec::new(),
+                selected_piece_movements: vec![
+                    GameMovement::from(DefaultMovement::from(Movement::of_str('♟', "B2", "B3"))),
+                    GameMovement::from(DefaultMovement::from(Movement::of_str('♟', "B2", "B4"))),
+                ],
             }
         );
     }
@@ -98,7 +200,156 @@ mod tests {
             selected_piece_movements: Vec::new(),
         };
         let board = standard_chess().initial_board;
-        toggle(&mut selection, &board, Pos::of_str("G7"));
+        let players = HashMap::from([
+            (
+                Color::Black,
+                GamePlayer {
+                    color: Color::Black,
+                    captures: Vec::new(),
+                    menace: HashSet::new(),
+                    moves: HashMap::new(),
+                },
+            ),
+            (
+                Color::White,
+                GamePlayer {
+                    color: Color::White,
+                    captures: Vec::new(),
+                    menace: HashSet::new(),
+                    moves: HashMap::new(),
+                },
+            ),
+        ]);
+        let history = Vec::new();
+        toggle(&mut selection, &board, &players, &history, Pos::of_str("G7"));
+        assert_eq!(
+            selection,
+            Selection {
+                selected_squares: HashSet::new(),
+                selected_piece: None,
+                selected_piece_movements: Vec::new(),
+            }
+        );
+    }
+
+    #[test]
+    fn selected_piece_then_same_piece() {
+        let mut selection = Selection {
+            selected_squares: HashSet::from([Pos::of_str("D4")]),
+            selected_piece: Some(Pos::of_str("B2")),
+            selected_piece_movements: Vec::new(),
+        };
+        let board = standard_chess().initial_board;
+        let players = HashMap::from([
+            (
+                Color::Black,
+                GamePlayer {
+                    color: Color::Black,
+                    captures: Vec::new(),
+                    menace: HashSet::new(),
+                    moves: HashMap::new(),
+                },
+            ),
+            (
+                Color::White,
+                GamePlayer {
+                    color: Color::White,
+                    captures: Vec::new(),
+                    menace: HashSet::new(),
+                    moves: HashMap::new(),
+                },
+            ),
+        ]);
+        let history = Vec::new();
+        toggle(&mut selection, &board, &players, &history, Pos::of_str("B2"));
+        assert_eq!(
+            selection,
+            Selection {
+                selected_squares: HashSet::from([Pos::of_str("D4")]),
+                selected_piece: None,
+                selected_piece_movements: Vec::new(),
+            }
+        );
+    }
+
+    #[test]
+    fn selected_piece_then_another_piece() {
+        let mut selection = Selection {
+            selected_squares: HashSet::from([Pos::of_str("D4")]),
+            selected_piece: Some(Pos::of_str("B2")),
+            selected_piece_movements: Vec::new(),
+        };
+        let board = standard_chess().initial_board;
+        let players = HashMap::from([
+            (
+                Color::Black,
+                GamePlayer {
+                    color: Color::Black,
+                    captures: Vec::new(),
+                    menace: HashSet::new(),
+                    moves: HashMap::new(),
+                },
+            ),
+            (
+                Color::White,
+                GamePlayer {
+                    color: Color::White,
+                    captures: Vec::new(),
+                    menace: HashSet::new(),
+                    moves: HashMap::from([
+                        (Pos::of_str("C2"), vec![
+                            GameMovement::from(DefaultMovement::from(Movement::of_str('♟', "C2", "C3"))),
+                            GameMovement::from(DefaultMovement::from(Movement::of_str('♟', "C2", "C4"))),
+                        ])
+                    ]),
+                },
+            ),
+        ]);
+        let history = Vec::new();
+        toggle(&mut selection, &board, &players, &history, Pos::of_str("C2"));
+        assert_eq!(
+            selection,
+            Selection {
+                selected_squares: HashSet::new(),
+                selected_piece: Some(Pos::of_str("C2")),
+                selected_piece_movements: vec![
+                    GameMovement::from(DefaultMovement::from(Movement::of_str('♟', "C2", "C3"))),
+                    GameMovement::from(DefaultMovement::from(Movement::of_str('♟', "C2", "C4"))),
+                ],
+            }
+        );
+    }
+
+    #[test]
+    fn selected_piece_then_another_user_piece() {
+        let mut selection = Selection {
+            selected_squares: HashSet::from([Pos::of_str("D4")]),
+            selected_piece: Some(Pos::of_str("B2")),
+            selected_piece_movements: Vec::new(),
+        };
+        let board = standard_chess().initial_board;
+        let players = HashMap::from([
+            (
+                Color::Black,
+                GamePlayer {
+                    color: Color::Black,
+                    captures: Vec::new(),
+                    menace: HashSet::new(),
+                    moves: HashMap::new(),
+                },
+            ),
+            (
+                Color::White,
+                GamePlayer {
+                    color: Color::White,
+                    captures: Vec::new(),
+                    menace: HashSet::new(),
+                    moves: HashMap::new(),
+                },
+            ),
+        ]);
+        let history = Vec::new();
+        toggle(&mut selection, &board, &players, &history, Pos::of_str("B7"));
         assert_eq!(
             selection,
             Selection {
@@ -109,28 +360,3 @@ mod tests {
         );
     }
 }
-
-/*
-Neutral => {
-    se selecionou uma célula vazia, seleciona ela; o estado vai ser SelectedEmptyCells
-    se selecionou uma célula com peça
-        se é da cor do jogador que pode jogar, seleciona a peça e renderiza os movimentos; o estado vai ser SelectedPiece
-}
-SelectedEmptyCells => {
-    se selecionou uma célula vazia, adiciona ela à seleçao; estado continua em SelectedEmptyCells
-    se selecionou uma celula com peça
-        limpa selecao;
-        se é da cor do jogador que pode jogar, seleciona a peça e renderiza os movimentos; o estado vai ser SelectedPiece
-        senao
-            estado vai ser neutro
-}
-
-SelectedPiece => {
-    se selecionou um movimento possível da peça, realiza o movimento, limpa seleçao; estado vai ser neutro;
-    se selecionou uma celula vazia, limpa seleçao, estado vai ser neutro;
-    se selecionou uma peça
-        se foi a mesma peça limpa seleçao, estado vai ser neutro;
-        se foi outra peça da mesma cor; seleciona ela, estado vai ser SelectedPiece
-        se foi peça de outra cor, limpa seleçao, estado vai ser neutro
-}
-*/
