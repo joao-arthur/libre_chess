@@ -261,7 +261,6 @@ mod tests {
             Movement::of_str('♝', "F8", "C5"),
             Movement::of_str('♗', "F1", "C4"),
             Movement::of_str('♝', "C8", "F5"),
-            //
             Movement::of_str('♗', "F4", "B8"),
             Movement::of_str('♝', "C5", "G1"),
             Movement::of_str('♗', "C4", "G8"),
@@ -271,7 +270,6 @@ mod tests {
             Movement::of_str('♜', "A5", "A8"),
             Movement::of_str('♖', "H4", "H1"),
             Movement::of_str('♜', "H5", "H8"),
-            //
             Movement::of_str('♖', "A1", "B1"),
             Movement::of_str('♜', "A8", "B8"),
             Movement::of_str('♖', "H1", "G1"),

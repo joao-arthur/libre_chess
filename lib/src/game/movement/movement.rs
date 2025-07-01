@@ -1,6 +1,6 @@
 use crate::{board::pos::Pos, movement::Movement, piece::Piece};
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct DefaultMovement {
     pub movement: Movement,
 }
@@ -11,7 +11,7 @@ impl From<Movement> for DefaultMovement {
     }
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct EnPassantMovement {
     pub movement: Movement,
 }
@@ -22,7 +22,7 @@ impl From<Movement> for EnPassantMovement {
     }
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct CastlingMovement {
     pub movement: Movement,
 }
@@ -33,13 +33,13 @@ impl From<Movement> for CastlingMovement {
     }
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct PromotionMovement {
     pub pos: Pos,
     pub piece: Piece,
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub enum GameMovement {
     Default(DefaultMovement),
     EnPassant(EnPassantMovement),
