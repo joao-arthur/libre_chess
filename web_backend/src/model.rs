@@ -2,10 +2,14 @@ use std::collections::HashSet;
 
 use web_sys::CanvasRenderingContext2d;
 
-use libre_chess_lib::game::{mode::standard_chess, selection::Selection, Game, rule::init::game_of_mode};
+use libre_chess_lib::game::{
+    mode::standard_chess, rule::init::game_of_mode, selection::Selection, Game,
+};
 
 use crate::{
-    board_color::{board_color_purple, BoardColor}, board_set::{board_set_normal_1, BoardSet}, render::RenderSettings,
+    board_color::{board_color_purple, BoardColor},
+    board_set::{board_set_normal_1, BoardSet},
+    render::RenderSettings,
 };
 
 #[derive(Debug, PartialEq)]
@@ -41,7 +45,7 @@ impl Default for Model {
                 selected_squares: HashSet::new(),
                 selected_piece: None,
                 selected_piece_movements: Vec::new(),
-            }
+            },
         }
     }
 }

@@ -1,9 +1,13 @@
 use crate::{
     board::pos::Pos,
     game::{
-        capture::GameCapture, game::{GameBounds, GameHistory, GamePlayers}, movement::movement::{
+        Game, GameBoard,
+        capture::GameCapture,
+        game::{GameBounds, GameHistory, GamePlayers},
+        movement::movement::{
             CastlingMovement, DefaultMovement, EnPassantMovement, GameMovement, PromotionMovement,
-        }, rule::{allowed_movements::allowed_movements_of_player, turn::evaluate_turn}, Game, GameBoard
+        },
+        rule::{allowed_movements::allowed_movements_of_player, turn::evaluate_turn},
     },
 };
 
@@ -54,8 +58,8 @@ fn castling_move(board: &mut GameBoard, history: &mut GameHistory, castling: Cas
                     rook,
                 );
             }
-        } else if let Some(rook) = board
-            .remove(&Pos { col: castling.movement.to.col - 1, row: castling.movement.to.row })
+        } else if let Some(rook) =
+            board.remove(&Pos { col: castling.movement.to.col - 1, row: castling.movement.to.row })
         {
             board.insert(
                 Pos { col: castling.movement.to.col + 1, row: castling.movement.to.row },
@@ -75,7 +79,8 @@ fn move_piece(
     board: &mut GameBoard,
     players: &mut GamePlayers,
     history: &mut GameHistory,
-    movement: GameMovement) {
+    movement: GameMovement,
+) {
     match movement {
         GameMovement::Default(movement) => default_move(board, players, history, movement),
         GameMovement::EnPassant(en_passant) => en_passant_move(board, players, history, en_passant),
@@ -89,19 +94,15 @@ pub fn app_move_piece(
     bounds: &GameBounds,
     players: &mut GamePlayers,
     history: &mut GameHistory,
-    movement: GameMovement) {
+    movement: &GameMovement,
+) {
     let turn = evaluate_turn(&history);
-    move_piece(board, players, history, movement);
+    move_piece(board, players, history, movement.clone());
     for (color, player) in players.iter_mut() {
         if &turn == color {
             player.moves.drain();
         } else {
-            player.moves.extend(allowed_movements_of_player(
-                &board,
-                &bounds,
-                &history,
-                color,
-            ));
+            player.moves.extend(allowed_movements_of_player(&board, &bounds, &history, color));
         }
     }
 }

@@ -9,7 +9,11 @@ use libre_chess_lib::{
     board::pos::Pos,
     color::Color,
     game::{
-        mode::standard_chess, movement::movement::GameMovement, rule::{move_piece::app_move_piece, turn::evaluate_turn}, selection::{toggle_selection, Selection}
+        mode::standard_chess,
+        movement::movement::GameMovement,
+        rule::{move_piece::app_move_piece, turn::evaluate_turn},
+        selection::{toggle_selection, Selection},
+        Game,
     },
     movement::Movement,
     piece::Type,
@@ -217,46 +221,26 @@ pub fn app_render() {
 }
 
 pub fn app_click(row: u16, col: u16) {
+    let dim = MODEL.with(|m| m.borrow().settings.render_settings.dim as f64);
+    let bounds = MODEL.with(|m| m.borrow().game.bounds);
+
     MODEL.with(|i| {
         let mut m = i.borrow_mut();
-
-        let board = &mut m.game.board;
-        let bounds = &m.game.bounds;
-        let players = &mut m.game.players;
-        let history = &mut m.game.history;
-
-        let mut selection = &mut m.selection;
-        let turn = evaluate_turn(&history);
-        let player = &players.get(&turn).unwrap();
-        let dim = m.settings.render_settings.dim as f64;
+        let Model { game: Game { board, bounds, players, history }, selection, .. } = &mut *m;
         let cell_size = dim / 8.0;
         let cell_row = (8 - ((((row as f64) / cell_size).floor() as u8) as i16)) as u8 - 1;
         let cell_col = ((col as f64) / cell_size).floor() as u8;
         let pos = Pos { row: cell_row, col: cell_col };
 
-        if let Some(movement) = selection
-            .selected_piece_movements
-            .iter()
-            .find(|mov| match mov {
-                GameMovement::Default(mov) => mov.movement.to == pos,
-                GameMovement::EnPassant(mov) => mov.movement.to == pos,
-                GameMovement::Castling(mov) => mov.movement.to == pos,
-                _ => false,
-            })
-        {
-            app_move_piece(
-                board,
-                bounds,
-                players,
-                history,
-                movement.clone()
-            );
-            return;
+        if let Some(movement) = &selection.selected_piece_movements.iter().find(|mov| match mov {
+            GameMovement::Default(mov) => mov.movement.to == pos,
+            GameMovement::EnPassant(mov) => mov.movement.to == pos,
+            GameMovement::Castling(mov) => mov.movement.to == pos,
+            _ => false,
+        }) {
+            app_move_piece(board, &bounds, players, history, movement);
         }
-
-        toggle_selection(&mut selection, &board, &players, &history, pos);
-
-
+        toggle_selection(selection, board, players, history, pos.clone());
     });
     on_change(Prop::BoardSet);
 }
