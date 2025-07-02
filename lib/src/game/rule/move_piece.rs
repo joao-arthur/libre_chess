@@ -1,96 +1,105 @@
 use crate::{
     board::pos::Pos,
     game::{
-        Game,
-        capture::GameCapture,
-        movement::movement::{
+        capture::GameCapture, game::{GameBounds, GameHistory, GamePlayers}, movement::movement::{
             CastlingMovement, DefaultMovement, EnPassantMovement, GameMovement, PromotionMovement,
-        },
-        rule::{allowed_movements::allowed_movements_of_player, turn::evaluate_turn},
+        }, rule::{allowed_movements::allowed_movements_of_player, turn::evaluate_turn}, Game, GameBoard
     },
 };
 
-fn default_move(game: &mut Game, movement: DefaultMovement) {
-    if let Some(piece) = game.board.remove(&movement.movement.from) {
-        if let Some(captured) = game.board.insert(movement.movement.to.clone(), piece) {
-            if let Some(player) = game.players.get_mut(&piece.color) {
-                player
-                    .captures
-                    .push(GameCapture { piece: captured, at: game.history.len() as u16 });
+fn default_move(
+    board: &mut GameBoard,
+    players: &mut GamePlayers,
+    history: &mut GameHistory,
+    movement: DefaultMovement,
+) {
+    if let Some(piece) = board.remove(&movement.movement.from) {
+        if let Some(captured) = board.insert(movement.movement.to.clone(), piece) {
+            if let Some(player) = players.get_mut(&piece.color) {
+                player.captures.push(GameCapture { piece: captured, at: history.len() as u16 });
             }
         }
     }
-    game.history.push(movement.movement);
+    history.push(movement.movement);
 }
 
-fn en_passant_move(game: &mut Game, en_passant: EnPassantMovement) {
-    if let Some(piece) = game.board.remove(&en_passant.movement.from) {
-        game.board.insert(en_passant.movement.to.clone(), piece);
-        if let Some(captured) = game
-            .board
+fn en_passant_move(
+    board: &mut GameBoard,
+    players: &mut GamePlayers,
+    history: &mut GameHistory,
+    en_passant: EnPassantMovement,
+) {
+    if let Some(piece) = board.remove(&en_passant.movement.from) {
+        board.insert(en_passant.movement.to.clone(), piece);
+        if let Some(captured) = board
             .remove(&Pos { col: en_passant.movement.to.col, row: en_passant.movement.from.row })
         {
-            if let Some(player) = game.players.get_mut(&piece.color) {
-                player
-                    .captures
-                    .push(GameCapture { piece: captured, at: game.history.len() as u16 });
+            if let Some(player) = players.get_mut(&piece.color) {
+                player.captures.push(GameCapture { piece: captured, at: history.len() as u16 });
             }
         }
     }
-    game.history.push(en_passant.movement);
+    history.push(en_passant.movement);
 }
 
-fn castling_move(game: &mut Game, castling: CastlingMovement) {
-    if let Some(piece) = game.board.remove(&castling.movement.from) {
-        game.board.insert(castling.movement.to.clone(), piece);
+fn castling_move(board: &mut GameBoard, history: &mut GameHistory, castling: CastlingMovement) {
+    if let Some(piece) = board.remove(&castling.movement.from) {
+        board.insert(castling.movement.to.clone(), piece);
         if castling.movement.to.col > castling.movement.from.col {
-            if let Some(rook) = game
-                .board
+            if let Some(rook) = board
                 .remove(&Pos { col: castling.movement.to.col + 1, row: castling.movement.to.row })
             {
-                game.board.insert(
+                board.insert(
                     Pos { col: castling.movement.to.col - 1, row: castling.movement.to.row },
                     rook,
                 );
             }
-        } else if let Some(rook) = game
-            .board
+        } else if let Some(rook) = board
             .remove(&Pos { col: castling.movement.to.col - 1, row: castling.movement.to.row })
         {
-            game.board.insert(
+            board.insert(
                 Pos { col: castling.movement.to.col + 1, row: castling.movement.to.row },
                 rook,
             );
         }
     }
-    game.history.push(castling.movement);
+    history.push(castling.movement);
 }
 
-fn promotion_move(game: &mut Game, promotion: PromotionMovement) {
-    game.board.insert(promotion.pos.clone(), promotion.piece);
+fn promotion_move(board: &mut GameBoard, history: &mut GameHistory, promotion: PromotionMovement) {
+    board.insert(promotion.pos.clone(), promotion.piece);
     // edit the pawn move
 }
 
-fn move_piece(game: &mut Game, movement: GameMovement) {
+fn move_piece(
+    board: &mut GameBoard,
+    players: &mut GamePlayers,
+    history: &mut GameHistory,
+    movement: GameMovement) {
     match movement {
-        GameMovement::Default(movement) => default_move(game, movement),
-        GameMovement::EnPassant(en_passant) => en_passant_move(game, en_passant),
-        GameMovement::Castling(castling) => castling_move(game, castling),
-        GameMovement::Promotion(promotion) => promotion_move(game, promotion),
+        GameMovement::Default(movement) => default_move(board, players, history, movement),
+        GameMovement::EnPassant(en_passant) => en_passant_move(board, players, history, en_passant),
+        GameMovement::Castling(castling) => castling_move(board, history, castling),
+        GameMovement::Promotion(promotion) => promotion_move(board, history, promotion),
     }
 }
 
-pub fn app_move_piece(game: &mut Game, movement: GameMovement) {
-    let turn = evaluate_turn(&game.history);
-    move_piece(game, movement);
-    for (color, player) in game.players.iter_mut() {
+pub fn app_move_piece(
+    board: &mut GameBoard,
+    bounds: &GameBounds,
+    players: &mut GamePlayers,
+    history: &mut GameHistory,
+    movement: GameMovement) {
+    let turn = evaluate_turn(&history);
+    move_piece(board, players, history, movement);
+    for (color, player) in players.iter_mut() {
         if &turn == color {
             player.moves.drain();
         } else {
             player.moves.extend(allowed_movements_of_player(
-                &game.board,
-                &game.bounds,
-                &game.history,
+                &board,
+                &bounds,
+                &history,
                 color,
             ));
         }

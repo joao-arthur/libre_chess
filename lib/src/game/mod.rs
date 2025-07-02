@@ -9,4 +9,4 @@ pub mod movement;
 mod piece;
 mod player;
 pub mod rule;
-mod selection;
+pub mod selection;

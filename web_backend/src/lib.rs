@@ -18,8 +18,6 @@ mod board_set;
 mod model;
 mod prop;
 mod render;
-mod settings;
-mod state;
 
 #[derive(Serialize)]
 pub struct Preset {

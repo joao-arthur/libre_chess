@@ -18,7 +18,7 @@ pub struct Selection {
     pub selected_piece_movements: Vec<GameMovement>,
 }
 
-pub fn toggle(
+pub fn toggle_selection(
     selection: &mut Selection,
     board: &GameBoard,
     players: &GamePlayers,
@@ -99,7 +99,7 @@ mod tests {
         movement::Movement,
     };
 
-    use super::{Selection, toggle};
+    use super::{Selection, toggle_selection};
 
     #[test]
     fn player_selected_empty_square() {
@@ -130,7 +130,7 @@ mod tests {
             ),
         ]);
         let history = Vec::new();
-        toggle(&mut selection, &board, &players, &history, Pos::of_str("D4"));
+        toggle_selection(&mut selection, &board, &players, &history, Pos::of_str("D4"));
         assert_eq!(
             selection,
             Selection {
@@ -170,7 +170,7 @@ mod tests {
             ),
         ]);
         let history = Vec::new();
-        toggle(&mut selection, &board, &players, &history, Pos::of_str("D4"));
+        toggle_selection(&mut selection, &board, &players, &history, Pos::of_str("D4"));
         assert_eq!(
             selection,
             Selection {
@@ -208,15 +208,19 @@ mod tests {
                     moves: HashMap::from([(
                         Pos::of_str("B2"),
                         vec![
-                            GameMovement::from(DefaultMovement::from(Movement::of_str('♟', "B2", "B3"))),
-                            GameMovement::from(DefaultMovement::from(Movement::of_str('♟', "B2", "B4"))),
+                            GameMovement::from(DefaultMovement::from(Movement::of_str(
+                                '♟', "B2", "B3",
+                            ))),
+                            GameMovement::from(DefaultMovement::from(Movement::of_str(
+                                '♟', "B2", "B4",
+                            ))),
                         ],
                     )]),
                 },
             ),
         ]);
         let history = Vec::new();
-        toggle(&mut selection, &board, &players, &history, Pos::of_str("B2"));
+        toggle_selection(&mut selection, &board, &players, &history, Pos::of_str("B2"));
         assert_eq!(
             selection,
             Selection {
@@ -259,7 +263,7 @@ mod tests {
             ),
         ]);
         let history = Vec::new();
-        toggle(&mut selection, &board, &players, &history, Pos::of_str("B2"));
+        toggle_selection(&mut selection, &board, &players, &history, Pos::of_str("B2"));
         assert_eq!(
             selection,
             Selection {
@@ -299,7 +303,7 @@ mod tests {
             ),
         ]);
         let history = Vec::new();
-        toggle(&mut selection, &board, &players, &history, Pos::of_str("G7"));
+        toggle_selection(&mut selection, &board, &players, &history, Pos::of_str("G7"));
         assert_eq!(
             selection,
             Selection {
@@ -337,15 +341,19 @@ mod tests {
                     moves: HashMap::from([(
                         Pos::of_str("C2"),
                         vec![
-                            GameMovement::from(DefaultMovement::from(Movement::of_str('♟', "C2", "C3"))),
-                            GameMovement::from(DefaultMovement::from(Movement::of_str('♟', "C2", "C4"))),
+                            GameMovement::from(DefaultMovement::from(Movement::of_str(
+                                '♟', "C2", "C3",
+                            ))),
+                            GameMovement::from(DefaultMovement::from(Movement::of_str(
+                                '♟', "C2", "C4",
+                            ))),
                         ],
                     )]),
                 },
             ),
         ]);
         let history = Vec::new();
-        toggle(&mut selection, &board, &players, &history, Pos::of_str("C2"));
+        toggle_selection(&mut selection, &board, &players, &history, Pos::of_str("C2"));
         assert_eq!(
             selection,
             Selection {
@@ -388,7 +396,7 @@ mod tests {
             ),
         ]);
         let history = Vec::new();
-        toggle(&mut selection, &board, &players, &history, Pos::of_str("B7"));
+        toggle_selection(&mut selection, &board, &players, &history, Pos::of_str("B7"));
         assert_eq!(
             selection,
             Selection {
@@ -440,17 +448,25 @@ mod tests {
                     moves: HashMap::from([(
                         Pos::of_str("D5"),
                         vec![
-                            GameMovement::from(DefaultMovement::from(Movement::of_str('♖', "D5", "E5"))),
-                            GameMovement::from(DefaultMovement::from(Movement::of_str('♖', "D5", "D4"))),
-                            GameMovement::from(DefaultMovement::from(Movement::of_str('♖', "D5", "C5"))),
-                            GameMovement::from(DefaultMovement::from(Movement::of_str('♖', "D5", "D6"))),
+                            GameMovement::from(DefaultMovement::from(Movement::of_str(
+                                '♖', "D5", "E5",
+                            ))),
+                            GameMovement::from(DefaultMovement::from(Movement::of_str(
+                                '♖', "D5", "D4",
+                            ))),
+                            GameMovement::from(DefaultMovement::from(Movement::of_str(
+                                '♖', "D5", "C5",
+                            ))),
+                            GameMovement::from(DefaultMovement::from(Movement::of_str(
+                                '♖', "D5", "D6",
+                            ))),
                         ],
                     )]),
                 },
             ),
         ]);
         let history = Vec::new();
-        toggle(&mut selection, &board, &players, &history, Pos::of_str("E5"));
+        toggle_selection(&mut selection, &board, &players, &history, Pos::of_str("E5"));
         assert_eq!(
             selection,
             Selection {

@@ -1,5 +1,5 @@
 use core::f64;
-use std::{cell::RefCell, collections::HashSet, rc::Rc};
+use std::{cell::RefCell, rc::Rc};
 use wasm_bindgen::{prelude::Closure, JsCast, JsValue};
 use web_sys::{
     js_sys, window, Blob, BlobPropertyBag, CanvasRenderingContext2d, HtmlImageElement, Url,
@@ -9,8 +9,7 @@ use libre_chess_lib::{
     board::pos::Pos,
     color::Color,
     game::{
-        mode::standard_chess,
-        rule::{move_piece::app_move_piece, turn::evaluate_turn},
+        mode::standard_chess, movement::movement::GameMovement, rule::{move_piece::app_move_piece, turn::evaluate_turn}, selection::{toggle_selection, Selection}
     },
     movement::Movement,
     piece::Type,
@@ -103,6 +102,7 @@ pub fn app_render() {
         let m = i.borrow();
         let board = &m.game.board;
         let settings = &m.settings;
+        let selection = &m.selection;
         let context = &m.context;
         if let Some(context) = context {
             let dimmm = settings.render_settings.dim as f64;
@@ -174,9 +174,9 @@ pub fn app_render() {
                 img.set_onload(Some(closure.as_ref().unchecked_ref()));
                 closure.forget();
             }
-            if settings.selected_squares.len() > 0 {
+            if selection.selected_squares.len() > 0 {
                 context.set_fill_style(&"#f0ec0088".into());
-                settings.selected_squares.iter().for_each(|pos| {
+                selection.selected_squares.iter().for_each(|pos| {
                     context.fill_rect(
                         pos.col as f64 * cell_size,
                         (settings.render_settings.dim as f64)
@@ -187,21 +187,29 @@ pub fn app_render() {
                     );
                 })
             }
-            if settings.selected_piece_movements.len() > 0 {
+            if selection.selected_piece_movements.len() > 0 {
                 context.set_fill_style(&"#3d3d3dee".into());
-                settings.selected_piece_movements.iter().for_each(|pos| {
-                    context.begin_path();
-                    let _ = context.arc(
-                        pos.col as f64 * cell_size + cell_size / 2.0,
-                        ((settings.render_settings.dim as f64)
-                            - (pos.row as f64) * cell_size
-                            - cell_size)
-                            + cell_size / 2.0,
-                        cell_size / (2.0 * f64::consts::PI),
-                        0.0,
-                        2.0 * f64::consts::PI,
-                    );
-                    context.fill();
+                selection.selected_piece_movements.iter().for_each(|movement| {
+                    let maybe_pos = match movement {
+                        GameMovement::Default(mov) => Some(&mov.movement),
+                        GameMovement::EnPassant(mov) => Some(&mov.movement),
+                        GameMovement::Castling(mov) => Some(&mov.movement),
+                        _ => None,
+                    };
+                    if let Some(mov) = maybe_pos {
+                        context.begin_path();
+                        let _ = context.arc(
+                            mov.to.col as f64 * cell_size + cell_size / 2.0,
+                            ((settings.render_settings.dim as f64)
+                                - (mov.to.row as f64) * cell_size
+                                - cell_size)
+                                + cell_size / 2.0,
+                            cell_size / (2.0 * f64::consts::PI),
+                            0.0,
+                            2.0 * f64::consts::PI,
+                        );
+                        context.fill();
+                    }
                 })
             }
         }
@@ -211,46 +219,44 @@ pub fn app_render() {
 pub fn app_click(row: u16, col: u16) {
     MODEL.with(|i| {
         let mut m = i.borrow_mut();
-        let turn = evaluate_turn(&m.game.history);
-        let player = &m.game.players.get(&turn).unwrap();
+
+        let board = &mut m.game.board;
+        let bounds = &m.game.bounds;
+        let players = &mut m.game.players;
+        let history = &mut m.game.history;
+
+        let mut selection = &mut m.selection;
+        let turn = evaluate_turn(&history);
+        let player = &players.get(&turn).unwrap();
         let dim = m.settings.render_settings.dim as f64;
         let cell_size = dim / 8.0;
         let cell_row = (8 - ((((row as f64) / cell_size).floor() as u8) as i16)) as u8 - 1;
         let cell_col = ((col as f64) / cell_size).floor() as u8;
         let pos = Pos { row: cell_row, col: cell_col };
-        if m.settings.selected_piece_movements.contains(&pos) {
-            let piece =
-                m.game.board.get(m.settings.selected_piece.as_ref().unwrap()).unwrap().clone();
-            let from = m.settings.selected_piece.clone().unwrap();
-            let to = pos;
-            app_move_piece(&mut m.game, Movement { piece: piece.clone(), from, to });
-            m.settings.selected_piece = None;
-            m.settings.selected_piece_movements = HashSet::new();
-            m.settings.selected_squares = HashSet::new()
-        } else {
-            if let Some(piece) = m.game.board.get(&pos.clone()) {
-                if m.settings.selected_piece == Some(pos.clone()) {
-                    m.settings.selected_piece = None;
-                    m.settings.selected_piece_movements = HashSet::new();
-                } else {
-                    m.settings.selected_squares.clear();
-                    let movements = player.moves;
-                    m.settings.selected_piece = Some(pos.clone());
-                    m.settings.selected_piece_movements = movements;
-                }
-            } else {
-                if m.settings.selected_piece.is_some() {
-                    m.settings.selected_piece = None;
-                    m.settings.selected_piece_movements = HashSet::new();
-                } else {
-                    if m.settings.selected_squares.contains(&pos) {
-                        m.settings.selected_squares.remove(&pos);
-                    } else {
-                        m.settings.selected_squares.insert(pos);
-                    }
-                }
-            }
+
+        if let Some(movement) = selection
+            .selected_piece_movements
+            .iter()
+            .find(|mov| match mov {
+                GameMovement::Default(mov) => mov.movement.to == pos,
+                GameMovement::EnPassant(mov) => mov.movement.to == pos,
+                GameMovement::Castling(mov) => mov.movement.to == pos,
+                _ => false,
+            })
+        {
+            app_move_piece(
+                board,
+                bounds,
+                players,
+                history,
+                movement.clone()
+            );
+            return;
         }
+
+        toggle_selection(&mut selection, &board, &players, &history, pos);
+
+
     });
     on_change(Prop::BoardSet);
 }
