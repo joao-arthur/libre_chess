@@ -58,7 +58,7 @@ pub fn board_of_str(mode: &GameMode, rows: [&str; 8]) -> GameBoard {
     board_try_of_str(mode, rows).unwrap()
 }
 
-fn board_to_string(mode: &GameMode, board: &GameBoard) -> String {
+fn board_to_string(board: &GameBoard) -> String {
     let mut res = "".to_string();
     let mut row = 8;
     while row > 0 {
@@ -78,14 +78,15 @@ fn board_to_string(mode: &GameMode, board: &GameBoard) -> String {
 mod tests {
     use std::collections::HashMap;
 
-    use crate::game::piece::piece_of_str;
+    use crate::game::{mode::standard_chess, piece::piece_of_str};
 
     use super::{FromStringErr, InvalidCharacterErr, board_of_str, board_to_string, board_try_of_str};
 
     #[test]
     fn try_of_str_ok() {
+        let mode = standard_chess();
         assert_eq!(
-            board_try_of_str([
+            board_try_of_str(&mode, [
                 "♜♞♝♛♚♝♞♜",
                 "♟♟♟♟♟♟♟♟",
                 "        ",
@@ -135,8 +136,9 @@ mod tests {
 
     #[test]
     fn try_of_str_err() {
+        let mode = standard_chess();
         assert_eq!(
-            board_try_of_str([
+            board_try_of_str(&mode, [
                 "RNBQKBNR",
                 "PPPPPPPP",
                 "        ",
@@ -170,8 +172,9 @@ mod tests {
 
     #[test]
     fn test_of_str() {
+        let mode = standard_chess();
         assert_eq!(
-            board_of_str([
+            board_of_str(&mode, [
                 "♜♞♝♛♚♝♞♜",
                 "♟♟♟♟♟♟♟♟",
                 "        ",
@@ -220,8 +223,9 @@ mod tests {
 
     #[test]
     fn test_to_string() {
+        let mode = standard_chess();
         assert_eq!(
-            board_to_string(&board_of_str([
+            board_to_string(&board_of_str(&mode, [
                 "♜♞♝♛♚♝♞♜",
                 "♟♟♟♟♟♟♟♟",
                 "        ",

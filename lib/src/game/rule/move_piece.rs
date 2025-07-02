@@ -1,7 +1,7 @@
 use crate::{
     board::pos::Pos,
     game::{
-        Game, GameBoard,
+        GameBoard,
         capture::GameCapture,
         game::{GameBounds, GameHistory, GamePlayers},
         movement::movement::{
@@ -96,13 +96,13 @@ pub fn app_move_piece(
     history: &mut GameHistory,
     movement: &GameMovement,
 ) {
-    let turn = evaluate_turn(&history);
+    let turn = evaluate_turn(history);
     move_piece(board, players, history, movement.clone());
     for (color, player) in players.iter_mut() {
         if &turn == color {
             player.moves.drain();
         } else {
-            player.moves.extend(allowed_movements_of_player(&board, &bounds, &history, color));
+            player.moves.extend(allowed_movements_of_player(board, bounds, history, color));
         }
     }
 }

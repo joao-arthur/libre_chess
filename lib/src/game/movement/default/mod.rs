@@ -32,7 +32,7 @@ mod tests {
 
     use crate::{
         board::pos::Pos,
-        game::{board::{board_of_str, board_empty}, mode::standard_chess, movement::movement::DefaultMovement, piece::piece_of_str},
+        game::{board::board_empty, mode::standard_chess, movement::movement::DefaultMovement, piece::piece_of_str},
         movement::Movement,
     };
 

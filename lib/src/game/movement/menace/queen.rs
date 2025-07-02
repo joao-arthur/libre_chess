@@ -15,7 +15,7 @@ mod tests {
 
     use crate::{
         board::pos::{Pos, pos_of_str_slice},
-        game::{board::{board_of_str, board_empty}, mode::standard_chess, piece::piece_of_str},
+        game::{board::board_of_str, mode::standard_chess, piece::piece_of_str},
         geometry::poligon::rect::RectU8,
     };
 
