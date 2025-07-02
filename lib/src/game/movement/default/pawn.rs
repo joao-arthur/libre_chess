@@ -63,7 +63,7 @@ mod tests {
 
     use crate::{
         board::pos::Pos,
-        game::{board, mode::standard_chess, movement::movement::DefaultMovement, piece},
+        game::{board::{board_of_str, board_empty}, mode::standard_chess, movement::movement::DefaultMovement, piece::piece_of_str},
         movement::Movement,
     };
 
@@ -72,12 +72,12 @@ mod tests {
     #[test]
     fn movements_empty_board() {
         let bounds = standard_chess().bounds;
-        assert_eq!(movements(&board::empty(), &bounds, &Pos::of_str("A1")), []);
+        assert_eq!(movements(&board_empty(), &bounds, &Pos::of_str("A1")), []);
     }
 
     #[test]
     fn movements_lonely_white_pawn() {
-        let board = HashMap::from([piece::of_str("C5", '♙')]);
+        let board = HashMap::from([piece_of_str("C5", '♙')]);
         let bounds = standard_chess().bounds;
         assert_eq!(
             movements(&board, &bounds, &Pos::of_str("C5")),
@@ -87,7 +87,7 @@ mod tests {
 
     #[test]
     fn movements_lonely_black_pawn() {
-        let board = HashMap::from([piece::of_str("C5", '♟')]);
+        let board = HashMap::from([piece_of_str("C5", '♟')]);
         let bounds = standard_chess().bounds;
         assert_eq!(
             movements(&board, &bounds, &Pos::of_str("C5")),
@@ -97,7 +97,7 @@ mod tests {
 
     #[test]
     fn movements_first_move_white_pawn() {
-        let board = HashMap::from([piece::of_str("A2", '♙')]);
+        let board = HashMap::from([piece_of_str("A2", '♙')]);
         let bounds = standard_chess().bounds;
         assert_eq!(
             movements(&board, &bounds, &Pos::of_str("A2")),
@@ -110,7 +110,7 @@ mod tests {
 
     #[test]
     fn movements_first_move_black_pawn() {
-        let board = HashMap::from([piece::of_str("H7", '♟')]);
+        let board = HashMap::from([piece_of_str("H7", '♟')]);
         let bounds = standard_chess().bounds;
         assert_eq!(
             movements(&board, &bounds, &Pos::of_str("H7")),
@@ -123,21 +123,22 @@ mod tests {
 
     #[test]
     fn movements_blocked_white_pawn() {
-        let board = HashMap::from([piece::of_str("C5", '♙'), piece::of_str("C6", '♟')]);
+        let board = HashMap::from([piece_of_str("C5", '♙'), piece_of_str("C6", '♟')]);
         let bounds = standard_chess().bounds;
         assert_eq!(movements(&board, &bounds, &Pos::of_str("C5")), []);
     }
 
     #[test]
     fn movements_blocked_black_pawn() {
-        let board = HashMap::from([piece::of_str("C5", '♟'), piece::of_str("C4", '♙')]);
+        let board = HashMap::from([piece_of_str("C5", '♟'), piece_of_str("C4", '♙')]);
         let bounds = standard_chess().bounds;
         assert_eq!(movements(&board, &bounds, &Pos::of_str("C5")), []);
     }
 
     #[test]
     fn movements_white_capture() {
-        let board = board::of_str([
+        let mode = standard_chess();
+        let board = board_of_str(&mode, [
             "        ",
             "        ",
             " ♟ ♙    ",
@@ -147,9 +148,8 @@ mod tests {
             "        ",
             "        ",
         ]);
-        let bounds = standard_chess().bounds;
         assert_eq!(
-            movements(&board, &bounds, &Pos::of_str("C5")),
+            movements(&board, &mode.bounds, &Pos::of_str("C5")),
             [
                 DefaultMovement::from(Movement::of_str('♙', "C5", "C6")),
                 DefaultMovement::from(Movement::of_str('♙', "C5", "B6"))
@@ -159,7 +159,8 @@ mod tests {
 
     #[test]
     fn movements_black_capture() {
-        let board = board::of_str([
+        let mode = standard_chess();
+        let board = board_of_str(&mode, [
             "        ",
             "        ",
             "        ",
@@ -169,9 +170,8 @@ mod tests {
             "        ",
             "        ",
         ]);
-        let bounds = standard_chess().bounds;
         assert_eq!(
-            movements(&board, &bounds, &Pos::of_str("C5")),
+            movements(&board, &mode.bounds, &Pos::of_str("C5")),
             [
                 DefaultMovement::from(Movement::of_str('♟', "C5", "C4")),
                 DefaultMovement::from(Movement::of_str('♟', "C5", "D4"))

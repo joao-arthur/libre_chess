@@ -25,7 +25,7 @@ mod tests {
     use crate::{
         board::pos::pos_of_str_slice,
         color::Color,
-        game::{Game, board::of_str, player::GamePlayer},
+        game::{Game, board::board_of_str, player::GamePlayer},
         geometry::poligon::rect::RectU8,
         movement::Movement,
     };
@@ -35,7 +35,7 @@ mod tests {
     #[test]
     fn is_in_check_false() {
         assert!(!is_in_check(&Game {
-            board: of_str([
+            board: board_of_str([
                 "    ♚   ",
                 "    ♟   ",
                 "        ",
@@ -77,7 +77,7 @@ mod tests {
     #[test]
     fn is_in_check_true() {
         assert!(is_in_check(&Game {
-            board: of_str([
+            board: board_of_str([
                 "    ♚   ",
                 "   ♙♟   ",
                 "        ",

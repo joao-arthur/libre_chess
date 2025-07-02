@@ -54,7 +54,7 @@ mod tests {
 
     use crate::{
         board::pos::Pos,
-        game::{board, mode::standard_chess, movement::movement::DefaultMovement, piece},
+        game::{board::{board_empty, board_of_str}, mode::standard_chess, movement::movement::DefaultMovement, piece::piece_of_str},
         geometry::poligon::rect::RectU8,
         movement::Movement,
     };
@@ -64,12 +64,12 @@ mod tests {
     #[test]
     fn movements_empty_board() {
         let bounds = standard_chess().bounds;
-        assert_eq!(movements(&board::empty(), &bounds, &Pos::of_str("A1")), []);
+        assert_eq!(movements(&board_empty(), &bounds, &Pos::of_str("A1")), []);
     }
 
     #[test]
     fn movements_lonely_piece() {
-        let board = HashMap::from([piece::of_str("D4", '♞')]);
+        let board = HashMap::from([piece_of_str("D4", '♞')]);
         let bounds = standard_chess().bounds;
         assert_eq!(
             movements(&board, &bounds, &Pos::of_str("D4")),
@@ -88,7 +88,7 @@ mod tests {
 
     #[test]
     fn movements_top_right_edge() {
-        let board = HashMap::from([piece::of_str("H8", '♞')]);
+        let board = HashMap::from([piece_of_str("H8", '♞')]);
         let bounds = standard_chess().bounds;
         assert_eq!(
             movements(&board, &bounds, &Pos::of_str("H8")),
@@ -101,7 +101,7 @@ mod tests {
 
     #[test]
     fn movements_bottom_right_edge() {
-        let board = HashMap::from([piece::of_str("H1", '♞')]);
+        let board = HashMap::from([piece_of_str("H1", '♞')]);
         let bounds = standard_chess().bounds;
         assert_eq!(
             movements(&board, &bounds, &Pos::of_str("H1")),
@@ -114,7 +114,7 @@ mod tests {
 
     #[test]
     fn movements_bottom_left_edge() {
-        let board = HashMap::from([piece::of_str("A1", '♞')]);
+        let board = HashMap::from([piece_of_str("A1", '♞')]);
         let bounds = standard_chess().bounds;
         assert_eq!(
             movements(&board, &bounds, &Pos::of_str("A1")),
@@ -127,7 +127,7 @@ mod tests {
 
     #[test]
     fn movements_top_left_edge() {
-        let board = HashMap::from([piece::of_str("A8", '♞')]);
+        let board = HashMap::from([piece_of_str("A8", '♞')]);
         let bounds = standard_chess().bounds;
         assert_eq!(
             movements(&board, &bounds, &Pos::of_str("A8")),
@@ -140,7 +140,7 @@ mod tests {
 
     #[test]
     fn movements_small_bounds_top_right_edge() {
-        let board = HashMap::from([piece::of_str("G7", '♞')]);
+        let board = HashMap::from([piece_of_str("G7", '♞')]);
         let bounds = RectU8 { x1: 3, y1: 3, x2: 7, y2: 7 };
         assert_eq!(
             movements(&board, &bounds, &Pos::of_str("G7")),
@@ -155,7 +155,7 @@ mod tests {
 
     #[test]
     fn movements_small_bounds_bottom_right_edge() {
-        let board = HashMap::from([piece::of_str("G5", '♞')]);
+        let board = HashMap::from([piece_of_str("G5", '♞')]);
         let bounds = RectU8 { x1: 3, y1: 3, x2: 7, y2: 7 };
         assert_eq!(
             movements(&board, &bounds, &Pos::of_str("G5")),
@@ -170,7 +170,7 @@ mod tests {
 
     #[test]
     fn movements_small_bounds_bottom_left_edge() {
-        let board = HashMap::from([piece::of_str("E5", '♞')]);
+        let board = HashMap::from([piece_of_str("E5", '♞')]);
         let bounds = RectU8 { x1: 3, y1: 3, x2: 7, y2: 7 };
         assert_eq!(
             movements(&board, &bounds, &Pos::of_str("E5")),
@@ -185,7 +185,7 @@ mod tests {
 
     #[test]
     fn movements_small_bounds_top_left_edge() {
-        let board = HashMap::from([piece::of_str("E7", '♞')]);
+        let board = HashMap::from([piece_of_str("E7", '♞')]);
         let bounds = RectU8 { x1: 3, y1: 3, x2: 7, y2: 7 };
         assert_eq!(
             movements(&board, &bounds, &Pos::of_str("E7")),
@@ -200,7 +200,8 @@ mod tests {
 
     #[test]
     fn movements_white_capture() {
-        let board = board::of_str([
+        let mode = standard_chess();
+        let board = board_of_str(&mode, [
             "        ",
             "        ",
             "    ♜   ",
@@ -210,9 +211,8 @@ mod tests {
             "        ",
             "        ",
         ]);
-        let bounds = standard_chess().bounds;
         assert_eq!(
-            movements(&board, &bounds, &Pos::of_str("D4")),
+            movements(&board, &mode.bounds, &Pos::of_str("D4")),
             [
                 DefaultMovement::from(Movement::of_str('♘', "D4", "E6")),
                 DefaultMovement::from(Movement::of_str('♘', "D4", "F5")),
@@ -227,7 +227,8 @@ mod tests {
 
     #[test]
     fn movements_black_capture() {
-        let board = board::of_str([
+        let mode = standard_chess();
+        let board = board_of_str(&mode, [
             "        ",
             "        ",
             "    ♖   ",
@@ -237,9 +238,8 @@ mod tests {
             "        ",
             "        ",
         ]);
-        let bounds = standard_chess().bounds;
         assert_eq!(
-            movements(&board, &bounds, &Pos::of_str("D4")),
+            movements(&board, &mode.bounds, &Pos::of_str("D4")),
             [
                 DefaultMovement::from(Movement::of_str('♞', "D4", "E6")),
                 DefaultMovement::from(Movement::of_str('♞', "D4", "F5")),

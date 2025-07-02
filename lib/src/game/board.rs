@@ -1,6 +1,6 @@
 use std::{collections::HashMap, fmt};
 
-use crate::{board::pos::Pos, piece::Piece};
+use crate::{board::pos::Pos, game::mode::GameMode, piece::Piece};
 
 #[derive(Debug, PartialEq)]
 pub struct InvalidCharacterErr;
@@ -28,11 +28,11 @@ pub enum FromStringErr {
 
 pub type GameBoard = HashMap<Pos, Piece>;
 
-pub fn empty() -> GameBoard {
+pub fn board_empty() -> GameBoard {
     HashMap::new()
 }
 
-fn try_of_str<const N: usize>(rows: [&str; N]) -> Result<GameBoard, FromStringErr> {
+pub fn board_try_of_str<const N: usize>(mode: &GameMode, rows: [&str; N]) -> Result<GameBoard, FromStringErr> {
     if rows.join("").find(|c: char| c != ' ' && Piece::try_of(c).is_none()).is_some() {
         return Err(FromStringErr::InvalidCharacter(InvalidCharacterErr));
     }
@@ -54,11 +54,11 @@ fn try_of_str<const N: usize>(rows: [&str; N]) -> Result<GameBoard, FromStringEr
     Ok(board)
 }
 
-pub fn of_str(rows: [&str; 8]) -> GameBoard {
-    try_of_str(rows).unwrap()
+pub fn board_of_str(mode: &GameMode, rows: [&str; 8]) -> GameBoard {
+    board_try_of_str(mode, rows).unwrap()
 }
 
-fn to_string(board: &GameBoard) -> String {
+fn board_to_string(mode: &GameMode, board: &GameBoard) -> String {
     let mut res = "".to_string();
     let mut row = 8;
     while row > 0 {
@@ -78,14 +78,14 @@ fn to_string(board: &GameBoard) -> String {
 mod tests {
     use std::collections::HashMap;
 
-    use crate::game::piece;
+    use crate::game::piece::piece_of_str;
 
-    use super::{FromStringErr, InvalidCharacterErr, of_str, to_string, try_of_str};
+    use super::{FromStringErr, InvalidCharacterErr, board_of_str, board_to_string, board_try_of_str};
 
     #[test]
     fn try_of_str_ok() {
         assert_eq!(
-            try_of_str([
+            board_try_of_str([
                 "♜♞♝♛♚♝♞♜",
                 "♟♟♟♟♟♟♟♟",
                 "        ",
@@ -97,38 +97,38 @@ mod tests {
             ])
             .unwrap(),
             HashMap::from([
-                piece::of_str("A8", '♜'),
-                piece::of_str("B8", '♞'),
-                piece::of_str("C8", '♝'),
-                piece::of_str("D8", '♛'),
-                piece::of_str("E8", '♚'),
-                piece::of_str("F8", '♝'),
-                piece::of_str("G8", '♞'),
-                piece::of_str("H8", '♜'),
-                piece::of_str("A7", '♟'),
-                piece::of_str("B7", '♟'),
-                piece::of_str("C7", '♟'),
-                piece::of_str("D7", '♟'),
-                piece::of_str("E7", '♟'),
-                piece::of_str("F7", '♟'),
-                piece::of_str("G7", '♟'),
-                piece::of_str("H7", '♟'),
-                piece::of_str("A2", '♙'),
-                piece::of_str("B2", '♙'),
-                piece::of_str("C2", '♙'),
-                piece::of_str("D2", '♙'),
-                piece::of_str("E2", '♙'),
-                piece::of_str("F2", '♙'),
-                piece::of_str("G2", '♙'),
-                piece::of_str("H2", '♙'),
-                piece::of_str("A1", '♖'),
-                piece::of_str("B1", '♘'),
-                piece::of_str("C1", '♗'),
-                piece::of_str("D1", '♕'),
-                piece::of_str("E1", '♔'),
-                piece::of_str("F1", '♗'),
-                piece::of_str("G1", '♘'),
-                piece::of_str("H1", '♖'),
+                piece_of_str("A8", '♜'),
+                piece_of_str("B8", '♞'),
+                piece_of_str("C8", '♝'),
+                piece_of_str("D8", '♛'),
+                piece_of_str("E8", '♚'),
+                piece_of_str("F8", '♝'),
+                piece_of_str("G8", '♞'),
+                piece_of_str("H8", '♜'),
+                piece_of_str("A7", '♟'),
+                piece_of_str("B7", '♟'),
+                piece_of_str("C7", '♟'),
+                piece_of_str("D7", '♟'),
+                piece_of_str("E7", '♟'),
+                piece_of_str("F7", '♟'),
+                piece_of_str("G7", '♟'),
+                piece_of_str("H7", '♟'),
+                piece_of_str("A2", '♙'),
+                piece_of_str("B2", '♙'),
+                piece_of_str("C2", '♙'),
+                piece_of_str("D2", '♙'),
+                piece_of_str("E2", '♙'),
+                piece_of_str("F2", '♙'),
+                piece_of_str("G2", '♙'),
+                piece_of_str("H2", '♙'),
+                piece_of_str("A1", '♖'),
+                piece_of_str("B1", '♘'),
+                piece_of_str("C1", '♗'),
+                piece_of_str("D1", '♕'),
+                piece_of_str("E1", '♔'),
+                piece_of_str("F1", '♗'),
+                piece_of_str("G1", '♘'),
+                piece_of_str("H1", '♖'),
             ])
         );
     }
@@ -136,7 +136,7 @@ mod tests {
     #[test]
     fn try_of_str_err() {
         assert_eq!(
-            try_of_str([
+            board_try_of_str([
                 "RNBQKBNR",
                 "PPPPPPPP",
                 "        ",
@@ -171,7 +171,7 @@ mod tests {
     #[test]
     fn test_of_str() {
         assert_eq!(
-            of_str([
+            board_of_str([
                 "♜♞♝♛♚♝♞♜",
                 "♟♟♟♟♟♟♟♟",
                 "        ",
@@ -182,38 +182,38 @@ mod tests {
                 "♖♘♗♕♔♗♘♖",
             ]),
             HashMap::from([
-                piece::of_str("A8", '♜'),
-                piece::of_str("B8", '♞'),
-                piece::of_str("C8", '♝'),
-                piece::of_str("D8", '♛'),
-                piece::of_str("E8", '♚'),
-                piece::of_str("F8", '♝'),
-                piece::of_str("G8", '♞'),
-                piece::of_str("H8", '♜'),
-                piece::of_str("A7", '♟'),
-                piece::of_str("B7", '♟'),
-                piece::of_str("C7", '♟'),
-                piece::of_str("D7", '♟'),
-                piece::of_str("E7", '♟'),
-                piece::of_str("F7", '♟'),
-                piece::of_str("G7", '♟'),
-                piece::of_str("H7", '♟'),
-                piece::of_str("A2", '♙'),
-                piece::of_str("B2", '♙'),
-                piece::of_str("C2", '♙'),
-                piece::of_str("D2", '♙'),
-                piece::of_str("E2", '♙'),
-                piece::of_str("F2", '♙'),
-                piece::of_str("G2", '♙'),
-                piece::of_str("H2", '♙'),
-                piece::of_str("A1", '♖'),
-                piece::of_str("B1", '♘'),
-                piece::of_str("C1", '♗'),
-                piece::of_str("D1", '♕'),
-                piece::of_str("E1", '♔'),
-                piece::of_str("F1", '♗'),
-                piece::of_str("G1", '♘'),
-                piece::of_str("H1", '♖'),
+                piece_of_str("A8", '♜'),
+                piece_of_str("B8", '♞'),
+                piece_of_str("C8", '♝'),
+                piece_of_str("D8", '♛'),
+                piece_of_str("E8", '♚'),
+                piece_of_str("F8", '♝'),
+                piece_of_str("G8", '♞'),
+                piece_of_str("H8", '♜'),
+                piece_of_str("A7", '♟'),
+                piece_of_str("B7", '♟'),
+                piece_of_str("C7", '♟'),
+                piece_of_str("D7", '♟'),
+                piece_of_str("E7", '♟'),
+                piece_of_str("F7", '♟'),
+                piece_of_str("G7", '♟'),
+                piece_of_str("H7", '♟'),
+                piece_of_str("A2", '♙'),
+                piece_of_str("B2", '♙'),
+                piece_of_str("C2", '♙'),
+                piece_of_str("D2", '♙'),
+                piece_of_str("E2", '♙'),
+                piece_of_str("F2", '♙'),
+                piece_of_str("G2", '♙'),
+                piece_of_str("H2", '♙'),
+                piece_of_str("A1", '♖'),
+                piece_of_str("B1", '♘'),
+                piece_of_str("C1", '♗'),
+                piece_of_str("D1", '♕'),
+                piece_of_str("E1", '♔'),
+                piece_of_str("F1", '♗'),
+                piece_of_str("G1", '♘'),
+                piece_of_str("H1", '♖'),
             ])
         );
     }
@@ -221,7 +221,7 @@ mod tests {
     #[test]
     fn test_to_string() {
         assert_eq!(
-            to_string(&of_str([
+            board_to_string(&board_of_str([
                 "♜♞♝♛♚♝♞♜",
                 "♟♟♟♟♟♟♟♟",
                 "        ",

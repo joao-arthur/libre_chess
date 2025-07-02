@@ -104,7 +104,7 @@ mod tests {
         assert_eq!(
             game_of_mode(standard_chess()),
             Game {
-                board: board::of_str([
+                board: board_of_str(&mode, [
                     "♜♞♝♛♚♝♞♜",
                     "♟♟♟♟♟♟♟♟",
                     "        ",
@@ -326,7 +326,7 @@ mod tests {
         assert_eq!(
             game_of_mode_and_history(standard_chess(), history),
             Game {
-                board: board::of_str([
+                board: board_of_str(&mode, [
                     "   ♖    ",
                     "    ♚   ",
                     "        ",

@@ -91,7 +91,7 @@ mod tests {
         board::pos::Pos,
         color::Color,
         game::{
-            board,
+            board::board_of_str,
             mode::standard_chess,
             movement::movement::{DefaultMovement, GameMovement},
             player::GamePlayer,
@@ -419,7 +419,8 @@ mod tests {
                 GameMovement::from(DefaultMovement::from(Movement::of_str('♖', "D5", "D6"))),
             ],
         };
-        let board = board::of_str([
+        let mode = standard_chess();
+        let board = board_of_str(&mode, [
             "    ♚   ",
             "        ",
             "   ♟    ",

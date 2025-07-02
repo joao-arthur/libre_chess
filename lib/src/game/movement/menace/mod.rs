@@ -42,7 +42,7 @@ mod tests {
 
     use crate::{
         board::pos::{Pos, pos_of_str_slice},
-        game::{board, mode::standard_chess, piece},
+        game::{board::{board_of_str, board_empty}, mode::standard_chess, piece::piece_of_str},
     };
 
     use super::menace_of_piece;
@@ -50,12 +50,12 @@ mod tests {
     #[test]
     fn menace_of_piece_empty_board() {
         let bounds = standard_chess().bounds;
-        assert_eq!(menace_of_piece(&board::empty(), &bounds, &Pos::of_str("A1")), []);
+        assert_eq!(menace_of_piece(&board_empty(), &bounds, &Pos::of_str("A1")), []);
     }
 
     #[test]
     fn menace_of_piece_rook() {
-        let board = HashMap::from([piece::of_str("D4", '♜')]);
+        let board = HashMap::from([piece_of_str("D4", '♜')]);
         let bounds = standard_chess().bounds;
         assert_eq!(
             menace_of_piece(&board, &bounds, &Pos::of_str("D4")),
@@ -67,7 +67,7 @@ mod tests {
 
     #[test]
     fn menace_of_piece_knight() {
-        let board = HashMap::from([piece::of_str("D4", '♞')]);
+        let board = HashMap::from([piece_of_str("D4", '♞')]);
         let bounds = standard_chess().bounds;
         assert_eq!(
             menace_of_piece(&board, &bounds, &Pos::of_str("D4")),
@@ -77,7 +77,7 @@ mod tests {
 
     #[test]
     fn menace_of_piece_bishop() {
-        let board = HashMap::from([piece::of_str("C5", '♝')]);
+        let board = HashMap::from([piece_of_str("C5", '♝')]);
         let bounds = standard_chess().bounds;
         assert_eq!(
             menace_of_piece(&board, &bounds, &Pos::of_str("C5")),
@@ -87,7 +87,7 @@ mod tests {
 
     #[test]
     fn menace_of_piece_queen() {
-        let board = HashMap::from([piece::of_str("C5", '♛')]);
+        let board = HashMap::from([piece_of_str("C5", '♛')]);
         let bounds = standard_chess().bounds;
         assert_eq!(
             menace_of_piece(&board, &bounds, &Pos::of_str("C5")),
@@ -100,7 +100,7 @@ mod tests {
 
     #[test]
     fn menace_of_piece_king() {
-        let board = HashMap::from([piece::of_str("D4", '♚')]);
+        let board = HashMap::from([piece_of_str("D4", '♚')]);
         let bounds = standard_chess().bounds;
         assert_eq!(
             menace_of_piece(&board, &bounds, &Pos::of_str("D4")),
@@ -110,7 +110,7 @@ mod tests {
 
     #[test]
     fn menace_of_piece_pawn() {
-        let board = HashMap::from([piece::of_str("C5", '♙')]);
+        let board = HashMap::from([piece_of_str("C5", '♙')]);
         let bounds = standard_chess().bounds;
         assert_eq!(
             menace_of_piece(&board, &bounds, &Pos::of_str("C5")),

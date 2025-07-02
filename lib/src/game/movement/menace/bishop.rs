@@ -36,7 +36,7 @@ mod tests {
 
     use crate::{
         board::pos::{Pos, pos_of_str_slice},
-        game::{board, mode::standard_chess, piece},
+        game::{board::{board_of_str, board_empty}, mode::standard_chess, piece::piece_of_str},
         geometry::poligon::rect::RectU8,
     };
 
@@ -44,7 +44,7 @@ mod tests {
 
     #[test]
     fn menace_lonely_piece() {
-        let board = HashMap::from([piece::of_str("C5", '♝')]);
+        let board = HashMap::from([piece_of_str("C5", '♝')]);
         let bounds = standard_chess().bounds;
         assert_eq!(
             menace(&board, &bounds, &Pos::of_str("C5")),
@@ -54,10 +54,10 @@ mod tests {
 
     #[test]
     fn menace_edge() {
-        let top_right = HashMap::from([piece::of_str("H8", '♝')]);
-        let bottom_right = HashMap::from([piece::of_str("H1", '♝')]);
-        let bottom_left = HashMap::from([piece::of_str("A1", '♝')]);
-        let top_left = HashMap::from([piece::of_str("A8", '♝')]);
+        let top_right = HashMap::from([piece_of_str("H8", '♝')]);
+        let bottom_right = HashMap::from([piece_of_str("H1", '♝')]);
+        let bottom_left = HashMap::from([piece_of_str("A1", '♝')]);
+        let top_left = HashMap::from([piece_of_str("A8", '♝')]);
         let bounds = standard_chess().bounds;
         assert_eq!(
             menace(&top_right, &bounds, &Pos::of_str("H8")),
@@ -79,7 +79,7 @@ mod tests {
 
     #[test]
     fn menace_small_bounds() {
-        let board = HashMap::from([piece::of_str("F6", '♝')]);
+        let board = HashMap::from([piece_of_str("F6", '♝')]);
         let bounds = RectU8 { x1: 3, y1: 3, x2: 7, y2: 7 };
         assert_eq!(
             menace(&board, &bounds, &Pos::of_str("F6")),
@@ -89,7 +89,8 @@ mod tests {
 
     #[test]
     fn menace_with_capture() {
-        let board_white_bishop = board::of_str([
+        let mode = standard_chess();
+        let board_white_bishop = board_of_str(&mode, [
             "        ",
             "        ",
             "   ♜    ",
@@ -99,7 +100,7 @@ mod tests {
             "        ",
             "        ",
         ]);
-        let board_black_bishop = board::of_str([
+        let board_black_bishop = board_of_str(&mode, [
             "        ",
             "        ",
             "   ♖    ",
@@ -109,13 +110,12 @@ mod tests {
             "        ",
             "        ",
         ]);
-        let bounds = standard_chess().bounds;
         assert_eq!(
-            menace(&board_white_bishop, &bounds, &Pos::of_str("C5")),
+            menace(&board_white_bishop, &mode.bounds, &Pos::of_str("C5")),
             pos_of_str_slice(["D6", "D4", "E3", "B4", "A3", "B6", "A7"])
         );
         assert_eq!(
-            menace(&board_black_bishop, &bounds, &Pos::of_str("C5")),
+            menace(&board_black_bishop, &mode.bounds, &Pos::of_str("C5")),
             pos_of_str_slice(["D6", "D4", "E3", "B4", "A3", "B6", "A7"])
         );
     }

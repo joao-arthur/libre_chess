@@ -31,15 +31,15 @@ mod tests {
 
     use crate::{
         board::pos::{Pos, pos_of_str_slice},
-        game::{board, mode::standard_chess, piece},
+        game::{board::{board_of_str, board_empty}, mode::standard_chess, piece::piece_of_str},
     };
 
     use super::menace;
 
     #[test]
     fn menace_lonely_piece() {
-        let board_white_pawn = HashMap::from([piece::of_str("C5", '♙')]);
-        let board_black_pawn = HashMap::from([piece::of_str("C5", '♟')]);
+        let board_white_pawn = HashMap::from([piece_of_str("C5", '♙')]);
+        let board_black_pawn = HashMap::from([piece_of_str("C5", '♟')]);
         let bounds = standard_chess().bounds;
         assert_eq!(
             menace(&board_white_pawn, &bounds, &Pos::of_str("C5")),
@@ -53,7 +53,8 @@ mod tests {
 
     #[test]
     fn menace_capture() {
-        let board_white_pawn = board::of_str([
+        let mode = standard_chess();
+        let board_white_pawn = board_of_str(&mode, [
             "        ",
             "        ",
             " ♟ ♙    ",
@@ -63,7 +64,7 @@ mod tests {
             "        ",
             "        ",
         ]);
-        let board_black_pawn = board::of_str([
+        let board_black_pawn = board_of_str(&mode, [
             "        ",
             "        ",
             "        ",
@@ -73,13 +74,12 @@ mod tests {
             "        ",
             "        ",
         ]);
-        let bounds = standard_chess().bounds;
         assert_eq!(
-            menace(&board_white_pawn, &bounds, &Pos::of_str("C5")),
+            menace(&board_white_pawn, &mode.bounds, &Pos::of_str("C5")),
             pos_of_str_slice(["B6", "D6"])
         );
         assert_eq!(
-            menace(&board_black_pawn, &bounds, &Pos::of_str("C5")),
+            menace(&board_black_pawn, &mode.bounds, &Pos::of_str("C5")),
             pos_of_str_slice(["B4", "D4"])
         );
     }
