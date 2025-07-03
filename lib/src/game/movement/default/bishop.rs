@@ -1,11 +1,10 @@
 use crate::{
     board::pos::Pos,
-    game::{board::GameBoard, movement::movement::DefaultMovement},
-    geometry::poligon::rect::RectU8,
+    game::{board::GameBoard, game::GameBounds, movement::movement::DefaultMovement},
     movement::Movement,
 };
 
-pub fn movements(board: &GameBoard, bounds: &RectU8, pos: &Pos) -> Vec<DefaultMovement> {
+pub fn movements(board: &GameBoard, bounds: &GameBounds, pos: &Pos) -> Vec<DefaultMovement> {
     let mut result: Vec<DefaultMovement> = Vec::new();
     if let Some(piece) = board.get(pos) {
         let modifiers: [[i8; 2]; 4] = [[1, 1], [-1, 1], [-1, -1], [1, -1]];
@@ -56,8 +55,13 @@ mod tests {
 
     use crate::{
         board::pos::Pos,
-        game::{board::{board_empty, board_of_str}, mode::standard_chess, movement::movement::DefaultMovement, piece::piece_of_str},
-        geometry::poligon::rect::RectU8,
+        game::{
+            board::{board_empty, board_of_str},
+            game::GameBounds,
+            mode::standard_chess,
+            movement::movement::DefaultMovement,
+            piece::piece_of_str,
+        },
         movement::Movement,
     };
 
@@ -94,7 +98,7 @@ mod tests {
     #[test]
     fn movements_small_bounds() {
         let board = HashMap::from([piece_of_str("F6", '♝')]);
-        let bounds = RectU8 { x1: 3, y1: 3, x2: 7, y2: 7 };
+        let bounds = GameBounds { x1: 3, y1: 3, x2: 7, y2: 7 };
         assert_eq!(
             movements(&board, &bounds, &Pos::of_str("F6")),
             [
@@ -185,16 +189,19 @@ mod tests {
     #[test]
     fn movements_with_capture() {
         let mode = standard_chess();
-        let board = board_of_str(&mode, [
-            "        ",
-            "        ",
-            "   ♜    ",
-            "  ♗     ",
-            "        ",
-            "♜   ♖   ",
-            "        ",
-            "        ",
-        ]);
+        let board = board_of_str(
+            &mode,
+            [
+                "        ",
+                "        ",
+                "   ♜    ",
+                "  ♗     ",
+                "        ",
+                "♜   ♖   ",
+                "        ",
+                "        ",
+            ],
+        );
         assert_eq!(
             movements(&board, &mode.bounds, &Pos::of_str("C5")),
             [
@@ -211,16 +218,19 @@ mod tests {
     #[test]
     fn movements_black_capture() {
         let mode = standard_chess();
-        let board = board_of_str(&mode, [
-            "        ",
-            "        ",
-            "   ♖    ",
-            "  ♝     ",
-            "        ",
-            "♖   ♜   ",
-            "        ",
-            "        ",
-        ]);
+        let board = board_of_str(
+            &mode,
+            [
+                "        ",
+                "        ",
+                "   ♖    ",
+                "  ♝     ",
+                "        ",
+                "♖   ♜   ",
+                "        ",
+                "        ",
+            ],
+        );
         assert_eq!(
             movements(&board, &mode.bounds, &Pos::of_str("C5")),
             [

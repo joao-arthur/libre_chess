@@ -208,12 +208,8 @@ mod tests {
                     moves: HashMap::from([(
                         Pos::of_str("B2"),
                         vec![
-                            GameMovement::from(DefaultMovement::from(Movement::of_str(
-                                '♟', "B2", "B3",
-                            ))),
-                            GameMovement::from(DefaultMovement::from(Movement::of_str(
-                                '♟', "B2", "B4",
-                            ))),
+                            GameMovement::from(DefaultMovement::from(Movement::of_str('♟', "B2", "B3"))),
+                            GameMovement::from(DefaultMovement::from(Movement::of_str('♟', "B2", "B4"))),
                         ],
                     )]),
                 },
@@ -236,6 +232,7 @@ mod tests {
 
     #[test]
     fn player_toggle_selected_piece() {
+        let mode = standard_chess();
         let mut selection = Selection {
             selected_squares: HashSet::from([Pos::of_str("D4")]),
             selected_piece: Some(Pos::of_str("B2")),
@@ -276,6 +273,7 @@ mod tests {
 
     #[test]
     fn player_select_another_player_piece() {
+        let mode = standard_chess();
         let mut selection = Selection {
             selected_squares: HashSet::from([Pos::of_str("D4")]),
             selected_piece: None,
@@ -316,6 +314,7 @@ mod tests {
 
     #[test]
     fn player_select_own_piece_then_another_own_piece() {
+        let mode = standard_chess();
         let mut selection = Selection {
             selected_squares: HashSet::from([Pos::of_str("D4")]),
             selected_piece: Some(Pos::of_str("B2")),
@@ -341,12 +340,8 @@ mod tests {
                     moves: HashMap::from([(
                         Pos::of_str("C2"),
                         vec![
-                            GameMovement::from(DefaultMovement::from(Movement::of_str(
-                                '♟', "C2", "C3",
-                            ))),
-                            GameMovement::from(DefaultMovement::from(Movement::of_str(
-                                '♟', "C2", "C4",
-                            ))),
+                            GameMovement::from(DefaultMovement::from(Movement::of_str('♟', "C2", "C3"))),
+                            GameMovement::from(DefaultMovement::from(Movement::of_str('♟', "C2", "C4",))),
                         ],
                     )]),
                 },
@@ -420,16 +415,19 @@ mod tests {
             ],
         };
         let mode = standard_chess();
-        let board = board_of_str(&mode, [
-            "    ♚   ",
-            "        ",
-            "   ♟    ",
-            "  ♟♖♟   ",
-            "   ♟    ",
-            "        ",
-            "        ",
-            "    ♔   ",
-        ]);
+        let board = board_of_str(
+            &mode,
+            [
+                "    ♚   ",
+                "        ",
+                "   ♟    ",
+                "  ♟♖♟   ",
+                "   ♟    ",
+                "        ",
+                "        ",
+                "    ♔   ",
+            ],
+        );
         let players = HashMap::from([
             (
                 Color::Black,
@@ -449,18 +447,10 @@ mod tests {
                     moves: HashMap::from([(
                         Pos::of_str("D5"),
                         vec![
-                            GameMovement::from(DefaultMovement::from(Movement::of_str(
-                                '♖', "D5", "E5",
-                            ))),
-                            GameMovement::from(DefaultMovement::from(Movement::of_str(
-                                '♖', "D5", "D4",
-                            ))),
-                            GameMovement::from(DefaultMovement::from(Movement::of_str(
-                                '♖', "D5", "C5",
-                            ))),
-                            GameMovement::from(DefaultMovement::from(Movement::of_str(
-                                '♖', "D5", "D6",
-                            ))),
+                            GameMovement::from(DefaultMovement::from(Movement::of_str('♖', "D5", "E5"))),
+                            GameMovement::from(DefaultMovement::from(Movement::of_str('♖', "D5", "D4"))),
+                            GameMovement::from(DefaultMovement::from(Movement::of_str('♖', "D5", "C5"))),
+                            GameMovement::from(DefaultMovement::from(Movement::of_str('♖', "D5", "D6"))),
                         ],
                     )]),
                 },

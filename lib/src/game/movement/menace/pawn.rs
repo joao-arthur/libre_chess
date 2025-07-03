@@ -1,8 +1,10 @@
 use crate::{
-    board::pos::Pos, color::Color, game::board::GameBoard, geometry::poligon::rect::RectU8,
+    board::pos::Pos,
+    color::Color,
+    game::{board::GameBoard, game::GameBounds},
 };
 
-pub fn menace(board: &GameBoard, bounds: &RectU8, pos: &Pos) -> Vec<Pos> {
+pub fn menace(board: &GameBoard, bounds: &GameBounds, pos: &Pos) -> Vec<Pos> {
     let mut result: Vec<Pos> = Vec::new();
     if let Some(piece) = board.get(pos) {
         let capture_base = match &piece.color {
@@ -54,26 +56,32 @@ mod tests {
     #[test]
     fn menace_capture() {
         let mode = standard_chess();
-        let board_white_pawn = board_of_str(&mode, [
-            "        ",
-            "        ",
-            " ♟ ♙    ",
-            "  ♙     ",
-            "        ",
-            "        ",
-            "        ",
-            "        ",
-        ]);
-        let board_black_pawn = board_of_str(&mode, [
-            "        ",
-            "        ",
-            "        ",
-            "  ♟     ",
-            " ♟ ♙    ",
-            "        ",
-            "        ",
-            "        ",
-        ]);
+        let board_white_pawn = board_of_str(
+            &mode,
+            [
+                "        ",
+                "        ",
+                " ♟ ♙    ",
+                "  ♙     ",
+                "        ",
+                "        ",
+                "        ",
+                "        ",
+            ],
+        );
+        let board_black_pawn = board_of_str(
+            &mode,
+            [
+                "        ",
+                "        ",
+                "        ",
+                "  ♟     ",
+                " ♟ ♙    ",
+                "        ",
+                "        ",
+                "        ",
+            ],
+        );
         assert_eq!(
             menace(&board_white_pawn, &mode.bounds, &Pos::of_str("C5")),
             pos_of_str_slice(["B6", "D6"])

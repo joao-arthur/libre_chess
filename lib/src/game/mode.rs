@@ -1,19 +1,16 @@
 use std::collections::HashMap;
 
-use crate::{
-    game::{board::GameBoard, piece::piece_of_str},
-    geometry::poligon::rect::RectU8,
-};
+use crate::game::{board::GameBoard, game::GameBounds, piece::piece_of_str};
 
 #[derive(Debug, PartialEq)]
 pub struct GameMode {
-    pub bounds: RectU8,
+    pub bounds: GameBounds,
     pub initial_board: GameBoard,
 }
 
 pub fn standard_chess() -> GameMode {
     GameMode {
-        bounds: RectU8 { x1: 0, y1: 0, x2: 7, y2: 7 },
+        bounds: GameBounds { x1: 0, y1: 0, x2: 7, y2: 7 },
         initial_board: HashMap::from([
             piece_of_str("A8", '♜'),
             piece_of_str("B8", '♞'),
@@ -57,7 +54,7 @@ pub fn chess_960() {
 
 #[cfg(test)]
 mod tests {
-    use crate::{game::board::board_of_str, geometry::poligon::rect::RectU8};
+    use crate::game::{board::board_of_str, game::GameBounds};
 
     use super::{GameMode, standard_chess};
 
@@ -67,17 +64,20 @@ mod tests {
         assert_eq!(
             mode,
             GameMode {
-                bounds: RectU8 { x1: 0, y1: 0, x2: 7, y2: 7 },
-                initial_board: board_of_str(&mode, [
-                    "♜♞♝♛♚♝♞♜",
-                    "♟♟♟♟♟♟♟♟",
-                    "        ",
-                    "        ",
-                    "        ",
-                    "        ",
-                    "♙♙♙♙♙♙♙♙",
-                    "♖♘♗♕♔♗♘♖",
-                ])
+                bounds: GameBounds { x1: 0, y1: 0, x2: 7, y2: 7 },
+                initial_board: board_of_str(
+                    &mode,
+                    [
+                        "♜♞♝♛♚♝♞♜",
+                        "♟♟♟♟♟♟♟♟",
+                        "        ",
+                        "        ",
+                        "        ",
+                        "        ",
+                        "♙♙♙♙♙♙♙♙",
+                        "♖♘♗♕♔♗♘♖",
+                    ]
+                )
             }
         );
     }

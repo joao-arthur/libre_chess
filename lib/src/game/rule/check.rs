@@ -25,8 +25,9 @@ mod tests {
     use crate::{
         board::pos::pos_of_str_slice,
         color::Color,
-        game::{board::board_of_str, mode::standard_chess, player::GamePlayer, Game},
-        geometry::poligon::rect::RectU8,
+        game::{
+            Game, board::board_of_str, game::GameBounds, mode::standard_chess, player::GamePlayer,
+        },
         movement::Movement,
     };
 
@@ -36,17 +37,20 @@ mod tests {
     fn is_in_check_false() {
         let mode = standard_chess();
         assert!(!is_in_check(&Game {
-            board: board_of_str(&mode, [
-                "    ♚   ",
-                "    ♟   ",
-                "        ",
-                "        ",
-                "        ",
-                "        ",
-                "    ♙   ",
-                "    ♔   ",
-            ]),
-            bounds: RectU8 { x1: 0, y1: 0, x2: 7, y2: 7 },
+            board: board_of_str(
+                &mode,
+                [
+                    "    ♚   ",
+                    "    ♟   ",
+                    "        ",
+                    "        ",
+                    "        ",
+                    "        ",
+                    "    ♙   ",
+                    "    ♔   ",
+                ]
+            ),
+            bounds: GameBounds { x1: 0, y1: 0, x2: 7, y2: 7 },
             players: HashMap::from([
                 (
                     Color::White,
@@ -79,17 +83,20 @@ mod tests {
     fn is_in_check_true() {
         let mode = standard_chess();
         assert!(is_in_check(&Game {
-            board: board_of_str(&mode, [
-                "    ♚   ",
-                "   ♙♟   ",
-                "        ",
-                "        ",
-                "        ",
-                "        ",
-                "        ",
-                "    ♔   ",
-            ]),
-            bounds: RectU8 { x1: 0, y1: 0, x2: 7, y2: 7 },
+            board: board_of_str(
+                &mode,
+                [
+                    "    ♚   ",
+                    "   ♙♟   ",
+                    "        ",
+                    "        ",
+                    "        ",
+                    "        ",
+                    "        ",
+                    "    ♔   ",
+                ]
+            ),
+            bounds: GameBounds { x1: 0, y1: 0, x2: 7, y2: 7 },
             players: HashMap::from([
                 (
                     Color::White,

@@ -1,14 +1,17 @@
 use crate::{
     board::pos::Pos,
-    game::{board::GameBoard, game::GameHistory, movement::movement::CastlingMovement},
-    geometry::poligon::rect::RectU8,
+    game::{
+        board::GameBoard,
+        game::{GameBounds, GameHistory},
+        movement::movement::CastlingMovement,
+    },
     movement::Movement,
     piece::Type,
 };
 
 pub fn movements(
     board: &GameBoard,
-    bounds: &RectU8,
+    bounds: &GameBounds,
     history: &GameHistory,
     pos: &Pos,
 ) -> Vec<CastlingMovement> {

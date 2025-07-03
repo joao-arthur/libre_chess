@@ -88,12 +88,12 @@ mod tests {
         board::pos::{Pos, pos_of_str_slice},
         color::Color,
         game::{
-            Game, board::board_of_str,
+            Game,
+            board::board_of_str,
             mode::standard_chess,
             movement::movement::{DefaultMovement, GameMovement},
             player::GamePlayer,
         },
-        geometry::poligon::rect::RectU8,
         movement::Movement,
     };
 
@@ -105,17 +105,20 @@ mod tests {
         assert_eq!(
             game_of_mode(standard_chess()),
             Game {
-                board: board_of_str(&mode, [
-                    "♜♞♝♛♚♝♞♜",
-                    "♟♟♟♟♟♟♟♟",
-                    "        ",
-                    "        ",
-                    "        ",
-                    "        ",
-                    "♙♙♙♙♙♙♙♙",
-                    "♖♘♗♕♔♗♘♖",
-                ]),
-                bounds: RectU8 { x1: 0, y1: 0, x2: 7, y2: 7 },
+                board: board_of_str(
+                    &mode,
+                    [
+                        "♜♞♝♛♚♝♞♜",
+                        "♟♟♟♟♟♟♟♟",
+                        "        ",
+                        "        ",
+                        "        ",
+                        "        ",
+                        "♙♙♙♙♙♙♙♙",
+                        "♖♘♗♕♔♗♘♖",
+                    ]
+                ),
+                bounds: GameBounds { x1: 0, y1: 0, x2: 7, y2: 7 },
                 players: HashMap::from([
                     (
                         Color::Black,
@@ -288,17 +291,20 @@ mod tests {
         assert_eq!(
             game_of_mode_and_history(standard_chess(), history),
             Game {
-                board: board_of_str(&mode, [
-                    "   ♖    ",
-                    "    ♚   ",
-                    "        ",
-                    "        ",
-                    "        ",
-                    "        ",
-                    "    ♔   ",
-                    "   ♜    ",
-                ]),
-                bounds: RectU8 { x1: 0, y1: 0, x2: 7, y2: 7 },
+                board: board_of_str(
+                    &mode,
+                    [
+                        "   ♖    ",
+                        "    ♚   ",
+                        "        ",
+                        "        ",
+                        "        ",
+                        "        ",
+                        "    ♔   ",
+                        "   ♜    ",
+                    ]
+                ),
+                bounds: GameBounds { x1: 0, y1: 0, x2: 7, y2: 7 },
                 players: HashMap::from([
                     (
                         Color::Black,

@@ -21,7 +21,7 @@ impl fmt::Display for InvalidLengthErr {
 }
 
 #[derive(Debug, PartialEq)]
-pub enum FromStringErr {
+pub enum GameBoardErr {
     InvalidCharacter(InvalidCharacterErr),
     InvalidLength(InvalidLengthErr),
 }
@@ -32,13 +32,16 @@ pub fn board_empty() -> GameBoard {
     HashMap::new()
 }
 
-pub fn board_try_of_str<const N: usize>(mode: &GameMode, rows: [&str; N]) -> Result<GameBoard, FromStringErr> {
+pub fn board_try_of_str<const N: usize>(
+    mode: &GameMode,
+    rows: [&str; N],
+) -> Result<GameBoard, GameBoardErr> {
     if rows.join("").find(|c: char| c != ' ' && Piece::try_of(c).is_none()).is_some() {
-        return Err(FromStringErr::InvalidCharacter(InvalidCharacterErr));
+        return Err(GameBoardErr::InvalidCharacter(InvalidCharacterErr));
     }
     //for line in rows {
     //    if line.chars().count() != 8 {
-    //        return Err(FromStringErr::InvalidLength(InvalidLengthErr));
+    //        return Err(GameBoardErr::InvalidLength(InvalidLengthErr));
     //    }
     //}
     let rows_iter = rows.iter().rev();
@@ -80,22 +83,27 @@ mod tests {
 
     use crate::game::{mode::standard_chess, piece::piece_of_str};
 
-    use super::{FromStringErr, InvalidCharacterErr, board_of_str, board_to_string, board_try_of_str};
+    use super::{
+        GameBoardErr, InvalidCharacterErr, board_of_str, board_to_string, board_try_of_str,
+    };
 
     #[test]
     fn try_of_str_ok() {
         let mode = standard_chess();
         assert_eq!(
-            board_try_of_str(&mode, [
-                "♜♞♝♛♚♝♞♜",
-                "♟♟♟♟♟♟♟♟",
-                "        ",
-                "        ",
-                "        ",
-                "        ",
-                "♙♙♙♙♙♙♙♙",
-                "♖♘♗♕♔♗♘♖",
-            ])
+            board_try_of_str(
+                &mode,
+                [
+                    "♜♞♝♛♚♝♞♜",
+                    "♟♟♟♟♟♟♟♟",
+                    "        ",
+                    "        ",
+                    "        ",
+                    "        ",
+                    "♙♙♙♙♙♙♙♙",
+                    "♖♘♗♕♔♗♘♖",
+                ]
+            )
             .unwrap(),
             HashMap::from([
                 piece_of_str("A8", '♜'),
@@ -138,17 +146,20 @@ mod tests {
     fn try_of_str_err() {
         let mode = standard_chess();
         assert_eq!(
-            board_try_of_str(&mode, [
-                "RNBQKBNR",
-                "PPPPPPPP",
-                "        ",
-                "        ",
-                "        ",
-                "        ",
-                "♙♙♙♙♙♙♙♙",
-                "♖♘♗♕♔♗♘♖",
-            ]),
-            Err(FromStringErr::InvalidCharacter(InvalidCharacterErr))
+            board_try_of_str(
+                &mode,
+                [
+                    "RNBQKBNR",
+                    "PPPPPPPP",
+                    "        ",
+                    "        ",
+                    "        ",
+                    "        ",
+                    "♙♙♙♙♙♙♙♙",
+                    "♖♘♗♕♔♗♘♖",
+                ]
+            ),
+            Err(GameBoardErr::InvalidCharacter(InvalidCharacterErr))
         );
         //assert_eq!(
         //    try_of_str([
@@ -161,7 +172,7 @@ mod tests {
         //        "♙♙♙♙♙♙♙♙",
         //        "♖♘♗♕♔♗♘♖",
         //    ]),
-        //    Err(FromStringErr::InvalidLength(InvalidLengthErr))
+        //    Err(GameBoardErr::InvalidLength(InvalidLengthErr))
         //);
         //assert_eq!(
         //    format!("{}", InvalidCharacterErr),
@@ -174,16 +185,19 @@ mod tests {
     fn test_of_str() {
         let mode = standard_chess();
         assert_eq!(
-            board_of_str(&mode, [
-                "♜♞♝♛♚♝♞♜",
-                "♟♟♟♟♟♟♟♟",
-                "        ",
-                "        ",
-                "        ",
-                "        ",
-                "♙♙♙♙♙♙♙♙",
-                "♖♘♗♕♔♗♘♖",
-            ]),
+            board_of_str(
+                &mode,
+                [
+                    "♜♞♝♛♚♝♞♜",
+                    "♟♟♟♟♟♟♟♟",
+                    "        ",
+                    "        ",
+                    "        ",
+                    "        ",
+                    "♙♙♙♙♙♙♙♙",
+                    "♖♘♗♕♔♗♘♖",
+                ]
+            ),
             HashMap::from([
                 piece_of_str("A8", '♜'),
                 piece_of_str("B8", '♞'),
@@ -225,16 +239,19 @@ mod tests {
     fn test_to_string() {
         let mode = standard_chess();
         assert_eq!(
-            board_to_string(&board_of_str(&mode, [
-                "♜♞♝♛♚♝♞♜",
-                "♟♟♟♟♟♟♟♟",
-                "        ",
-                "        ",
-                "        ",
-                "        ",
-                "♙♙♙♙♙♙♙♙",
-                "♖♘♗♕♔♗♘♖",
-            ])),
+            board_to_string(&board_of_str(
+                &mode,
+                [
+                    "♜♞♝♛♚♝♞♜",
+                    "♟♟♟♟♟♟♟♟",
+                    "        ",
+                    "        ",
+                    "        ",
+                    "        ",
+                    "♙♙♙♙♙♙♙♙",
+                    "♖♘♗♕♔♗♘♖",
+                ]
+            )),
             "".to_owned()
                 + "♜♞♝♛♚♝♞♜\n"
                 + "♟♟♟♟♟♟♟♟\n"

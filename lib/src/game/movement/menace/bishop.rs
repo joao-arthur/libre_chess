@@ -1,6 +1,9 @@
-use crate::{board::pos::Pos, game::board::GameBoard, geometry::poligon::rect::RectU8};
+use crate::{
+    board::pos::Pos,
+    game::{board::GameBoard, game::GameBounds},
+};
 
-pub fn menace(board: &GameBoard, bounds: &RectU8, pos: &Pos) -> Vec<Pos> {
+pub fn menace(board: &GameBoard, bounds: &GameBounds, pos: &Pos) -> Vec<Pos> {
     let mut result: Vec<Pos> = Vec::new();
     let modifiers: [[i8; 2]; 4] = [[1, 1], [-1, 1], [-1, -1], [1, -1]];
     for modifier in modifiers {
@@ -36,8 +39,7 @@ mod tests {
 
     use crate::{
         board::pos::{Pos, pos_of_str_slice},
-        game::{board::board_of_str, mode::standard_chess, piece::piece_of_str},
-        geometry::poligon::rect::RectU8,
+        game::{board::board_of_str, game::GameBounds, mode::standard_chess, piece::piece_of_str},
     };
 
     use super::menace;
@@ -80,7 +82,7 @@ mod tests {
     #[test]
     fn menace_small_bounds() {
         let board = HashMap::from([piece_of_str("F6", '♝')]);
-        let bounds = RectU8 { x1: 3, y1: 3, x2: 7, y2: 7 };
+        let bounds = GameBounds { x1: 3, y1: 3, x2: 7, y2: 7 };
         assert_eq!(
             menace(&board, &bounds, &Pos::of_str("F6")),
             pos_of_str_slice(["G7", "H8", "G5", "H4", "E5", "D4", "E7", "D8"])
@@ -90,26 +92,32 @@ mod tests {
     #[test]
     fn menace_with_capture() {
         let mode = standard_chess();
-        let board_white_bishop = board_of_str(&mode, [
-            "        ",
-            "        ",
-            "   ♜    ",
-            "  ♗     ",
-            "        ",
-            "♜   ♖   ",
-            "        ",
-            "        ",
-        ]);
-        let board_black_bishop = board_of_str(&mode, [
-            "        ",
-            "        ",
-            "   ♖    ",
-            "  ♝     ",
-            "        ",
-            "♖   ♜   ",
-            "        ",
-            "        ",
-        ]);
+        let board_white_bishop = board_of_str(
+            &mode,
+            [
+                "        ",
+                "        ",
+                "   ♜    ",
+                "  ♗     ",
+                "        ",
+                "♜   ♖   ",
+                "        ",
+                "        ",
+            ],
+        );
+        let board_black_bishop = board_of_str(
+            &mode,
+            [
+                "        ",
+                "        ",
+                "   ♖    ",
+                "  ♝     ",
+                "        ",
+                "♖   ♜   ",
+                "        ",
+                "        ",
+            ],
+        );
         assert_eq!(
             menace(&board_white_bishop, &mode.bounds, &Pos::of_str("C5")),
             pos_of_str_slice(["D6", "D4", "E3", "B4", "A3", "B6", "A7"])

@@ -1,7 +1,6 @@
 use crate::{
     board::pos::Pos,
-    game::{board::GameBoard, movement::movement::DefaultMovement},
-    geometry::poligon::rect::RectU8,
+    game::{board::GameBoard, game::GameBounds, movement::movement::DefaultMovement},
     piece::Type,
 };
 
@@ -12,7 +11,7 @@ mod pawn;
 mod queen;
 mod rook;
 
-pub fn movements(board: &GameBoard, bounds: &RectU8, pos: &Pos) -> Vec<DefaultMovement> {
+pub fn movements(board: &GameBoard, bounds: &GameBounds, pos: &Pos) -> Vec<DefaultMovement> {
     if let Some(piece) = board.get(pos) {
         return match piece.t {
             Type::Rook => rook::movements(board, bounds, pos),
@@ -32,7 +31,10 @@ mod tests {
 
     use crate::{
         board::pos::Pos,
-        game::{board::board_empty, mode::standard_chess, movement::movement::DefaultMovement, piece::piece_of_str},
+        game::{
+            board::board_empty, mode::standard_chess, movement::movement::DefaultMovement,
+            piece::piece_of_str,
+        },
         movement::Movement,
     };
 

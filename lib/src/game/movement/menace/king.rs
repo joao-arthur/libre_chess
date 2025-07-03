@@ -1,6 +1,9 @@
-use crate::{board::pos::Pos, game::board::GameBoard, geometry::poligon::rect::RectU8};
+use crate::{
+    board::pos::Pos,
+    game::{board::GameBoard, game::GameBounds},
+};
 
-pub fn menace(board: &GameBoard, bounds: &RectU8, pos: &Pos) -> Vec<Pos> {
+pub fn menace(board: &GameBoard, bounds: &GameBounds, pos: &Pos) -> Vec<Pos> {
     let mut result: Vec<Pos> = Vec::new();
     let base = [
         pos.try_of_rel_idx(1, 1),
@@ -33,8 +36,7 @@ mod tests {
 
     use crate::{
         board::pos::{Pos, pos_of_str_slice},
-        game::{board::board_of_str, mode::standard_chess, piece::piece_of_str},
-        geometry::poligon::rect::RectU8,
+        game::{board::board_of_str, game::GameBounds, mode::standard_chess, piece::piece_of_str},
     };
 
     use super::menace;
@@ -80,7 +82,7 @@ mod tests {
         let bottom_right = HashMap::from([piece_of_str("H4", '♚')]);
         let bottom_left = HashMap::from([piece_of_str("D4 ", '♚')]);
         let top_left = HashMap::from([piece_of_str("D8", '♚')]);
-        let bounds = RectU8 { x1: 3, y1: 3, x2: 7, y2: 7 };
+        let bounds = GameBounds { x1: 3, y1: 3, x2: 7, y2: 7 };
         assert_eq!(
             menace(&top_right, &bounds, &Pos::of_str("H8")),
             pos_of_str_slice(["H7", "G7", "G8"])
@@ -102,26 +104,32 @@ mod tests {
     #[test]
     fn menace_with_capture() {
         let mode = standard_chess();
-        let board_white_king = board_of_str(&mode, [
-            "        ",
-            "        ",
-            "        ",
-            "    ♜   ",
-            "  ♝♔    ",
-            "   ♖    ",
-            "        ",
-            "        ",
-        ]);
-        let board_black_king = board_of_str(&mode, [
-            "        ",
-            "        ",
-            "        ",
-            "    ♖   ",
-            "  ♗♚    ",
-            "   ♜    ",
-            "        ",
-            "        ",
-        ]);
+        let board_white_king = board_of_str(
+            &mode,
+            [
+                "        ",
+                "        ",
+                "        ",
+                "    ♜   ",
+                "  ♝♔    ",
+                "   ♖    ",
+                "        ",
+                "        ",
+            ],
+        );
+        let board_black_king = board_of_str(
+            &mode,
+            [
+                "        ",
+                "        ",
+                "        ",
+                "    ♖   ",
+                "  ♗♚    ",
+                "   ♜    ",
+                "        ",
+                "        ",
+            ],
+        );
         assert_eq!(
             menace(&board_white_king, &mode.bounds, &Pos::of_str("D4")),
             pos_of_str_slice(["E5", "E4", "E3", "D3", "C3", "C4", "C5", "D5"])
