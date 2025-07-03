@@ -46,35 +46,35 @@ mod tests {
 
     #[test]
     fn menace_lonely_piece() {
+        let mode = standard_chess();
         let board = HashMap::from([piece_of_str("C5", '♝')]);
-        let bounds = standard_chess().bounds;
         assert_eq!(
-            menace(&board, &bounds, &Pos::of_str("C5")),
+            menace(&board, &mode.bounds, &Pos::of_str("C5")),
             pos_of_str_slice(["D6", "E7", "F8", "D4", "E3", "F2", "G1", "B4", "A3", "B6", "A7"])
         );
     }
 
     #[test]
     fn menace_edge() {
+        let mode = standard_chess();
         let top_right = HashMap::from([piece_of_str("H8", '♝')]);
         let bottom_right = HashMap::from([piece_of_str("H1", '♝')]);
         let bottom_left = HashMap::from([piece_of_str("A1", '♝')]);
         let top_left = HashMap::from([piece_of_str("A8", '♝')]);
-        let bounds = standard_chess().bounds;
         assert_eq!(
-            menace(&top_right, &bounds, &Pos::of_str("H8")),
+            menace(&top_right, &mode.bounds, &Pos::of_str("H8")),
             pos_of_str_slice(["G7", "F6", "E5", "D4", "C3", "B2", "A1"])
         );
         assert_eq!(
-            menace(&bottom_right, &bounds, &Pos::of_str("H1")),
+            menace(&bottom_right, &mode.bounds, &Pos::of_str("H1")),
             pos_of_str_slice(["G2", "F3", "E4", "D5", "C6", "B7", "A8"])
         );
         assert_eq!(
-            menace(&bottom_left, &bounds, &Pos::of_str("A1")),
+            menace(&bottom_left, &mode.bounds, &Pos::of_str("A1")),
             pos_of_str_slice(["B2", "C3", "D4", "E5", "F6", "G7", "H8"])
         );
         assert_eq!(
-            menace(&top_left, &bounds, &Pos::of_str("A8")),
+            menace(&top_left, &mode.bounds, &Pos::of_str("A8")),
             pos_of_str_slice(["B7", "C6", "D5", "E4", "F3", "G2", "H1"])
         );
     }

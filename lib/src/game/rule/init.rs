@@ -90,6 +90,7 @@ mod tests {
         game::{
             Game,
             board::board_of_str,
+            game::GameBounds,
             mode::standard_chess,
             movement::movement::{DefaultMovement, GameMovement},
             player::GamePlayer,

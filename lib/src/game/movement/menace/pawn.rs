@@ -40,15 +40,15 @@ mod tests {
 
     #[test]
     fn menace_lonely_piece() {
+        let mode = standard_chess();
         let board_white_pawn = HashMap::from([piece_of_str("C5", '♙')]);
         let board_black_pawn = HashMap::from([piece_of_str("C5", '♟')]);
-        let bounds = standard_chess().bounds;
         assert_eq!(
-            menace(&board_white_pawn, &bounds, &Pos::of_str("C5")),
+            menace(&board_white_pawn, &mode.bounds, &Pos::of_str("C5")),
             pos_of_str_slice(["B6", "D6"])
         );
         assert_eq!(
-            menace(&board_black_pawn, &bounds, &Pos::of_str("C5")),
+            menace(&board_black_pawn, &mode.bounds, &Pos::of_str("C5")),
             pos_of_str_slice(["B4", "D4"])
         );
     }

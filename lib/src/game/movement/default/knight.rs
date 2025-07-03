@@ -67,16 +67,16 @@ mod tests {
 
     #[test]
     fn movements_empty_board() {
-        let bounds = standard_chess().bounds;
-        assert_eq!(movements(&board_empty(), &bounds, &Pos::of_str("A1")), []);
+        let mode = standard_chess();
+        assert_eq!(movements(&board_empty(), &mode.bounds, &Pos::of_str("A1")), []);
     }
 
     #[test]
     fn movements_lonely_piece() {
+        let mode = standard_chess();
         let board = HashMap::from([piece_of_str("D4", '♞')]);
-        let bounds = standard_chess().bounds;
         assert_eq!(
-            movements(&board, &bounds, &Pos::of_str("D4")),
+            movements(&board, &mode.bounds, &Pos::of_str("D4")),
             [
                 DefaultMovement::from(Movement::of_str('♞', "D4", "E6")),
                 DefaultMovement::from(Movement::of_str('♞', "D4", "F5")),
@@ -92,10 +92,10 @@ mod tests {
 
     #[test]
     fn movements_top_right_edge() {
+        let mode = standard_chess();
         let board = HashMap::from([piece_of_str("H8", '♞')]);
-        let bounds = standard_chess().bounds;
         assert_eq!(
-            movements(&board, &bounds, &Pos::of_str("H8")),
+            movements(&board, &mode.bounds, &Pos::of_str("H8")),
             [
                 DefaultMovement::from(Movement::of_str('♞', "H8", "G6")),
                 DefaultMovement::from(Movement::of_str('♞', "H8", "F7"))
@@ -105,10 +105,10 @@ mod tests {
 
     #[test]
     fn movements_bottom_right_edge() {
+        let mode = standard_chess();
         let board = HashMap::from([piece_of_str("H1", '♞')]);
-        let bounds = standard_chess().bounds;
         assert_eq!(
-            movements(&board, &bounds, &Pos::of_str("H1")),
+            movements(&board, &mode.bounds, &Pos::of_str("H1")),
             [
                 DefaultMovement::from(Movement::of_str('♞', "H1", "F2")),
                 DefaultMovement::from(Movement::of_str('♞', "H1", "G3"))
@@ -118,10 +118,10 @@ mod tests {
 
     #[test]
     fn movements_bottom_left_edge() {
+        let mode = standard_chess();
         let board = HashMap::from([piece_of_str("A1", '♞')]);
-        let bounds = standard_chess().bounds;
         assert_eq!(
-            movements(&board, &bounds, &Pos::of_str("A1")),
+            movements(&board, &mode.bounds, &Pos::of_str("A1")),
             [
                 DefaultMovement::from(Movement::of_str('♞', "A1", "B3")),
                 DefaultMovement::from(Movement::of_str('♞', "A1", "C2"))
@@ -131,10 +131,10 @@ mod tests {
 
     #[test]
     fn movements_top_left_edge() {
+        let mode = standard_chess();
         let board = HashMap::from([piece_of_str("A8", '♞')]);
-        let bounds = standard_chess().bounds;
         assert_eq!(
-            movements(&board, &bounds, &Pos::of_str("A8")),
+            movements(&board, &mode.bounds, &Pos::of_str("A8")),
             [
                 DefaultMovement::from(Movement::of_str('♞', "A8", "C7")),
                 DefaultMovement::from(Movement::of_str('♞', "A8", "B6"))

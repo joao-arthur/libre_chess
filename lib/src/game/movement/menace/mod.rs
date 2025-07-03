@@ -51,16 +51,16 @@ mod tests {
 
     #[test]
     fn menace_of_piece_empty_board() {
-        let bounds = standard_chess().bounds;
-        assert_eq!(menace_of_piece(&board_empty(), &bounds, &Pos::of_str("A1")), []);
+        let mode = standard_chess();
+        assert_eq!(menace_of_piece(&board_empty(), &mode.bounds, &Pos::of_str("A1")), []);
     }
 
     #[test]
     fn menace_of_piece_rook() {
+        let mode = standard_chess();
         let board = HashMap::from([piece_of_str("D4", '♜')]);
-        let bounds = standard_chess().bounds;
         assert_eq!(
-            menace_of_piece(&board, &bounds, &Pos::of_str("D4")),
+            menace_of_piece(&board, &mode.bounds, &Pos::of_str("D4")),
             pos_of_str_slice([
                 "E4", "F4", "G4", "H4", "D3", "D2", "D1", "C4", "B4", "A4", "D5", "D6", "D7", "D8",
             ])
@@ -69,30 +69,30 @@ mod tests {
 
     #[test]
     fn menace_of_piece_knight() {
+        let mode = standard_chess();
         let board = HashMap::from([piece_of_str("D4", '♞')]);
-        let bounds = standard_chess().bounds;
         assert_eq!(
-            menace_of_piece(&board, &bounds, &Pos::of_str("D4")),
+            menace_of_piece(&board, &mode.bounds, &Pos::of_str("D4")),
             pos_of_str_slice(["E6", "F5", "F3", "E2", "C2", "B3", "B5", "C6"])
         );
     }
 
     #[test]
     fn menace_of_piece_bishop() {
+        let mode = standard_chess();
         let board = HashMap::from([piece_of_str("C5", '♝')]);
-        let bounds = standard_chess().bounds;
         assert_eq!(
-            menace_of_piece(&board, &bounds, &Pos::of_str("C5")),
+            menace_of_piece(&board, &mode.bounds, &Pos::of_str("C5")),
             pos_of_str_slice(["D6", "E7", "F8", "D4", "E3", "F2", "G1", "B4", "A3", "B6", "A7"])
         );
     }
 
     #[test]
     fn menace_of_piece_queen() {
+        let mode = standard_chess();
         let board = HashMap::from([piece_of_str("C5", '♛')]);
-        let bounds = standard_chess().bounds;
         assert_eq!(
-            menace_of_piece(&board, &bounds, &Pos::of_str("C5")),
+            menace_of_piece(&board, &mode.bounds, &Pos::of_str("C5")),
             pos_of_str_slice([
                 "D6", "E7", "F8", "D4", "E3", "F2", "G1", "B4", "A3", "B6", "A7", "D5", "E5", "F5",
                 "G5", "H5", "C4", "C3", "C2", "C1", "B5", "A5", "C6", "C7", "C8",
@@ -102,20 +102,20 @@ mod tests {
 
     #[test]
     fn menace_of_piece_king() {
+        let mode = standard_chess();
         let board = HashMap::from([piece_of_str("D4", '♚')]);
-        let bounds = standard_chess().bounds;
         assert_eq!(
-            menace_of_piece(&board, &bounds, &Pos::of_str("D4")),
+            menace_of_piece(&board, &mode.bounds, &Pos::of_str("D4")),
             pos_of_str_slice(["E5", "E4", "E3", "D3", "C3", "C4", "C5", "D5"])
         );
     }
 
     #[test]
     fn menace_of_piece_pawn() {
+        let mode = standard_chess();
         let board = HashMap::from([piece_of_str("C5", '♙')]);
-        let bounds = standard_chess().bounds;
         assert_eq!(
-            menace_of_piece(&board, &bounds, &Pos::of_str("C5")),
+            menace_of_piece(&board, &mode.bounds, &Pos::of_str("C5")),
             pos_of_str_slice(["B6", "D6"])
         );
     }
