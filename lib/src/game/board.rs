@@ -1,13 +1,17 @@
 use std::{collections::HashMap, fmt};
 
-use crate::{board::pos::Pos, game::mode::GameMode, piece::Piece};
+use crate::{
+    board::pos::Pos,
+    game::{game::GameBounds, mode::GameMode},
+    piece::Piece,
+};
 
 #[derive(Debug, PartialEq)]
 pub struct InvalidCharacterErr;
 
 impl fmt::Display for InvalidCharacterErr {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "Only [0-9] characters and spaces are allowed!")
+        write!(f, "Must match the pattern [♖♘♗♕♔♙♜♞♝♛♚♟ ]")
     }
 }
 
@@ -16,7 +20,7 @@ pub struct InvalidLengthErr;
 
 impl fmt::Display for InvalidLengthErr {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "Every line must be 8 characters long")
+        write!(f, "Every column and row lengths must match the bounds")
     }
 }
 
@@ -33,23 +37,30 @@ pub fn board_empty() -> GameBoard {
 }
 
 pub fn board_try_of_str<const N: usize>(
-    mode: &GameMode,
+    bounds: &GameBounds,
     rows: [&str; N],
 ) -> Result<GameBoard, GameBoardErr> {
-    if rows.join("").find(|c: char| c != ' ' && Piece::try_of(c).is_none()).is_some() {
+    if rows.join("").find(|c| c != ' ' && Piece::try_of(c).is_none()).is_some() {
         return Err(GameBoardErr::InvalidCharacter(InvalidCharacterErr));
     }
-    //for line in rows {
-    //    if line.chars().count() != 8 {
-    //        return Err(GameBoardErr::InvalidLength(InvalidLengthErr));
-    //    }
-    //}
-    let rows_iter = rows.iter().rev();
+    let delta_x = usize::from(bounds.x2 - bounds.x1) + 1;
+    let delta_y: usize = usize::from(bounds.y2 - bounds.y1) + 1;
+    if rows.len() != delta_y {
+        return Err(GameBoardErr::InvalidLength(InvalidLengthErr));
+    }
+    for line in rows {
+        if line.chars().count() != delta_x {
+            return Err(GameBoardErr::InvalidLength(InvalidLengthErr));
+        }
+    }
     let mut board = HashMap::new();
-    for row in 0..8 {
-        for col in 0..8 {
-            let pos_str = rows[7 - row as usize].chars().nth(col.into()).unwrap();
-            if let Some(piece) = Piece::try_of(pos_str) {
+    for row in bounds.y1..=bounds.y2 {
+        for col in bounds.x1..=bounds.x2 {
+            let row_index = bounds.y2 - row;
+            let col_index = col - bounds.x1;
+            let str_row = rows[row_index as usize];
+            let str_col = str_row.chars().nth(col_index.into()).unwrap();
+            if let Some(piece) = Piece::try_of(str_col) {
                 board.insert(Pos { row, col }, piece);
             }
         }
@@ -57,16 +68,16 @@ pub fn board_try_of_str<const N: usize>(
     Ok(board)
 }
 
-pub fn board_of_str(mode: &GameMode, rows: [&str; 8]) -> GameBoard {
-    board_try_of_str(mode, rows).unwrap()
+pub fn board_of_str<const N: usize>(bounds: &GameBounds, rows: [&str; N]) -> GameBoard {
+    board_try_of_str(bounds, rows).unwrap()
 }
 
-fn board_to_string(board: &GameBoard) -> String {
+fn board_to_string(bounds: &GameBounds, board: &GameBoard) -> String {
     let mut res = "".to_string();
-    let mut row = 8;
-    while row > 0 {
+    let mut row = bounds.y2 + 1;
+    while row > bounds.y1 {
         row -= 1;
-        for col in 0..8 {
+        for col in bounds.x1..=bounds.x2 {
             match board.get(&Pos { row, col }) {
                 Some(p) => res.push_str(&p.to_string()),
                 None => res.push(' '),
@@ -81,18 +92,32 @@ fn board_to_string(board: &GameBoard) -> String {
 mod tests {
     use std::collections::HashMap;
 
-    use crate::game::{mode::standard_chess, piece::piece_of_str};
+    use crate::game::{game::GameBounds, mode::standard_chess, piece::piece_of_str};
 
     use super::{
-        GameBoardErr, InvalidCharacterErr, board_of_str, board_to_string, board_try_of_str,
+        GameBoardErr, InvalidCharacterErr, InvalidLengthErr, board_of_str, board_to_string,
+        board_try_of_str,
     };
 
     #[test]
-    fn try_of_str_ok() {
+    fn invalid_character_err() {
+        assert_eq!(InvalidCharacterErr.to_string(), "Must match the pattern [♖♘♗♕♔♙♜♞♝♛♚♟ ]");
+    }
+
+    #[test]
+    fn invalid_length_err() {
+        assert_eq!(
+            InvalidLengthErr.to_string(),
+            "Every column and row lengths must match the bounds"
+        );
+    }
+
+    #[test]
+    fn board_try_of_str_ok() {
         let mode = standard_chess();
         assert_eq!(
             board_try_of_str(
-                &mode,
+                &mode.bounds,
                 [
                     "♜♞♝♛♚♝♞♜",
                     "♟♟♟♟♟♟♟♟",
@@ -103,9 +128,8 @@ mod tests {
                     "♙♙♙♙♙♙♙♙",
                     "♖♘♗♕♔♗♘♖",
                 ]
-            )
-            .unwrap(),
-            HashMap::from([
+            ),
+            Ok(HashMap::from([
                 piece_of_str("A8", '♜'),
                 piece_of_str("B8", '♞'),
                 piece_of_str("C8", '♝'),
@@ -138,16 +162,32 @@ mod tests {
                 piece_of_str("F1", '♗'),
                 piece_of_str("G1", '♘'),
                 piece_of_str("H1", '♖'),
-            ])
+            ]))
         );
     }
 
     #[test]
-    fn try_of_str_err() {
+    fn board_try_of_str_custom_bounds() {
+        assert_eq!(
+            board_try_of_str(
+                &GameBounds { x1: 10, y1: 10, x2: 13, y2: 13 },
+                [" ♛♚ ", "    ", "    ", " ♕♔ ",]
+            ),
+            Ok(HashMap::from([
+                piece_of_str("L14", '♛'),
+                piece_of_str("M14", '♚'),
+                piece_of_str("L11", '♕'),
+                piece_of_str("M11", '♔'),
+            ]))
+        );
+    }
+
+    #[test]
+    fn board_try_of_str_invalid_character_err() {
         let mode = standard_chess();
         assert_eq!(
             board_try_of_str(
-                &mode,
+                &mode.bounds,
                 [
                     "RNBQKBNR",
                     "PPPPPPPP",
@@ -161,24 +201,47 @@ mod tests {
             ),
             Err(GameBoardErr::InvalidCharacter(InvalidCharacterErr))
         );
-        //assert_eq!(
-        //    try_of_str([
-        //        "♜♞♝♛♚♝♞",
-        //        "♟♟♟♟♟♟♟♟",
-        //        "        ",
-        //        "        ",
-        //        "        ",
-        //        "        ",
-        //        "♙♙♙♙♙♙♙♙",
-        //        "♖♘♗♕♔♗♘♖",
-        //    ]),
-        //    Err(GameBoardErr::InvalidLength(InvalidLengthErr))
-        //);
-        //assert_eq!(
-        //    format!("{}", InvalidCharacterErr),
-        //    "Only [0-9] characters and spaces are allowed!"
-        //);
-        //assert_eq!(format!("{}", InvalidLengthErr), "Every line must be 8 characters long");
+    }
+
+    #[test]
+    fn board_try_of_str_invalid_col_len() {
+        let mode = standard_chess();
+        assert_eq!(
+            board_try_of_str(
+                &mode.bounds,
+                [
+                    "♜♞♝♛♚♝♞",
+                    "♟♟♟♟♟♟♟♟",
+                    "        ",
+                    "        ",
+                    "        ",
+                    "        ",
+                    "♙♙♙♙♙♙♙♙",
+                    "♖♘♗♕♔♗♘♖",
+                ]
+            ),
+            Err(GameBoardErr::InvalidLength(InvalidLengthErr))
+        );
+    }
+
+    #[test]
+    fn board_try_of_str_invalid_row_len() {
+        let mode = standard_chess();
+        assert_eq!(
+            board_try_of_str(
+                &mode.bounds,
+                [
+                    "♜♞♝♛♚♝♞♜",
+                    "♟♟♟♟♟♟♟♟",
+                    "        ",
+                    "        ",
+                    "        ",
+                    "♙♙♙♙♙♙♙♙",
+                    "♖♘♗♕♔♗♘♖",
+                ]
+            ),
+            Err(GameBoardErr::InvalidLength(InvalidLengthErr))
+        );
     }
 
     #[test]
@@ -186,7 +249,7 @@ mod tests {
         let mode = standard_chess();
         assert_eq!(
             board_of_str(
-                &mode,
+                &mode.bounds,
                 [
                     "♜♞♝♛♚♝♞♜",
                     "♟♟♟♟♟♟♟♟",
@@ -236,22 +299,25 @@ mod tests {
     }
 
     #[test]
-    fn test_to_string() {
+    fn test_board_to_string() {
         let mode = standard_chess();
         assert_eq!(
-            board_to_string(&board_of_str(
-                &mode,
-                [
-                    "♜♞♝♛♚♝♞♜",
-                    "♟♟♟♟♟♟♟♟",
-                    "        ",
-                    "        ",
-                    "        ",
-                    "        ",
-                    "♙♙♙♙♙♙♙♙",
-                    "♖♘♗♕♔♗♘♖",
-                ]
-            )),
+            board_to_string(
+                &mode.bounds,
+                &board_of_str(
+                    &mode.bounds,
+                    [
+                        "♜♞♝♛♚♝♞♜",
+                        "♟♟♟♟♟♟♟♟",
+                        "        ",
+                        "        ",
+                        "        ",
+                        "        ",
+                        "♙♙♙♙♙♙♙♙",
+                        "♖♘♗♕♔♗♘♖",
+                    ]
+                )
+            ),
             "".to_owned()
                 + "♜♞♝♛♚♝♞♜\n"
                 + "♟♟♟♟♟♟♟♟\n"
@@ -261,6 +327,15 @@ mod tests {
                 + "        \n"
                 + "♙♙♙♙♙♙♙♙\n"
                 + "♖♘♗♕♔♗♘♖\n"
+        );
+    }
+
+    #[test]
+    fn test_board_to_string_custom_bounds() {
+        let bounds = GameBounds { x1: 10, y1: 10, x2: 13, y2: 13 };
+        assert_eq!(
+            board_to_string(&bounds, &board_of_str(&bounds, [" ♛♚ ", "    ", "    ", " ♕♔ ",])),
+            "".to_owned() + " ♛♚ \n" + "    \n" + "    \n" + " ♕♔ \n"
         );
     }
 }

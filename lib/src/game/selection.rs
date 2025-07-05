@@ -91,7 +91,12 @@ mod tests {
         board::pos::Pos,
         color::Color,
         game::{
-            board::board_of_str, game::GamePlayers, mode::standard_chess, movement::movement::{DefaultMovement, GameMovement}, player::GamePlayer, rule::init::game_of_mode
+            board::board_of_str,
+            game::GamePlayers,
+            mode::standard_chess,
+            movement::movement::{DefaultMovement, GameMovement},
+            player::GamePlayer,
+            rule::init::game_of_mode,
         },
         movement::Movement,
     };
@@ -133,13 +138,7 @@ mod tests {
         let players = empty_players();
         let history = Vec::new();
         let pos = Pos::of_str("D4");
-        toggle_selection(
-            &mut selection,
-            &board,
-            &players,
-            &history,
-            pos.clone(),
-        );
+        toggle_selection(&mut selection, &board, &players, &history, pos.clone());
         assert_eq!(
             selection,
             Selection {
@@ -356,7 +355,7 @@ mod tests {
         };
         let mode = standard_chess();
         let board = board_of_str(
-            &mode,
+            &mode.bounds,
             [
                 "    ♚   ",
                 "        ",

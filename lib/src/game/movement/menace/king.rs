@@ -105,7 +105,7 @@ mod tests {
     fn menace_with_capture() {
         let mode = standard_chess();
         let board_white_king = board_of_str(
-            &mode,
+            &mode.bounds,
             [
                 "        ",
                 "        ",
@@ -118,7 +118,7 @@ mod tests {
             ],
         );
         let board_black_king = board_of_str(
-            &mode,
+            &mode.bounds,
             [
                 "        ",
                 "        ",

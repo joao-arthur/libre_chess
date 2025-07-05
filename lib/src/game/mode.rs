@@ -66,7 +66,7 @@ mod tests {
             GameMode {
                 bounds: GameBounds { x1: 0, y1: 0, x2: 7, y2: 7 },
                 initial_board: board_of_str(
-                    &mode,
+                    &mode.bounds,
                     [
                         "♜♞♝♛♚♝♞♜",
                         "♟♟♟♟♟♟♟♟",

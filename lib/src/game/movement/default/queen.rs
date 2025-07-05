@@ -231,7 +231,7 @@ mod tests {
     fn movements_white_capture() {
         let mode = standard_chess();
         let board = board_of_str(
-            &mode,
+            &mode.bounds,
             [
                 "        ",
                 "  ♗     ",
@@ -270,7 +270,7 @@ mod tests {
     fn movements_black_capture() {
         let mode = standard_chess();
         let board = board_of_str(
-            &mode,
+            &mode.bounds,
             [
                 "        ",
                 "  ♝     ",

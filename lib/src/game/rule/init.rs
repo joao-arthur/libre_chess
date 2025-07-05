@@ -107,7 +107,7 @@ mod tests {
             game_of_mode(standard_chess()),
             Game {
                 board: board_of_str(
-                    &mode,
+                    &mode.bounds,
                     [
                         "♜♞♝♛♚♝♞♜",
                         "♟♟♟♟♟♟♟♟",
@@ -293,7 +293,7 @@ mod tests {
             game_of_mode_and_history(standard_chess(), history),
             Game {
                 board: board_of_str(
-                    &mode,
+                    &mode.bounds,
                     [
                         "   ♖    ",
                         "    ♚   ",

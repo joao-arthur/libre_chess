@@ -19,8 +19,8 @@ pub struct Piece {
 }
 
 impl Piece {
-    pub fn try_of(s: char) -> Option<Self> {
-        match s {
+    pub fn try_of(c: char) -> Option<Self> {
+        match c {
             '♖' => Some(Piece { t: Type::Rook, color: Color::White }),
             '♘' => Some(Piece { t: Type::Knight, color: Color::White }),
             '♗' => Some(Piece { t: Type::Bishop, color: Color::White }),

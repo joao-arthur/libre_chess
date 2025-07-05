@@ -38,7 +38,7 @@ mod tests {
         let mode = standard_chess();
         assert!(!is_in_check(&Game {
             board: board_of_str(
-                &mode,
+                &mode.bounds,
                 [
                     "    ♚   ",
                     "    ♟   ",
@@ -84,7 +84,7 @@ mod tests {
         let mode = standard_chess();
         assert!(is_in_check(&Game {
             board: board_of_str(
-                &mode,
+                &mode.bounds,
                 [
                     "    ♚   ",
                     "   ♙♟   ",
