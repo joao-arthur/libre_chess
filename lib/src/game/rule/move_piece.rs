@@ -83,7 +83,9 @@ fn move_piece(
 ) {
     match movement {
         GameMovement::Default(movement) => default_move(board, players, history, movement),
-        GameMovement::Capture(movement) => default_move(board, players, history, DefaultMovement::from(movement.movement)),
+        GameMovement::Capture(movement) => {
+            default_move(board, players, history, DefaultMovement::from(movement.movement))
+        }
         GameMovement::EnPassant(en_passant) => en_passant_move(board, players, history, en_passant),
         GameMovement::Castling(castling) => castling_move(board, history, castling),
         GameMovement::Promotion(promotion) => promotion_move(board, history, promotion),

@@ -1,12 +1,16 @@
 use crate::{
     board::pos::Pos,
     color::Color,
-    game::{board::GameBoard, game::GameBounds, movement::movement::DefaultMovement},
+    game::{
+        board::GameBoard,
+        game::GameBounds,
+        movement::movement::{DefaultMovement, GameMovement},
+    },
     movement::Movement,
 };
 
-pub fn movements(board: &GameBoard, bounds: &GameBounds, pos: &Pos) -> Vec<DefaultMovement> {
-    let mut result: Vec<DefaultMovement> = Vec::new();
+pub fn movements(board: &GameBoard, bounds: &GameBounds, pos: &Pos) -> Vec<GameMovement> {
+    let mut result: Vec<GameMovement> = Vec::new();
     if let Some(piece) = board.get(pos) {
         let move_base = match &piece.color {
             Color::White => {
@@ -31,11 +35,11 @@ pub fn movements(board: &GameBoard, bounds: &GameBounds, pos: &Pos) -> Vec<Defau
         for curr_pos in move_base {
             if let Some(curr_pos) = curr_pos {
                 if board.get(&curr_pos).is_none() {
-                    result.push(DefaultMovement::from(Movement {
+                    result.push(GameMovement::from(DefaultMovement::from(Movement {
                         piece: *piece,
                         from: pos.clone(),
                         to: curr_pos,
-                    }));
+                    })));
                 }
             }
         }
@@ -43,11 +47,11 @@ pub fn movements(board: &GameBoard, bounds: &GameBounds, pos: &Pos) -> Vec<Defau
             if let Some(curr_pos) = curr_pos {
                 if let Some(curr_piece) = board.get(&curr_pos) {
                     if curr_piece.color != piece.color {
-                        result.push(DefaultMovement::from(Movement {
+                        result.push(GameMovement::from(DefaultMovement::from(Movement {
                             piece: *piece,
                             from: pos.clone(),
                             to: curr_pos,
-                        }));
+                        })));
                     }
                 }
             }
@@ -65,7 +69,7 @@ mod tests {
         game::{
             board::{board_empty, board_of_str},
             mode::standard_chess,
-            movement::movement::DefaultMovement,
+            movement::movement::{DefaultMovement, GameMovement},
             piece::piece_of_str,
         },
         movement::Movement,
@@ -85,7 +89,7 @@ mod tests {
         let board = HashMap::from([piece_of_str("C5", '♙')]);
         assert_eq!(
             movements(&board, &mode.bounds, &Pos::of_str("C5")),
-            [DefaultMovement::from(Movement::of_str('♙', "C5", "C6"))]
+            [GameMovement::from(DefaultMovement::from(Movement::of_str('♙', "C5", "C6")))]
         );
     }
 
@@ -95,7 +99,7 @@ mod tests {
         let board = HashMap::from([piece_of_str("C5", '♟')]);
         assert_eq!(
             movements(&board, &mode.bounds, &Pos::of_str("C5")),
-            [DefaultMovement::from(Movement::of_str('♟', "C5", "C4"))]
+            [GameMovement::from(DefaultMovement::from(Movement::of_str('♟', "C5", "C4")))]
         );
     }
 
@@ -106,8 +110,8 @@ mod tests {
         assert_eq!(
             movements(&board, &mode.bounds, &Pos::of_str("A2")),
             [
-                DefaultMovement::from(Movement::of_str('♙', "A2", "A3")),
-                DefaultMovement::from(Movement::of_str('♙', "A2", "A4"))
+                GameMovement::from(DefaultMovement::from(Movement::of_str('♙', "A2", "A3"))),
+                GameMovement::from(DefaultMovement::from(Movement::of_str('♙', "A2", "A4")))
             ]
         );
     }
@@ -119,8 +123,8 @@ mod tests {
         assert_eq!(
             movements(&board, &mode.bounds, &Pos::of_str("H7")),
             [
-                DefaultMovement::from(Movement::of_str('♟', "H7", "H6")),
-                DefaultMovement::from(Movement::of_str('♟', "H7", "H5"))
+                GameMovement::from(DefaultMovement::from(Movement::of_str('♟', "H7", "H6"))),
+                GameMovement::from(DefaultMovement::from(Movement::of_str('♟', "H7", "H5")))
             ]
         );
     }
@@ -158,8 +162,8 @@ mod tests {
         assert_eq!(
             movements(&board, &mode.bounds, &Pos::of_str("C5")),
             [
-                DefaultMovement::from(Movement::of_str('♙', "C5", "C6")),
-                DefaultMovement::from(Movement::of_str('♙', "C5", "B6"))
+                GameMovement::from(DefaultMovement::from(Movement::of_str('♙', "C5", "C6"))),
+                GameMovement::from(DefaultMovement::from(Movement::of_str('♙', "C5", "B6"))),
             ]
         );
     }
@@ -183,8 +187,8 @@ mod tests {
         assert_eq!(
             movements(&board, &mode.bounds, &Pos::of_str("C5")),
             [
-                DefaultMovement::from(Movement::of_str('♟', "C5", "C4")),
-                DefaultMovement::from(Movement::of_str('♟', "C5", "D4"))
+                GameMovement::from(DefaultMovement::from(Movement::of_str('♟', "C5", "C4"))),
+                GameMovement::from(DefaultMovement::from(Movement::of_str('♟', "C5", "D4"))),
             ]
         );
     }
