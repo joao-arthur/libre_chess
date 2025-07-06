@@ -4,7 +4,7 @@ use crate::{
     game::{
         board::GameBoard,
         game::GameBounds,
-        movement::movement::{DefaultMovement, GameMovement},
+        movement::movement::{CaptureMovement, DefaultMovement, GameMovement},
     },
     movement::Movement,
 };
@@ -47,7 +47,7 @@ pub fn movements(board: &GameBoard, bounds: &GameBounds, pos: &Pos) -> Vec<GameM
             if let Some(curr_pos) = curr_pos {
                 if let Some(curr_piece) = board.get(&curr_pos) {
                     if curr_piece.color != piece.color {
-                        result.push(GameMovement::from(DefaultMovement::from(Movement {
+                        result.push(GameMovement::from(CaptureMovement::from(Movement {
                             piece: *piece,
                             from: pos.clone(),
                             to: curr_pos,
@@ -69,7 +69,7 @@ mod tests {
         game::{
             board::{board_empty, board_of_str},
             mode::standard_chess,
-            movement::movement::{DefaultMovement, GameMovement},
+            movement::movement::{CaptureMovement, DefaultMovement, GameMovement},
             piece::piece_of_str,
         },
         movement::Movement,
@@ -163,7 +163,7 @@ mod tests {
             movements(&board, &mode.bounds, &Pos::of_str("C5")),
             [
                 GameMovement::from(DefaultMovement::from(Movement::of_str('♙', "C5", "C6"))),
-                GameMovement::from(DefaultMovement::from(Movement::of_str('♙', "C5", "B6"))),
+                GameMovement::from(CaptureMovement::from(Movement::of_str('♙', "C5", "B6"))),
             ]
         );
     }
@@ -188,7 +188,7 @@ mod tests {
             movements(&board, &mode.bounds, &Pos::of_str("C5")),
             [
                 GameMovement::from(DefaultMovement::from(Movement::of_str('♟', "C5", "C4"))),
-                GameMovement::from(DefaultMovement::from(Movement::of_str('♟', "C5", "D4"))),
+                GameMovement::from(CaptureMovement::from(Movement::of_str('♟', "C5", "D4"))),
             ]
         );
     }

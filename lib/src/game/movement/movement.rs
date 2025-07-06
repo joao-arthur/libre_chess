@@ -56,12 +56,19 @@ pub enum GameMovement {
     Capture(CaptureMovement),
     EnPassant(EnPassantMovement),
     Castling(CastlingMovement),
+    // Menace(MenaceMovement),
     Promotion(PromotionMovement),
 }
 
 impl From<DefaultMovement> for GameMovement {
     fn from(movement: DefaultMovement) -> Self {
         GameMovement::Default(movement)
+    }
+}
+
+impl From<CaptureMovement> for GameMovement {
+    fn from(movement: CaptureMovement) -> Self {
+        GameMovement::Capture(movement)
     }
 }
 

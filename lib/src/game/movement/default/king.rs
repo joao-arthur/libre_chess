@@ -3,7 +3,7 @@ use crate::{
     game::{
         board::GameBoard,
         game::GameBounds,
-        movement::movement::{DefaultMovement, GameMovement},
+        movement::movement::{CaptureMovement, DefaultMovement, GameMovement},
     },
     movement::Movement,
 };
@@ -32,7 +32,7 @@ pub fn movements(board: &GameBoard, bounds: &GameBounds, pos: &Pos) -> Vec<GameM
                 }
                 if let Some(curr_piece) = board.get(&curr_pos) {
                     if curr_piece.color != piece.color {
-                        result.push(GameMovement::from(DefaultMovement::from(Movement {
+                        result.push(GameMovement::from(CaptureMovement::from(Movement {
                             piece: *piece,
                             from: pos.clone(),
                             to: curr_pos,
@@ -61,7 +61,7 @@ mod tests {
             board::{board_empty, board_of_str},
             game::GameBounds,
             mode::standard_chess,
-            movement::movement::{DefaultMovement, GameMovement},
+            movement::movement::{CaptureMovement, DefaultMovement, GameMovement},
             piece::piece_of_str,
         },
         movement::Movement,
@@ -225,11 +225,11 @@ mod tests {
         assert_eq!(
             movements(&board, &mode.bounds, &Pos::of_str("D4")),
             [
-                GameMovement::from(DefaultMovement::from(Movement::of_str('♔', "D4", "E5"))),
+                GameMovement::from(CaptureMovement::from(Movement::of_str('♔', "D4", "E5"))),
                 GameMovement::from(DefaultMovement::from(Movement::of_str('♔', "D4", "E4"))),
                 GameMovement::from(DefaultMovement::from(Movement::of_str('♔', "D4", "E3"))),
                 GameMovement::from(DefaultMovement::from(Movement::of_str('♔', "D4", "C3"))),
-                GameMovement::from(DefaultMovement::from(Movement::of_str('♔', "D4", "C4"))),
+                GameMovement::from(CaptureMovement::from(Movement::of_str('♔', "D4", "C4"))),
                 GameMovement::from(DefaultMovement::from(Movement::of_str('♔', "D4", "C5"))),
                 GameMovement::from(DefaultMovement::from(Movement::of_str('♔', "D4", "D5"))),
             ]
@@ -255,11 +255,11 @@ mod tests {
         assert_eq!(
             movements(&board, &mode.bounds, &Pos::of_str("D4")),
             [
-                GameMovement::from(DefaultMovement::from(Movement::of_str('♚', "D4", "E5"))),
+                GameMovement::from(CaptureMovement::from(Movement::of_str('♚', "D4", "E5"))),
                 GameMovement::from(DefaultMovement::from(Movement::of_str('♚', "D4", "E4"))),
                 GameMovement::from(DefaultMovement::from(Movement::of_str('♚', "D4", "E3"))),
                 GameMovement::from(DefaultMovement::from(Movement::of_str('♚', "D4", "C3"))),
-                GameMovement::from(DefaultMovement::from(Movement::of_str('♚', "D4", "C4"))),
+                GameMovement::from(CaptureMovement::from(Movement::of_str('♚', "D4", "C4"))),
                 GameMovement::from(DefaultMovement::from(Movement::of_str('♚', "D4", "C5"))),
                 GameMovement::from(DefaultMovement::from(Movement::of_str('♚', "D4", "D5"))),
             ]

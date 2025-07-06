@@ -92,7 +92,7 @@ mod tests {
             board::board_of_str,
             game::GameBounds,
             mode::standard_chess,
-            movement::movement::{DefaultMovement, GameMovement},
+            movement::movement::{CaptureMovement, DefaultMovement, GameMovement},
             player::GamePlayer,
         },
         movement::Movement,
@@ -344,7 +344,7 @@ mod tests {
                                         GameMovement::from(DefaultMovement::from(Movement::of_str('♔', "E2", "F2"))),
                                         GameMovement::from(DefaultMovement::from(Movement::of_str('♔', "E2", "F1"))), //////
                                         GameMovement::from(DefaultMovement::from(Movement::of_str('♔', "E2", "E1"))), //////
-                                        GameMovement::from(DefaultMovement::from(Movement::of_str('♔', "E2", "D1"))),
+                                        GameMovement::from(CaptureMovement::from(Movement::of_str('♔', "E2", "D1"))),
                                         GameMovement::from(DefaultMovement::from(Movement::of_str('♔', "E2", "D2"))), //////
                                         GameMovement::from(DefaultMovement::from(Movement::of_str('♔', "E2", "D3"))), //////
                                         GameMovement::from(DefaultMovement::from(Movement::of_str('♔', "E2", "E3"))),
@@ -364,7 +364,7 @@ mod tests {
                                         GameMovement::from(DefaultMovement::from(Movement::of_str('♖', "D8", "D4"))),
                                         GameMovement::from(DefaultMovement::from(Movement::of_str('♖', "D8", "D3"))),
                                         GameMovement::from(DefaultMovement::from(Movement::of_str('♖', "D8", "D2"))),
-                                        GameMovement::from(DefaultMovement::from(Movement::of_str('♖', "D8", "D1"))),
+                                        GameMovement::from(CaptureMovement::from(Movement::of_str('♖', "D8", "D1"))),
                                         //
                                         GameMovement::from(DefaultMovement::from(Movement::of_str('♖', "D8", "C8"))),
                                         GameMovement::from(DefaultMovement::from(Movement::of_str('♖', "D8", "B8"))),
