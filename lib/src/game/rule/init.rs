@@ -80,7 +80,8 @@ mod tests {
         game::{
             Game,
             board::{board_of_str, board_to_string},
-            game::GameBounds, mode::standard_chess,
+            game::GameBounds,
+            mode::standard_chess,
             movement::movement::{CaptureMove, DefaultMove, GameMove, MenaceMove},
             player::GamePlayer,
         },
@@ -95,7 +96,7 @@ mod tests {
         let mode = standard_chess();
         let game = game_of_mode(standard_chess());
         assert_eq!(
-            board_to_string(&mode.bounds, &game.board), 
+            board_to_string(&mode.bounds, &game.board),
             "".to_owned()
                 + "♜♞♝♛♚♝♞♜\n"
                 + "♟♟♟♟♟♟♟♟\n"
@@ -113,11 +114,7 @@ mod tests {
             HashMap::from([
                 (
                     Color::Black,
-                    GamePlayer {
-                        color: Color::Black,
-                        captures: Vec::new(),
-                        moves: HashMap::new(),
-                    },
+                    GamePlayer { color: Color::Black, captures: Vec::new(), moves: HashMap::new() },
                 ),
                 (
                     Color::White,

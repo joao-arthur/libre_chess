@@ -334,17 +334,19 @@ mod tests {
     fn test_board_to_string_custom_bounds() {
         let bounds = GameBounds { x1: 10, y1: 10, x2: 13, y2: 13 };
         assert_eq!(
-            board_to_string(&bounds, &board_of_str(&bounds, [
-                " ♛♚ ",//
-                "    ",//
-                "    ",//
-                " ♕♔ ",//
-                ])),
-            "".to_owned() +//
-            " ♛♚ \n" +//
-            "    \n" +//
-            "    \n" +//
-            " ♕♔ \n"
+            board_to_string(
+                &bounds,
+                &board_of_str(
+                    &bounds,
+                    [
+                        " ♛♚ ", //
+                        "    ", //
+                        "    ", //
+                        " ♕♔ ", //
+                    ]
+                )
+            ),
+            "".to_owned() + " ♛♚ \n" + "    \n" + "    \n" + " ♕♔ \n"
         );
     }
 }
