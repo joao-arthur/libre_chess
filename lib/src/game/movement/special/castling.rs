@@ -1,5 +1,4 @@
 use crate::{
-    pos::Pos,
     game::{
         board::GameBoard,
         game::{GameBounds, GameHistory},
@@ -7,6 +6,7 @@ use crate::{
     },
     movement::Movement,
     piece::Type,
+    pos::Pos,
 };
 
 pub fn movements(

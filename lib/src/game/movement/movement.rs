@@ -1,4 +1,4 @@
-use crate::{pos::Pos, movement::Movement, piece::Piece};
+use crate::{movement::Movement, piece::Piece, pos::Pos};
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct DefaultMovement {

@@ -1,11 +1,7 @@
 use crate::{
-    pos::Pos,
-    game::{
-        board::GameBoard,
-        game::GameBounds,
-        movement::movement::GameMovement,
-    },
+    game::{board::GameBoard, game::GameBounds, movement::movement::GameMovement},
     piece::Type,
+    pos::Pos,
 };
 
 mod bishop;
@@ -34,7 +30,6 @@ mod tests {
     use std::collections::HashMap;
 
     use crate::{
-        pos::Pos,
         game::{
             board::board_empty,
             mode::standard_chess,
@@ -42,6 +37,7 @@ mod tests {
             piece::piece_of_str,
         },
         movement::Movement,
+        pos::Pos,
     };
 
     use super::movements;

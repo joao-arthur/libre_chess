@@ -1,6 +1,9 @@
 use std::fmt;
 
-use self::{col::{col_try_of, col_to_string}, row::{row_try_of, row_to_string}};
+use self::{
+    col::{col_to_string, col_try_of},
+    row::{row_to_string, row_try_of},
+};
 
 mod col;
 mod row;

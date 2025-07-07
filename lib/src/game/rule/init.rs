@@ -18,11 +18,7 @@ pub fn game_of_mode(mode: GameMode) -> Game {
     let players = HashMap::from([
         (
             Color::Black,
-            GamePlayer {
-                color: Color::Black,
-                captures: Vec::new(),
-                moves: HashMap::new(),
-            },
+            GamePlayer { color: Color::Black, captures: Vec::new(), moves: HashMap::new() },
         ),
         (
             Color::White,
@@ -80,7 +76,6 @@ mod tests {
     use std::collections::HashMap;
 
     use crate::{
-        pos::Pos,
         color::Color,
         game::{
             Game,
@@ -91,6 +86,7 @@ mod tests {
             player::GamePlayer,
         },
         movement::Movement,
+        pos::Pos,
     };
 
     use super::{game_of_mode, game_of_mode_and_history};

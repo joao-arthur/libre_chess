@@ -1,6 +1,6 @@
 use crate::{
-    pos::Pos,
     game::{board::GameBoard, game::GameBounds, movement::movement::GameMovement},
+    pos::Pos,
 };
 
 use super::{bishop, rook};
@@ -17,7 +17,6 @@ mod tests {
     use std::collections::HashMap;
 
     use crate::{
-        pos::Pos,
         game::{
             board::{board_empty, board_of_str},
             game::GameBounds,
@@ -26,6 +25,7 @@ mod tests {
             piece::piece_of_str,
         },
         movement::Movement,
+        pos::Pos,
     };
 
     use super::movements;

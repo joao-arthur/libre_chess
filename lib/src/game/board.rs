@@ -1,9 +1,9 @@
 use std::{collections::HashMap, fmt};
 
 use crate::{
-    pos::Pos,
     game::{game::GameBounds, mode::GameMode},
     piece::Piece,
+    pos::Pos,
 };
 
 #[derive(Debug, PartialEq)]

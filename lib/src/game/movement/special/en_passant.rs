@@ -1,9 +1,9 @@
 use crate::{
-    pos::Pos,
     color::Color,
     game::{board::GameBoard, game::GameHistory, movement::movement::EnPassantMovement},
     movement::Movement,
     piece::Type,
+    pos::Pos,
 };
 
 pub fn movements(board: &GameBoard, history: &GameHistory, pos: &Pos) -> Vec<EnPassantMovement> {
@@ -99,9 +99,9 @@ mod tests {
     use std::collections::HashMap;
 
     use crate::{
-        pos::Pos,
         game::{movement::movement::EnPassantMovement, piece::piece_of_str},
         movement::Movement,
+        pos::Pos,
     };
 
     use super::movements;

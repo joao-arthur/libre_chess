@@ -1,13 +1,13 @@
 use std::collections::HashSet;
 
 use crate::{
-    pos::Pos,
     game::{
         GameBoard,
         game::{GameHistory, GamePlayers},
         movement::movement::GameMovement,
         rule::turn::evaluate_turn,
     },
+    pos::Pos,
 };
 
 #[derive(Debug, PartialEq)]
@@ -88,7 +88,6 @@ mod tests {
     use std::collections::{HashMap, HashSet};
 
     use crate::{
-        pos::Pos,
         color::Color,
         game::{
             board::board_of_str,
@@ -98,6 +97,7 @@ mod tests {
             player::GamePlayer,
         },
         movement::Movement,
+        pos::Pos,
     };
 
     use super::{Selection, toggle_selection};
@@ -106,19 +106,11 @@ mod tests {
         HashMap::from([
             (
                 Color::Black,
-                GamePlayer {
-                    color: Color::Black,
-                    captures: Vec::new(),
-                    moves: HashMap::new(),
-                },
+                GamePlayer { color: Color::Black, captures: Vec::new(), moves: HashMap::new() },
             ),
             (
                 Color::White,
-                GamePlayer {
-                    color: Color::White,
-                    captures: Vec::new(),
-                    moves: HashMap::new(),
-                },
+                GamePlayer { color: Color::White, captures: Vec::new(), moves: HashMap::new() },
             ),
         ])
     }
@@ -181,11 +173,7 @@ mod tests {
         let players = HashMap::from([
             (
                 Color::Black,
-                GamePlayer {
-                    color: Color::Black,
-                    captures: Vec::new(),
-                    moves: HashMap::new(),
-                },
+                GamePlayer { color: Color::Black, captures: Vec::new(), moves: HashMap::new() },
             ),
             (
                 Color::White,
@@ -276,11 +264,7 @@ mod tests {
         let players = HashMap::from([
             (
                 Color::Black,
-                GamePlayer {
-                    color: Color::Black,
-                    captures: Vec::new(),
-                    moves: HashMap::new(),
-                },
+                GamePlayer { color: Color::Black, captures: Vec::new(), moves: HashMap::new() },
             ),
             (
                 Color::White,
@@ -363,11 +347,7 @@ mod tests {
         let players = HashMap::from([
             (
                 Color::Black,
-                GamePlayer {
-                    color: Color::Black,
-                    captures: Vec::new(),
-                    moves: HashMap::new(),
-                },
+                GamePlayer { color: Color::Black, captures: Vec::new(), moves: HashMap::new() },
             ),
             (
                 Color::White,

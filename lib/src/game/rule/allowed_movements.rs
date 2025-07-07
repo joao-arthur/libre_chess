@@ -1,7 +1,6 @@
 use std::collections::HashMap;
 
 use crate::{
-    pos::Pos,
     color::Color,
     game::{
         GameBoard,
@@ -13,6 +12,7 @@ use crate::{
         },
     },
     piece::Type,
+    pos::Pos,
 };
 
 fn allowed_movements_of_piece(

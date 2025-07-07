@@ -1,4 +1,4 @@
-use crate::{pos::Pos, piece::Piece};
+use crate::{piece::Piece, pos::Pos};
 
 pub fn piece_of_str(pos: &str, piece: char) -> (Pos, Piece) {
     (Pos::of_str(pos), Piece::of(piece))
@@ -6,7 +6,7 @@ pub fn piece_of_str(pos: &str, piece: char) -> (Pos, Piece) {
 
 #[cfg(test)]
 mod tests {
-    use crate::{pos::Pos, piece::Piece};
+    use crate::{piece::Piece, pos::Pos};
 
     use super::piece_of_str;
 

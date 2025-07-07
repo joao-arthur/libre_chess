@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use crate::{pos::Pos, color::Color, game::movement::movement::GameMovement};
+use crate::{color::Color, game::movement::movement::GameMovement, pos::Pos};
 
 use super::capture::GameCapture;
 

@@ -1,5 +1,4 @@
 use crate::{
-    pos::Pos,
     game::{
         GameBoard,
         capture::GameCapture,
@@ -9,6 +8,7 @@ use crate::{
         },
         rule::{allowed_movements::allowed_movements_of_player, turn::evaluate_turn},
     },
+    pos::Pos,
 };
 
 fn default_move(

@@ -1,5 +1,5 @@
 use crate::{
-    game::{movement::movement::GameMovement, rule::turn::evaluate_turn, Game},
+    game::{Game, movement::movement::GameMovement, rule::turn::evaluate_turn},
     piece::Type,
 };
 
@@ -13,15 +13,15 @@ pub fn is_in_check(game: &Game) -> bool {
                     for (_, moves) in it {
                         for mov in moves {
                             let maybe_pos = match mov {
-                                GameMovement::Default(default_mov) => Some(&default_mov.movement.to),
-                                GameMovement::Capture(capture_mov) => Some(&capture_mov.movement.to),
+                                GameMovement::Default(m) => Some(&m.movement.to),
+                                GameMovement::Capture(m) => Some(&m.movement.to),
                                 _ => None,
                             };
                             if let Some(menace_pos) = maybe_pos {
                                 if menace_pos == pos {
                                     return true;
                                 }
-                            } 
+                            }
                         }
                     }
                 }
@@ -67,19 +67,11 @@ mod tests {
             players: HashMap::from([
                 (
                     Color::White,
-                    GamePlayer {
-                        color: Color::White,
-                        captures: Vec::new(),
-                        moves: HashMap::new()
-                    },
+                    GamePlayer { color: Color::White, captures: Vec::new(), moves: HashMap::new() },
                 ),
                 (
                     Color::Black,
-                    GamePlayer {
-                        color: Color::Black,
-                        captures: Vec::new(),
-                        moves: HashMap::new()
-                    },
+                    GamePlayer { color: Color::Black, captures: Vec::new(), moves: HashMap::new() },
                 ),
             ]),
             history: Vec::new(),
@@ -107,19 +99,11 @@ mod tests {
             players: HashMap::from([
                 (
                     Color::White,
-                    GamePlayer {
-                        color: Color::White,
-                        captures: Vec::new(),
-                        moves: HashMap::new(),
-                    },
+                    GamePlayer { color: Color::White, captures: Vec::new(), moves: HashMap::new() },
                 ),
                 (
                     Color::Black,
-                    GamePlayer {
-                        color: Color::Black,
-                        captures: Vec::new(),
-                        moves: HashMap::new(),
-                    },
+                    GamePlayer { color: Color::Black, captures: Vec::new(), moves: HashMap::new() },
                 ),
             ]),
             history: vec![Movement::of('♙', "D6", "D7")],

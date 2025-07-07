@@ -1,4 +1,4 @@
-use crate::{pos::Pos, piece::Piece};
+use crate::{piece::Piece, pos::Pos};
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct Movement {
@@ -22,7 +22,7 @@ impl Movement {
 
 #[cfg(test)]
 mod tests {
-    use crate::{pos::Pos, piece::Piece};
+    use crate::{piece::Piece, pos::Pos};
 
     use super::Movement;
 
