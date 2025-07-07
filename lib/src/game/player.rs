@@ -1,4 +1,4 @@
-use std::collections::{HashMap, HashSet};
+use std::collections::HashMap;
 
 use crate::{board::pos::Pos, color::Color, game::movement::movement::GameMovement};
 
@@ -8,6 +8,5 @@ use super::capture::GameCapture;
 pub struct GamePlayer {
     pub color: Color,
     pub captures: Vec<GameCapture>,
-    pub menace: HashSet<Pos>,
     pub moves: HashMap<Pos, Vec<GameMovement>>,
 }

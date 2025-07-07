@@ -6,7 +6,6 @@ use crate::{
         Game,
         game::GameHistory,
         mode::GameMode,
-        movement::menace::menace_of_player,
         player::GamePlayer,
         rule::{allowed_movements::allowed_movements_of_player, turn::evaluate_turn},
     },
@@ -22,7 +21,6 @@ pub fn game_of_mode(mode: GameMode) -> Game {
             GamePlayer {
                 color: Color::Black,
                 captures: Vec::new(),
-                menace: menace_of_player(&board, &bounds, Color::Black),
                 moves: HashMap::new(),
             },
         ),
@@ -31,7 +29,6 @@ pub fn game_of_mode(mode: GameMode) -> Game {
             GamePlayer {
                 color: Color::White,
                 captures: Vec::new(),
-                menace: menace_of_player(&board, &bounds, Color::White),
                 moves: allowed_movements_of_player(&board, &bounds, &history, &Color::White),
             },
         ),
@@ -55,7 +52,6 @@ pub fn game_of_mode_and_history(mode: GameMode, history: GameHistory) -> Game {
             GamePlayer {
                 color: Color::Black,
                 captures: Vec::new(),
-                menace: menace_of_player(&board, &bounds, Color::Black),
                 moves: if turn == Color::Black {
                     allowed_movements_of_player(&board, &bounds, &history, &Color::Black)
                 } else {
@@ -68,7 +64,6 @@ pub fn game_of_mode_and_history(mode: GameMode, history: GameHistory) -> Game {
             GamePlayer {
                 color: Color::White,
                 captures: Vec::new(),
-                menace: menace_of_player(&board, &bounds, Color::White),
                 moves: if turn == Color::White {
                     allowed_movements_of_player(&board, &bounds, &history, &Color::White)
                 } else {
@@ -126,13 +121,6 @@ mod tests {
                         GamePlayer {
                             color: Color::Black,
                             captures: Vec::new(),
-                            menace: pos_of_str_slice([
-                                /**/ "B8", "C8", "D8", "E8", "F8", "G8", //
-                                "A7", "B7", "C7", "D7", "E7", "F7", "G7", "H7", //
-                                "A6", "B6", "C6", "D6", "E6", "F6", "G6", "H6",
-                            ])
-                            .into_iter()
-                            .collect(),
                             moves: HashMap::new(),
                         },
                     ),
@@ -141,13 +129,6 @@ mod tests {
                         GamePlayer {
                             color: Color::White,
                             captures: Vec::new(),
-                            menace: pos_of_str_slice([
-                                "A3", "B3", "C3", "D3", "E3", "F3", "G3", "H3", //
-                                "A2", "B2", "C2", "D2", "E2", "F2", "G2", "H2", //
-                                /**/ "B1", "C1", "D1", "E1", "F1", "G1",
-                            ])
-                            .into_iter()
-                            .collect(),
                             moves: HashMap::from([
                                 (
                                     Pos::of_str("A2"),
@@ -312,14 +293,6 @@ mod tests {
                         GamePlayer {
                             color: Color::Black,
                             captures: Vec::new(),
-                            menace: pos_of_str_slice([
-                                "E1", "F1", "G1", "H1", //
-                                "C1", "B1", "A1", //
-                                "D2", "D3", "D4", "D5", "D6", "D7", "D8", //
-                                "F8", "F7", "F6", "E6", "D6", "D7", "D8", "E8",
-                            ])
-                            .into_iter()
-                            .collect(),
                             moves: HashMap::new(),
                         },
                     ),
@@ -328,14 +301,6 @@ mod tests {
                         GamePlayer {
                             color: Color::White,
                             captures: Vec::new(),
-                            menace: pos_of_str_slice([
-                                "E8", "F8", "G8", "H8", //
-                                "D7", "D6", "D5", "D4", "D3", "D2", "D1", //
-                                "C8", "B8", "A8", //
-                                "F3", "F2", "F1", "E1", "D1", "D2", "D3", "E3",
-                            ])
-                            .into_iter()
-                            .collect(),
                             moves: HashMap::from([
                                 (
                                     Pos::of_str("E2"),

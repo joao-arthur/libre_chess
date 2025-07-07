@@ -1,5 +1,5 @@
 use crate::{
-    game::{Game, rule::turn::evaluate_turn},
+    game::{movement::movement::GameMovement, rule::turn::evaluate_turn, Game},
     piece::Type,
 };
 
@@ -8,8 +8,22 @@ pub fn is_in_check(game: &Game) -> bool {
     for (pos, piece) in game.board.iter() {
         if piece.t == Type::King && piece.color == curr_turn {
             for player in game.players.values() {
-                if player.color != curr_turn && player.menace.contains(pos) {
-                    return true;
+                if player.color != curr_turn {
+                    let it = player.moves.iter();
+                    for (_, moves) in it {
+                        for mov in moves {
+                            let maybe_pos = match mov {
+                                GameMovement::Default(default_mov) => Some(&default_mov.movement.to),
+                                GameMovement::Capture(capture_mov) => Some(&capture_mov.movement.to),
+                                _ => None,
+                            };
+                            if let Some(menace_pos) = maybe_pos {
+                                if menace_pos == pos {
+                                    return true;
+                                }
+                            } 
+                        }
+                    }
                 }
             }
             break;
@@ -23,7 +37,6 @@ mod tests {
     use std::collections::HashMap;
 
     use crate::{
-        board::pos::pos_of_str_slice,
         color::Color,
         game::{
             Game, board::board_of_str, game::GameBounds, mode::standard_chess, player::GamePlayer,
@@ -57,9 +70,6 @@ mod tests {
                     GamePlayer {
                         color: Color::White,
                         captures: Vec::new(),
-                        menace: pos_of_str_slice(["D1", "D2", "F1", "F2", "E3", "E4"])
-                            .into_iter()
-                            .collect(),
                         moves: HashMap::new()
                     },
                 ),
@@ -68,9 +78,6 @@ mod tests {
                     GamePlayer {
                         color: Color::Black,
                         captures: Vec::new(),
-                        menace: pos_of_str_slice(["D8", "D7", "F8", "F7", "E6", "E5"])
-                            .into_iter()
-                            .collect(),
                         moves: HashMap::new()
                     },
                 ),
@@ -103,9 +110,6 @@ mod tests {
                     GamePlayer {
                         color: Color::White,
                         captures: Vec::new(),
-                        menace: pos_of_str_slice(["D1", "D2", "E2", "F1", "F2", "D8", "E8", "F8"])
-                            .into_iter()
-                            .collect(),
                         moves: HashMap::new(),
                     },
                 ),
@@ -114,9 +118,6 @@ mod tests {
                     GamePlayer {
                         color: Color::Black,
                         captures: Vec::new(),
-                        menace: pos_of_str_slice(["D8", "D7", "F8", "F7", "E6", "E5"])
-                            .into_iter()
-                            .collect(),
                         moves: HashMap::new(),
                     },
                 ),

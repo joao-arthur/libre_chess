@@ -96,7 +96,6 @@ mod tests {
             mode::standard_chess,
             movement::movement::{DefaultMovement, GameMovement},
             player::GamePlayer,
-            rule::init::game_of_mode,
         },
         movement::Movement,
     };
@@ -110,7 +109,6 @@ mod tests {
                 GamePlayer {
                     color: Color::Black,
                     captures: Vec::new(),
-                    menace: HashSet::new(),
                     moves: HashMap::new(),
                 },
             ),
@@ -119,7 +117,6 @@ mod tests {
                 GamePlayer {
                     color: Color::White,
                     captures: Vec::new(),
-                    menace: HashSet::new(),
                     moves: HashMap::new(),
                 },
             ),
@@ -187,7 +184,6 @@ mod tests {
                 GamePlayer {
                     color: Color::Black,
                     captures: Vec::new(),
-                    menace: HashSet::new(),
                     moves: HashMap::new(),
                 },
             ),
@@ -196,7 +192,6 @@ mod tests {
                 GamePlayer {
                     color: Color::White,
                     captures: Vec::new(),
-                    menace: HashSet::new(),
                     moves: HashMap::from([(
                         Pos::of_str("B2"),
                         vec![
@@ -284,7 +279,6 @@ mod tests {
                 GamePlayer {
                     color: Color::Black,
                     captures: Vec::new(),
-                    menace: HashSet::new(),
                     moves: HashMap::new(),
                 },
             ),
@@ -293,7 +287,6 @@ mod tests {
                 GamePlayer {
                     color: Color::White,
                     captures: Vec::new(),
-                    menace: HashSet::new(),
                     moves: HashMap::from([(
                         pos.clone(),
                         vec![
@@ -373,7 +366,6 @@ mod tests {
                 GamePlayer {
                     color: Color::Black,
                     captures: Vec::new(),
-                    menace: HashSet::new(),
                     moves: HashMap::new(),
                 },
             ),
@@ -382,7 +374,6 @@ mod tests {
                 GamePlayer {
                     color: Color::White,
                     captures: Vec::new(),
-                    menace: HashSet::new(),
                     moves: HashMap::from([(
                         Pos::of_str("D5"),
                         vec![
