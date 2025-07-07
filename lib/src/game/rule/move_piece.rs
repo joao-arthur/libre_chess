@@ -6,7 +6,7 @@ use crate::{
         mov::{
             CastlingMov, DefaultMov, EnPassantMov, GameMov, PromotionMov,
         },
-        rule::{allowed_movements::allowed_movements_of_player, turn::evaluate_turn},
+        rule::{allowed_moves::allowed_moves_of_player, turn::evaluate_turn},
     },
     pos::Pos,
 };
@@ -104,7 +104,7 @@ pub fn app_move_piece(
         if &turn == color {
             player.moves.drain();
         } else {
-            player.moves.extend(allowed_movements_of_player(board, bounds, history, color));
+            player.moves.extend(allowed_moves_of_player(board, bounds, history, color));
         }
     }
 }

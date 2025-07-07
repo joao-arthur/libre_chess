@@ -104,13 +104,13 @@ mod tests {
     use super::moves;
 
     #[test]
-    fn movements_empty_board() {
+    fn moves_empty_board() {
         let mode = standard_chess();
         assert_eq!(moves(&board_empty(), &mode.bounds, &Pos::of_str("A1")), []);
     }
 
     #[test]
-    fn movements_lonely_white_pawn() {
+    fn moves_lonely_white_pawn() {
         let mode = standard_chess();
         let board = HashMap::from([piece_of_str("C5", '♙')]);
         assert_eq!(
@@ -124,7 +124,7 @@ mod tests {
     }
 
     #[test]
-    fn movements_lonely_black_pawn() {
+    fn moves_lonely_black_pawn() {
         let mode = standard_chess();
         let board = HashMap::from([piece_of_str("C5", '♟')]);
         assert_eq!(
@@ -138,7 +138,7 @@ mod tests {
     }
 
     #[test]
-    fn movements_first_move_white_pawn() {
+    fn moves_first_move_white_pawn() {
         let mode = standard_chess();
         let board = HashMap::from([piece_of_str("A2", '♙')]);
         assert_eq!(
@@ -152,7 +152,7 @@ mod tests {
     }
 
     #[test]
-    fn movements_first_move_black_pawn() {
+    fn moves_first_move_black_pawn() {
         let mode = standard_chess();
         let board = HashMap::from([piece_of_str("H7", '♟')]);
         assert_eq!(
@@ -166,7 +166,7 @@ mod tests {
     }
 
     #[test]
-    fn movements_blocked_white_pawn() {
+    fn moves_blocked_white_pawn() {
         let mode = standard_chess();
         let board = HashMap::from([piece_of_str("C5", '♙'), piece_of_str("C6", '♟')]);
         assert_eq!(
@@ -179,7 +179,7 @@ mod tests {
     }
 
     #[test]
-    fn movements_blocked_black_pawn() {
+    fn moves_blocked_black_pawn() {
         let mode = standard_chess();
         let board = HashMap::from([piece_of_str("C5", '♟'), piece_of_str("C4", '♙')]);
         assert_eq!(
@@ -192,7 +192,7 @@ mod tests {
     }
 
     #[test]
-    fn movements_white_capture() {
+    fn moves_white_capture() {
         let mode = standard_chess();
         let board = board_of_str(
             &mode.bounds,
@@ -218,7 +218,7 @@ mod tests {
     }
 
     #[test]
-    fn movements_black_capture() {
+    fn moves_black_capture() {
         let mode = standard_chess();
         let board = board_of_str(
             &mode.bounds,

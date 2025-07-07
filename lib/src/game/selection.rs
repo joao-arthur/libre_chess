@@ -15,7 +15,7 @@ pub struct Selection {
     pub selected_squares: HashSet<Pos>,
     pub selected_piece: Option<Pos>,
     // If it gets hard to handle: HashMap<Pos, Vec<GameMov>>
-    pub selected_piece_movements: Vec<GameMov>,
+    pub selected_piece_moves: Vec<GameMov>,
 }
 
 pub fn toggle_selection(
@@ -27,7 +27,7 @@ pub fn toggle_selection(
 ) {
     // Player selected a movement
     if selection
-        .selected_piece_movements
+        .selected_piece_moves
         .iter()
         .find(|mov| match mov {
             GameMov::Default(mov) => mov.mov.to == pos,
@@ -39,7 +39,7 @@ pub fn toggle_selection(
     {
         selection.selected_squares.clear();
         selection.selected_piece = None;
-        selection.selected_piece_movements.clear();
+        selection.selected_piece_moves.clear();
         return;
     }
     if let Some(piece) = board.get(&pos) {
@@ -47,7 +47,7 @@ pub fn toggle_selection(
         if let Some(selected_piece) = &selection.selected_piece {
             if &pos == selected_piece {
                 selection.selected_piece = None;
-                selection.selected_piece_movements.clear();
+                selection.selected_piece_moves.clear();
                 return;
             }
         }
@@ -58,20 +58,20 @@ pub fn toggle_selection(
                 if let Some(moves) = player.moves.get(&pos) {
                     selection.selected_squares.clear();
                     selection.selected_piece = Some(pos.clone());
-                    selection.selected_piece_movements = moves.clone();
+                    selection.selected_piece_moves = moves.clone();
                     return;
                 }
             }
             // Player same player piece that is locked
             selection.selected_squares.clear();
             selection.selected_piece = None;
-            selection.selected_piece_movements.clear();
+            selection.selected_piece_moves.clear();
             return;
         }
         // Player selected another player piece
         selection.selected_squares.clear();
         selection.selected_piece = None;
-        selection.selected_piece_movements.clear();
+        selection.selected_piece_moves.clear();
         return;
     }
     // Player selected empty square already selected
@@ -121,7 +121,7 @@ mod tests {
         let mut selection = Selection {
             selected_squares: HashSet::new(),
             selected_piece: None,
-            selected_piece_movements: Vec::new(),
+            selected_piece_moves: Vec::new(),
         };
         let board = mode.initial_board;
         let players = empty_players();
@@ -133,7 +133,7 @@ mod tests {
             Selection {
                 selected_squares: HashSet::from([pos.clone()]),
                 selected_piece: None,
-                selected_piece_movements: Vec::new(),
+                selected_piece_moves: Vec::new(),
             }
         );
     }
@@ -145,7 +145,7 @@ mod tests {
         let mut selection = Selection {
             selected_squares: HashSet::from([pos.clone()]),
             selected_piece: None,
-            selected_piece_movements: Vec::new(),
+            selected_piece_moves: Vec::new(),
         };
         let board = mode.initial_board;
         let players = empty_players();
@@ -156,7 +156,7 @@ mod tests {
             Selection {
                 selected_squares: HashSet::new(),
                 selected_piece: None,
-                selected_piece_movements: Vec::new(),
+                selected_piece_moves: Vec::new(),
             }
         );
     }
@@ -167,7 +167,7 @@ mod tests {
         let mut selection = Selection {
             selected_squares: HashSet::from([Pos::of_str("D4")]),
             selected_piece: None,
-            selected_piece_movements: Vec::new(),
+            selected_piece_moves: Vec::new(),
         };
         let board = mode.initial_board;
         let players = HashMap::from([
@@ -197,7 +197,7 @@ mod tests {
             Selection {
                 selected_squares: HashSet::new(),
                 selected_piece: Some(Pos::of_str("B2")),
-                selected_piece_movements: vec![
+                selected_piece_moves: vec![
                     GameMov::from(DefaultMov::from(Mov::of('♟', "B2", "B3"))),
                     GameMov::from(DefaultMov::from(Mov::of('♟', "B2", "B4"))),
                 ],
@@ -212,7 +212,7 @@ mod tests {
         let mut selection = Selection {
             selected_squares: HashSet::from([Pos::of_str("D4")]),
             selected_piece: Some(pos.clone()),
-            selected_piece_movements: Vec::new(),
+            selected_piece_moves: Vec::new(),
         };
         let board = mode.initial_board;
         let players = empty_players();
@@ -223,7 +223,7 @@ mod tests {
             Selection {
                 selected_squares: HashSet::from([Pos::of_str("D4")]),
                 selected_piece: None,
-                selected_piece_movements: Vec::new(),
+                selected_piece_moves: Vec::new(),
             }
         );
     }
@@ -234,7 +234,7 @@ mod tests {
         let mut selection = Selection {
             selected_squares: HashSet::from([Pos::of_str("D4")]),
             selected_piece: None,
-            selected_piece_movements: Vec::new(),
+            selected_piece_moves: Vec::new(),
         };
         let board = mode.initial_board;
         let players = empty_players();
@@ -246,7 +246,7 @@ mod tests {
             Selection {
                 selected_squares: HashSet::new(),
                 selected_piece: None,
-                selected_piece_movements: Vec::new(),
+                selected_piece_moves: Vec::new(),
             }
         );
     }
@@ -257,7 +257,7 @@ mod tests {
         let mut selection = Selection {
             selected_squares: HashSet::from([Pos::of_str("D4")]),
             selected_piece: Some(Pos::of_str("B2")),
-            selected_piece_movements: Vec::new(),
+            selected_piece_moves: Vec::new(),
         };
         let board = mode.initial_board;
         let pos = Pos::of_str("C2");
@@ -288,7 +288,7 @@ mod tests {
             Selection {
                 selected_squares: HashSet::new(),
                 selected_piece: Some(pos.clone()),
-                selected_piece_movements: vec![
+                selected_piece_moves: vec![
                     GameMov::from(DefaultMov::from(Mov::of('♟', "C2", "C3"))),
                     GameMov::from(DefaultMov::from(Mov::of('♟', "C2", "C4"))),
                 ],
@@ -302,7 +302,7 @@ mod tests {
         let mut selection = Selection {
             selected_squares: HashSet::from([Pos::of_str("D4")]),
             selected_piece: Some(Pos::of_str("B2")),
-            selected_piece_movements: Vec::new(),
+            selected_piece_moves: Vec::new(),
         };
         let board = mode.initial_board;
         let players = empty_players();
@@ -313,7 +313,7 @@ mod tests {
             Selection {
                 selected_squares: HashSet::new(),
                 selected_piece: None,
-                selected_piece_movements: Vec::new(),
+                selected_piece_moves: Vec::new(),
             }
         );
     }
@@ -323,7 +323,7 @@ mod tests {
         let mut selection = Selection {
             selected_squares: HashSet::new(),
             selected_piece: Some(Pos::of_str("D5")),
-            selected_piece_movements: vec![
+            selected_piece_moves: vec![
                 GameMov::from(DefaultMov::from(Mov::of('♖', "D5", "E5"))),
                 GameMov::from(DefaultMov::from(Mov::of('♖', "D5", "D4"))),
                 GameMov::from(DefaultMov::from(Mov::of('♖', "D5", "C5"))),
@@ -373,7 +373,7 @@ mod tests {
             Selection {
                 selected_squares: HashSet::new(),
                 selected_piece: None,
-                selected_piece_movements: Vec::new(),
+                selected_piece_moves: Vec::new(),
             }
         );
     }

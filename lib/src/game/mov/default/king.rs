@@ -76,13 +76,13 @@ mod tests {
     use super::moves;
 
     #[test]
-    fn movements_empty_board() {
+    fn moves_empty_board() {
         let mode = standard_chess();
         assert_eq!(moves(&board_empty(), &mode.bounds, &Pos::of_str("A1")), []);
     }
 
     #[test]
-    fn movements_lonely_piece() {
+    fn moves_lonely_piece() {
         let mode = standard_chess();
         let board = HashMap::from([piece_of_str("D4", '♚')]);
         assert_eq!(
@@ -101,7 +101,7 @@ mod tests {
     }
 
     #[test]
-    fn movements_top_right_edge() {
+    fn moves_top_right_edge() {
         let mode = standard_chess();
         let board = HashMap::from([piece_of_str("H8", '♚')]);
         assert_eq!(
@@ -115,7 +115,7 @@ mod tests {
     }
 
     #[test]
-    fn movements_bottom_right_edge() {
+    fn moves_bottom_right_edge() {
         let mode = standard_chess();
         let board = HashMap::from([piece_of_str("H1", '♚')]);
         assert_eq!(
@@ -129,7 +129,7 @@ mod tests {
     }
 
     #[test]
-    fn movements_bottom_left_edge() {
+    fn moves_bottom_left_edge() {
         let mode = standard_chess();
         let board = HashMap::from([piece_of_str("A1", '♚')]);
         assert_eq!(
@@ -143,7 +143,7 @@ mod tests {
     }
 
     #[test]
-    fn movements_top_left_edge() {
+    fn moves_top_left_edge() {
         let mode = standard_chess();
         let board = HashMap::from([piece_of_str("A8", '♚')]);
         assert_eq!(
@@ -157,7 +157,7 @@ mod tests {
     }
 
     #[test]
-    fn movements_small_bounds_top_right_edge() {
+    fn moves_small_bounds_top_right_edge() {
         let board = HashMap::from([piece_of_str("H8", '♚')]);
         let bounds = GameBounds { x1: 3, y1: 3, x2: 7, y2: 7 };
         assert_eq!(
@@ -171,7 +171,7 @@ mod tests {
     }
 
     #[test]
-    fn movements_small_bounds_bottom_right_edge() {
+    fn moves_small_bounds_bottom_right_edge() {
         let board = HashMap::from([piece_of_str("H4", '♚')]);
         let bounds = GameBounds { x1: 3, y1: 3, x2: 7, y2: 7 };
         assert_eq!(
@@ -185,7 +185,7 @@ mod tests {
     }
 
     #[test]
-    fn movements_small_bounds_bottom_left_edge() {
+    fn moves_small_bounds_bottom_left_edge() {
         let board = HashMap::from([piece_of_str("D4 ", '♚')]);
         let bounds = GameBounds { x1: 3, y1: 3, x2: 7, y2: 7 };
         assert_eq!(
@@ -199,7 +199,7 @@ mod tests {
     }
 
     #[test]
-    fn movements_small_bounds_top_left_edge() {
+    fn moves_small_bounds_top_left_edge() {
         let board = HashMap::from([piece_of_str("D8", '♚')]);
         let bounds = GameBounds { x1: 3, y1: 3, x2: 7, y2: 7 };
         assert_eq!(
@@ -213,7 +213,7 @@ mod tests {
     }
 
     #[test]
-    fn movements_white_capture() {
+    fn moves_white_capture() {
         let mode = standard_chess();
         let board = board_of_str(
             &mode.bounds,
@@ -244,7 +244,7 @@ mod tests {
     }
 
     #[test]
-    fn movements_black_capture() {
+    fn moves_black_capture() {
         let mode = standard_chess();
         let board = board_of_str(
             &mode.bounds,

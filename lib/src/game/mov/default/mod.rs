@@ -43,13 +43,13 @@ mod tests {
     use super::moves;
 
     #[test]
-    fn movements_empty_board() {
+    fn moves_empty_board() {
         let mode = standard_chess();
         assert_eq!(moves(&board_empty(), &mode.bounds, &Pos::of_str("A1")), []);
     }
 
     #[test]
-    fn movements_rook() {
+    fn moves_rook() {
         let mode = standard_chess();
         let board = HashMap::from([piece_of_str("D4", '♜')]);
         assert_eq!(
@@ -74,7 +74,7 @@ mod tests {
     }
 
     #[test]
-    fn movements_knight() {
+    fn moves_knight() {
         let mode = standard_chess();
         let board = HashMap::from([piece_of_str("D4", '♞')]);
         assert_eq!(
@@ -93,7 +93,7 @@ mod tests {
     }
 
     #[test]
-    fn movements_bishop() {
+    fn moves_bishop() {
         let mode = standard_chess();
         let board = HashMap::from([piece_of_str("C5", '♝')]);
         assert_eq!(
@@ -115,7 +115,7 @@ mod tests {
     }
 
     #[test]
-    fn movements_queen() {
+    fn moves_queen() {
         let mode = standard_chess();
         let board = HashMap::from([piece_of_str("C5", '♛')]);
         assert_eq!(
@@ -151,7 +151,7 @@ mod tests {
     }
 
     #[test]
-    fn movements_king() {
+    fn moves_king() {
         let mode = standard_chess();
         let board = HashMap::from([piece_of_str("D4", '♚')]);
         assert_eq!(
@@ -170,7 +170,7 @@ mod tests {
     }
 
     #[test]
-    fn movements_pawn() {
+    fn moves_pawn() {
         let mode = standard_chess();
         let board = HashMap::from([piece_of_str("C5", '♙')]);
         assert_eq!(

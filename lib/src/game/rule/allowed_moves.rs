@@ -6,8 +6,8 @@ use crate::{
         GameBoard,
         game::{GameBounds, GameHistory},
         mov::{
+            GameMov,
             default,
-            mov::GameMov,
             special::{castling, en_passant},
         },
     },
@@ -15,7 +15,7 @@ use crate::{
     pos::Pos,
 };
 
-fn allowed_movements_of_piece(
+fn allowed_moves_of_piece(
     board: &GameBoard,
     bounds: &GameBounds,
     history: &GameHistory,
@@ -59,7 +59,7 @@ fn allowed_movements_of_piece(
     }
 }
 
-pub fn allowed_movements_of_player(
+pub fn allowed_moves_of_player(
     board: &GameBoard,
     bounds: &GameBounds,
     history: &GameHistory,
@@ -68,7 +68,7 @@ pub fn allowed_movements_of_player(
     let mut result = HashMap::new();
     for (pos, piece) in board {
         if &piece.color == color {
-            let moves = allowed_movements_of_piece(board, bounds, history, pos);
+            let moves = allowed_moves_of_piece(board, bounds, history, pos);
             // if piece.t == Type::King {
             //     for (curr_color, curr_player) in game.players {
             //         if curr_color != player.color {

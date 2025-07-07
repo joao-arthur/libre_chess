@@ -35,7 +35,7 @@
 - [ ] game_of_mode_and_history
     - [ ] Captures
 
-- [ ] allowed_movements_of_player
+- [ ] allowed_moves_of_player
     - [ ] King menaces
 
 - [ ] Selection
