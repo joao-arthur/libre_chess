@@ -122,7 +122,7 @@ mod tests {
                     },
                 ),
             ]),
-            history: vec![Movement::of_str('♙', "D6", "D7")],
+            history: vec![Movement::of('♙', "D6", "D7")],
         }));
     }
 }

@@ -32,7 +32,6 @@
 
 ## Fix
 
-
 - [ ] game_of_mode_and_history
     - [ ] Captures
 

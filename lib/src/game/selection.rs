@@ -195,8 +195,8 @@ mod tests {
                     moves: HashMap::from([(
                         Pos::of_str("B2"),
                         vec![
-                            GameMovement::from(DefaultMovement::from(Movement::of_str('♟', "B2", "B3"))),
-                            GameMovement::from(DefaultMovement::from(Movement::of_str('♟', "B2", "B4"))),
+                            GameMovement::from(DefaultMovement::from(Movement::of('♟', "B2", "B3"))),
+                            GameMovement::from(DefaultMovement::from(Movement::of('♟', "B2", "B4"))),
                         ],
                     )]),
                 },
@@ -210,8 +210,8 @@ mod tests {
                 selected_squares: HashSet::new(),
                 selected_piece: Some(Pos::of_str("B2")),
                 selected_piece_movements: vec![
-                    GameMovement::from(DefaultMovement::from(Movement::of_str('♟', "B2", "B3"))),
-                    GameMovement::from(DefaultMovement::from(Movement::of_str('♟', "B2", "B4"))),
+                    GameMovement::from(DefaultMovement::from(Movement::of('♟', "B2", "B3"))),
+                    GameMovement::from(DefaultMovement::from(Movement::of('♟', "B2", "B4"))),
                 ],
             }
         );
@@ -290,8 +290,8 @@ mod tests {
                     moves: HashMap::from([(
                         pos.clone(),
                         vec![
-                            GameMovement::from(DefaultMovement::from(Movement::of_str('♟', "C2", "C3"))),
-                            GameMovement::from(DefaultMovement::from(Movement::of_str('♟', "C2", "C4"))),
+                            GameMovement::from(DefaultMovement::from(Movement::of('♟', "C2", "C3"))),
+                            GameMovement::from(DefaultMovement::from(Movement::of('♟', "C2", "C4"))),
                         ],
                     )]),
                 },
@@ -305,8 +305,8 @@ mod tests {
                 selected_squares: HashSet::new(),
                 selected_piece: Some(pos.clone()),
                 selected_piece_movements: vec![
-                    GameMovement::from(DefaultMovement::from(Movement::of_str('♟', "C2", "C3"))),
-                    GameMovement::from(DefaultMovement::from(Movement::of_str('♟', "C2", "C4"))),
+                    GameMovement::from(DefaultMovement::from(Movement::of('♟', "C2", "C3"))),
+                    GameMovement::from(DefaultMovement::from(Movement::of('♟', "C2", "C4"))),
                 ],
             }
         );
@@ -340,10 +340,10 @@ mod tests {
             selected_squares: HashSet::new(),
             selected_piece: Some(Pos::of_str("D5")),
             selected_piece_movements: vec![
-                GameMovement::from(DefaultMovement::from(Movement::of_str('♖', "D5", "E5"))),
-                GameMovement::from(DefaultMovement::from(Movement::of_str('♖', "D5", "D4"))),
-                GameMovement::from(DefaultMovement::from(Movement::of_str('♖', "D5", "C5"))),
-                GameMovement::from(DefaultMovement::from(Movement::of_str('♖', "D5", "D6"))),
+                GameMovement::from(DefaultMovement::from(Movement::of('♖', "D5", "E5"))),
+                GameMovement::from(DefaultMovement::from(Movement::of('♖', "D5", "D4"))),
+                GameMovement::from(DefaultMovement::from(Movement::of('♖', "D5", "C5"))),
+                GameMovement::from(DefaultMovement::from(Movement::of('♖', "D5", "D6"))),
             ],
         };
         let mode = standard_chess();
@@ -377,10 +377,10 @@ mod tests {
                     moves: HashMap::from([(
                         Pos::of_str("D5"),
                         vec![
-                            GameMovement::from(DefaultMovement::from(Movement::of_str('♖', "D5", "E5"))),
-                            GameMovement::from(DefaultMovement::from(Movement::of_str('♖', "D5", "D4"))),
-                            GameMovement::from(DefaultMovement::from(Movement::of_str('♖', "D5", "C5"))),
-                            GameMovement::from(DefaultMovement::from(Movement::of_str('♖', "D5", "D6"))),
+                            GameMovement::from(DefaultMovement::from(Movement::of('♖', "D5", "E5"))),
+                            GameMovement::from(DefaultMovement::from(Movement::of('♖', "D5", "D4"))),
+                            GameMovement::from(DefaultMovement::from(Movement::of('♖', "D5", "C5"))),
+                            GameMovement::from(DefaultMovement::from(Movement::of('♖', "D5", "D6"))),
                         ],
                     )]),
                 },

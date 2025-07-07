@@ -13,11 +13,11 @@ mod tests {
     #[test]
     fn test_get_turn() {
         assert_eq!(evaluate_turn(&Vec::new()), Color::White);
-        assert_eq!(evaluate_turn(&Vec::from([Movement::of_str('♙', "D2", "D4")])), Color::Black);
+        assert_eq!(evaluate_turn(&Vec::from([Movement::of('♙', "D2", "D4")])), Color::Black);
         assert_eq!(
             evaluate_turn(&Vec::from([
-                Movement::of_str('♙', "D2", "D4"),
-                Movement::of_str('♟', "A7", "A5")
+                Movement::of('♙', "D2", "D4"),
+                Movement::of('♟', "A7", "A5")
             ])),
             Color::White
         );
