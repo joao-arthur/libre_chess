@@ -3,9 +3,7 @@ use crate::{
         GameBoard,
         capture::GameCapture,
         game::{GameBounds, GameHistory, GamePlayers},
-        mov::{
-            CastlingMov, DefaultMov, EnPassantMov, GameMov, PromotionMov,
-        },
+        mov::{CastlingMov, DefaultMov, EnPassantMov, GameMov, PromotionMov},
         rule::{allowed_moves::allowed_moves_of_player, turn::evaluate_turn},
     },
     pos::Pos,
@@ -17,57 +15,54 @@ fn default_move(
     history: &mut GameHistory,
     mov: DefaultMov,
 ) {
-    if let Some(piece) = board.remove(&mov.mov.from) {
-        if let Some(captured) = board.insert(mov.mov.to.clone(), piece) {
+    let mov = mov.mov;
+    if let Some(piece) = board.remove(&mov.from) {
+        if let Some(captured) = board.insert(mov.to.clone(), piece) {
             if let Some(player) = players.get_mut(&piece.color) {
                 player.captures.push(GameCapture { piece: captured, at: history.len() as u16 });
             }
         }
     }
-    history.push(mov.mov);
+    history.push(mov);
 }
 
 fn en_passant_move(
     board: &mut GameBoard,
     players: &mut GamePlayers,
     history: &mut GameHistory,
-    en_passant: EnPassantMov,
+    mov: EnPassantMov,
 ) {
-    if let Some(piece) = board.remove(&en_passant.mov.from) {
-        board.insert(en_passant.mov.to.clone(), piece);
-        if let Some(captured) = board
-            .remove(&Pos { col: en_passant.mov.to.col, row: en_passant.mov.from.row })
+    let mov = mov.mov;
+    if let Some(piece) = board.remove(&mov.from) {
+        board.insert(mov.to.clone(), piece);
+        if let Some(captured) =
+            board.remove(&Pos { col: mov.to.col, row: mov.from.row })
         {
             if let Some(player) = players.get_mut(&piece.color) {
                 player.captures.push(GameCapture { piece: captured, at: history.len() as u16 });
             }
         }
     }
-    history.push(en_passant.mov);
+    history.push(mov);
 }
 
-fn castling_move(board: &mut GameBoard, history: &mut GameHistory, castling: CastlingMov) {
-    if let Some(piece) = board.remove(&castling.mov.from) {
-        board.insert(castling.mov.to.clone(), piece);
-        if castling.mov.to.col > castling.mov.from.col {
-            if let Some(rook) = board
-                .remove(&Pos { col: castling.mov.to.col + 1, row: castling.mov.to.row })
+fn castling_move(board: &mut GameBoard, history: &mut GameHistory, mov: CastlingMov) {
+    let mov = mov.mov;
+    if let Some(piece) = board.remove(&mov.from) {
+        board.insert(mov.to.clone(), piece);
+        if mov.to.col > mov.from.col {
+            if let Some(rook) =
+                board.remove(&Pos { col: mov.to.col + 1, row: mov.to.row })
             {
-                board.insert(
-                    Pos { col: castling.mov.to.col - 1, row: castling.mov.to.row },
-                    rook,
-                );
+                board.insert(Pos { col: mov.to.col - 1, row: mov.to.row }, rook);
             }
         } else if let Some(rook) =
-            board.remove(&Pos { col: castling.mov.to.col - 1, row: castling.mov.to.row })
+            board.remove(&Pos { col: mov.to.col - 1, row: mov.to.row })
         {
-            board.insert(
-                Pos { col: castling.mov.to.col + 1, row: castling.mov.to.row },
-                rook,
-            );
+            board.insert(Pos { col: mov.to.col + 1, row: mov.to.row }, rook);
         }
     }
-    history.push(castling.mov);
+    history.push(mov);
 }
 
 fn promotion_move(board: &mut GameBoard, history: &mut GameHistory, promotion: PromotionMov) {
@@ -79,15 +74,15 @@ fn move_piece(
     board: &mut GameBoard,
     players: &mut GamePlayers,
     history: &mut GameHistory,
-    movement: GameMov,
+    mov: GameMov,
 ) {
-    match movement {
-        GameMov::Default(movement) => default_move(board, players, history, movement),
-        GameMov::Capture(movement) => default_move(board, players, history, DefaultMov::from(movement.mov)),
-        GameMov::Menace(movement) => {},
-        GameMov::EnPassant(en_passant) => en_passant_move(board, players, history, en_passant),
-        GameMov::Castling(castling) => castling_move(board, history, castling),
-        GameMov::Promotion(promotion) => promotion_move(board, history, promotion),
+    match mov {
+        GameMov::Default(mov) => default_move(board, players, history, mov),
+        GameMov::Capture(mov) => default_move(board, players, history, DefaultMov::from(mov.mov)),
+        GameMov::Menace(mov) => {}
+        GameMov::EnPassant(mov) => en_passant_move(board, players, history, mov),
+        GameMov::Castling(mov) => castling_move(board, history, mov),
+        GameMov::Promotion(mov) => promotion_move(board, history, mov),
     }
 }
 

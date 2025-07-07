@@ -6,8 +6,7 @@ use crate::{
         GameBoard,
         game::{GameBounds, GameHistory},
         mov::{
-            GameMov,
-            default,
+            GameMov, default,
             special::{castling, en_passant},
         },
     },

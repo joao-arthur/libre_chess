@@ -1,4 +1,4 @@
-use crate::{game::game::GameBounds, mov::Mov, piece::Piece, pos::Pos};
+use crate::{game::{board::{GameBoardErr, InvalidCharacterErr, InvalidLengthErr}, game::GameBounds}, mov::Mov, piece::Piece, pos::Pos};
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct DefaultMov {
@@ -107,40 +107,61 @@ impl From<PromotionMov> for GameMov {
     }
 }
 
-pub fn try_game_move_from_str<const N: usize>(
+pub fn try_game_move_vec_from_str<const N: usize>(
     bounds: &GameBounds,
     rows: [&str; N],
-) -> Result<Vec<GameMov>, ()> {
-    //         if rows.join("").find(|c| c != ' ' && Piece::try_of(c).is_none()).is_some() {
-    //             return Err(GameBoardErr::InvalidCharacter(InvalidCharacterErr));
-    //         }
-    //         let delta_x = usize::from(bounds.x2 - bounds.x1) + 1;
-    //         let delta_y: usize = usize::from(bounds.y2 - bounds.y1) + 1;
-    //         if rows.len() != delta_y {
-    //             return Err(GameBoardErr::InvalidLength(InvalidLengthErr));
-    //         }
-    //         for line in rows {
-    //             if line.chars().count() != delta_x {
-    //                 return Err(GameBoardErr::InvalidLength(InvalidLengthErr));
-    //             }
-    //         }
-    //         let mut board = HashMap::new();
-    //         for row in bounds.y1..=bounds.y2 {
-    //             for col in bounds.x1..=bounds.x2 {
-    //                 let row_index = bounds.y2 - row;
-    //                 let col_index = col - bounds.x1;
-    //                 let str_row = rows[row_index as usize];
-    //                 let str_col = str_row.chars().nth(col_index.into()).unwrap();
-    //                 if let Some(piece) = Piece::try_of(str_col) {
-    //                     board.insert(Pos { row, col }, piece);
-    //                 }
-    //             }
-    //         }
-    //         Ok(board)
-    Err(())
+) -> Result<Vec<GameMov>, GameBoardErr> {
+    let joined = rows.join("");
+    if joined.find(|c| c != ' ' && c != '●' && c != '◎' && c != '○' && Piece::try_of(c).is_none()).is_some() {
+        return Err(GameBoardErr::InvalidCharacter(InvalidCharacterErr));
+    }
+    let delta_x = usize::from(bounds.x2 - bounds.x1) + 1;
+    let delta_y: usize = usize::from(bounds.y2 - bounds.y1) + 1;
+    if rows.len() != delta_y {
+        return Err(GameBoardErr::InvalidLength(InvalidLengthErr));
+    }
+    for row in rows {
+        if row.chars().count() != delta_x {
+            return Err(GameBoardErr::InvalidLength(InvalidLengthErr));
+        }
+    }
+    let mut piece: Option<Piece> = None;
+    let mut from: Option<Pos> = None;
+    for row in bounds.y1..=bounds.y2 {
+        for col in bounds.x1..=bounds.x2 {
+            let row_index = bounds.y2 - row;
+            let col_index = col - bounds.x1;
+            let str_row = rows[row_index as usize];
+            let str_col = str_row.chars().nth(col_index.into()).unwrap();
+            if let Some(p) = Piece::try_of(str_col) {
+                piece = Some(p);
+                from = Some(Pos { row, col });
+                break;
+            }
+        }
+    }
+    let piece = piece.ok_or_else(|| GameBoardErr::InvalidCharacter(InvalidCharacterErr))?;
+    let from = from.ok_or_else(|| GameBoardErr::InvalidCharacter(InvalidCharacterErr))?;
+    let mut res = Vec::new();
+    for row in bounds.y1..=bounds.y2 {
+        for col in bounds.x1..=bounds.x2 {
+            let row_index = bounds.y2 - row;
+            let col_index = col - bounds.x1;
+            let str_row = rows[row_index as usize];
+            let str_col = str_row.chars().nth(col_index.into()).unwrap();
+            let to = Pos { row, col };
+            match str_col {
+                '●' => res.push(GameMov::from(DefaultMov::from(Mov { piece, from: from.clone(), to }))),
+                '◎' => res.push(GameMov::from(CaptureMov::from(Mov { piece, from: from.clone(), to }))),
+                '○' => res.push(GameMov::from(MenaceMov::from(Mov { piece, from: from.clone(), to }))),
+                _ => {}
+            }
+        }
+    }
+    return Ok(res);
 }
 
-pub fn game_move_to_string(bounds: &GameBounds, moves: &Vec<GameMov>) -> String {
+pub fn game_move_vec_to_string(bounds: &GameBounds, moves: &Vec<GameMov>) -> String {
     let mut res = "".to_string();
 
     let mut row = bounds.y2 + 1;
@@ -188,20 +209,49 @@ pub fn game_move_to_string(bounds: &GameBounds, moves: &Vec<GameMov>) -> String 
 #[cfg(test)]
 mod tests {
     use crate::{
-        game::{
-            game::GameBounds,
-            mode::standard_chess,
-        },
-        mov::Mov
+        game::{game::GameBounds, mode::standard_chess},
+        mov::Mov,
     };
 
-    use super::{game_move_to_string, try_game_move_from_str, CaptureMov, DefaultMov, GameMov, MenaceMov};
+    use super::{
+        CaptureMov, DefaultMov, GameMov, MenaceMov, game_move_vec_to_string, try_game_move_vec_from_str,
+    };
 
     #[test]
-    fn test_game_move_to_string_standard_chess() {
+    fn test_try_game_move_vec_from_str() {
         let mode = standard_chess();
         assert_eq!(
-            game_move_to_string(
+            try_game_move_vec_from_str(
+                &mode.bounds,
+                [
+                    "        ",
+                    "        ",
+                    "  ◎ ◎   ",
+                    " ●   ●  ",
+                    "   ♘    ",
+                    " ●   ●  ",
+                    "  ○ ○   ",
+                    "        ",
+                ]
+            ),
+            Ok(vec![
+                GameMov::from(MenaceMov::from(Mov::of('♘', "D4", "C2"))),
+                GameMov::from(MenaceMov::from(Mov::of('♘', "D4", "E2"))),
+                GameMov::from(DefaultMov::from(Mov::of('♘', "D4", "B3"))),
+                GameMov::from(DefaultMov::from(Mov::of('♘', "D4", "F3"))),
+                GameMov::from(DefaultMov::from(Mov::of('♘', "D4", "B5"))),
+                GameMov::from(DefaultMov::from(Mov::of('♘', "D4", "F5"))),
+                GameMov::from(CaptureMov::from(Mov::of('♘', "D4", "C6"))),
+                GameMov::from(CaptureMov::from(Mov::of('♘', "D4", "E6"))),
+            ])
+        )
+    }
+
+    #[test]
+    fn test_game_move_vec_to_string_standard_chess() {
+        let mode = standard_chess();
+        assert_eq!(
+            game_move_vec_to_string(
                 &mode.bounds,
                 &vec![
                     GameMov::from(DefaultMov::from(Mov::of('♘', "D4", "B3"))),

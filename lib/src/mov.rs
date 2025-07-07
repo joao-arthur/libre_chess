@@ -30,11 +30,7 @@ mod tests {
     fn try_from_str() {
         assert_eq!(
             Mov::try_of('♟', "D2", "D4"),
-            Some(Mov {
-                piece: Piece::of('♟'),
-                from: Pos::of_str("D2"),
-                to: Pos::of_str("D4")
-            })
+            Some(Mov { piece: Piece::of('♟'), from: Pos::of_str("D2"), to: Pos::of_str("D4") })
         );
     }
 

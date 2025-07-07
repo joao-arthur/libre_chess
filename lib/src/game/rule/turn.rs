@@ -15,10 +15,7 @@ mod tests {
         assert_eq!(evaluate_turn(&Vec::new()), Color::White);
         assert_eq!(evaluate_turn(&Vec::from([Mov::of('♙', "D2", "D4")])), Color::Black);
         assert_eq!(
-            evaluate_turn(&Vec::from([
-                Mov::of('♙', "D2", "D4"),
-                Mov::of('♟', "A7", "A5")
-            ])),
+            evaluate_turn(&Vec::from([Mov::of('♙', "D2", "D4"), Mov::of('♟', "A7", "A5")])),
             Color::White
         );
     }

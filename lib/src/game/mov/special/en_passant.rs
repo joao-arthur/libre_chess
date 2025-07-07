@@ -16,11 +16,7 @@ pub fn moves(board: &GameBoard, history: &GameHistory, pos: &Pos) -> Vec<EnPassa
     Vec::new()
 }
 
-fn white_pawn_en_passant(
-    board: &GameBoard,
-    history: &GameHistory,
-    pos: &Pos,
-) -> Vec<EnPassantMov> {
+fn white_pawn_en_passant(board: &GameBoard, history: &GameHistory, pos: &Pos) -> Vec<EnPassantMov> {
     let mut result: Vec<EnPassantMov> = Vec::new();
     if let Some(piece) = board.get(pos) {
         if pos.row == 4 {
@@ -55,11 +51,7 @@ fn white_pawn_en_passant(
     result
 }
 
-fn black_pawn_en_passant(
-    board: &GameBoard,
-    history: &GameHistory,
-    pos: &Pos,
-) -> Vec<EnPassantMov> {
+fn black_pawn_en_passant(board: &GameBoard, history: &GameHistory, pos: &Pos) -> Vec<EnPassantMov> {
     let mut result: Vec<EnPassantMov> = Vec::new();
     if let Some(piece) = board.get(pos) {
         if pos.row == 3 {

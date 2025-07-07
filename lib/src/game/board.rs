@@ -48,8 +48,8 @@ pub fn board_try_of_str<const N: usize>(
     if rows.len() != delta_y {
         return Err(GameBoardErr::InvalidLength(InvalidLengthErr));
     }
-    for line in rows {
-        if line.chars().count() != delta_x {
+    for row in rows {
+        if row.chars().count() != delta_x {
             return Err(GameBoardErr::InvalidLength(InvalidLengthErr));
         }
     }

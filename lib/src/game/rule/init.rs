@@ -137,7 +137,7 @@ mod tests {
                                     GameMov::from(DefaultMov::from(Mov::of('♙', "B2", "B4"))),
                                     GameMov::from(MenaceMov::from(Mov::of('♙', "B2", "A3"))),
                                     GameMov::from(MenaceMov::from(Mov::of('♙', "B2", "D3"))),
-                                ] 
+                                ]
                             ),
                             (
                                 Pos::of_str("C2"),
