@@ -106,3 +106,45 @@ impl From<PromotionMovement> for GameMovement {
         GameMovement::Promotion(movement)
     }
 }
+
+fn game_movements_to_string(moves: Vec<GameMovement>) -> String {
+    String::new()
+}
+
+fn game_movements_from_str(value: Vec<&str>) -> Result<Vec<GameMovement>, ()> {
+    Err(())
+}
+
+// impl GameMovement {
+//     fn try_of<const N: usize>(
+//         bounds: &GameBounds,
+//         rows: [&str; N],
+//     ) -> Result<Vec<GameMovement>> {
+//         if rows.join("").find(|c| c != ' ' && Piece::try_of(c).is_none()).is_some() {
+//             return Err(GameBoardErr::InvalidCharacter(InvalidCharacterErr));
+//         }
+//         let delta_x = usize::from(bounds.x2 - bounds.x1) + 1;
+//         let delta_y: usize = usize::from(bounds.y2 - bounds.y1) + 1;
+//         if rows.len() != delta_y {
+//             return Err(GameBoardErr::InvalidLength(InvalidLengthErr));
+//         }
+//         for line in rows {
+//             if line.chars().count() != delta_x {
+//                 return Err(GameBoardErr::InvalidLength(InvalidLengthErr));
+//             }
+//         }
+//         let mut board = HashMap::new();
+//         for row in bounds.y1..=bounds.y2 {
+//             for col in bounds.x1..=bounds.x2 {
+//                 let row_index = bounds.y2 - row;
+//                 let col_index = col - bounds.x1;
+//                 let str_row = rows[row_index as usize];
+//                 let str_col = str_row.chars().nth(col_index.into()).unwrap();
+//                 if let Some(piece) = Piece::try_of(str_col) {
+//                     board.insert(Pos { row, col }, piece);
+//                 }
+//             }
+//         }
+//         Ok(board)
+//     }
+// }

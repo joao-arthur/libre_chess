@@ -78,12 +78,7 @@ mod tests {
     use crate::{
         color::Color,
         game::{
-            Game,
-            board::board_of_str,
-            game::GameBounds,
-            mode::standard_chess,
-            movement::movement::{CaptureMovement, DefaultMovement, GameMovement},
-            player::GamePlayer,
+            board::board_of_str, game::GameBounds, mode::standard_chess, movement::movement::{CaptureMovement, DefaultMovement, GameMovement, MenaceMovement}, player::GamePlayer, Game
         },
         movement::Movement,
         pos::Pos,
@@ -131,6 +126,7 @@ mod tests {
                                     vec![
                                         GameMovement::from(DefaultMovement::from(Movement::of('♙', "A2", "A3"))),
                                         GameMovement::from(DefaultMovement::from(Movement::of('♙', "A2", "A4"))),
+                                        GameMovement::from(MenaceMovement::from(Movement::of('♙', "A2", "B3"))),
                                     ]
                                 ),
                                 (
@@ -138,13 +134,17 @@ mod tests {
                                     vec![
                                         GameMovement::from(DefaultMovement::from(Movement::of('♙', "B2", "B3"))),
                                         GameMovement::from(DefaultMovement::from(Movement::of('♙', "B2", "B4"))),
-                                    ]
+                                        GameMovement::from(MenaceMovement::from(Movement::of('♙', "B2", "A3"))),
+                                        GameMovement::from(MenaceMovement::from(Movement::of('♙', "B2", "D3"))),
+                                    ] 
                                 ),
                                 (
                                     Pos::of_str("C2"),
                                     vec![
                                         GameMovement::from(DefaultMovement::from(Movement::of('♙', "C2", "C3"))),
                                         GameMovement::from(DefaultMovement::from(Movement::of('♙', "C2", "C4"))),
+                                        GameMovement::from(MenaceMovement::from(Movement::of('♙', "C2", "B3"))),
+                                        GameMovement::from(MenaceMovement::from(Movement::of('♙', "C2", "E3"))),
                                     ]
                                 ),
                                 (
@@ -152,6 +152,8 @@ mod tests {
                                     vec![
                                         GameMovement::from(DefaultMovement::from(Movement::of('♙', "D2", "D3"))),
                                         GameMovement::from(DefaultMovement::from(Movement::of('♙', "D2", "D4"))),
+                                        GameMovement::from(MenaceMovement::from(Movement::of('♙', "D2", "C3"))),
+                                        GameMovement::from(MenaceMovement::from(Movement::of('♙', "D2", "E3"))),
                                     ]
                                 ),
                                 (
@@ -159,6 +161,8 @@ mod tests {
                                     vec![
                                         GameMovement::from(DefaultMovement::from(Movement::of('♙', "E2", "E3"))),
                                         GameMovement::from(DefaultMovement::from(Movement::of('♙', "E2", "E4"))),
+                                        GameMovement::from(MenaceMovement::from(Movement::of('♙', "E2", "D3"))),
+                                        GameMovement::from(MenaceMovement::from(Movement::of('♙', "E2", "F3"))),
                                     ]
                                 ),
                                 (
@@ -166,6 +170,8 @@ mod tests {
                                     vec![
                                         GameMovement::from(DefaultMovement::from(Movement::of('♙', "F2", "F3"))),
                                         GameMovement::from(DefaultMovement::from(Movement::of('♙', "F2", "F4"))),
+                                        GameMovement::from(MenaceMovement::from(Movement::of('♙', "F2", "E3"))),
+                                        GameMovement::from(MenaceMovement::from(Movement::of('♙', "F2", "G3"))),
                                     ]
                                 ),
                                 (
@@ -173,6 +179,8 @@ mod tests {
                                     vec![
                                         GameMovement::from(DefaultMovement::from(Movement::of('♙', "G2", "G3"))),
                                         GameMovement::from(DefaultMovement::from(Movement::of('♙', "G2", "G4"))),
+                                        GameMovement::from(MenaceMovement::from(Movement::of('♙', "G2", "F3"))),
+                                        GameMovement::from(MenaceMovement::from(Movement::of('♙', "G2", "H3"))),
                                     ]
                                 ),
                                 (
@@ -180,6 +188,14 @@ mod tests {
                                     vec![
                                         GameMovement::from(DefaultMovement::from(Movement::of('♙', "H2", "H3"))),
                                         GameMovement::from(DefaultMovement::from(Movement::of('♙', "H2", "H4"))),
+                                        GameMovement::from(MenaceMovement::from(Movement::of('♙', "H2", "G3"))),
+                                    ]
+                                ),
+                                (
+                                    Pos::of_str("A1"),
+                                    vec![
+                                        GameMovement::from(MenaceMovement::from(Movement::of('♖', "A1", "B1"))),
+                                        GameMovement::from(MenaceMovement::from(Movement::of('♖', "A1", "A2"))),
                                     ]
                                 ),
                                 (
@@ -187,6 +203,41 @@ mod tests {
                                     vec![
                                         GameMovement::from(DefaultMovement::from(Movement::of('♘', "B1", "C3"))),
                                         GameMovement::from(DefaultMovement::from(Movement::of('♘', "B1", "A3"))),
+                                        GameMovement::from(MenaceMovement::from(Movement::of('♘', "B1", "D2"))),
+                                    ]
+                                ),
+                                (
+                                    Pos::of_str("C1"),
+                                    vec![
+                                        GameMovement::from(MenaceMovement::from(Movement::of('♗', "C1", "D2"))),
+                                        GameMovement::from(MenaceMovement::from(Movement::of('♗', "C1", "B2"))),
+                                    ]
+                                ),
+                                (
+                                    Pos::of_str("D1"),
+                                    vec![
+                                        GameMovement::from(MenaceMovement::from(Movement::of('♕', "D1", "E2"))),
+                                        GameMovement::from(MenaceMovement::from(Movement::of('♕', "D1", "E1"))),
+                                        GameMovement::from(MenaceMovement::from(Movement::of('♕', "D1", "C1"))),
+                                        GameMovement::from(MenaceMovement::from(Movement::of('♕', "D1", "C2"))),
+                                        GameMovement::from(MenaceMovement::from(Movement::of('♕', "D1", "D2"))),
+                                    ]
+                                ),
+                                (
+                                    Pos::of_str("E1"),
+                                    vec![
+                                        GameMovement::from(MenaceMovement::from(Movement::of('♔', "E1", "F2"))),
+                                        GameMovement::from(MenaceMovement::from(Movement::of('♔', "E1", "F1"))),
+                                        GameMovement::from(MenaceMovement::from(Movement::of('♔', "E1", "D1"))),
+                                        GameMovement::from(MenaceMovement::from(Movement::of('♔', "E1", "D2"))),
+                                        GameMovement::from(MenaceMovement::from(Movement::of('♔', "E1", "E2"))),
+                                    ]
+                                ),
+                                (
+                                    Pos::of_str("F1"),
+                                    vec![
+                                        GameMovement::from(MenaceMovement::from(Movement::of('♗', "F1", "G2"))),
+                                        GameMovement::from(MenaceMovement::from(Movement::of('♗', "F1", "E2"))),
                                     ]
                                 ),
                                 (
@@ -194,6 +245,14 @@ mod tests {
                                     vec![
                                         GameMovement::from(DefaultMovement::from(Movement::of('♘', "G1", "H3"))),
                                         GameMovement::from(DefaultMovement::from(Movement::of('♘', "G1", "F3"))),
+                                        GameMovement::from(DefaultMovement::from(Movement::of('♘', "G1", "E2"))),
+                                    ]
+                                ),
+                                (
+                                    Pos::of_str("H1"),
+                                    vec![
+                                        GameMovement::from(MenaceMovement::from(Movement::of('♖', "H1", "G1"))),
+                                        GameMovement::from(MenaceMovement::from(Movement::of('♖', "H1", "H2"))),
                                     ]
                                 ),
                             ]),

@@ -76,9 +76,7 @@ pub fn allowed_movements_of_player(
             //         }
             //     }
             // }
-            if !movements.is_empty() {
-                result.insert(pos.clone(), movements);
-            }
+            result.insert(pos.clone(), movements);
         }
     }
     result
