@@ -1,6 +1,6 @@
 use std::fmt;
 
-use super::{col, row};
+use super::{col::{col_try_of, col_to_string}, row::{row_try_of, row_to_string}};
 
 #[derive(Debug, PartialEq, Eq, Clone, Hash)]
 pub struct Pos {
@@ -45,7 +45,7 @@ impl Pos {
                 pos_row.push(c);
             }
         }
-        Some(Pos { col: col::try_of_str(&pos_col)?, row: row::try_of_str(&pos_row)? })
+        Some(Pos { col: col_try_of(&pos_col)?, row: row_try_of(&pos_row)? })
     }
 
     pub fn of_str(s: &str) -> Self {
@@ -59,7 +59,7 @@ pub fn pos_of_str_slice<const N: usize>(values: [&str; N]) -> Vec<Pos> {
 
 impl fmt::Display for Pos {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", col::to_str(self.col) + &row::to_str(self.row))
+        write!(f, "{}", col_to_string(self.col) + &row_to_string(self.row))
     }
 }
 
@@ -116,26 +116,29 @@ mod tests {
     }
 
     #[test]
-    fn of_rel_idx() {
-        let pos0 = Pos { row: 0, col: 0 };
-        assert_eq!(pos0.of_rel_idx(0, 0), Pos { row: 0, col: 0 });
-        assert_eq!(pos0.of_rel_idx(1, 1), Pos { row: 1, col: 1 });
-        assert_eq!(pos0.of_rel_idx(2, 2), Pos { row: 2, col: 2 });
-        assert_eq!(pos0.of_rel_idx(3, 3), Pos { row: 3, col: 3 });
-        assert_eq!(pos0.of_rel_idx(4, 4), Pos { row: 4, col: 4 });
-        assert_eq!(pos0.of_rel_idx(5, 5), Pos { row: 5, col: 5 });
-        assert_eq!(pos0.of_rel_idx(6, 6), Pos { row: 6, col: 6 });
-        assert_eq!(pos0.of_rel_idx(7, 7), Pos { row: 7, col: 7 });
+    fn of_rel_idx_0() {
+        let pos = Pos { row: 0, col: 0 };
+        assert_eq!(pos.of_rel_idx(0, 0), Pos { row: 0, col: 0 });
+        assert_eq!(pos.of_rel_idx(1, 1), Pos { row: 1, col: 1 });
+        assert_eq!(pos.of_rel_idx(2, 2), Pos { row: 2, col: 2 });
+        assert_eq!(pos.of_rel_idx(3, 3), Pos { row: 3, col: 3 });
+        assert_eq!(pos.of_rel_idx(4, 4), Pos { row: 4, col: 4 });
+        assert_eq!(pos.of_rel_idx(5, 5), Pos { row: 5, col: 5 });
+        assert_eq!(pos.of_rel_idx(6, 6), Pos { row: 6, col: 6 });
+        assert_eq!(pos.of_rel_idx(7, 7), Pos { row: 7, col: 7 });
+    }
 
-        let pos255 = Pos { row: 255, col: 255 };
-        assert_eq!(pos255.of_rel_idx(0, 0), Pos { row: 255, col: 255 });
-        assert_eq!(pos255.of_rel_idx(-1, -1), Pos { row: 254, col: 254 });
-        assert_eq!(pos255.of_rel_idx(-2, -2), Pos { row: 253, col: 253 });
-        assert_eq!(pos255.of_rel_idx(-3, -3), Pos { row: 252, col: 252 });
-        assert_eq!(pos255.of_rel_idx(-4, -4), Pos { row: 251, col: 251 });
-        assert_eq!(pos255.of_rel_idx(-5, -5), Pos { row: 250, col: 250 });
-        assert_eq!(pos255.of_rel_idx(-6, -6), Pos { row: 249, col: 249 });
-        assert_eq!(pos255.of_rel_idx(-7, -7), Pos { row: 248, col: 248 });
+    #[test]
+    fn of_rel_idx_255() {
+        let pos = Pos { row: 255, col: 255 };
+        assert_eq!(pos.of_rel_idx(0, 0), Pos { row: 255, col: 255 });
+        assert_eq!(pos.of_rel_idx(-1, -1), Pos { row: 254, col: 254 });
+        assert_eq!(pos.of_rel_idx(-2, -2), Pos { row: 253, col: 253 });
+        assert_eq!(pos.of_rel_idx(-3, -3), Pos { row: 252, col: 252 });
+        assert_eq!(pos.of_rel_idx(-4, -4), Pos { row: 251, col: 251 });
+        assert_eq!(pos.of_rel_idx(-5, -5), Pos { row: 250, col: 250 });
+        assert_eq!(pos.of_rel_idx(-6, -6), Pos { row: 249, col: 249 });
+        assert_eq!(pos.of_rel_idx(-7, -7), Pos { row: 248, col: 248 });
     }
 
     #[test]
