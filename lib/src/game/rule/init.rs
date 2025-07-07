@@ -78,7 +78,11 @@ mod tests {
     use crate::{
         color::Color,
         game::{
-            board::board_of_str, game::GameBounds, mode::standard_chess, movement::movement::{CaptureMovement, DefaultMovement, GameMovement, MenaceMovement}, player::GamePlayer, Game
+            Game,
+            board::{board_of_str, board_to_string},
+            game::GameBounds, mode::standard_chess,
+            movement::movement::{CaptureMove, DefaultMove, GameMove, MenaceMove},
+            player::GamePlayer,
         },
         movement::Movement,
         pos::Pos,
@@ -89,178 +93,176 @@ mod tests {
     #[test]
     fn game_of_mode_standard_chess() {
         let mode = standard_chess();
+        let game = game_of_mode(standard_chess());
         assert_eq!(
-            game_of_mode(standard_chess()),
-            Game {
-                board: board_of_str(
-                    &mode.bounds,
-                    [
-                        "♜♞♝♛♚♝♞♜",
-                        "♟♟♟♟♟♟♟♟",
-                        "        ",
-                        "        ",
-                        "        ",
-                        "        ",
-                        "♙♙♙♙♙♙♙♙",
-                        "♖♘♗♕♔♗♘♖",
-                    ]
+            board_to_string(&mode.bounds, &game.board), 
+            "".to_owned()
+                + "♜♞♝♛♚♝♞♜\n"
+                + "♟♟♟♟♟♟♟♟\n"
+                + "        \n"
+                + "        \n"
+                + "        \n"
+                + "        \n"
+                + "♙♙♙♙♙♙♙♙\n"
+                + "♖♘♗♕♔♗♘♖\n"
+        );
+        assert_eq!(game.bounds, GameBounds { x1: 0, y1: 0, x2: 7, y2: 7 });
+        assert_eq!(game.history, Vec::new());
+        assert_eq!(
+            game.players,
+            HashMap::from([
+                (
+                    Color::Black,
+                    GamePlayer {
+                        color: Color::Black,
+                        captures: Vec::new(),
+                        moves: HashMap::new(),
+                    },
                 ),
-                bounds: GameBounds { x1: 0, y1: 0, x2: 7, y2: 7 },
-                players: HashMap::from([
-                    (
-                        Color::Black,
-                        GamePlayer {
-                            color: Color::Black,
-                            captures: Vec::new(),
-                            moves: HashMap::new(),
-                        },
-                    ),
-                    (
-                        Color::White,
-                        GamePlayer {
-                            color: Color::White,
-                            captures: Vec::new(),
-                            moves: HashMap::from([
-                                (
-                                    Pos::of_str("A2"),
-                                    vec![
-                                        GameMovement::from(DefaultMovement::from(Movement::of('♙', "A2", "A3"))),
-                                        GameMovement::from(DefaultMovement::from(Movement::of('♙', "A2", "A4"))),
-                                        GameMovement::from(MenaceMovement::from(Movement::of('♙', "A2", "B3"))),
-                                    ]
-                                ),
-                                (
-                                    Pos::of_str("B2"),
-                                    vec![
-                                        GameMovement::from(DefaultMovement::from(Movement::of('♙', "B2", "B3"))),
-                                        GameMovement::from(DefaultMovement::from(Movement::of('♙', "B2", "B4"))),
-                                        GameMovement::from(MenaceMovement::from(Movement::of('♙', "B2", "A3"))),
-                                        GameMovement::from(MenaceMovement::from(Movement::of('♙', "B2", "D3"))),
-                                    ] 
-                                ),
-                                (
-                                    Pos::of_str("C2"),
-                                    vec![
-                                        GameMovement::from(DefaultMovement::from(Movement::of('♙', "C2", "C3"))),
-                                        GameMovement::from(DefaultMovement::from(Movement::of('♙', "C2", "C4"))),
-                                        GameMovement::from(MenaceMovement::from(Movement::of('♙', "C2", "B3"))),
-                                        GameMovement::from(MenaceMovement::from(Movement::of('♙', "C2", "E3"))),
-                                    ]
-                                ),
-                                (
-                                    Pos::of_str("D2"),
-                                    vec![
-                                        GameMovement::from(DefaultMovement::from(Movement::of('♙', "D2", "D3"))),
-                                        GameMovement::from(DefaultMovement::from(Movement::of('♙', "D2", "D4"))),
-                                        GameMovement::from(MenaceMovement::from(Movement::of('♙', "D2", "C3"))),
-                                        GameMovement::from(MenaceMovement::from(Movement::of('♙', "D2", "E3"))),
-                                    ]
-                                ),
-                                (
-                                    Pos::of_str("E2"),
-                                    vec![
-                                        GameMovement::from(DefaultMovement::from(Movement::of('♙', "E2", "E3"))),
-                                        GameMovement::from(DefaultMovement::from(Movement::of('♙', "E2", "E4"))),
-                                        GameMovement::from(MenaceMovement::from(Movement::of('♙', "E2", "D3"))),
-                                        GameMovement::from(MenaceMovement::from(Movement::of('♙', "E2", "F3"))),
-                                    ]
-                                ),
-                                (
-                                    Pos::of_str("F2"),
-                                    vec![
-                                        GameMovement::from(DefaultMovement::from(Movement::of('♙', "F2", "F3"))),
-                                        GameMovement::from(DefaultMovement::from(Movement::of('♙', "F2", "F4"))),
-                                        GameMovement::from(MenaceMovement::from(Movement::of('♙', "F2", "E3"))),
-                                        GameMovement::from(MenaceMovement::from(Movement::of('♙', "F2", "G3"))),
-                                    ]
-                                ),
-                                (
-                                    Pos::of_str("G2"),
-                                    vec![
-                                        GameMovement::from(DefaultMovement::from(Movement::of('♙', "G2", "G3"))),
-                                        GameMovement::from(DefaultMovement::from(Movement::of('♙', "G2", "G4"))),
-                                        GameMovement::from(MenaceMovement::from(Movement::of('♙', "G2", "F3"))),
-                                        GameMovement::from(MenaceMovement::from(Movement::of('♙', "G2", "H3"))),
-                                    ]
-                                ),
-                                (
-                                    Pos::of_str("H2"),
-                                    vec![
-                                        GameMovement::from(DefaultMovement::from(Movement::of('♙', "H2", "H3"))),
-                                        GameMovement::from(DefaultMovement::from(Movement::of('♙', "H2", "H4"))),
-                                        GameMovement::from(MenaceMovement::from(Movement::of('♙', "H2", "G3"))),
-                                    ]
-                                ),
-                                (
-                                    Pos::of_str("A1"),
-                                    vec![
-                                        GameMovement::from(MenaceMovement::from(Movement::of('♖', "A1", "B1"))),
-                                        GameMovement::from(MenaceMovement::from(Movement::of('♖', "A1", "A2"))),
-                                    ]
-                                ),
-                                (
-                                    Pos::of_str("B1"),
-                                    vec![
-                                        GameMovement::from(DefaultMovement::from(Movement::of('♘', "B1", "C3"))),
-                                        GameMovement::from(DefaultMovement::from(Movement::of('♘', "B1", "A3"))),
-                                        GameMovement::from(MenaceMovement::from(Movement::of('♘', "B1", "D2"))),
-                                    ]
-                                ),
-                                (
-                                    Pos::of_str("C1"),
-                                    vec![
-                                        GameMovement::from(MenaceMovement::from(Movement::of('♗', "C1", "D2"))),
-                                        GameMovement::from(MenaceMovement::from(Movement::of('♗', "C1", "B2"))),
-                                    ]
-                                ),
-                                (
-                                    Pos::of_str("D1"),
-                                    vec![
-                                        GameMovement::from(MenaceMovement::from(Movement::of('♕', "D1", "E2"))),
-                                        GameMovement::from(MenaceMovement::from(Movement::of('♕', "D1", "E1"))),
-                                        GameMovement::from(MenaceMovement::from(Movement::of('♕', "D1", "C1"))),
-                                        GameMovement::from(MenaceMovement::from(Movement::of('♕', "D1", "C2"))),
-                                        GameMovement::from(MenaceMovement::from(Movement::of('♕', "D1", "D2"))),
-                                    ]
-                                ),
-                                (
-                                    Pos::of_str("E1"),
-                                    vec![
-                                        GameMovement::from(MenaceMovement::from(Movement::of('♔', "E1", "F2"))),
-                                        GameMovement::from(MenaceMovement::from(Movement::of('♔', "E1", "F1"))),
-                                        GameMovement::from(MenaceMovement::from(Movement::of('♔', "E1", "D1"))),
-                                        GameMovement::from(MenaceMovement::from(Movement::of('♔', "E1", "D2"))),
-                                        GameMovement::from(MenaceMovement::from(Movement::of('♔', "E1", "E2"))),
-                                    ]
-                                ),
-                                (
-                                    Pos::of_str("F1"),
-                                    vec![
-                                        GameMovement::from(MenaceMovement::from(Movement::of('♗', "F1", "G2"))),
-                                        GameMovement::from(MenaceMovement::from(Movement::of('♗', "F1", "E2"))),
-                                    ]
-                                ),
-                                (
-                                    Pos::of_str("G1"),
-                                    vec![
-                                        GameMovement::from(DefaultMovement::from(Movement::of('♘', "G1", "H3"))),
-                                        GameMovement::from(DefaultMovement::from(Movement::of('♘', "G1", "F3"))),
-                                        GameMovement::from(DefaultMovement::from(Movement::of('♘', "G1", "E2"))),
-                                    ]
-                                ),
-                                (
-                                    Pos::of_str("H1"),
-                                    vec![
-                                        GameMovement::from(MenaceMovement::from(Movement::of('♖', "H1", "G1"))),
-                                        GameMovement::from(MenaceMovement::from(Movement::of('♖', "H1", "H2"))),
-                                    ]
-                                ),
-                            ]),
-                        },
-                    ),
-                ]),
-                history: Vec::new(),
-            }
+                (
+                    Color::White,
+                    GamePlayer {
+                        color: Color::White,
+                        captures: Vec::new(),
+                        moves: HashMap::from([
+                            (
+                                Pos::of_str("A2"),
+                                vec![
+                                    GameMove::from(DefaultMove::from(Movement::of('♙', "A2", "A3"))),
+                                    GameMove::from(DefaultMove::from(Movement::of('♙', "A2", "A4"))),
+                                    GameMove::from(MenaceMove::from(Movement::of('♙', "A2", "B3"))),
+                                ]
+                            ),
+                            (
+                                Pos::of_str("B2"),
+                                vec![
+                                    GameMove::from(DefaultMove::from(Movement::of('♙', "B2", "B3"))),
+                                    GameMove::from(DefaultMove::from(Movement::of('♙', "B2", "B4"))),
+                                    GameMove::from(MenaceMove::from(Movement::of('♙', "B2", "A3"))),
+                                    GameMove::from(MenaceMove::from(Movement::of('♙', "B2", "D3"))),
+                                ] 
+                            ),
+                            (
+                                Pos::of_str("C2"),
+                                vec![
+                                    GameMove::from(DefaultMove::from(Movement::of('♙', "C2", "C3"))),
+                                    GameMove::from(DefaultMove::from(Movement::of('♙', "C2", "C4"))),
+                                    GameMove::from(MenaceMove::from(Movement::of('♙', "C2", "B3"))),
+                                    GameMove::from(MenaceMove::from(Movement::of('♙', "C2", "E3"))),
+                                ]
+                            ),
+                            (
+                                Pos::of_str("D2"),
+                                vec![
+                                    GameMove::from(DefaultMove::from(Movement::of('♙', "D2", "D3"))),
+                                    GameMove::from(DefaultMove::from(Movement::of('♙', "D2", "D4"))),
+                                    GameMove::from(MenaceMove::from(Movement::of('♙', "D2", "C3"))),
+                                    GameMove::from(MenaceMove::from(Movement::of('♙', "D2", "E3"))),
+                                ]
+                            ),
+                            (
+                                Pos::of_str("E2"),
+                                vec![
+                                    GameMove::from(DefaultMove::from(Movement::of('♙', "E2", "E3"))),
+                                    GameMove::from(DefaultMove::from(Movement::of('♙', "E2", "E4"))),
+                                    GameMove::from(MenaceMove::from(Movement::of('♙', "E2", "D3"))),
+                                    GameMove::from(MenaceMove::from(Movement::of('♙', "E2", "F3"))),
+                                ]
+                            ),
+                            (
+                                Pos::of_str("F2"),
+                                vec![
+                                    GameMove::from(DefaultMove::from(Movement::of('♙', "F2", "F3"))),
+                                    GameMove::from(DefaultMove::from(Movement::of('♙', "F2", "F4"))),
+                                    GameMove::from(MenaceMove::from(Movement::of('♙', "F2", "E3"))),
+                                    GameMove::from(MenaceMove::from(Movement::of('♙', "F2", "G3"))),
+                                ]
+                            ),
+                            (
+                                Pos::of_str("G2"),
+                                vec![
+                                    GameMove::from(DefaultMove::from(Movement::of('♙', "G2", "G3"))),
+                                    GameMove::from(DefaultMove::from(Movement::of('♙', "G2", "G4"))),
+                                    GameMove::from(MenaceMove::from(Movement::of('♙', "G2", "F3"))),
+                                    GameMove::from(MenaceMove::from(Movement::of('♙', "G2", "H3"))),
+                                ]
+                            ),
+                            (
+                                Pos::of_str("H2"),
+                                vec![
+                                    GameMove::from(DefaultMove::from(Movement::of('♙', "H2", "H3"))),
+                                    GameMove::from(DefaultMove::from(Movement::of('♙', "H2", "H4"))),
+                                    GameMove::from(MenaceMove::from(Movement::of('♙', "H2", "G3"))),
+                                ]
+                            ),
+                            (
+                                Pos::of_str("A1"),
+                                vec![
+                                    GameMove::from(MenaceMove::from(Movement::of('♖', "A1", "B1"))),
+                                    GameMove::from(MenaceMove::from(Movement::of('♖', "A1", "A2"))),
+                                ]
+                            ),
+                            (
+                                Pos::of_str("B1"),
+                                vec![
+                                    GameMove::from(DefaultMove::from(Movement::of('♘', "B1", "C3"))),
+                                    GameMove::from(DefaultMove::from(Movement::of('♘', "B1", "A3"))),
+                                    GameMove::from(MenaceMove::from(Movement::of('♘', "B1", "D2"))),
+                                ]
+                            ),
+                            (
+                                Pos::of_str("C1"),
+                                vec![
+                                    GameMove::from(MenaceMove::from(Movement::of('♗', "C1", "D2"))),
+                                    GameMove::from(MenaceMove::from(Movement::of('♗', "C1", "B2"))),
+                                ]
+                            ),
+                            (
+                                Pos::of_str("D1"),
+                                vec![
+                                    GameMove::from(MenaceMove::from(Movement::of('♕', "D1", "E2"))),
+                                    GameMove::from(MenaceMove::from(Movement::of('♕', "D1", "E1"))),
+                                    GameMove::from(MenaceMove::from(Movement::of('♕', "D1", "C1"))),
+                                    GameMove::from(MenaceMove::from(Movement::of('♕', "D1", "C2"))),
+                                    GameMove::from(MenaceMove::from(Movement::of('♕', "D1", "D2"))),
+                                ]
+                            ),
+                            (
+                                Pos::of_str("E1"),
+                                vec![
+                                    GameMove::from(MenaceMove::from(Movement::of('♔', "E1", "F2"))),
+                                    GameMove::from(MenaceMove::from(Movement::of('♔', "E1", "F1"))),
+                                    GameMove::from(MenaceMove::from(Movement::of('♔', "E1", "D1"))),
+                                    GameMove::from(MenaceMove::from(Movement::of('♔', "E1", "D2"))),
+                                    GameMove::from(MenaceMove::from(Movement::of('♔', "E1", "E2"))),
+                                ]
+                            ),
+                            (
+                                Pos::of_str("F1"),
+                                vec![
+                                    GameMove::from(MenaceMove::from(Movement::of('♗', "F1", "G2"))),
+                                    GameMove::from(MenaceMove::from(Movement::of('♗', "F1", "E2"))),
+                                ]
+                            ),
+                            (
+                                Pos::of_str("G1"),
+                                vec![
+                                    GameMove::from(DefaultMove::from(Movement::of('♘', "G1", "H3"))),
+                                    GameMove::from(DefaultMove::from(Movement::of('♘', "G1", "F3"))),
+                                    GameMove::from(DefaultMove::from(Movement::of('♘', "G1", "E2"))),
+                                ]
+                            ),
+                            (
+                                Pos::of_str("H1"),
+                                vec![
+                                    GameMove::from(MenaceMove::from(Movement::of('♖', "H1", "G1"))),
+                                    GameMove::from(MenaceMove::from(Movement::of('♖', "H1", "H2"))),
+                                ]
+                            ),
+                        ]),
+                    },
+                ),
+            ])
         );
     }
 
@@ -360,35 +362,35 @@ mod tests {
                                 (
                                     Pos::of_str("E2"),
                                     vec![
-                                        GameMovement::from(DefaultMovement::from(Movement::of('♔', "E2", "F3"))),
-                                        GameMovement::from(DefaultMovement::from(Movement::of('♔', "E2", "F2"))),
-                                        GameMovement::from(DefaultMovement::from(Movement::of('♔', "E2", "F1"))), //////
-                                        GameMovement::from(DefaultMovement::from(Movement::of('♔', "E2", "E1"))), //////
-                                        GameMovement::from(CaptureMovement::from(Movement::of('♔', "E2", "D1"))),
-                                        GameMovement::from(DefaultMovement::from(Movement::of('♔', "E2", "D2"))), //////
-                                        GameMovement::from(DefaultMovement::from(Movement::of('♔', "E2", "D3"))), //////
-                                        GameMovement::from(DefaultMovement::from(Movement::of('♔', "E2", "E3"))),
+                                        GameMove::from(DefaultMove::from(Movement::of('♔', "E2", "F3"))),
+                                        GameMove::from(DefaultMove::from(Movement::of('♔', "E2", "F2"))),
+                                        GameMove::from(DefaultMove::from(Movement::of('♔', "E2", "F1"))), //////
+                                        GameMove::from(DefaultMove::from(Movement::of('♔', "E2", "E1"))), //////
+                                        GameMove::from(CaptureMove::from(Movement::of('♔', "E2", "D1"))),
+                                        GameMove::from(DefaultMove::from(Movement::of('♔', "E2", "D2"))), //////
+                                        GameMove::from(DefaultMove::from(Movement::of('♔', "E2", "D3"))), //////
+                                        GameMove::from(DefaultMove::from(Movement::of('♔', "E2", "E3"))),
                                     ]
                                 ),
                                 (
                                     Pos::of_str("D8"),
                                     vec![
-                                        GameMovement::from(DefaultMovement::from(Movement::of('♖', "D8", "E8"))),
-                                        GameMovement::from(DefaultMovement::from(Movement::of('♖', "D8", "F8"))),
-                                        GameMovement::from(DefaultMovement::from(Movement::of('♖', "D8", "G8"))),
-                                        GameMovement::from(DefaultMovement::from(Movement::of('♖', "D8", "H8"))),
+                                        GameMove::from(DefaultMove::from(Movement::of('♖', "D8", "E8"))),
+                                        GameMove::from(DefaultMove::from(Movement::of('♖', "D8", "F8"))),
+                                        GameMove::from(DefaultMove::from(Movement::of('♖', "D8", "G8"))),
+                                        GameMove::from(DefaultMove::from(Movement::of('♖', "D8", "H8"))),
                                         //
-                                        GameMovement::from(DefaultMovement::from(Movement::of('♖', "D8", "D7"))),
-                                        GameMovement::from(DefaultMovement::from(Movement::of('♖', "D8", "D6"))),
-                                        GameMovement::from(DefaultMovement::from(Movement::of('♖', "D8", "D5"))),
-                                        GameMovement::from(DefaultMovement::from(Movement::of('♖', "D8", "D4"))),
-                                        GameMovement::from(DefaultMovement::from(Movement::of('♖', "D8", "D3"))),
-                                        GameMovement::from(DefaultMovement::from(Movement::of('♖', "D8", "D2"))),
-                                        GameMovement::from(CaptureMovement::from(Movement::of('♖', "D8", "D1"))),
+                                        GameMove::from(DefaultMove::from(Movement::of('♖', "D8", "D7"))),
+                                        GameMove::from(DefaultMove::from(Movement::of('♖', "D8", "D6"))),
+                                        GameMove::from(DefaultMove::from(Movement::of('♖', "D8", "D5"))),
+                                        GameMove::from(DefaultMove::from(Movement::of('♖', "D8", "D4"))),
+                                        GameMove::from(DefaultMove::from(Movement::of('♖', "D8", "D3"))),
+                                        GameMove::from(DefaultMove::from(Movement::of('♖', "D8", "D2"))),
+                                        GameMove::from(CaptureMove::from(Movement::of('♖', "D8", "D1"))),
                                         //
-                                        GameMovement::from(DefaultMovement::from(Movement::of('♖', "D8", "C8"))),
-                                        GameMovement::from(DefaultMovement::from(Movement::of('♖', "D8", "B8"))),
-                                        GameMovement::from(DefaultMovement::from(Movement::of('♖', "D8", "A8"))),
+                                        GameMove::from(DefaultMove::from(Movement::of('♖', "D8", "C8"))),
+                                        GameMove::from(DefaultMove::from(Movement::of('♖', "D8", "B8"))),
+                                        GameMove::from(DefaultMove::from(Movement::of('♖', "D8", "A8"))),
                                     ]
                                 ),
                             ]),

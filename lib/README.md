@@ -1,11 +1,11 @@
 ## TODO
 
-- [x] Pieces naive movements limited to the bounds of the board
+- [x] Pieces naive moves limited to the bounds of the board
 - [x] Naive momements should return the attacking positions for pawn
 
-- [ ] Game helper method from game mode and movements history
+- [ ] Game helper method from game mode and moves history
 
-- [ ] Special movements
+- [ ] Special moves
     - [-] En passant
     - [ ] Check
     - [-] Castling

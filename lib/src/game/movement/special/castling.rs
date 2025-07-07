@@ -2,7 +2,7 @@ use crate::{
     game::{
         board::GameBoard,
         game::{GameBounds, GameHistory},
-        movement::movement::CastlingMovement,
+        movement::movement::CastlingMove,
     },
     movement::Movement,
     piece::Type,
@@ -14,8 +14,8 @@ pub fn moves(
     bounds: &GameBounds,
     history: &GameHistory,
     pos: &Pos,
-) -> Vec<CastlingMovement> {
-    let mut result: Vec<CastlingMovement> = Vec::new();
+) -> Vec<CastlingMove> {
+    let mut result: Vec<CastlingMove> = Vec::new();
     if let Some(piece) = board.get(pos) {
         let mut col_index = 0;
         loop {
@@ -33,7 +33,7 @@ pub fn moves(
                     && maybe_rook.color == piece.color
                     && !history.iter().any(|mov| mov.piece == *maybe_rook)
                 {
-                    result.push(CastlingMovement::from(Movement {
+                    result.push(CastlingMove::from(Movement {
                         piece: *piece,
                         from: pos.clone(),
                         to: curr_pos,
@@ -60,7 +60,7 @@ pub fn moves(
                     && maybe_rook.color == piece.color
                     && !history.iter().any(|mov| mov.piece == *maybe_rook)
                 {
-                    result.push(CastlingMovement::from(Movement {
+                    result.push(CastlingMove::from(Movement {
                         piece: *piece,
                         from: pos.clone(),
                         to: curr_pos,

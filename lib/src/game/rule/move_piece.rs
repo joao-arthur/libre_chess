@@ -4,7 +4,7 @@ use crate::{
         capture::GameCapture,
         game::{GameBounds, GameHistory, GamePlayers},
         movement::movement::{
-            CastlingMovement, DefaultMovement, EnPassantMovement, GameMovement, PromotionMovement,
+            CastlingMove, DefaultMove, EnPassantMove, GameMove, PromotionMove,
         },
         rule::{allowed_movements::allowed_movements_of_player, turn::evaluate_turn},
     },
@@ -15,7 +15,7 @@ fn default_move(
     board: &mut GameBoard,
     players: &mut GamePlayers,
     history: &mut GameHistory,
-    movement: DefaultMovement,
+    movement: DefaultMove,
 ) {
     if let Some(piece) = board.remove(&movement.movement.from) {
         if let Some(captured) = board.insert(movement.movement.to.clone(), piece) {
@@ -31,7 +31,7 @@ fn en_passant_move(
     board: &mut GameBoard,
     players: &mut GamePlayers,
     history: &mut GameHistory,
-    en_passant: EnPassantMovement,
+    en_passant: EnPassantMove,
 ) {
     if let Some(piece) = board.remove(&en_passant.movement.from) {
         board.insert(en_passant.movement.to.clone(), piece);
@@ -46,7 +46,7 @@ fn en_passant_move(
     history.push(en_passant.movement);
 }
 
-fn castling_move(board: &mut GameBoard, history: &mut GameHistory, castling: CastlingMovement) {
+fn castling_move(board: &mut GameBoard, history: &mut GameHistory, castling: CastlingMove) {
     if let Some(piece) = board.remove(&castling.movement.from) {
         board.insert(castling.movement.to.clone(), piece);
         if castling.movement.to.col > castling.movement.from.col {
@@ -70,7 +70,7 @@ fn castling_move(board: &mut GameBoard, history: &mut GameHistory, castling: Cas
     history.push(castling.movement);
 }
 
-fn promotion_move(board: &mut GameBoard, history: &mut GameHistory, promotion: PromotionMovement) {
+fn promotion_move(board: &mut GameBoard, history: &mut GameHistory, promotion: PromotionMove) {
     board.insert(promotion.pos.clone(), promotion.piece);
     // edit the pawn move
 }
@@ -79,15 +79,15 @@ fn move_piece(
     board: &mut GameBoard,
     players: &mut GamePlayers,
     history: &mut GameHistory,
-    movement: GameMovement,
+    movement: GameMove,
 ) {
     match movement {
-        GameMovement::Default(movement) => default_move(board, players, history, movement),
-        GameMovement::Capture(movement) => default_move(board, players, history, DefaultMovement::from(movement.movement)),
-        GameMovement::Menace(movement) => {},
-        GameMovement::EnPassant(en_passant) => en_passant_move(board, players, history, en_passant),
-        GameMovement::Castling(castling) => castling_move(board, history, castling),
-        GameMovement::Promotion(promotion) => promotion_move(board, history, promotion),
+        GameMove::Default(movement) => default_move(board, players, history, movement),
+        GameMove::Capture(movement) => default_move(board, players, history, DefaultMove::from(movement.movement)),
+        GameMove::Menace(movement) => {},
+        GameMove::EnPassant(en_passant) => en_passant_move(board, players, history, en_passant),
+        GameMove::Castling(castling) => castling_move(board, history, castling),
+        GameMove::Promotion(promotion) => promotion_move(board, history, promotion),
     }
 }
 
@@ -96,7 +96,7 @@ pub fn app_move_piece(
     bounds: &GameBounds,
     players: &mut GamePlayers,
     history: &mut GameHistory,
-    movement: &GameMovement,
+    movement: &GameMove,
 ) {
     let turn = evaluate_turn(history);
     move_piece(board, players, history, movement.clone());

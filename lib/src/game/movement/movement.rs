@@ -1,125 +1,125 @@
 use crate::{movement::Movement, piece::Piece, pos::Pos};
 
 #[derive(Debug, PartialEq, Clone)]
-pub struct DefaultMovement {
+pub struct DefaultMove {
     pub movement: Movement,
 }
 
-impl From<Movement> for DefaultMovement {
+impl From<Movement> for DefaultMove {
     fn from(movement: Movement) -> Self {
-        DefaultMovement { movement }
+        DefaultMove { movement }
     }
 }
 
 #[derive(Debug, PartialEq, Clone)]
-pub struct CaptureMovement {
+pub struct CaptureMove {
     pub movement: Movement,
 }
 
-impl From<Movement> for CaptureMovement {
+impl From<Movement> for CaptureMove {
     fn from(movement: Movement) -> Self {
-        CaptureMovement { movement }
+        CaptureMove { movement }
     }
 }
 
 #[derive(Debug, PartialEq, Clone)]
-pub struct MenaceMovement {
+pub struct MenaceMove {
     pub movement: Movement,
 }
 
-impl From<Movement> for MenaceMovement {
+impl From<Movement> for MenaceMove {
     fn from(movement: Movement) -> Self {
-        MenaceMovement { movement }
+        MenaceMove { movement }
     }
 }
 
 #[derive(Debug, PartialEq, Clone)]
-pub struct EnPassantMovement {
+pub struct EnPassantMove {
     pub movement: Movement,
 }
 
-impl From<Movement> for EnPassantMovement {
+impl From<Movement> for EnPassantMove {
     fn from(movement: Movement) -> Self {
-        EnPassantMovement { movement }
+        EnPassantMove { movement }
     }
 }
 
 #[derive(Debug, PartialEq, Clone)]
-pub struct CastlingMovement {
+pub struct CastlingMove {
     pub movement: Movement,
 }
 
-impl From<Movement> for CastlingMovement {
+impl From<Movement> for CastlingMove {
     fn from(movement: Movement) -> Self {
-        CastlingMovement { movement }
+        CastlingMove { movement }
     }
 }
 
 #[derive(Debug, PartialEq, Clone)]
-pub struct PromotionMovement {
+pub struct PromotionMove {
     pub pos: Pos,
     pub piece: Piece,
 }
 
 #[derive(Debug, PartialEq, Clone)]
-pub enum GameMovement {
-    Default(DefaultMovement),
-    Capture(CaptureMovement),
-    Menace(MenaceMovement),
-    EnPassant(EnPassantMovement),
-    Castling(CastlingMovement),
-    Promotion(PromotionMovement),
+pub enum GameMove {
+    Default(DefaultMove),
+    Capture(CaptureMove),
+    Menace(MenaceMove),
+    EnPassant(EnPassantMove),
+    Castling(CastlingMove),
+    Promotion(PromotionMove),
 }
 
-impl From<DefaultMovement> for GameMovement {
-    fn from(movement: DefaultMovement) -> Self {
-        GameMovement::Default(movement)
+impl From<DefaultMove> for GameMove {
+    fn from(movement: DefaultMove) -> Self {
+        GameMove::Default(movement)
     }
 }
 
-impl From<CaptureMovement> for GameMovement {
-    fn from(movement: CaptureMovement) -> Self {
-        GameMovement::Capture(movement)
+impl From<CaptureMove> for GameMove {
+    fn from(movement: CaptureMove) -> Self {
+        GameMove::Capture(movement)
     }
 }
 
-impl From<MenaceMovement> for GameMovement {
-    fn from(movement: MenaceMovement) -> Self {
-        GameMovement::Menace(movement)
+impl From<MenaceMove> for GameMove {
+    fn from(movement: MenaceMove) -> Self {
+        GameMove::Menace(movement)
     }
 }
 
-impl From<EnPassantMovement> for GameMovement {
-    fn from(movement: EnPassantMovement) -> Self {
-        GameMovement::EnPassant(movement)
+impl From<EnPassantMove> for GameMove {
+    fn from(movement: EnPassantMove) -> Self {
+        GameMove::EnPassant(movement)
     }
 }
 
-impl From<CastlingMovement> for GameMovement {
-    fn from(movement: CastlingMovement) -> Self {
-        GameMovement::Castling(movement)
+impl From<CastlingMove> for GameMove {
+    fn from(movement: CastlingMove) -> Self {
+        GameMove::Castling(movement)
     }
 }
 
-impl From<PromotionMovement> for GameMovement {
-    fn from(movement: PromotionMovement) -> Self {
-        GameMovement::Promotion(movement)
+impl From<PromotionMove> for GameMove {
+    fn from(movement: PromotionMove) -> Self {
+        GameMove::Promotion(movement)
     }
 }
 
-fn game_movements_to_string(moves: Vec<GameMovement>) -> String {
+fn game_move_to_string(moves: Vec<GameMove>) -> String {
     String::new()
 }
 
-fn game_movements_from_str(value: Vec<&str>) -> Result<Vec<GameMovement>, ()> {
+fn game_move_from_str(value: Vec<&str>) -> Result<Vec<GameMove>, ()> {
     Err(())
 }
 
-// impl GameMovement {
+// impl GameMove {
 //     fn try_of<const N: usize>(
 //         bounds: &GameBounds,
 //         rows: [&str; N],
-//     ) -> Result<Vec<GameMovement>> {
+//     ) -> Result<Vec<GameMove>> {
 //         if rows.join("").find(|c| c != ' ' && Piece::try_of(c).is_none()).is_some() {
 //             return Err(GameBoardErr::InvalidCharacter(InvalidCharacterErr));
 //         }

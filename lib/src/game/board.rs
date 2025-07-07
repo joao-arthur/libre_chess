@@ -72,7 +72,7 @@ pub fn board_of_str<const N: usize>(bounds: &GameBounds, rows: [&str; N]) -> Gam
     board_try_of_str(bounds, rows).unwrap()
 }
 
-fn board_to_string(bounds: &GameBounds, board: &GameBoard) -> String {
+pub fn board_to_string(bounds: &GameBounds, board: &GameBoard) -> String {
     let mut res = "".to_string();
     let mut row = bounds.y2 + 1;
     while row > bounds.y1 {
@@ -334,8 +334,17 @@ mod tests {
     fn test_board_to_string_custom_bounds() {
         let bounds = GameBounds { x1: 10, y1: 10, x2: 13, y2: 13 };
         assert_eq!(
-            board_to_string(&bounds, &board_of_str(&bounds, [" ♛♚ ", "    ", "    ", " ♕♔ ",])),
-            "".to_owned() + " ♛♚ \n" + "    \n" + "    \n" + " ♕♔ \n"
+            board_to_string(&bounds, &board_of_str(&bounds, [
+                " ♛♚ ",//
+                "    ",//
+                "    ",//
+                " ♕♔ ",//
+                ])),
+            "".to_owned() +//
+            " ♛♚ \n" +//
+            "    \n" +//
+            "    \n" +//
+            " ♕♔ \n"
         );
     }
 }

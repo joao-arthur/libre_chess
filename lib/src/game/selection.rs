@@ -4,7 +4,7 @@ use crate::{
     game::{
         GameBoard,
         game::{GameHistory, GamePlayers},
-        movement::movement::GameMovement,
+        movement::movement::GameMove,
         rule::turn::evaluate_turn,
     },
     pos::Pos,
@@ -14,8 +14,8 @@ use crate::{
 pub struct Selection {
     pub selected_squares: HashSet<Pos>,
     pub selected_piece: Option<Pos>,
-    // If it gets hard to handle: HashMap<Pos, Vec<GameMovement>>
-    pub selected_piece_movements: Vec<GameMovement>,
+    // If it gets hard to handle: HashMap<Pos, Vec<GameMove>>
+    pub selected_piece_movements: Vec<GameMove>,
 }
 
 pub fn toggle_selection(
@@ -30,9 +30,9 @@ pub fn toggle_selection(
         .selected_piece_movements
         .iter()
         .find(|mov| match mov {
-            GameMovement::Default(mov) => mov.movement.to == pos,
-            GameMovement::EnPassant(mov) => mov.movement.to == pos,
-            GameMovement::Castling(mov) => mov.movement.to == pos,
+            GameMove::Default(mov) => mov.movement.to == pos,
+            GameMove::EnPassant(mov) => mov.movement.to == pos,
+            GameMove::Castling(mov) => mov.movement.to == pos,
             _ => false,
         })
         .is_some()
@@ -93,7 +93,7 @@ mod tests {
             board::board_of_str,
             game::GamePlayers,
             mode::standard_chess,
-            movement::movement::{DefaultMovement, GameMovement},
+            movement::movement::{DefaultMove, GameMove},
             player::GamePlayer,
         },
         movement::Movement,
@@ -183,8 +183,8 @@ mod tests {
                     moves: HashMap::from([(
                         Pos::of_str("B2"),
                         vec![
-                            GameMovement::from(DefaultMovement::from(Movement::of('♟', "B2", "B3"))),
-                            GameMovement::from(DefaultMovement::from(Movement::of('♟', "B2", "B4"))),
+                            GameMove::from(DefaultMove::from(Movement::of('♟', "B2", "B3"))),
+                            GameMove::from(DefaultMove::from(Movement::of('♟', "B2", "B4"))),
                         ],
                     )]),
                 },
@@ -198,8 +198,8 @@ mod tests {
                 selected_squares: HashSet::new(),
                 selected_piece: Some(Pos::of_str("B2")),
                 selected_piece_movements: vec![
-                    GameMovement::from(DefaultMovement::from(Movement::of('♟', "B2", "B3"))),
-                    GameMovement::from(DefaultMovement::from(Movement::of('♟', "B2", "B4"))),
+                    GameMove::from(DefaultMove::from(Movement::of('♟', "B2", "B3"))),
+                    GameMove::from(DefaultMove::from(Movement::of('♟', "B2", "B4"))),
                 ],
             }
         );
@@ -274,8 +274,8 @@ mod tests {
                     moves: HashMap::from([(
                         pos.clone(),
                         vec![
-                            GameMovement::from(DefaultMovement::from(Movement::of('♟', "C2", "C3"))),
-                            GameMovement::from(DefaultMovement::from(Movement::of('♟', "C2", "C4"))),
+                            GameMove::from(DefaultMove::from(Movement::of('♟', "C2", "C3"))),
+                            GameMove::from(DefaultMove::from(Movement::of('♟', "C2", "C4"))),
                         ],
                     )]),
                 },
@@ -289,8 +289,8 @@ mod tests {
                 selected_squares: HashSet::new(),
                 selected_piece: Some(pos.clone()),
                 selected_piece_movements: vec![
-                    GameMovement::from(DefaultMovement::from(Movement::of('♟', "C2", "C3"))),
-                    GameMovement::from(DefaultMovement::from(Movement::of('♟', "C2", "C4"))),
+                    GameMove::from(DefaultMove::from(Movement::of('♟', "C2", "C3"))),
+                    GameMove::from(DefaultMove::from(Movement::of('♟', "C2", "C4"))),
                 ],
             }
         );
@@ -324,10 +324,10 @@ mod tests {
             selected_squares: HashSet::new(),
             selected_piece: Some(Pos::of_str("D5")),
             selected_piece_movements: vec![
-                GameMovement::from(DefaultMovement::from(Movement::of('♖', "D5", "E5"))),
-                GameMovement::from(DefaultMovement::from(Movement::of('♖', "D5", "D4"))),
-                GameMovement::from(DefaultMovement::from(Movement::of('♖', "D5", "C5"))),
-                GameMovement::from(DefaultMovement::from(Movement::of('♖', "D5", "D6"))),
+                GameMove::from(DefaultMove::from(Movement::of('♖', "D5", "E5"))),
+                GameMove::from(DefaultMove::from(Movement::of('♖', "D5", "D4"))),
+                GameMove::from(DefaultMove::from(Movement::of('♖', "D5", "C5"))),
+                GameMove::from(DefaultMove::from(Movement::of('♖', "D5", "D6"))),
             ],
         };
         let mode = standard_chess();
@@ -357,10 +357,10 @@ mod tests {
                     moves: HashMap::from([(
                         Pos::of_str("D5"),
                         vec![
-                            GameMovement::from(DefaultMovement::from(Movement::of('♖', "D5", "E5"))),
-                            GameMovement::from(DefaultMovement::from(Movement::of('♖', "D5", "D4"))),
-                            GameMovement::from(DefaultMovement::from(Movement::of('♖', "D5", "C5"))),
-                            GameMovement::from(DefaultMovement::from(Movement::of('♖', "D5", "D6"))),
+                            GameMove::from(DefaultMove::from(Movement::of('♖', "D5", "E5"))),
+                            GameMove::from(DefaultMove::from(Movement::of('♖', "D5", "D4"))),
+                            GameMove::from(DefaultMove::from(Movement::of('♖', "D5", "C5"))),
+                            GameMove::from(DefaultMove::from(Movement::of('♖', "D5", "D6"))),
                         ],
                     )]),
                 },
