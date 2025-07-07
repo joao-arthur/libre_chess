@@ -3,7 +3,7 @@ use crate::{
     game::{
         board::GameBoard,
         game::GameBounds,
-        movement::movement::{DefaultMovement, GameMovement},
+        movement::movement::GameMovement,
     },
     piece::Type,
 };
@@ -38,7 +38,7 @@ mod tests {
         game::{
             board::board_empty,
             mode::standard_chess,
-            movement::movement::{DefaultMovement, GameMovement},
+            movement::movement::{DefaultMovement, GameMovement, MenaceMovement},
             piece::piece_of_str,
         },
         movement::Movement,
@@ -179,7 +179,11 @@ mod tests {
         let board = HashMap::from([piece_of_str("C5", '♙')]);
         assert_eq!(
             movements(&board, &mode.bounds, &Pos::of_str("C5")),
-            [GameMovement::from(DefaultMovement::from(Movement::of_str('♙', "C5", "C6")))]
+            [
+                GameMovement::from(DefaultMovement::from(Movement::of_str('♙', "C5", "C6"))),
+                GameMovement::from(MenaceMovement::from(Movement::of_str('♙', "C5", "B6"))),
+                GameMovement::from(MenaceMovement::from(Movement::of_str('♙', "C5", "D6"))),
+            ]
         );
     }
 }

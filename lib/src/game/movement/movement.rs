@@ -23,6 +23,17 @@ impl From<Movement> for CaptureMovement {
 }
 
 #[derive(Debug, PartialEq, Clone)]
+pub struct MenaceMovement {
+    pub movement: Movement,
+}
+
+impl From<Movement> for MenaceMovement {
+    fn from(movement: Movement) -> Self {
+        MenaceMovement { movement }
+    }
+}
+
+#[derive(Debug, PartialEq, Clone)]
 pub struct EnPassantMovement {
     pub movement: Movement,
 }
@@ -54,9 +65,9 @@ pub struct PromotionMovement {
 pub enum GameMovement {
     Default(DefaultMovement),
     Capture(CaptureMovement),
+    Menace(MenaceMovement),
     EnPassant(EnPassantMovement),
     Castling(CastlingMovement),
-    // Menace(MenaceMovement),
     Promotion(PromotionMovement),
 }
 
@@ -69,6 +80,12 @@ impl From<DefaultMovement> for GameMovement {
 impl From<CaptureMovement> for GameMovement {
     fn from(movement: CaptureMovement) -> Self {
         GameMovement::Capture(movement)
+    }
+}
+
+impl From<MenaceMovement> for GameMovement {
+    fn from(movement: MenaceMovement) -> Self {
+        GameMovement::Menace(movement)
     }
 }
 

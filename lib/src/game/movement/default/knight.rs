@@ -3,7 +3,7 @@ use crate::{
     game::{
         board::GameBoard,
         game::GameBounds,
-        movement::movement::{CaptureMovement, DefaultMovement, GameMovement},
+        movement::movement::{CaptureMovement, DefaultMovement, GameMovement, MenaceMovement},
     },
     movement::Movement,
 };
@@ -31,7 +31,13 @@ pub fn movements(board: &GameBoard, bounds: &GameBounds, pos: &Pos) -> Vec<GameM
                     continue;
                 }
                 if let Some(curr_piece) = board.get(&curr_pos) {
-                    if curr_piece.color != piece.color {
+                    if curr_piece.color == piece.color {
+                        result.push(GameMovement::from(MenaceMovement::from(Movement {
+                            piece: *piece,
+                            from: pos.clone(),
+                            to: curr_pos,
+                        })));
+                    } else {
                         result.push(GameMovement::from(CaptureMovement::from(Movement {
                             piece: *piece,
                             from: pos.clone(),
@@ -61,7 +67,7 @@ mod tests {
             board::{board_empty, board_of_str},
             game::GameBounds,
             mode::standard_chess,
-            movement::movement::{CaptureMovement, DefaultMovement, GameMovement},
+            movement::movement::{CaptureMovement, DefaultMovement, GameMovement, MenaceMovement},
             piece::piece_of_str,
         },
         movement::Movement,
@@ -230,6 +236,7 @@ mod tests {
                 GameMovement::from(DefaultMovement::from(Movement::of_str('♘', "D4", "F3"))),
                 GameMovement::from(DefaultMovement::from(Movement::of_str('♘', "D4", "E2"))),
                 GameMovement::from(DefaultMovement::from(Movement::of_str('♘', "D4", "C2"))),
+                GameMovement::from(MenaceMovement::from(Movement::of_str('♘', "D4", "B3"))),
                 GameMovement::from(DefaultMovement::from(Movement::of_str('♘', "D4", "B5"))),
                 GameMovement::from(DefaultMovement::from(Movement::of_str('♘', "D4", "C6"))),
             ]
@@ -260,6 +267,7 @@ mod tests {
                 GameMovement::from(DefaultMovement::from(Movement::of_str('♞', "D4", "F3"))),
                 GameMovement::from(DefaultMovement::from(Movement::of_str('♞', "D4", "E2"))),
                 GameMovement::from(DefaultMovement::from(Movement::of_str('♞', "D4", "C2"))),
+                GameMovement::from(MenaceMovement::from(Movement::of_str('♞', "D4", "B3"))),
                 GameMovement::from(DefaultMovement::from(Movement::of_str('♞', "D4", "B5"))),
                 GameMovement::from(DefaultMovement::from(Movement::of_str('♞', "D4", "C6")))
             ]
