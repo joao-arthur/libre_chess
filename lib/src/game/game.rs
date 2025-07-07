@@ -4,12 +4,12 @@ use crate::{
     color::Color,
     game::{board::GameBoard, player::GamePlayer},
     geometry::poligon::rect::RectU8,
-    movement::Movement,
+    movement::Mov,
 };
 
 pub type GameBounds = RectU8;
 pub type GamePlayers = HashMap<Color, GamePlayer>;
-pub type GameHistory = Vec<Movement>;
+pub type GameHistory = Vec<Mov>;
 
 #[derive(Debug, PartialEq)]
 pub struct Game {

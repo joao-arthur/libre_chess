@@ -4,7 +4,7 @@ use crate::{
         capture::GameCapture,
         game::{GameBounds, GameHistory, GamePlayers},
         movement::movement::{
-            CastlingMove, DefaultMove, EnPassantMove, GameMove, PromotionMove,
+            CastlingMov, DefaultMov, EnPassantMov, GameMov, PromotionMov,
         },
         rule::{allowed_movements::allowed_movements_of_player, turn::evaluate_turn},
     },
@@ -15,62 +15,62 @@ fn default_move(
     board: &mut GameBoard,
     players: &mut GamePlayers,
     history: &mut GameHistory,
-    movement: DefaultMove,
+    mov: DefaultMov,
 ) {
-    if let Some(piece) = board.remove(&movement.movement.from) {
-        if let Some(captured) = board.insert(movement.movement.to.clone(), piece) {
+    if let Some(piece) = board.remove(&mov.mov.from) {
+        if let Some(captured) = board.insert(mov.mov.to.clone(), piece) {
             if let Some(player) = players.get_mut(&piece.color) {
                 player.captures.push(GameCapture { piece: captured, at: history.len() as u16 });
             }
         }
     }
-    history.push(movement.movement);
+    history.push(mov.mov);
 }
 
 fn en_passant_move(
     board: &mut GameBoard,
     players: &mut GamePlayers,
     history: &mut GameHistory,
-    en_passant: EnPassantMove,
+    en_passant: EnPassantMov,
 ) {
-    if let Some(piece) = board.remove(&en_passant.movement.from) {
-        board.insert(en_passant.movement.to.clone(), piece);
+    if let Some(piece) = board.remove(&en_passant.mov.from) {
+        board.insert(en_passant.mov.to.clone(), piece);
         if let Some(captured) = board
-            .remove(&Pos { col: en_passant.movement.to.col, row: en_passant.movement.from.row })
+            .remove(&Pos { col: en_passant.mov.to.col, row: en_passant.mov.from.row })
         {
             if let Some(player) = players.get_mut(&piece.color) {
                 player.captures.push(GameCapture { piece: captured, at: history.len() as u16 });
             }
         }
     }
-    history.push(en_passant.movement);
+    history.push(en_passant.mov);
 }
 
-fn castling_move(board: &mut GameBoard, history: &mut GameHistory, castling: CastlingMove) {
-    if let Some(piece) = board.remove(&castling.movement.from) {
-        board.insert(castling.movement.to.clone(), piece);
-        if castling.movement.to.col > castling.movement.from.col {
+fn castling_move(board: &mut GameBoard, history: &mut GameHistory, castling: CastlingMov) {
+    if let Some(piece) = board.remove(&castling.mov.from) {
+        board.insert(castling.mov.to.clone(), piece);
+        if castling.mov.to.col > castling.mov.from.col {
             if let Some(rook) = board
-                .remove(&Pos { col: castling.movement.to.col + 1, row: castling.movement.to.row })
+                .remove(&Pos { col: castling.mov.to.col + 1, row: castling.mov.to.row })
             {
                 board.insert(
-                    Pos { col: castling.movement.to.col - 1, row: castling.movement.to.row },
+                    Pos { col: castling.mov.to.col - 1, row: castling.mov.to.row },
                     rook,
                 );
             }
         } else if let Some(rook) =
-            board.remove(&Pos { col: castling.movement.to.col - 1, row: castling.movement.to.row })
+            board.remove(&Pos { col: castling.mov.to.col - 1, row: castling.mov.to.row })
         {
             board.insert(
-                Pos { col: castling.movement.to.col + 1, row: castling.movement.to.row },
+                Pos { col: castling.mov.to.col + 1, row: castling.mov.to.row },
                 rook,
             );
         }
     }
-    history.push(castling.movement);
+    history.push(castling.mov);
 }
 
-fn promotion_move(board: &mut GameBoard, history: &mut GameHistory, promotion: PromotionMove) {
+fn promotion_move(board: &mut GameBoard, history: &mut GameHistory, promotion: PromotionMov) {
     board.insert(promotion.pos.clone(), promotion.piece);
     // edit the pawn move
 }
@@ -79,15 +79,15 @@ fn move_piece(
     board: &mut GameBoard,
     players: &mut GamePlayers,
     history: &mut GameHistory,
-    movement: GameMove,
+    movement: GameMov,
 ) {
     match movement {
-        GameMove::Default(movement) => default_move(board, players, history, movement),
-        GameMove::Capture(movement) => default_move(board, players, history, DefaultMove::from(movement.movement)),
-        GameMove::Menace(movement) => {},
-        GameMove::EnPassant(en_passant) => en_passant_move(board, players, history, en_passant),
-        GameMove::Castling(castling) => castling_move(board, history, castling),
-        GameMove::Promotion(promotion) => promotion_move(board, history, promotion),
+        GameMov::Default(movement) => default_move(board, players, history, movement),
+        GameMov::Capture(movement) => default_move(board, players, history, DefaultMov::from(movement.mov)),
+        GameMov::Menace(movement) => {},
+        GameMov::EnPassant(en_passant) => en_passant_move(board, players, history, en_passant),
+        GameMov::Castling(castling) => castling_move(board, history, castling),
+        GameMov::Promotion(promotion) => promotion_move(board, history, promotion),
     }
 }
 
@@ -96,7 +96,7 @@ pub fn app_move_piece(
     bounds: &GameBounds,
     players: &mut GamePlayers,
     history: &mut GameHistory,
-    movement: &GameMove,
+    movement: &GameMov,
 ) {
     let turn = evaluate_turn(history);
     move_piece(board, players, history, movement.clone());

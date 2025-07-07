@@ -1,116 +1,116 @@
-use crate::{game::game::GameBounds, movement::Movement, piece::Piece, pos::Pos};
+use crate::{game::game::GameBounds, movement::Mov, piece::Piece, pos::Pos};
 
 #[derive(Debug, PartialEq, Clone)]
-pub struct DefaultMove {
-    pub movement: Movement,
+pub struct DefaultMov {
+    pub mov: Mov,
 }
 
-impl From<Movement> for DefaultMove {
-    fn from(movement: Movement) -> Self {
-        DefaultMove { movement }
+impl From<Mov> for DefaultMov {
+    fn from(mov: Mov) -> Self {
+        DefaultMov { mov }
     }
 }
 
 #[derive(Debug, PartialEq, Clone)]
-pub struct CaptureMove {
-    pub movement: Movement,
+pub struct CaptureMov {
+    pub mov: Mov,
 }
 
-impl From<Movement> for CaptureMove {
-    fn from(movement: Movement) -> Self {
-        CaptureMove { movement }
+impl From<Mov> for CaptureMov {
+    fn from(mov: Mov) -> Self {
+        CaptureMov { mov }
     }
 }
 
 #[derive(Debug, PartialEq, Clone)]
-pub struct MenaceMove {
-    pub movement: Movement,
+pub struct MenaceMov {
+    pub mov: Mov,
 }
 
-impl From<Movement> for MenaceMove {
-    fn from(movement: Movement) -> Self {
-        MenaceMove { movement }
+impl From<Mov> for MenaceMov {
+    fn from(mov: Mov) -> Self {
+        MenaceMov { mov }
     }
 }
 
 #[derive(Debug, PartialEq, Clone)]
-pub struct EnPassantMove {
-    pub movement: Movement,
+pub struct EnPassantMov {
+    pub mov: Mov,
 }
 
-impl From<Movement> for EnPassantMove {
-    fn from(movement: Movement) -> Self {
-        EnPassantMove { movement }
+impl From<Mov> for EnPassantMov {
+    fn from(mov: Mov) -> Self {
+        EnPassantMov { mov }
     }
 }
 
 #[derive(Debug, PartialEq, Clone)]
-pub struct CastlingMove {
-    pub movement: Movement,
+pub struct CastlingMov {
+    pub mov: Mov,
 }
 
-impl From<Movement> for CastlingMove {
-    fn from(movement: Movement) -> Self {
-        CastlingMove { movement }
+impl From<Mov> for CastlingMov {
+    fn from(mov: Mov) -> Self {
+        CastlingMov { mov }
     }
 }
 
 #[derive(Debug, PartialEq, Clone)]
-pub struct PromotionMove {
+pub struct PromotionMov {
     pub pos: Pos,
     pub piece: Piece,
 }
 
 #[derive(Debug, PartialEq, Clone)]
-pub enum GameMove {
-    Default(DefaultMove),
-    Capture(CaptureMove),
-    Menace(MenaceMove),
-    EnPassant(EnPassantMove),
-    Castling(CastlingMove),
-    Promotion(PromotionMove),
+pub enum GameMov {
+    Default(DefaultMov),
+    Capture(CaptureMov),
+    Menace(MenaceMov),
+    EnPassant(EnPassantMov),
+    Castling(CastlingMov),
+    Promotion(PromotionMov),
 }
 
-impl From<DefaultMove> for GameMove {
-    fn from(movement: DefaultMove) -> Self {
-        GameMove::Default(movement)
+impl From<DefaultMov> for GameMov {
+    fn from(mov: DefaultMov) -> Self {
+        GameMov::Default(mov)
     }
 }
 
-impl From<CaptureMove> for GameMove {
-    fn from(movement: CaptureMove) -> Self {
-        GameMove::Capture(movement)
+impl From<CaptureMov> for GameMov {
+    fn from(mov: CaptureMov) -> Self {
+        GameMov::Capture(mov)
     }
 }
 
-impl From<MenaceMove> for GameMove {
-    fn from(movement: MenaceMove) -> Self {
-        GameMove::Menace(movement)
+impl From<MenaceMov> for GameMov {
+    fn from(mov: MenaceMov) -> Self {
+        GameMov::Menace(mov)
     }
 }
 
-impl From<EnPassantMove> for GameMove {
-    fn from(movement: EnPassantMove) -> Self {
-        GameMove::EnPassant(movement)
+impl From<EnPassantMov> for GameMov {
+    fn from(mov: EnPassantMov) -> Self {
+        GameMov::EnPassant(mov)
     }
 }
 
-impl From<CastlingMove> for GameMove {
-    fn from(movement: CastlingMove) -> Self {
-        GameMove::Castling(movement)
+impl From<CastlingMov> for GameMov {
+    fn from(mov: CastlingMov) -> Self {
+        GameMov::Castling(mov)
     }
 }
 
-impl From<PromotionMove> for GameMove {
-    fn from(movement: PromotionMove) -> Self {
-        GameMove::Promotion(movement)
+impl From<PromotionMov> for GameMov {
+    fn from(mov: PromotionMov) -> Self {
+        GameMov::Promotion(mov)
     }
 }
 
 fn try_game_move_from_str<const N: usize>(
     bounds: &GameBounds,
     rows: [&str; N],
-) -> Result<Vec<GameMove>, ()> {
+) -> Result<Vec<GameMov>, ()> {
     //         if rows.join("").find(|c| c != ' ' && Piece::try_of(c).is_none()).is_some() {
     //             return Err(GameBoardErr::InvalidCharacter(InvalidCharacterErr));
     //         }
@@ -140,7 +140,7 @@ fn try_game_move_from_str<const N: usize>(
     Err(())
 }
 
-fn game_move_to_string(bounds: &GameBounds, moves: &Vec<GameMove>) -> String {
+fn game_move_to_string(bounds: &GameBounds, moves: &Vec<GameMov>) -> String {
     let mut res = "".to_string();
 
     let mut row = bounds.y2 + 1;
@@ -149,31 +149,31 @@ fn game_move_to_string(bounds: &GameBounds, moves: &Vec<GameMove>) -> String {
         for col in bounds.x1..=bounds.x2 {
             let pos = Pos { row, col };
             let maybe_mov = moves.iter().find(|mov| match mov {
-                GameMove::Default(default_move) => default_move.movement.to == pos,
-                GameMove::Capture(capture_move) => capture_move.movement.to == pos,
-                GameMove::Menace(menace_move) => menace_move.movement.to == pos,
+                GameMov::Default(default_move) => default_move.mov.to == pos,
+                GameMov::Capture(capture_move) => capture_move.mov.to == pos,
+                GameMov::Menace(menace_move) => menace_move.mov.to == pos,
                 _ => false,
             });
             if let Some(mov) = maybe_mov {
                 match mov {
-                    GameMove::Default(_) => res.push('●'),
-                    GameMove::Capture(_) => res.push('◎'),
-                    GameMove::Menace(_) => res.push('○'),
+                    GameMov::Default(_) => res.push('●'),
+                    GameMov::Capture(_) => res.push('◎'),
+                    GameMov::Menace(_) => res.push('○'),
                     _ => res.push(' '),
                 };
                 continue;
             }
             let maybe_piece_mov = moves.iter().find(|mov| match mov {
-                GameMove::Default(default_move) => default_move.movement.from == pos,
-                GameMove::Capture(capture_move) => capture_move.movement.from == pos,
-                GameMove::Menace(menace_move) => menace_move.movement.from == pos,
+                GameMov::Default(default_move) => default_move.mov.from == pos,
+                GameMov::Capture(capture_move) => capture_move.mov.from == pos,
+                GameMov::Menace(menace_move) => menace_move.mov.from == pos,
                 _ => false,
             });
             if let Some(piece_mov) = maybe_piece_mov {
                 match piece_mov {
-                    GameMove::Default(mov) => res.push_str(&mov.movement.piece.to_string()),
-                    GameMove::Capture(mov) => res.push_str(&mov.movement.piece.to_string()),
-                    GameMove::Menace(mov) => res.push_str(&mov.movement.piece.to_string()),
+                    GameMov::Default(mov) => res.push_str(&mov.mov.piece.to_string()),
+                    GameMov::Capture(mov) => res.push_str(&mov.mov.piece.to_string()),
+                    GameMov::Menace(mov) => res.push_str(&mov.mov.piece.to_string()),
                     _ => res.push(' '),
                 };
                 continue;
@@ -191,12 +191,11 @@ mod tests {
         game::{
             game::GameBounds,
             mode::standard_chess,
-            movement::movement::{CaptureMove, DefaultMove, GameMove, MenaceMove},
         },
-        movement::Movement,
+        movement::Mov
     };
 
-    use super::{game_move_to_string, try_game_move_from_str};
+    use super::{game_move_to_string, try_game_move_from_str, CaptureMov, DefaultMov, GameMov, MenaceMov};
 
     #[test]
     fn test_game_move_to_string_standard_chess() {
@@ -205,14 +204,14 @@ mod tests {
             game_move_to_string(
                 &mode.bounds,
                 &vec![
-                    GameMove::from(DefaultMove::from(Movement::of('♘', "D4", "B3"))),
-                    GameMove::from(DefaultMove::from(Movement::of('♘', "D4", "B5"))),
-                    GameMove::from(DefaultMove::from(Movement::of('♘', "D4", "F3"))),
-                    GameMove::from(DefaultMove::from(Movement::of('♘', "D4", "F5"))),
-                    GameMove::from(MenaceMove::from(Movement::of('♘', "D4", "C2"))),
-                    GameMove::from(MenaceMove::from(Movement::of('♘', "D4", "E2"))),
-                    GameMove::from(CaptureMove::from(Movement::of('♘', "D4", "C6"))),
-                    GameMove::from(CaptureMove::from(Movement::of('♘', "D4", "E6"))),
+                    GameMov::from(DefaultMov::from(Mov::of('♘', "D4", "B3"))),
+                    GameMov::from(DefaultMov::from(Mov::of('♘', "D4", "B5"))),
+                    GameMov::from(DefaultMov::from(Mov::of('♘', "D4", "F3"))),
+                    GameMov::from(DefaultMov::from(Mov::of('♘', "D4", "F5"))),
+                    GameMov::from(MenaceMov::from(Mov::of('♘', "D4", "C2"))),
+                    GameMov::from(MenaceMov::from(Mov::of('♘', "D4", "E2"))),
+                    GameMov::from(CaptureMov::from(Mov::of('♘', "D4", "C6"))),
+                    GameMov::from(CaptureMov::from(Mov::of('♘', "D4", "E6"))),
                 ]
             ),
             "".to_owned()

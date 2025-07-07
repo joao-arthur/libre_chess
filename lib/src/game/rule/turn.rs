@@ -6,18 +6,18 @@ pub fn evaluate_turn(history: &GameHistory) -> Color {
 
 #[cfg(test)]
 mod tests {
-    use crate::{color::Color, movement::Movement};
+    use crate::{color::Color, movement::Mov};
 
     use super::evaluate_turn;
 
     #[test]
     fn test_get_turn() {
         assert_eq!(evaluate_turn(&Vec::new()), Color::White);
-        assert_eq!(evaluate_turn(&Vec::from([Movement::of('♙', "D2", "D4")])), Color::Black);
+        assert_eq!(evaluate_turn(&Vec::from([Mov::of('♙', "D2", "D4")])), Color::Black);
         assert_eq!(
             evaluate_turn(&Vec::from([
-                Movement::of('♙', "D2", "D4"),
-                Movement::of('♟', "A7", "A5")
+                Mov::of('♙', "D2", "D4"),
+                Mov::of('♟', "A7", "A5")
             ])),
             Color::White
         );

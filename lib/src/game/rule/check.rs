@@ -1,5 +1,5 @@
 use crate::{
-    game::{Game, movement::movement::GameMove, rule::turn::evaluate_turn},
+    game::{Game, movement::movement::GameMov, rule::turn::evaluate_turn},
     piece::Type,
 };
 
@@ -13,8 +13,8 @@ pub fn is_in_check(game: &Game) -> bool {
                     for (_, moves) in it {
                         for mov in moves {
                             let maybe_pos = match mov {
-                                GameMove::Default(m) => Some(&m.movement.to),
-                                GameMove::Capture(m) => Some(&m.movement.to),
+                                GameMov::Default(m) => Some(&m.mov.to),
+                                GameMov::Capture(m) => Some(&m.mov.to),
                                 _ => None,
                             };
                             if let Some(menace_pos) = maybe_pos {
@@ -41,7 +41,7 @@ mod tests {
         game::{
             Game, board::board_of_str, game::GameBounds, mode::standard_chess, player::GamePlayer,
         },
-        movement::Movement,
+        movement::Mov,
     };
 
     use super::is_in_check;
@@ -106,7 +106,7 @@ mod tests {
     //                GamePlayer { color: Color::Black, captures: Vec::new(), moves: HashMap::new() },
     //            ),
     //        ]),
-    //        history: vec![Movement::of('♙', "D6", "D7")],
+    //        history: vec![Mov::of('♙', "D6", "D7")],
     //    }));
     //}
 }

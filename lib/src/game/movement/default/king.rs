@@ -2,14 +2,14 @@ use crate::{
     game::{
         board::GameBoard,
         game::GameBounds,
-        movement::movement::{CaptureMove, DefaultMove, GameMove, MenaceMove},
+        movement::movement::{CaptureMov, DefaultMov, GameMov, MenaceMov},
     },
-    movement::Movement,
+    movement::Mov,
     pos::Pos,
 };
 
-pub fn moves(board: &GameBoard, bounds: &GameBounds, pos: &Pos) -> Vec<GameMove> {
-    let mut result: Vec<GameMove> = Vec::new();
+pub fn moves(board: &GameBoard, bounds: &GameBounds, pos: &Pos) -> Vec<GameMov> {
+    let mut result: Vec<GameMov> = Vec::new();
     if let Some(piece) = board.get(pos) {
         let base = [
             pos.try_of_rel_idx(1, 1),
@@ -32,20 +32,20 @@ pub fn moves(board: &GameBoard, bounds: &GameBounds, pos: &Pos) -> Vec<GameMove>
                 }
                 if let Some(curr_piece) = board.get(&curr_pos) {
                     if curr_piece.color == piece.color {
-                        result.push(GameMove::from(MenaceMove::from(Movement {
+                        result.push(GameMov::from(MenaceMov::from(Mov {
                             piece: *piece,
                             from: pos.clone(),
                             to: curr_pos,
                         })));
                     } else {
-                        result.push(GameMove::from(CaptureMove::from(Movement {
+                        result.push(GameMov::from(CaptureMov::from(Mov {
                             piece: *piece,
                             from: pos.clone(),
                             to: curr_pos,
                         })));
                     }
                 } else {
-                    result.push(GameMove::from(DefaultMove::from(Movement {
+                    result.push(GameMov::from(DefaultMov::from(Mov {
                         piece: *piece,
                         from: pos.clone(),
                         to: curr_pos,
@@ -66,10 +66,10 @@ mod tests {
             board::{board_empty, board_of_str},
             game::GameBounds,
             mode::standard_chess,
-            movement::movement::{CaptureMove, DefaultMove, GameMove, MenaceMove},
+            movement::movement::{CaptureMov, DefaultMov, GameMov, MenaceMov},
             piece::piece_of_str,
         },
-        movement::Movement,
+        movement::Mov,
         pos::Pos,
     };
 
@@ -88,14 +88,14 @@ mod tests {
         assert_eq!(
             moves(&board, &mode.bounds, &Pos::of_str("D4")),
             [
-                GameMove::from(DefaultMove::from(Movement::of('♚', "D4", "E5"))),
-                GameMove::from(DefaultMove::from(Movement::of('♚', "D4", "E4"))),
-                GameMove::from(DefaultMove::from(Movement::of('♚', "D4", "E3"))),
-                GameMove::from(DefaultMove::from(Movement::of('♚', "D4", "D3"))),
-                GameMove::from(DefaultMove::from(Movement::of('♚', "D4", "C3"))),
-                GameMove::from(DefaultMove::from(Movement::of('♚', "D4", "C4"))),
-                GameMove::from(DefaultMove::from(Movement::of('♚', "D4", "C5"))),
-                GameMove::from(DefaultMove::from(Movement::of('♚', "D4", "D5"))),
+                GameMov::from(DefaultMov::from(Mov::of('♚', "D4", "E5"))),
+                GameMov::from(DefaultMov::from(Mov::of('♚', "D4", "E4"))),
+                GameMov::from(DefaultMov::from(Mov::of('♚', "D4", "E3"))),
+                GameMov::from(DefaultMov::from(Mov::of('♚', "D4", "D3"))),
+                GameMov::from(DefaultMov::from(Mov::of('♚', "D4", "C3"))),
+                GameMov::from(DefaultMov::from(Mov::of('♚', "D4", "C4"))),
+                GameMov::from(DefaultMov::from(Mov::of('♚', "D4", "C5"))),
+                GameMov::from(DefaultMov::from(Mov::of('♚', "D4", "D5"))),
             ]
         );
     }
@@ -107,9 +107,9 @@ mod tests {
         assert_eq!(
             moves(&board, &mode.bounds, &Pos::of_str("H8")),
             [
-                GameMove::from(DefaultMove::from(Movement::of('♚', "H8", "H7"))),
-                GameMove::from(DefaultMove::from(Movement::of('♚', "H8", "G7"))),
-                GameMove::from(DefaultMove::from(Movement::of('♚', "H8", "G8"))),
+                GameMov::from(DefaultMov::from(Mov::of('♚', "H8", "H7"))),
+                GameMov::from(DefaultMov::from(Mov::of('♚', "H8", "G7"))),
+                GameMov::from(DefaultMov::from(Mov::of('♚', "H8", "G8"))),
             ]
         );
     }
@@ -121,9 +121,9 @@ mod tests {
         assert_eq!(
             moves(&board, &mode.bounds, &Pos::of_str("H1")),
             [
-                GameMove::from(DefaultMove::from(Movement::of('♚', "H1", "G1"))),
-                GameMove::from(DefaultMove::from(Movement::of('♚', "H1", "G2"))),
-                GameMove::from(DefaultMove::from(Movement::of('♚', "H1", "H2"))),
+                GameMov::from(DefaultMov::from(Mov::of('♚', "H1", "G1"))),
+                GameMov::from(DefaultMov::from(Mov::of('♚', "H1", "G2"))),
+                GameMov::from(DefaultMov::from(Mov::of('♚', "H1", "H2"))),
             ]
         );
     }
@@ -135,9 +135,9 @@ mod tests {
         assert_eq!(
             moves(&board, &mode.bounds, &Pos::of_str("A1")),
             [
-                GameMove::from(DefaultMove::from(Movement::of('♚', "A1", "B2"))),
-                GameMove::from(DefaultMove::from(Movement::of('♚', "A1", "B1"))),
-                GameMove::from(DefaultMove::from(Movement::of('♚', "A1", "A2"))),
+                GameMov::from(DefaultMov::from(Mov::of('♚', "A1", "B2"))),
+                GameMov::from(DefaultMov::from(Mov::of('♚', "A1", "B1"))),
+                GameMov::from(DefaultMov::from(Mov::of('♚', "A1", "A2"))),
             ]
         );
     }
@@ -149,9 +149,9 @@ mod tests {
         assert_eq!(
             moves(&board, &mode.bounds, &Pos::of_str("A8")),
             [
-                GameMove::from(DefaultMove::from(Movement::of('♚', "A8", "B8"))),
-                GameMove::from(DefaultMove::from(Movement::of('♚', "A8", "B7"))),
-                GameMove::from(DefaultMove::from(Movement::of('♚', "A8", "A7"))),
+                GameMov::from(DefaultMov::from(Mov::of('♚', "A8", "B8"))),
+                GameMov::from(DefaultMov::from(Mov::of('♚', "A8", "B7"))),
+                GameMov::from(DefaultMov::from(Mov::of('♚', "A8", "A7"))),
             ]
         );
     }
@@ -163,9 +163,9 @@ mod tests {
         assert_eq!(
             moves(&board, &bounds, &Pos::of_str("H8")),
             [
-                GameMove::from(DefaultMove::from(Movement::of('♚', "H8", "H7"))),
-                GameMove::from(DefaultMove::from(Movement::of('♚', "H8", "G7"))),
-                GameMove::from(DefaultMove::from(Movement::of('♚', "H8", "G8"))),
+                GameMov::from(DefaultMov::from(Mov::of('♚', "H8", "H7"))),
+                GameMov::from(DefaultMov::from(Mov::of('♚', "H8", "G7"))),
+                GameMov::from(DefaultMov::from(Mov::of('♚', "H8", "G8"))),
             ]
         );
     }
@@ -177,9 +177,9 @@ mod tests {
         assert_eq!(
             moves(&board, &bounds, &Pos::of_str("H4")),
             [
-                GameMove::from(DefaultMove::from(Movement::of('♚', "H4", "G4"))),
-                GameMove::from(DefaultMove::from(Movement::of('♚', "H4", "G5"))),
-                GameMove::from(DefaultMove::from(Movement::of('♚', "H4", "H5"))),
+                GameMov::from(DefaultMov::from(Mov::of('♚', "H4", "G4"))),
+                GameMov::from(DefaultMov::from(Mov::of('♚', "H4", "G5"))),
+                GameMov::from(DefaultMov::from(Mov::of('♚', "H4", "H5"))),
             ]
         );
     }
@@ -191,9 +191,9 @@ mod tests {
         assert_eq!(
             moves(&board, &bounds, &Pos::of_str("D4")),
             [
-                GameMove::from(DefaultMove::from(Movement::of('♚', "D4", "E5"))),
-                GameMove::from(DefaultMove::from(Movement::of('♚', "D4", "E4"))),
-                GameMove::from(DefaultMove::from(Movement::of('♚', "D4", "D5"))),
+                GameMov::from(DefaultMov::from(Mov::of('♚', "D4", "E5"))),
+                GameMov::from(DefaultMov::from(Mov::of('♚', "D4", "E4"))),
+                GameMov::from(DefaultMov::from(Mov::of('♚', "D4", "D5"))),
             ]
         );
     }
@@ -205,9 +205,9 @@ mod tests {
         assert_eq!(
             moves(&board, &bounds, &Pos::of_str("D8")),
             [
-                GameMove::from(DefaultMove::from(Movement::of('♚', "D8", "E8"))),
-                GameMove::from(DefaultMove::from(Movement::of('♚', "D8", "E7"))),
-                GameMove::from(DefaultMove::from(Movement::of('♚', "D8", "D7"))),
+                GameMov::from(DefaultMov::from(Mov::of('♚', "D8", "E8"))),
+                GameMov::from(DefaultMov::from(Mov::of('♚', "D8", "E7"))),
+                GameMov::from(DefaultMov::from(Mov::of('♚', "D8", "D7"))),
             ]
         );
     }
@@ -231,14 +231,14 @@ mod tests {
         assert_eq!(
             moves(&board, &mode.bounds, &Pos::of_str("D4")),
             [
-                GameMove::from(CaptureMove::from(Movement::of('♔', "D4", "E5"))),
-                GameMove::from(DefaultMove::from(Movement::of('♔', "D4", "E4"))),
-                GameMove::from(DefaultMove::from(Movement::of('♔', "D4", "E3"))),
-                GameMove::from(MenaceMove::from(Movement::of('♔', "D4", "D3"))),
-                GameMove::from(DefaultMove::from(Movement::of('♔', "D4", "C3"))),
-                GameMove::from(CaptureMove::from(Movement::of('♔', "D4", "C4"))),
-                GameMove::from(DefaultMove::from(Movement::of('♔', "D4", "C5"))),
-                GameMove::from(DefaultMove::from(Movement::of('♔', "D4", "D5"))),
+                GameMov::from(CaptureMov::from(Mov::of('♔', "D4", "E5"))),
+                GameMov::from(DefaultMov::from(Mov::of('♔', "D4", "E4"))),
+                GameMov::from(DefaultMov::from(Mov::of('♔', "D4", "E3"))),
+                GameMov::from(MenaceMov::from(Mov::of('♔', "D4", "D3"))),
+                GameMov::from(DefaultMov::from(Mov::of('♔', "D4", "C3"))),
+                GameMov::from(CaptureMov::from(Mov::of('♔', "D4", "C4"))),
+                GameMov::from(DefaultMov::from(Mov::of('♔', "D4", "C5"))),
+                GameMov::from(DefaultMov::from(Mov::of('♔', "D4", "D5"))),
             ]
         );
     }
@@ -262,14 +262,14 @@ mod tests {
         assert_eq!(
             moves(&board, &mode.bounds, &Pos::of_str("D4")),
             [
-                GameMove::from(CaptureMove::from(Movement::of('♚', "D4", "E5"))),
-                GameMove::from(DefaultMove::from(Movement::of('♚', "D4", "E4"))),
-                GameMove::from(DefaultMove::from(Movement::of('♚', "D4", "E3"))),
-                GameMove::from(MenaceMove::from(Movement::of('♚', "D4", "D3"))),
-                GameMove::from(DefaultMove::from(Movement::of('♚', "D4", "C3"))),
-                GameMove::from(CaptureMove::from(Movement::of('♚', "D4", "C4"))),
-                GameMove::from(DefaultMove::from(Movement::of('♚', "D4", "C5"))),
-                GameMove::from(DefaultMove::from(Movement::of('♚', "D4", "D5"))),
+                GameMov::from(CaptureMov::from(Mov::of('♚', "D4", "E5"))),
+                GameMov::from(DefaultMov::from(Mov::of('♚', "D4", "E4"))),
+                GameMov::from(DefaultMov::from(Mov::of('♚', "D4", "E3"))),
+                GameMov::from(MenaceMov::from(Mov::of('♚', "D4", "D3"))),
+                GameMov::from(DefaultMov::from(Mov::of('♚', "D4", "C3"))),
+                GameMov::from(CaptureMov::from(Mov::of('♚', "D4", "C4"))),
+                GameMov::from(DefaultMov::from(Mov::of('♚', "D4", "C5"))),
+                GameMov::from(DefaultMov::from(Mov::of('♚', "D4", "D5"))),
             ]
         );
     }
