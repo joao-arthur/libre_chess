@@ -8,7 +8,7 @@ use crate::{
     pos::Pos,
 };
 
-pub fn movements(board: &GameBoard, bounds: &GameBounds, pos: &Pos) -> Vec<GameMovement> {
+pub fn moves(board: &GameBoard, bounds: &GameBounds, pos: &Pos) -> Vec<GameMovement> {
     let mut result: Vec<GameMovement> = Vec::new();
     if let Some(piece) = board.get(pos) {
         let base = [
@@ -73,12 +73,12 @@ mod tests {
         pos::Pos,
     };
 
-    use super::movements;
+    use super::moves;
 
     #[test]
     fn movements_empty_board() {
         let mode = standard_chess();
-        assert_eq!(movements(&board_empty(), &mode.bounds, &Pos::of_str("A1")), []);
+        assert_eq!(moves(&board_empty(), &mode.bounds, &Pos::of_str("A1")), []);
     }
 
     #[test]
@@ -86,7 +86,7 @@ mod tests {
         let mode = standard_chess();
         let board = HashMap::from([piece_of_str("D4", '♞')]);
         assert_eq!(
-            movements(&board, &mode.bounds, &Pos::of_str("D4")),
+            moves(&board, &mode.bounds, &Pos::of_str("D4")),
             [
                 GameMovement::from(DefaultMovement::from(Movement::of('♞', "D4", "E6"))),
                 GameMovement::from(DefaultMovement::from(Movement::of('♞', "D4", "F5"))),
@@ -105,7 +105,7 @@ mod tests {
         let mode = standard_chess();
         let board = HashMap::from([piece_of_str("H8", '♞')]);
         assert_eq!(
-            movements(&board, &mode.bounds, &Pos::of_str("H8")),
+            moves(&board, &mode.bounds, &Pos::of_str("H8")),
             [
                 GameMovement::from(DefaultMovement::from(Movement::of('♞', "H8", "G6"))),
                 GameMovement::from(DefaultMovement::from(Movement::of('♞', "H8", "F7")))
@@ -118,7 +118,7 @@ mod tests {
         let mode = standard_chess();
         let board = HashMap::from([piece_of_str("H1", '♞')]);
         assert_eq!(
-            movements(&board, &mode.bounds, &Pos::of_str("H1")),
+            moves(&board, &mode.bounds, &Pos::of_str("H1")),
             [
                 GameMovement::from(DefaultMovement::from(Movement::of('♞', "H1", "F2"))),
                 GameMovement::from(DefaultMovement::from(Movement::of('♞', "H1", "G3")))
@@ -131,7 +131,7 @@ mod tests {
         let mode = standard_chess();
         let board = HashMap::from([piece_of_str("A1", '♞')]);
         assert_eq!(
-            movements(&board, &mode.bounds, &Pos::of_str("A1")),
+            moves(&board, &mode.bounds, &Pos::of_str("A1")),
             [
                 GameMovement::from(DefaultMovement::from(Movement::of('♞', "A1", "B3"))),
                 GameMovement::from(DefaultMovement::from(Movement::of('♞', "A1", "C2")))
@@ -144,7 +144,7 @@ mod tests {
         let mode = standard_chess();
         let board = HashMap::from([piece_of_str("A8", '♞')]);
         assert_eq!(
-            movements(&board, &mode.bounds, &Pos::of_str("A8")),
+            moves(&board, &mode.bounds, &Pos::of_str("A8")),
             [
                 GameMovement::from(DefaultMovement::from(Movement::of('♞', "A8", "C7"))),
                 GameMovement::from(DefaultMovement::from(Movement::of('♞', "A8", "B6")))
@@ -157,7 +157,7 @@ mod tests {
         let board = HashMap::from([piece_of_str("G7", '♞')]);
         let bounds = GameBounds { x1: 3, y1: 3, x2: 7, y2: 7 };
         assert_eq!(
-            movements(&board, &bounds, &Pos::of_str("G7")),
+            moves(&board, &bounds, &Pos::of_str("G7")),
             [
                 GameMovement::from(DefaultMovement::from(Movement::of('♞', "G7", "H5"))),
                 GameMovement::from(DefaultMovement::from(Movement::of('♞', "G7", "F5"))),
@@ -172,7 +172,7 @@ mod tests {
         let board = HashMap::from([piece_of_str("G5", '♞')]);
         let bounds = GameBounds { x1: 3, y1: 3, x2: 7, y2: 7 };
         assert_eq!(
-            movements(&board, &bounds, &Pos::of_str("G5")),
+            moves(&board, &bounds, &Pos::of_str("G5")),
             [
                 GameMovement::from(DefaultMovement::from(Movement::of('♞', "G5", "H7"))),
                 GameMovement::from(DefaultMovement::from(Movement::of('♞', "G5", "E4"))),
@@ -187,7 +187,7 @@ mod tests {
         let board = HashMap::from([piece_of_str("E5", '♞')]);
         let bounds = GameBounds { x1: 3, y1: 3, x2: 7, y2: 7 };
         assert_eq!(
-            movements(&board, &bounds, &Pos::of_str("E5")),
+            moves(&board, &bounds, &Pos::of_str("E5")),
             [
                 GameMovement::from(DefaultMovement::from(Movement::of('♞', "E5", "F7"))),
                 GameMovement::from(DefaultMovement::from(Movement::of('♞', "E5", "G6"))),
@@ -202,7 +202,7 @@ mod tests {
         let board = HashMap::from([piece_of_str("E7", '♞')]);
         let bounds = GameBounds { x1: 3, y1: 3, x2: 7, y2: 7 };
         assert_eq!(
-            movements(&board, &bounds, &Pos::of_str("E7")),
+            moves(&board, &bounds, &Pos::of_str("E7")),
             [
                 GameMovement::from(DefaultMovement::from(Movement::of('♞', "E7", "G8"))),
                 GameMovement::from(DefaultMovement::from(Movement::of('♞', "E7", "G6"))),
@@ -229,7 +229,7 @@ mod tests {
             ],
         );
         assert_eq!(
-            movements(&board, &mode.bounds, &Pos::of_str("D4")),
+            moves(&board, &mode.bounds, &Pos::of_str("D4")),
             [
                 GameMovement::from(CaptureMovement::from(Movement::of('♘', "D4", "E6"))),
                 GameMovement::from(CaptureMovement::from(Movement::of('♘', "D4", "F5"))),
@@ -260,7 +260,7 @@ mod tests {
             ],
         );
         assert_eq!(
-            movements(&board, &mode.bounds, &Pos::of_str("D4")),
+            moves(&board, &mode.bounds, &Pos::of_str("D4")),
             [
                 GameMovement::from(CaptureMovement::from(Movement::of('♞', "D4", "E6"))),
                 GameMovement::from(CaptureMovement::from(Movement::of('♞', "D4", "F5"))),

@@ -9,7 +9,7 @@ use crate::{
     pos::Pos,
 };
 
-pub fn movements(
+pub fn moves(
     board: &GameBoard,
     bounds: &GameBounds,
     history: &GameHistory,
