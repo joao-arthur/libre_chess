@@ -5,7 +5,7 @@ mod board;
 mod capture;
 mod game;
 pub mod mode;
-pub mod movement;
+pub mod mov;
 mod piece;
 mod player;
 pub mod rule;

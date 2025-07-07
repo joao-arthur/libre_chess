@@ -1,4 +1,4 @@
-use crate::{game::game::GameBounds, movement::Mov, piece::Piece, pos::Pos};
+use crate::{game::game::GameBounds, mov::Mov, piece::Piece, pos::Pos};
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct DefaultMov {
@@ -107,7 +107,7 @@ impl From<PromotionMov> for GameMov {
     }
 }
 
-fn try_game_move_from_str<const N: usize>(
+pub fn try_game_move_from_str<const N: usize>(
     bounds: &GameBounds,
     rows: [&str; N],
 ) -> Result<Vec<GameMov>, ()> {
@@ -140,7 +140,7 @@ fn try_game_move_from_str<const N: usize>(
     Err(())
 }
 
-fn game_move_to_string(bounds: &GameBounds, moves: &Vec<GameMov>) -> String {
+pub fn game_move_to_string(bounds: &GameBounds, moves: &Vec<GameMov>) -> String {
     let mut res = "".to_string();
 
     let mut row = bounds.y2 + 1;
@@ -192,7 +192,7 @@ mod tests {
             game::GameBounds,
             mode::standard_chess,
         },
-        movement::Mov
+        mov::Mov
     };
 
     use super::{game_move_to_string, try_game_move_from_str, CaptureMov, DefaultMov, GameMov, MenaceMov};

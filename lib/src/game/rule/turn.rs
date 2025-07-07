@@ -6,7 +6,7 @@ pub fn evaluate_turn(history: &GameHistory) -> Color {
 
 #[cfg(test)]
 mod tests {
-    use crate::{color::Color, movement::Mov};
+    use crate::{color::Color, mov::Mov};
 
     use super::evaluate_turn;
 

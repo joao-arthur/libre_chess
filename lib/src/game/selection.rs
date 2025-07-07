@@ -4,7 +4,7 @@ use crate::{
     game::{
         GameBoard,
         game::{GameHistory, GamePlayers},
-        movement::movement::GameMov,
+        mov::GameMov,
         rule::turn::evaluate_turn,
     },
     pos::Pos,
@@ -93,10 +93,10 @@ mod tests {
             board::board_of_str,
             game::GamePlayers,
             mode::standard_chess,
-            movement::movement::{DefaultMov, GameMov},
+            mov::{DefaultMov, GameMov},
             player::GamePlayer,
         },
-        movement::Mov,
+        mov::Mov,
         pos::Pos,
     };
 

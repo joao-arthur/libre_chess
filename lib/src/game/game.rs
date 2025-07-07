@@ -4,7 +4,7 @@ use crate::{
     color::Color,
     game::{board::GameBoard, player::GamePlayer},
     geometry::poligon::rect::RectU8,
-    movement::Mov,
+    mov::Mov,
 };
 
 pub type GameBounds = RectU8;

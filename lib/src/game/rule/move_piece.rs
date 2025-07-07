@@ -3,7 +3,7 @@ use crate::{
         GameBoard,
         capture::GameCapture,
         game::{GameBounds, GameHistory, GamePlayers},
-        movement::movement::{
+        mov::{
             CastlingMov, DefaultMov, EnPassantMov, GameMov, PromotionMov,
         },
         rule::{allowed_movements::allowed_movements_of_player, turn::evaluate_turn},
@@ -72,7 +72,7 @@ fn castling_move(board: &mut GameBoard, history: &mut GameHistory, castling: Cas
 
 fn promotion_move(board: &mut GameBoard, history: &mut GameHistory, promotion: PromotionMov) {
     board.insert(promotion.pos.clone(), promotion.piece);
-    // edit the pawn move
+    // edit the pawn mov
 }
 
 fn move_piece(

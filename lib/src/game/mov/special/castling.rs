@@ -2,9 +2,9 @@ use crate::{
     game::{
         board::GameBoard,
         game::{GameBounds, GameHistory},
-        movement::movement::CastlingMov,
+        mov::CastlingMov,
     },
-    movement::Mov,
+    mov::Mov,
     piece::Type,
     pos::Pos,
 };

@@ -1,5 +1,5 @@
 use crate::{
-    game::{board::GameBoard, game::GameBounds, movement::movement::GameMov},
+    game::{board::GameBoard, game::GameBounds, mov::GameMov},
     piece::Type,
     pos::Pos,
 };
@@ -33,10 +33,10 @@ mod tests {
         game::{
             board::board_empty,
             mode::standard_chess,
-            movement::movement::{DefaultMov, GameMov, MenaceMov},
+            mov::{DefaultMov, GameMov, MenaceMov},
             piece::piece_of_str,
         },
-        movement::Mov,
+        mov::Mov,
         pos::Pos,
     };
 

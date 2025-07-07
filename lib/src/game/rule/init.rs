@@ -82,10 +82,10 @@ mod tests {
             board::{board_of_str, board_to_string},
             game::GameBounds,
             mode::standard_chess,
-            movement::movement::{CaptureMov, DefaultMov, GameMov, MenaceMov},
+            mov::{CaptureMov, DefaultMov, GameMov, MenaceMov},
             player::GamePlayer,
         },
-        movement::Mov,
+        mov::Mov,
         pos::Pos,
     };
 

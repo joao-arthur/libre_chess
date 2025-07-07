@@ -1,5 +1,5 @@
 use crate::{
-    game::{Game, movement::movement::GameMov, rule::turn::evaluate_turn},
+    game::{Game, mov::GameMov, rule::turn::evaluate_turn},
     piece::Type,
 };
 
@@ -41,7 +41,7 @@ mod tests {
         game::{
             Game, board::board_of_str, game::GameBounds, mode::standard_chess, player::GamePlayer,
         },
-        movement::Mov,
+        mov::Mov,
     };
 
     use super::is_in_check;

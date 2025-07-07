@@ -2,9 +2,9 @@ use crate::{
     game::{
         board::GameBoard,
         game::GameBounds,
-        movement::movement::{CaptureMov, DefaultMov, GameMov, MenaceMov},
+        mov::{CaptureMov, DefaultMov, GameMov, MenaceMov},
     },
-    movement::Mov,
+    mov::Mov,
     pos::Pos,
 };
 
@@ -66,10 +66,10 @@ mod tests {
             board::{board_empty, board_of_str},
             game::GameBounds,
             mode::standard_chess,
-            movement::movement::{CaptureMov, DefaultMov, GameMov, MenaceMov},
+            mov::{CaptureMov, DefaultMov, GameMov, MenaceMov},
             piece::piece_of_str,
         },
-        movement::Mov,
+        mov::Mov,
         pos::Pos,
     };
 

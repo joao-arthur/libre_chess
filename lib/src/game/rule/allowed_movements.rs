@@ -5,9 +5,9 @@ use crate::{
     game::{
         GameBoard,
         game::{GameBounds, GameHistory},
-        movement::{
+        mov::{
             default,
-            movement::GameMov,
+            mov::GameMov,
             special::{castling, en_passant},
         },
     },

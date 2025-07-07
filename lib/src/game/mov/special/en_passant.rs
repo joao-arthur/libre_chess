@@ -1,7 +1,7 @@
 use crate::{
     color::Color,
-    game::{board::GameBoard, game::GameHistory, movement::movement::EnPassantMov},
-    movement::Mov,
+    game::{board::GameBoard, game::GameHistory, mov::EnPassantMov},
+    mov::Mov,
     piece::Type,
     pos::Pos,
 };
@@ -99,8 +99,8 @@ mod tests {
     use std::collections::HashMap;
 
     use crate::{
-        game::{movement::movement::EnPassantMov, piece::piece_of_str},
-        movement::Mov,
+        game::{mov::EnPassantMov, piece::piece_of_str},
+        mov::Mov,
         pos::Pos,
     };
 
