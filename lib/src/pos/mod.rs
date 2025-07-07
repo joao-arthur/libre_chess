@@ -1,6 +1,9 @@
 use std::fmt;
 
-use super::{col::{col_try_of, col_to_string}, row::{row_try_of, row_to_string}};
+use self::{col::{col_try_of, col_to_string}, row::{row_try_of, row_to_string}};
+
+mod col;
+mod row;
 
 #[derive(Debug, PartialEq, Eq, Clone, Hash)]
 pub struct Pos {
@@ -53,9 +56,9 @@ impl Pos {
     }
 }
 
-pub fn pos_of_str_slice<const N: usize>(values: [&str; N]) -> Vec<Pos> {
-    values.to_vec().iter().map(|value| Pos::of_str(value)).collect()
-}
+//pub fn pos_of_str_slice<const N: usize>(values: [&str; N]) -> Vec<Pos> {
+//    values.to_vec().iter().map(|value| Pos::of_str(value)).collect()
+//}
 
 impl fmt::Display for Pos {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {

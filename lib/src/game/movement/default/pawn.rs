@@ -1,5 +1,5 @@
 use crate::{
-    board::pos::Pos,
+    pos::Pos,
     color::Color,
     game::{
         board::GameBoard,
@@ -91,7 +91,7 @@ mod tests {
     use std::collections::HashMap;
 
     use crate::{
-        board::pos::Pos,
+        pos::Pos,
         game::{
             board::{board_empty, board_of_str},
             mode::standard_chess,

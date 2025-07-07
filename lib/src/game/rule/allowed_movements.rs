@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
 use crate::{
-    board::pos::Pos,
+    pos::Pos,
     color::Color,
     game::{
         GameBoard,

@@ -1,4 +1,4 @@
-pub mod board;
+pub mod pos;
 pub mod color;
 pub mod game;
 mod geometry;

@@ -1,7 +1,7 @@
 use std::collections::HashSet;
 
 use crate::{
-    board::pos::Pos,
+    pos::Pos,
     game::{
         GameBoard,
         game::{GameHistory, GamePlayers},
@@ -88,7 +88,7 @@ mod tests {
     use std::collections::{HashMap, HashSet};
 
     use crate::{
-        board::pos::Pos,
+        pos::Pos,
         color::Color,
         game::{
             board::board_of_str,

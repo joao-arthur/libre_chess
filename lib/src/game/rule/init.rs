@@ -80,7 +80,7 @@ mod tests {
     use std::collections::HashMap;
 
     use crate::{
-        board::pos::{Pos, pos_of_str_slice},
+        pos::Pos,
         color::Color,
         game::{
             Game,

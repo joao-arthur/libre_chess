@@ -1,5 +1,5 @@
 use crate::{
-    board::pos::Pos,
+    pos::Pos,
     game::{
         GameBoard,
         capture::GameCapture,

@@ -32,12 +32,12 @@
 
 ## Fix
 
+
 - [ ] game_of_mode_and_history
     - [ ] Captures
 
 - [ ] allowed_movements_of_player
     - [ ] King menaces
 
-- [ ] Replace 0..8 with GameMode
-
 - [ ] Selection
+    - [ ] use it in web_backend
