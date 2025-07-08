@@ -3,12 +3,12 @@ use crate::{
     pos::Pos,
 };
 
-use super::{bishop, rook};
+use super::{bishop::bishop_moves, rook::rook_moves};
 
-pub fn moves(board: &GameBoard, bounds: &GameBounds, pos: &Pos) -> Vec<GameMov> {
+pub fn queen_moves(board: &GameBoard, bounds: &GameBounds, pos: &Pos) -> Vec<GameMov> {
     let mut result: Vec<GameMov> = Vec::new();
-    result.append(&mut bishop::moves(board, bounds, pos));
-    result.append(&mut rook::moves(board, bounds, pos));
+    result.append(&mut bishop_moves(board, bounds, pos));
+    result.append(&mut rook_moves(board, bounds, pos));
     result
 }
 
@@ -28,20 +28,20 @@ mod tests {
         pos::Pos,
     };
 
-    use super::moves;
+    use super::queen_moves;
 
     #[test]
-    fn moves_empty_board() {
+    fn queen_moves_empty_board() {
         let mode = standard_chess();
-        assert_eq!(moves(&board_empty(), &mode.bounds, &Pos::of_str("A1")), []);
+        assert_eq!(queen_moves(&board_empty(), &mode.bounds, &Pos::of_str("A1")), []);
     }
 
     #[test]
-    fn moves_lonely_piece() {
+    fn queen_moves_lonely_piece() {
         let mode = standard_chess();
         let board = HashMap::from([piece_of_str("C5", '♛')]);
         assert_eq!(
-            moves(&board, &mode.bounds, &Pos::of_str("C5")),
+            queen_moves(&board, &mode.bounds, &Pos::of_str("C5")),
             [
                 GameMov::from(DefaultMov::from(Mov::of('♛', "C5", "D6"))),
                 GameMov::from(DefaultMov::from(Mov::of('♛', "C5", "E7"))),
@@ -73,11 +73,11 @@ mod tests {
     }
 
     #[test]
-    fn moves_top_right_edge() {
+    fn queen_moves_top_right_edge() {
         let mode = standard_chess();
         let board = HashMap::from([piece_of_str("H8", '♛')]);
         assert_eq!(
-            moves(&board, &mode.bounds, &Pos::of_str("H8")),
+            queen_moves(&board, &mode.bounds, &Pos::of_str("H8")),
             [
                 GameMov::from(DefaultMov::from(Mov::of('♛', "H8", "G7"))),
                 GameMov::from(DefaultMov::from(Mov::of('♛', "H8", "F6"))),
@@ -105,11 +105,11 @@ mod tests {
     }
 
     #[test]
-    fn moves_bottom_right_edge() {
+    fn queen_moves_bottom_right_edge() {
         let mode = standard_chess();
         let board = HashMap::from([piece_of_str("H1", '♛')]);
         assert_eq!(
-            moves(&board, &mode.bounds, &Pos::of_str("H1")),
+            queen_moves(&board, &mode.bounds, &Pos::of_str("H1")),
             [
                 GameMov::from(DefaultMov::from(Mov::of('♛', "H1", "G2"))),
                 GameMov::from(DefaultMov::from(Mov::of('♛', "H1", "F3"))),
@@ -137,11 +137,11 @@ mod tests {
     }
 
     #[test]
-    fn moves_bottom_left_edge() {
+    fn queen_moves_bottom_left_edge() {
         let mode = standard_chess();
         let board = HashMap::from([piece_of_str("A1", '♛')]);
         assert_eq!(
-            moves(&board, &mode.bounds, &Pos::of_str("A1")),
+            queen_moves(&board, &mode.bounds, &Pos::of_str("A1")),
             [
                 GameMov::from(DefaultMov::from(Mov::of('♛', "A1", "B2"))),
                 GameMov::from(DefaultMov::from(Mov::of('♛', "A1", "C3"))),
@@ -169,11 +169,11 @@ mod tests {
     }
 
     #[test]
-    fn moves_top_left_edge() {
+    fn queen_moves_top_left_edge() {
         let mode = standard_chess();
         let board = HashMap::from([piece_of_str("A8", '♛')]);
         assert_eq!(
-            moves(&board, &mode.bounds, &Pos::of_str("A8")),
+            queen_moves(&board, &mode.bounds, &Pos::of_str("A8")),
             [
                 GameMov::from(DefaultMov::from(Mov::of('♛', "A8", "B7"))),
                 GameMov::from(DefaultMov::from(Mov::of('♛', "A8", "C6"))),
@@ -201,11 +201,11 @@ mod tests {
     }
 
     #[test]
-    fn moves_small_bounds() {
+    fn queen_moves_small_bounds() {
         let board = HashMap::from([piece_of_str("F6", '♛')]);
         let bounds = GameBounds { x1: 3, y1: 3, x2: 7, y2: 7 };
         assert_eq!(
-            moves(&board, &bounds, &Pos::of_str("F6")),
+            queen_moves(&board, &bounds, &Pos::of_str("F6")),
             [
                 GameMov::from(DefaultMov::from(Mov::of('♛', "F6", "G7"))),
                 GameMov::from(DefaultMov::from(Mov::of('♛', "F6", "H8"))),
@@ -228,7 +228,7 @@ mod tests {
     }
 
     #[test]
-    fn moves_white_capture() {
+    fn queen_moves_white_capture() {
         let mode = standard_chess();
         let board = board_of_str(
             &mode.bounds,
@@ -244,7 +244,7 @@ mod tests {
             ],
         );
         assert_eq!(
-            moves(&board, &mode.bounds, &Pos::of_str("C5")),
+            queen_moves(&board, &mode.bounds, &Pos::of_str("C5")),
             [
                 GameMov::from(CaptureMov::from(Mov::of('♕', "C5", "D6"))),
                 GameMov::from(DefaultMov::from(Mov::of('♕', "C5", "D4"))),
@@ -269,7 +269,7 @@ mod tests {
     }
 
     #[test]
-    fn moves_black_capture() {
+    fn queen_moves_black_capture() {
         let mode = standard_chess();
         let board = board_of_str(
             &mode.bounds,
@@ -285,7 +285,7 @@ mod tests {
             ],
         );
         assert_eq!(
-            moves(&board, &mode.bounds, &Pos::of_str("C5")),
+            queen_moves(&board, &mode.bounds, &Pos::of_str("C5")),
             [
                 GameMov::from(CaptureMov::from(Mov::of('♛', "C5", "D6"))),
                 GameMov::from(DefaultMov::from(Mov::of('♛', "C5", "D4"))),
