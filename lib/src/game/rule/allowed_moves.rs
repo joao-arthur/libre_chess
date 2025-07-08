@@ -6,8 +6,9 @@ use crate::{
         GameBoard,
         game::{GameBounds, GameHistory},
         mov::{
-            GameMov, default,
-            special::{castling, en_passant},
+            GameMov,
+            default::default_moves,
+            special::{castling::castling_moves, en_passant::en_passant_moves},
         },
     },
     piece::Type,
@@ -23,11 +24,11 @@ fn allowed_moves_of_piece(
     if let Some(piece) = board.get(pos) {
         match piece.t {
             Type::Pawn => [
-                default::moves(board, bounds, pos)
+                default_moves(board, bounds, pos)
                     .into_iter()
                     .map(GameMov::from)
                     .collect::<Vec<GameMov>>(),
-                en_passant::moves(board, history, pos)
+                en_passant_moves(board, history, pos)
                     .into_iter()
                     .map(GameMov::from)
                     .collect::<Vec<GameMov>>(),
@@ -36,11 +37,11 @@ fn allowed_moves_of_piece(
             .flatten()
             .collect(),
             Type::King => [
-                default::moves(board, bounds, pos)
+                default_moves(board, bounds, pos)
                     .into_iter()
                     .map(GameMov::from)
                     .collect::<Vec<GameMov>>(),
-                castling::moves(board, bounds, history, pos)
+                castling_moves(board, bounds, history, pos)
                     .into_iter()
                     .map(GameMov::from)
                     .collect::<Vec<GameMov>>(),
@@ -48,7 +49,7 @@ fn allowed_moves_of_piece(
             .into_iter()
             .flatten()
             .collect(),
-            _ => default::moves(board, bounds, pos)
+            _ => default_moves(board, bounds, pos)
                 .into_iter()
                 .map(GameMov::from)
                 .collect::<Vec<GameMov>>(),

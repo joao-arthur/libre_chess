@@ -9,7 +9,7 @@ use crate::{
     pos::Pos,
 };
 
-pub fn moves(
+pub fn castling_moves(
     board: &GameBoard,
     bounds: &GameBounds,
     history: &GameHistory,
@@ -70,6 +70,5 @@ pub fn moves(
             }
         }
     }
-
     result
 }
