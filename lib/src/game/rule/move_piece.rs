@@ -85,10 +85,10 @@ pub fn app_move_piece(
     bounds: &GameBounds,
     players: &mut GamePlayers,
     history: &mut GameHistory,
-    movement: &GameMov,
+    mov: &GameMov,
 ) {
     let turn = evaluate_turn(history);
-    move_piece(board, players, history, movement.clone());
+    move_piece(board, players, history, mov.clone());
     for (color, player) in players.iter_mut() {
         if &turn == color {
             player.moves.drain();

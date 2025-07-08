@@ -91,7 +91,7 @@ mod tests {
     use std::collections::HashMap;
 
     use crate::{
-        game::{mov::EnPassantMov, piece::piece_of_str},
+        game::{mov::EnPassantMov, piece::game_piece_of},
         mov::Mov,
         pos::Pos,
     };
@@ -100,7 +100,7 @@ mod tests {
 
     #[test]
     fn pawn_moved_a7_to_a5() {
-        let board = HashMap::from([piece_of_str("A5", '♟'), piece_of_str("B5", '♙')]);
+        let board = HashMap::from([game_piece_of("A5", '♟'), game_piece_of("B5", '♙')]);
         let history = Vec::from([Mov::of('♟', "A7", "A5")]);
         assert_eq!(
             en_passant_moves(&board, &history, &Pos::of_str("B5")),
@@ -110,7 +110,7 @@ mod tests {
 
     #[test]
     fn pawn_moved_b7_to_b5() {
-        let board = HashMap::from([piece_of_str("B5", '♟'), piece_of_str("A5", '♙')]);
+        let board = HashMap::from([game_piece_of("B5", '♟'), game_piece_of("A5", '♙')]);
         let history = Vec::from([Mov::of('♟', "B7", "B5")]);
         assert_eq!(
             en_passant_moves(&board, &history, &Pos::of_str("A5")),
@@ -120,7 +120,7 @@ mod tests {
 
     #[test]
     fn pawn_moved_g7_to_g5() {
-        let board = HashMap::from([piece_of_str("G5", '♟'), piece_of_str("H5", '♙')]);
+        let board = HashMap::from([game_piece_of("G5", '♟'), game_piece_of("H5", '♙')]);
         let history = Vec::from([Mov::of('♟', "G7", "G5")]);
         assert_eq!(
             en_passant_moves(&board, &history, &Pos::of_str("H5")),
@@ -130,7 +130,7 @@ mod tests {
 
     #[test]
     fn pawn_moved_h7_to_h5() {
-        let board = HashMap::from([piece_of_str("H5", '♟'), piece_of_str("G5", '♙')]);
+        let board = HashMap::from([game_piece_of("H5", '♟'), game_piece_of("G5", '♙')]);
         let history = Vec::from([Mov::of('♟', "H7", "H5")]);
         assert_eq!(
             en_passant_moves(&board, &history, &Pos::of_str("G5")),
@@ -140,7 +140,7 @@ mod tests {
 
     #[test]
     fn pawn_moved_a2_to_a4() {
-        let board = HashMap::from([piece_of_str("A4", '♙'), piece_of_str("B4", '♟')]);
+        let board = HashMap::from([game_piece_of("A4", '♙'), game_piece_of("B4", '♟')]);
         let history = Vec::from([Mov::of('♙', "A2", "A4")]);
         assert_eq!(
             en_passant_moves(&board, &history, &Pos::of_str("B4")),
@@ -150,7 +150,7 @@ mod tests {
 
     #[test]
     fn pawn_moved_b2_to_b4() {
-        let board = HashMap::from([piece_of_str("B4", '♙'), piece_of_str("A4", '♟')]);
+        let board = HashMap::from([game_piece_of("B4", '♙'), game_piece_of("A4", '♟')]);
         let history = Vec::from([Mov::of('♙', "B2", "B4")]);
         assert_eq!(
             en_passant_moves(&board, &history, &Pos::of_str("A4")),
@@ -160,7 +160,7 @@ mod tests {
 
     #[test]
     fn pawn_moved_g2_to_g4() {
-        let board = HashMap::from([piece_of_str("G4", '♙'), piece_of_str("H4", '♟')]);
+        let board = HashMap::from([game_piece_of("G4", '♙'), game_piece_of("H4", '♟')]);
         let history = Vec::from([Mov::of('♙', "G2", "G4")]);
         assert_eq!(
             en_passant_moves(&board, &history, &Pos::of_str("H4")),
@@ -170,7 +170,7 @@ mod tests {
 
     #[test]
     fn pawn_moved_h2_to_h4() {
-        let board = HashMap::from([piece_of_str("H4", '♙'), piece_of_str("G4", '♟')]);
+        let board = HashMap::from([game_piece_of("H4", '♙'), game_piece_of("G4", '♟')]);
         let history = Vec::from([Mov::of('♙', "H2", "H4")]);
         assert_eq!(
             en_passant_moves(&board, &history, &Pos::of_str("G4")),
@@ -180,14 +180,14 @@ mod tests {
 
     #[test]
     fn pawn_moved_e6_to_e5() {
-        let board = HashMap::from([piece_of_str("E5", '♟'), piece_of_str("D5", '♙')]);
+        let board = HashMap::from([game_piece_of("E5", '♟'), game_piece_of("D5", '♙')]);
         let history = Vec::from([Mov::of('♟', "E6", "E5")]);
         assert_eq!(en_passant_moves(&board, &history, &Pos::of_str("D5")), []);
     }
 
     #[test]
     fn pawn_moved_d3_to_d4() {
-        let board = HashMap::from([piece_of_str("D4", '♙'), piece_of_str("E4", '♟')]);
+        let board = HashMap::from([game_piece_of("D4", '♙'), game_piece_of("E4", '♟')]);
         let history = Vec::from([Mov::of('♙', "D3", "D4")]);
         assert_eq!(en_passant_moves(&board, &history, &Pos::of_str("E4")), []);
     }

@@ -195,6 +195,11 @@ pub fn game_move_vec_to_string(bounds: &GameBounds, moves: &Vec<GameMov>) -> Str
                     GameMov::Default(_) => res.push('●'),
                     GameMov::Capture(_) => res.push('◎'),
                     GameMov::Menace(_) => res.push('○'),
+                    // Default => '○'
+                    // Capture => '◎'
+                    // Menace => '◌'
+                    // En Passant => '●'
+                    // Castling => '✚'
                     _ => res.push(' '),
                 };
                 continue;
@@ -223,10 +228,7 @@ pub fn game_move_vec_to_string(bounds: &GameBounds, moves: &Vec<GameMov>) -> Str
 
 #[cfg(test)]
 mod tests {
-    use crate::{
-        game::mode::standard_chess,
-        mov::Mov,
-    };
+    use crate::{game::mode::standard_chess, mov::Mov};
 
     use super::{
         CaptureMov, DefaultMov, GameMov, MenaceMov, game_move_vec_to_string,

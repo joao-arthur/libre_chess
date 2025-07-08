@@ -35,10 +35,20 @@ mod tests {
     }
 
     #[test]
-    fn try_of_str_none() {
+    fn try_of_str_piece_none() {
         assert_eq!(Mov::try_of('P', "D2", "D4"), None);
+    }
+
+    #[test]
+    fn try_of_str_piece_from_none() {
         assert_eq!(Mov::try_of('♟', "ZZ9", "D4"), None);
+        assert_eq!(Mov::try_of('♟', "A299", "D4"), None);
+    }
+
+    #[test]
+    fn try_of_str_piece_to_none() {
         assert_eq!(Mov::try_of('♟', "D2", "ZZ9"), None);
+        assert_eq!(Mov::try_of('♟', "D4", "A299"), None);
     }
 
     #[test]

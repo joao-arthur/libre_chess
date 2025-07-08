@@ -25,7 +25,7 @@ pub fn toggle_selection(
     history: &GameHistory,
     pos: Pos,
 ) {
-    // Player selected a movement
+    // Player selected a move
     if selection
         .selected_piece_moves
         .iter()
@@ -81,6 +81,8 @@ pub fn toggle_selection(
     }
     // empty square
     selection.selected_squares.insert(pos);
+    selection.selected_piece = None;
+    selection.selected_piece_moves.clear();
 }
 
 #[cfg(test)]
@@ -93,7 +95,7 @@ mod tests {
             board::board_of_str,
             game::GamePlayers,
             mode::standard_chess,
-            mov::{DefaultMov, GameMov},
+            mov::{DefaultMov, EnPassantMov, GameMov, MenaceMov},
             player::GamePlayer,
         },
         mov::Mov,
@@ -319,7 +321,7 @@ mod tests {
     }
 
     #[test]
-    fn player_select_movement() {
+    fn player_select_mov() {
         let mut selection = Selection {
             selected_squares: HashSet::new(),
             selected_piece: Some(Pos::of_str("D5")),
@@ -372,6 +374,122 @@ mod tests {
             selection,
             Selection {
                 selected_squares: HashSet::new(),
+                selected_piece: None,
+                selected_piece_moves: Vec::new(),
+            }
+        );
+    }
+
+    #[test]
+    fn player_select_en_passant_mov() {
+        let mut selection = Selection {
+            selected_squares: HashSet::new(),
+            selected_piece: Some(Pos::of_str("A5")),
+            selected_piece_moves: vec![
+                GameMov::from(DefaultMov::from(Mov::of('♙', "A5", "A6"))),
+                GameMov::from(EnPassantMov::from(Mov::of('♙', "A5", "B6"))),
+            ],
+        };
+        let mode = standard_chess();
+        let board = board_of_str(
+            &mode.bounds,
+            [
+                "       ♚",
+                "        ",
+                "        ",
+                "♙♟      ",
+                "        ",
+                "        ",
+                "        ",
+                "       ♔",
+            ],
+        );
+        let players = HashMap::from([
+            (
+                Color::Black,
+                GamePlayer { color: Color::Black, captures: Vec::new(), moves: HashMap::new() },
+            ),
+            (
+                Color::White,
+                GamePlayer {
+                    color: Color::White,
+                    captures: Vec::new(),
+                    moves: HashMap::from([(
+                        Pos::of_str("A5"),
+                        vec![
+                            GameMov::from(DefaultMov::from(Mov::of('♙', "A5", "A6"))),
+                            GameMov::from(EnPassantMov::from(Mov::of('♙', "A5", "B6"))),
+                        ],
+                    )]),
+                },
+            ),
+        ]);
+        let history = Vec::new();
+        toggle_selection(&mut selection, &board, &players, &history, Pos::of_str("B6"));
+        assert_eq!(
+            selection,
+            Selection {
+                selected_squares: HashSet::new(),
+                selected_piece: None,
+                selected_piece_moves: Vec::new(),
+            }
+        );
+    }
+
+    #[test]
+    fn player_select_menace_mov() {
+        let mut selection = Selection {
+            selected_squares: HashSet::new(),
+            selected_piece: Some(Pos::of_str("E2")),
+            selected_piece_moves: vec![
+                GameMov::from(DefaultMov::from(Mov::of('♙', "E2", "E3"))),
+                GameMov::from(DefaultMov::from(Mov::of('♙', "E2", "E4"))),
+                GameMov::from(MenaceMov::from(Mov::of('♙', "E2", "D3"))),
+                GameMov::from(MenaceMov::from(Mov::of('♙', "E2", "F3"))),
+            ],
+        };
+        let mode = standard_chess();
+        let board = board_of_str(
+            &mode.bounds,
+            [
+                "    ♚   ",
+                "    ♟   ",
+                "        ",
+                "        ",
+                "        ",
+                "        ",
+                "    ♙   ",
+                "    ♔   ",
+            ],
+        );
+        let players = HashMap::from([
+            (
+                Color::Black,
+                GamePlayer { color: Color::Black, captures: Vec::new(), moves: HashMap::new() },
+            ),
+            (
+                Color::White,
+                GamePlayer {
+                    color: Color::White,
+                    captures: Vec::new(),
+                    moves: HashMap::from([(
+                        Pos::of_str("E2"),
+                        vec![
+                            GameMov::from(DefaultMov::from(Mov::of('♙', "E2", "E3"))),
+                            GameMov::from(DefaultMov::from(Mov::of('♙', "E2", "E4"))),
+                            GameMov::from(MenaceMov::from(Mov::of('♙', "E2", "D3"))),
+                            GameMov::from(MenaceMov::from(Mov::of('♙', "E2", "F3"))),
+                        ],
+                    )]),
+                },
+            ),
+        ]);
+        let history = Vec::new();
+        toggle_selection(&mut selection, &board, &players, &history, Pos::of_str("F3"));
+        assert_eq!(
+            selection,
+            Selection {
+                selected_squares: HashSet::from([Pos::of_str("F3")]),
                 selected_piece: None,
                 selected_piece_moves: Vec::new(),
             }

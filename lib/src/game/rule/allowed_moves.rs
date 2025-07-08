@@ -24,8 +24,7 @@ fn allowed_moves_of_piece(
     if let Some(piece) = board.get(pos) {
         match piece.t {
             Type::Pawn => [
-                default_moves(board, bounds, pos)
-                    .into_iter().collect::<Vec<GameMov>>(),
+                default_moves(board, bounds, pos).into_iter().collect::<Vec<GameMov>>(),
                 en_passant_moves(board, history, pos)
                     .into_iter()
                     .map(GameMov::from)
@@ -41,8 +40,7 @@ fn allowed_moves_of_piece(
                 //         }
                 //     }
                 [
-                    default_moves(board, bounds, pos)
-                        .into_iter().collect::<Vec<GameMov>>(),
+                    default_moves(board, bounds, pos).into_iter().collect::<Vec<GameMov>>(),
                     castling_moves(board, bounds, history, pos)
                         .into_iter()
                         .map(GameMov::from)
@@ -52,8 +50,7 @@ fn allowed_moves_of_piece(
                 .flatten()
                 .collect()
             }
-            _ => default_moves(board, bounds, pos)
-                .into_iter().collect::<Vec<GameMov>>(),
+            _ => default_moves(board, bounds, pos).into_iter().collect::<Vec<GameMov>>(),
         }
     } else {
         Vec::new()
@@ -66,6 +63,8 @@ pub fn allowed_moves_of_player(
     history: &GameHistory,
     color: &Color,
 ) -> HashMap<Pos, Vec<GameMov>> {
+    // is in check?
+
     let mut result = HashMap::new();
     for (pos, piece) in board {
         if &piece.color == color {

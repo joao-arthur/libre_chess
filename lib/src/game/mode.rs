@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use crate::game::{board::GameBoard, game::GameBounds, piece::piece_of_str};
+use crate::game::{board::GameBoard, game::GameBounds, piece::game_piece_of};
 
 #[derive(Debug, PartialEq)]
 pub struct GameMode {
@@ -12,45 +12,71 @@ pub fn standard_chess() -> GameMode {
     GameMode {
         bounds: GameBounds { x1: 0, y1: 0, x2: 7, y2: 7 },
         initial_board: HashMap::from([
-            piece_of_str("A8", '♜'),
-            piece_of_str("B8", '♞'),
-            piece_of_str("C8", '♝'),
-            piece_of_str("D8", '♛'),
-            piece_of_str("E8", '♚'),
-            piece_of_str("F8", '♝'),
-            piece_of_str("G8", '♞'),
-            piece_of_str("H8", '♜'),
-            piece_of_str("A7", '♟'),
-            piece_of_str("B7", '♟'),
-            piece_of_str("C7", '♟'),
-            piece_of_str("D7", '♟'),
-            piece_of_str("E7", '♟'),
-            piece_of_str("F7", '♟'),
-            piece_of_str("G7", '♟'),
-            piece_of_str("H7", '♟'),
-            piece_of_str("A2", '♙'),
-            piece_of_str("B2", '♙'),
-            piece_of_str("C2", '♙'),
-            piece_of_str("D2", '♙'),
-            piece_of_str("E2", '♙'),
-            piece_of_str("F2", '♙'),
-            piece_of_str("G2", '♙'),
-            piece_of_str("H2", '♙'),
-            piece_of_str("A1", '♖'),
-            piece_of_str("B1", '♘'),
-            piece_of_str("C1", '♗'),
-            piece_of_str("D1", '♕'),
-            piece_of_str("E1", '♔'),
-            piece_of_str("F1", '♗'),
-            piece_of_str("G1", '♘'),
-            piece_of_str("H1", '♖'),
+            game_piece_of("A8", '♜'),
+            game_piece_of("B8", '♞'),
+            game_piece_of("C8", '♝'),
+            game_piece_of("D8", '♛'),
+            game_piece_of("E8", '♚'),
+            game_piece_of("F8", '♝'),
+            game_piece_of("G8", '♞'),
+            game_piece_of("H8", '♜'),
+            game_piece_of("A7", '♟'),
+            game_piece_of("B7", '♟'),
+            game_piece_of("C7", '♟'),
+            game_piece_of("D7", '♟'),
+            game_piece_of("E7", '♟'),
+            game_piece_of("F7", '♟'),
+            game_piece_of("G7", '♟'),
+            game_piece_of("H7", '♟'),
+            game_piece_of("A2", '♙'),
+            game_piece_of("B2", '♙'),
+            game_piece_of("C2", '♙'),
+            game_piece_of("D2", '♙'),
+            game_piece_of("E2", '♙'),
+            game_piece_of("F2", '♙'),
+            game_piece_of("G2", '♙'),
+            game_piece_of("H2", '♙'),
+            game_piece_of("A1", '♖'),
+            game_piece_of("B1", '♘'),
+            game_piece_of("C1", '♗'),
+            game_piece_of("D1", '♕'),
+            game_piece_of("E1", '♔'),
+            game_piece_of("F1", '♗'),
+            game_piece_of("G1", '♘'),
+            game_piece_of("H1", '♖'),
         ]),
     }
 }
 
-pub fn chess_960() {
-    //
-}
+// pub fn chess_960() {
+//     let mut order: [Option<Type>; 8] = [None, None, None, None, None, None, None, None];
+// 
+//     let black_col_bishop_i = random(0, 3) * 2;
+//     let white_col_bishop_i = random(0, 3) * 2 + 1;
+// 
+//     let queen_i = random(0, 5);
+//     let st_knight_i = random(0, 4);
+//     let nd_knight_i = random(0, 3);
+// 
+//     let mut final_queen_i = 0;
+//     let mut final_st_knight_i = 0;
+//     let mut final_nd_knight_i = 0;
+// 
+//     let mut i = 0;
+// 
+//     loop {
+//         if order[i].is_none() {
+// 
+//         }
+//     }
+// 
+//     order[black_col_bishop_i] = Type::Bishop;
+//     order[white_col_bishop_i] = Type::Bishop;
+// 
+//     order[final_queen_i] = Type::Queen;
+//     order[final_st_knight_i] = Type::Knight;
+//     order[final_nd_knight_i] = Type::Knight;
+// }
 
 #[cfg(test)]
 mod tests {

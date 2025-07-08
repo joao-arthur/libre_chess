@@ -39,10 +39,10 @@ pub fn game_of_mode(mode: GameMode) -> Game {
 pub fn game_of_mode_and_history(mode: GameMode, history: GameHistory) -> Game {
     let mut board = mode.initial_board;
     let bounds = mode.bounds;
-    let history_iter = history.iter();
-    for movement in history_iter {
-        if let Some(piece) = board.remove(&movement.from) {
-            board.insert(movement.to.clone(), piece);
+    let history_it = history.iter();
+    for mov in history_it {
+        if let Some(piece) = board.remove(&mov.from) {
+            board.insert(mov.to.clone(), piece);
         }
     }
     let turn = evaluate_turn(&history);

@@ -100,25 +100,47 @@ mod tests {
     }
 
     #[test]
-    fn try_of_rel_idx_positive_limit() {
+    fn try_of_rel_idx_positive_limit_row() {
         let pos = Pos { row: 253, col: 253 };
         assert_eq!(pos.try_of_rel_idx(0, 0), Some(Pos { row: 253, col: 253 }));
-        assert_eq!(pos.try_of_rel_idx(1, 1), Some(Pos { row: 254, col: 254 }));
-        assert_eq!(pos.try_of_rel_idx(2, 2), Some(Pos { row: 255, col: 255 }));
-        assert_eq!(pos.try_of_rel_idx(3, 3), None);
-        assert_eq!(pos.try_of_rel_idx(4, 4), None);
-        assert_eq!(pos.try_of_rel_idx(5, 5), None);
+        assert_eq!(pos.try_of_rel_idx(1, 0), Some(Pos { row: 254, col: 253 }));
+        assert_eq!(pos.try_of_rel_idx(2, 0), Some(Pos { row: 255, col: 253 }));
+        assert_eq!(pos.try_of_rel_idx(3, 0), None);
+        assert_eq!(pos.try_of_rel_idx(4, 0), None);
+        assert_eq!(pos.try_of_rel_idx(5, 0), None);
     }
 
     #[test]
-    fn try_of_rel_idx_negative_limit() {
+    fn try_of_rel_idx_positive_limit_col() {
+        let pos = Pos { row: 253, col: 253 };
+        assert_eq!(pos.try_of_rel_idx(0, 0), Some(Pos { row: 253, col: 253 }));
+        assert_eq!(pos.try_of_rel_idx(0, 1), Some(Pos { row: 253, col: 254 }));
+        assert_eq!(pos.try_of_rel_idx(0, 2), Some(Pos { row: 253, col: 255 }));
+        assert_eq!(pos.try_of_rel_idx(0, 3), None);
+        assert_eq!(pos.try_of_rel_idx(0, 4), None);
+        assert_eq!(pos.try_of_rel_idx(0, 5), None);
+    }
+
+    #[test]
+    fn try_of_rel_idx_negative_limit_row() {
         let pos = Pos { row: 2, col: 2 };
         assert_eq!(pos.try_of_rel_idx(0, 0), Some(Pos { row: 2, col: 2 }));
-        assert_eq!(pos.try_of_rel_idx(-1, -1), Some(Pos { row: 1, col: 1 }));
-        assert_eq!(pos.try_of_rel_idx(-2, -2), Some(Pos { row: 0, col: 0 }));
-        assert_eq!(pos.try_of_rel_idx(-3, -3), None);
-        assert_eq!(pos.try_of_rel_idx(-4, -4), None);
-        assert_eq!(pos.try_of_rel_idx(-5, -5), None);
+        assert_eq!(pos.try_of_rel_idx(-1, 0), Some(Pos { row: 1, col: 2 }));
+        assert_eq!(pos.try_of_rel_idx(-2, 0), Some(Pos { row: 0, col: 2 }));
+        assert_eq!(pos.try_of_rel_idx(-3, 0), None);
+        assert_eq!(pos.try_of_rel_idx(-4, 0), None);
+        assert_eq!(pos.try_of_rel_idx(-5, 0), None);
+    }
+
+    #[test]
+    fn try_of_rel_idx_negative_limit_col() {
+        let pos = Pos { row: 2, col: 2 };
+        assert_eq!(pos.try_of_rel_idx(0, 0), Some(Pos { row: 2, col: 2 }));
+        assert_eq!(pos.try_of_rel_idx(0, -1), Some(Pos { row: 2, col: 1 }));
+        assert_eq!(pos.try_of_rel_idx(0, -2), Some(Pos { row: 2, col: 0 }));
+        assert_eq!(pos.try_of_rel_idx(0, -3), None);
+        assert_eq!(pos.try_of_rel_idx(0, -4), None);
+        assert_eq!(pos.try_of_rel_idx(0, -5), None);
     }
 
     #[test]
