@@ -25,9 +25,7 @@ fn allowed_moves_of_piece(
         match piece.t {
             Type::Pawn => [
                 default_moves(board, bounds, pos)
-                    .into_iter()
-                    .map(GameMov::from)
-                    .collect::<Vec<GameMov>>(),
+                    .into_iter().collect::<Vec<GameMov>>(),
                 en_passant_moves(board, history, pos)
                     .into_iter()
                     .map(GameMov::from)
@@ -37,28 +35,25 @@ fn allowed_moves_of_piece(
             .flatten()
             .collect(),
             Type::King => {
-            //     for (curr_color, curr_player) in game.players {
-            //         if curr_color != player.color {
-            //             moves.retain(|mov|  !curr_player.menace.contains(mov));
-            //         }
-            //     }
-                return [
-                default_moves(board, bounds, pos)
-                    .into_iter()
-                    .map(GameMov::from)
-                    .collect::<Vec<GameMov>>(),
-                castling_moves(board, bounds, history, pos)
-                    .into_iter()
-                    .map(GameMov::from)
-                    .collect::<Vec<GameMov>>(),
-            ]
-            .into_iter()
-            .flatten()
-            .collect()},
-            _ => default_moves(board, bounds, pos)
+                //     for (curr_color, curr_player) in game.players {
+                //         if curr_color != player.color {
+                //             moves.retain(|mov|  !curr_player.menace.contains(mov));
+                //         }
+                //     }
+                [
+                    default_moves(board, bounds, pos)
+                        .into_iter().collect::<Vec<GameMov>>(),
+                    castling_moves(board, bounds, history, pos)
+                        .into_iter()
+                        .map(GameMov::from)
+                        .collect::<Vec<GameMov>>(),
+                ]
                 .into_iter()
-                .map(GameMov::from)
-                .collect::<Vec<GameMov>>(),
+                .flatten()
+                .collect()
+            }
+            _ => default_moves(board, bounds, pos)
+                .into_iter().collect::<Vec<GameMov>>(),
         }
     } else {
         Vec::new()

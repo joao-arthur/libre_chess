@@ -154,8 +154,8 @@ pub fn try_game_move_vec_from_str<const N: usize>(
             }
         }
     }
-    let piece = piece.ok_or_else(|| GameBoardErr::InvalidCharacter(InvalidCharacterErr))?;
-    let from = from.ok_or_else(|| GameBoardErr::InvalidCharacter(InvalidCharacterErr))?;
+    let piece = piece.ok_or(GameBoardErr::InvalidCharacter(InvalidCharacterErr))?;
+    let from = from.ok_or(GameBoardErr::InvalidCharacter(InvalidCharacterErr))?;
     let mut res = Vec::new();
     for row in bounds.y1..=bounds.y2 {
         for col in bounds.x1..=bounds.x2 {
@@ -173,7 +173,7 @@ pub fn try_game_move_vec_from_str<const N: usize>(
             }
         }
     }
-    return Ok(res);
+    Ok(res)
 }
 
 pub fn game_move_vec_to_string(bounds: &GameBounds, moves: &Vec<GameMov>) -> String {
@@ -224,7 +224,7 @@ pub fn game_move_vec_to_string(bounds: &GameBounds, moves: &Vec<GameMov>) -> Str
 #[cfg(test)]
 mod tests {
     use crate::{
-        game::{game::GameBounds, mode::standard_chess},
+        game::mode::standard_chess,
         mov::Mov,
     };
 

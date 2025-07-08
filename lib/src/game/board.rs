@@ -1,7 +1,7 @@
 use std::{collections::HashMap, fmt};
 
 use crate::{
-    game::{game::GameBounds, mode::GameMode},
+    game::game::GameBounds,
     piece::Piece,
     pos::Pos,
 };

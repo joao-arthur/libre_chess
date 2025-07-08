@@ -40,3 +40,14 @@
 
 - [ ] Selection
     - [ ] use it in web_backend
+
+## Pseudocode
+
+- init will init the board, history and players
+
+- player will 'move_piece'
+    - move the pieces in the board
+    - add the move to history
+    - evaluate players moves
+
+- the app will handle the player moves by verifying the current turn

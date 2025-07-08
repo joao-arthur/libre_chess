@@ -86,7 +86,7 @@ mod tests {
             board::{board_of_str, board_to_string},
             game::GameBounds,
             mode::standard_chess,
-            mov::{CaptureMov, DefaultMov, GameMov, MenaceMov, game_move_vec_to_string},
+            mov::{CaptureMov, DefaultMov, GameMov, game_move_vec_to_string},
             player::GamePlayer,
         },
         mov::Mov,
@@ -123,7 +123,7 @@ mod tests {
         assert_eq!(black.color, Color::Black);
         assert_eq!(black.captures, Vec::new());
         assert_eq!(
-            game_move_vec_to_string(&mode.bounds, &black.moves.get(&Pos::of_str("A7")).unwrap()),
+            game_move_vec_to_string(&mode.bounds, black.moves.get(&Pos::of_str("A7")).unwrap()),
             "".to_owned()
                 + "        \n"
                 + "♟       \n"
@@ -135,7 +135,7 @@ mod tests {
                 + "        \n"
         );
         assert_eq!(
-            game_move_vec_to_string(&mode.bounds, &black.moves.get(&Pos::of_str("B7")).unwrap()),
+            game_move_vec_to_string(&mode.bounds, black.moves.get(&Pos::of_str("B7")).unwrap()),
             "".to_owned()
                 + "        \n"
                 + " ♟      \n"
@@ -147,7 +147,7 @@ mod tests {
                 + "        \n"
         );
         assert_eq!(
-            game_move_vec_to_string(&mode.bounds, &black.moves.get(&Pos::of_str("C7")).unwrap()),
+            game_move_vec_to_string(&mode.bounds, black.moves.get(&Pos::of_str("C7")).unwrap()),
             "".to_owned()
                 + "        \n"
                 + "  ♟     \n"
@@ -159,7 +159,7 @@ mod tests {
                 + "        \n"
         );
         assert_eq!(
-            game_move_vec_to_string(&mode.bounds, &black.moves.get(&Pos::of_str("D7")).unwrap()),
+            game_move_vec_to_string(&mode.bounds, black.moves.get(&Pos::of_str("D7")).unwrap()),
             "".to_owned()
                 + "        \n"
                 + "   ♟    \n"
@@ -171,7 +171,7 @@ mod tests {
                 + "        \n"
         );
         assert_eq!(
-            game_move_vec_to_string(&mode.bounds, &black.moves.get(&Pos::of_str("E7")).unwrap()),
+            game_move_vec_to_string(&mode.bounds, black.moves.get(&Pos::of_str("E7")).unwrap()),
             "".to_owned()
                 + "        \n"
                 + "    ♟   \n"
@@ -183,7 +183,7 @@ mod tests {
                 + "        \n"
         );
         assert_eq!(
-            game_move_vec_to_string(&mode.bounds, &black.moves.get(&Pos::of_str("F7")).unwrap()),
+            game_move_vec_to_string(&mode.bounds, black.moves.get(&Pos::of_str("F7")).unwrap()),
             "".to_owned()
                 + "        \n"
                 + "     ♟  \n"
@@ -195,7 +195,7 @@ mod tests {
                 + "        \n"
         );
         assert_eq!(
-            game_move_vec_to_string(&mode.bounds, &black.moves.get(&Pos::of_str("G7")).unwrap()),
+            game_move_vec_to_string(&mode.bounds, black.moves.get(&Pos::of_str("G7")).unwrap()),
             "".to_owned()
                 + "        \n"
                 + "      ♟ \n"
@@ -207,7 +207,7 @@ mod tests {
                 + "        \n"
         );
         assert_eq!(
-            game_move_vec_to_string(&mode.bounds, &black.moves.get(&Pos::of_str("H7")).unwrap()),
+            game_move_vec_to_string(&mode.bounds, black.moves.get(&Pos::of_str("H7")).unwrap()),
             "".to_owned()
                 + "        \n"
                 + "       ♟\n"
@@ -219,7 +219,7 @@ mod tests {
                 + "        \n"
         );
         assert_eq!(
-            game_move_vec_to_string(&mode.bounds, &black.moves.get(&Pos::of_str("A8")).unwrap()),
+            game_move_vec_to_string(&mode.bounds, black.moves.get(&Pos::of_str("A8")).unwrap()),
             "".to_owned()
                 + "♜○      \n"
                 + "○       \n"
@@ -231,7 +231,7 @@ mod tests {
                 + "        \n"
         );
         assert_eq!(
-            game_move_vec_to_string(&mode.bounds, &black.moves.get(&Pos::of_str("B8")).unwrap()),
+            game_move_vec_to_string(&mode.bounds, black.moves.get(&Pos::of_str("B8")).unwrap()),
             "".to_owned()
                 + " ♞      \n"
                 + "   ○    \n"
@@ -243,7 +243,7 @@ mod tests {
                 + "        \n"
         );
         assert_eq!(
-            game_move_vec_to_string(&mode.bounds, &black.moves.get(&Pos::of_str("C8")).unwrap()),
+            game_move_vec_to_string(&mode.bounds, black.moves.get(&Pos::of_str("C8")).unwrap()),
             "".to_owned()
                 + "  ♝     \n"
                 + " ○ ○    \n"
@@ -255,7 +255,7 @@ mod tests {
                 + "        \n"
         );
         assert_eq!(
-            game_move_vec_to_string(&mode.bounds, &black.moves.get(&Pos::of_str("D8")).unwrap()),
+            game_move_vec_to_string(&mode.bounds, black.moves.get(&Pos::of_str("D8")).unwrap()),
             "".to_owned()
                 + "  ○♛○   \n"
                 + "  ○○○   \n"
@@ -267,7 +267,7 @@ mod tests {
                 + "        \n"
         );
         assert_eq!(
-            game_move_vec_to_string(&mode.bounds, &black.moves.get(&Pos::of_str("E8")).unwrap()),
+            game_move_vec_to_string(&mode.bounds, black.moves.get(&Pos::of_str("E8")).unwrap()),
             "".to_owned()
                 + "   ○♚○  \n"
                 + "   ○○○  \n"
@@ -279,7 +279,7 @@ mod tests {
                 + "        \n"
         );
         assert_eq!(
-            game_move_vec_to_string(&mode.bounds, &black.moves.get(&Pos::of_str("F8")).unwrap()),
+            game_move_vec_to_string(&mode.bounds, black.moves.get(&Pos::of_str("F8")).unwrap()),
             "".to_owned()
                 + "     ♝  \n"
                 + "    ○ ○ \n"
@@ -291,7 +291,7 @@ mod tests {
                 + "        \n"
         );
         assert_eq!(
-            game_move_vec_to_string(&mode.bounds, &black.moves.get(&Pos::of_str("G8")).unwrap()),
+            game_move_vec_to_string(&mode.bounds, black.moves.get(&Pos::of_str("G8")).unwrap()),
             "".to_owned()
                 + "      ♞ \n"
                 + "    ○   \n"
@@ -303,7 +303,7 @@ mod tests {
                 + "        \n"
         );
         assert_eq!(
-            game_move_vec_to_string(&mode.bounds, &black.moves.get(&Pos::of_str("H8")).unwrap()),
+            game_move_vec_to_string(&mode.bounds, black.moves.get(&Pos::of_str("H8")).unwrap()),
             "".to_owned()
                 + "      ○♜\n"
                 + "       ○\n"
@@ -324,7 +324,7 @@ mod tests {
         assert_eq!(white.color, Color::White);
         assert_eq!(white.captures, Vec::new());
         assert_eq!(
-            game_move_vec_to_string(&mode.bounds, &white.moves.get(&Pos::of_str("A2")).unwrap()),
+            game_move_vec_to_string(&mode.bounds, white.moves.get(&Pos::of_str("A2")).unwrap()),
             "".to_owned()
                 + "        \n"
                 + "        \n"
@@ -336,7 +336,7 @@ mod tests {
                 + "        \n"
         );
         assert_eq!(
-            game_move_vec_to_string(&mode.bounds, &white.moves.get(&Pos::of_str("B2")).unwrap()),
+            game_move_vec_to_string(&mode.bounds, white.moves.get(&Pos::of_str("B2")).unwrap()),
             "".to_owned()
                 + "        \n"
                 + "        \n"
@@ -348,7 +348,7 @@ mod tests {
                 + "        \n"
         );
         assert_eq!(
-            game_move_vec_to_string(&mode.bounds, &white.moves.get(&Pos::of_str("C2")).unwrap()),
+            game_move_vec_to_string(&mode.bounds, white.moves.get(&Pos::of_str("C2")).unwrap()),
             "".to_owned()
                 + "        \n"
                 + "        \n"
@@ -360,7 +360,7 @@ mod tests {
                 + "        \n"
         );
         assert_eq!(
-            game_move_vec_to_string(&mode.bounds, &white.moves.get(&Pos::of_str("D2")).unwrap()),
+            game_move_vec_to_string(&mode.bounds, white.moves.get(&Pos::of_str("D2")).unwrap()),
             "".to_owned()
                 + "        \n"
                 + "        \n"
@@ -372,7 +372,7 @@ mod tests {
                 + "        \n"
         );
         assert_eq!(
-            game_move_vec_to_string(&mode.bounds, &white.moves.get(&Pos::of_str("E2")).unwrap()),
+            game_move_vec_to_string(&mode.bounds, white.moves.get(&Pos::of_str("E2")).unwrap()),
             "".to_owned()
                 + "        \n"
                 + "        \n"
@@ -384,7 +384,7 @@ mod tests {
                 + "        \n"
         );
         assert_eq!(
-            game_move_vec_to_string(&mode.bounds, &white.moves.get(&Pos::of_str("F2")).unwrap()),
+            game_move_vec_to_string(&mode.bounds, white.moves.get(&Pos::of_str("F2")).unwrap()),
             "".to_owned()
                 + "        \n"
                 + "        \n"
@@ -396,7 +396,7 @@ mod tests {
                 + "        \n"
         );
         assert_eq!(
-            game_move_vec_to_string(&mode.bounds, &white.moves.get(&Pos::of_str("G2")).unwrap()),
+            game_move_vec_to_string(&mode.bounds, white.moves.get(&Pos::of_str("G2")).unwrap()),
             "".to_owned()
                 + "        \n"
                 + "        \n"
@@ -408,7 +408,7 @@ mod tests {
                 + "        \n"
         );
         assert_eq!(
-            game_move_vec_to_string(&mode.bounds, &white.moves.get(&Pos::of_str("H2")).unwrap()),
+            game_move_vec_to_string(&mode.bounds, white.moves.get(&Pos::of_str("H2")).unwrap()),
             "".to_owned()
                 + "        \n"
                 + "        \n"
@@ -420,7 +420,7 @@ mod tests {
                 + "        \n"
         );
         assert_eq!(
-            game_move_vec_to_string(&mode.bounds, &white.moves.get(&Pos::of_str("A1")).unwrap()),
+            game_move_vec_to_string(&mode.bounds, white.moves.get(&Pos::of_str("A1")).unwrap()),
             "".to_owned()
                 + "        \n"
                 + "        \n"
@@ -432,7 +432,7 @@ mod tests {
                 + "♖○      \n"
         );
         assert_eq!(
-            game_move_vec_to_string(&mode.bounds, &white.moves.get(&Pos::of_str("B1")).unwrap()),
+            game_move_vec_to_string(&mode.bounds, white.moves.get(&Pos::of_str("B1")).unwrap()),
             "".to_owned()
                 + "        \n"
                 + "        \n"
@@ -444,7 +444,7 @@ mod tests {
                 + " ♘      \n"
         );
         assert_eq!(
-            game_move_vec_to_string(&mode.bounds, &white.moves.get(&Pos::of_str("C1")).unwrap()),
+            game_move_vec_to_string(&mode.bounds, white.moves.get(&Pos::of_str("C1")).unwrap()),
             "".to_owned()
                 + "        \n"
                 + "        \n"
@@ -456,7 +456,7 @@ mod tests {
                 + "  ♗     \n"
         );
         assert_eq!(
-            game_move_vec_to_string(&mode.bounds, &white.moves.get(&Pos::of_str("D1")).unwrap()),
+            game_move_vec_to_string(&mode.bounds, white.moves.get(&Pos::of_str("D1")).unwrap()),
             "".to_owned()
                 + "        \n"
                 + "        \n"
@@ -468,7 +468,7 @@ mod tests {
                 + "  ○♕○   \n"
         );
         assert_eq!(
-            game_move_vec_to_string(&mode.bounds, &white.moves.get(&Pos::of_str("E1")).unwrap()),
+            game_move_vec_to_string(&mode.bounds, white.moves.get(&Pos::of_str("E1")).unwrap()),
             "".to_owned()
                 + "        \n"
                 + "        \n"
@@ -480,7 +480,7 @@ mod tests {
                 + "   ○♔○  \n"
         );
         assert_eq!(
-            game_move_vec_to_string(&mode.bounds, &white.moves.get(&Pos::of_str("F1")).unwrap()),
+            game_move_vec_to_string(&mode.bounds, white.moves.get(&Pos::of_str("F1")).unwrap()),
             "".to_owned()
                 + "        \n"
                 + "        \n"
@@ -492,7 +492,7 @@ mod tests {
                 + "     ♗  \n"
         );
         assert_eq!(
-            game_move_vec_to_string(&mode.bounds, &white.moves.get(&Pos::of_str("G1")).unwrap()),
+            game_move_vec_to_string(&mode.bounds, white.moves.get(&Pos::of_str("G1")).unwrap()),
             "".to_owned()
                 + "        \n"
                 + "        \n"
@@ -504,7 +504,7 @@ mod tests {
                 + "      ♘ \n"
         );
         assert_eq!(
-            game_move_vec_to_string(&mode.bounds, &white.moves.get(&Pos::of_str("H1")).unwrap()),
+            game_move_vec_to_string(&mode.bounds, white.moves.get(&Pos::of_str("H1")).unwrap()),
             "".to_owned()
                 + "        \n"
                 + "        \n"
