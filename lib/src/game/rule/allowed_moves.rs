@@ -36,7 +36,13 @@ fn allowed_moves_of_piece(
             .into_iter()
             .flatten()
             .collect(),
-            Type::King => [
+            Type::King => {
+            //     for (curr_color, curr_player) in game.players {
+            //         if curr_color != player.color {
+            //             moves.retain(|mov|  !curr_player.menace.contains(mov));
+            //         }
+            //     }
+                return [
                 default_moves(board, bounds, pos)
                     .into_iter()
                     .map(GameMov::from)
@@ -48,7 +54,7 @@ fn allowed_moves_of_piece(
             ]
             .into_iter()
             .flatten()
-            .collect(),
+            .collect()},
             _ => default_moves(board, bounds, pos)
                 .into_iter()
                 .map(GameMov::from)
@@ -69,13 +75,6 @@ pub fn allowed_moves_of_player(
     for (pos, piece) in board {
         if &piece.color == color {
             let moves = allowed_moves_of_piece(board, bounds, history, pos);
-            // if piece.t == Type::King {
-            //     for (curr_color, curr_player) in game.players {
-            //         if curr_color != player.color {
-            //             moves.retain(|mov|  !curr_player.menace.contains(mov));
-            //         }
-            //     }
-            // }
             result.insert(pos.clone(), moves);
         }
     }
