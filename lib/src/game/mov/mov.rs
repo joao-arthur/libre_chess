@@ -1,4 +1,12 @@
-use crate::{game::{board::{GameBoardErr, InvalidCharacterErr, InvalidLengthErr}, game::GameBounds}, mov::Mov, piece::Piece, pos::Pos};
+use crate::{
+    game::{
+        board::{GameBoardErr, InvalidCharacterErr, InvalidLengthErr},
+        game::GameBounds,
+    },
+    mov::Mov,
+    piece::Piece,
+    pos::Pos,
+};
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct DefaultMov {
@@ -112,7 +120,10 @@ pub fn try_game_move_vec_from_str<const N: usize>(
     rows: [&str; N],
 ) -> Result<Vec<GameMov>, GameBoardErr> {
     let joined = rows.join("");
-    if joined.find(|c| c != ' ' && c != '●' && c != '◎' && c != '○' && Piece::try_of(c).is_none()).is_some() {
+    if joined
+        .find(|c| c != ' ' && c != '●' && c != '◎' && c != '○' && Piece::try_of(c).is_none())
+        .is_some()
+    {
         return Err(GameBoardErr::InvalidCharacter(InvalidCharacterErr));
     }
     let delta_x = usize::from(bounds.x2 - bounds.x1) + 1;
@@ -150,10 +161,11 @@ pub fn try_game_move_vec_from_str<const N: usize>(
             let str_row = rows[row_index as usize];
             let str_col = str_row.chars().nth(col_index.into()).unwrap();
             let to = Pos { row, col };
+            let mov = Mov { piece, from: from.clone(), to };
             match str_col {
-                '●' => res.push(GameMov::from(DefaultMov::from(Mov { piece, from: from.clone(), to }))),
-                '◎' => res.push(GameMov::from(CaptureMov::from(Mov { piece, from: from.clone(), to }))),
-                '○' => res.push(GameMov::from(MenaceMov::from(Mov { piece, from: from.clone(), to }))),
+                '●' => res.push(GameMov::from(DefaultMov::from(mov))),
+                '◎' => res.push(GameMov::from(CaptureMov::from(mov))),
+                '○' => res.push(GameMov::from(MenaceMov::from(mov))),
                 _ => {}
             }
         }
@@ -214,7 +226,8 @@ mod tests {
     };
 
     use super::{
-        CaptureMov, DefaultMov, GameMov, MenaceMov, game_move_vec_to_string, try_game_move_vec_from_str,
+        CaptureMov, DefaultMov, GameMov, MenaceMov, game_move_vec_to_string,
+        try_game_move_vec_from_str,
     };
 
     #[test]

@@ -35,9 +35,7 @@ fn en_passant_move(
     let mov = mov.mov;
     if let Some(piece) = board.remove(&mov.from) {
         board.insert(mov.to.clone(), piece);
-        if let Some(captured) =
-            board.remove(&Pos { col: mov.to.col, row: mov.from.row })
-        {
+        if let Some(captured) = board.remove(&Pos { col: mov.to.col, row: mov.from.row }) {
             if let Some(player) = players.get_mut(&piece.color) {
                 player.captures.push(GameCapture { piece: captured, at: history.len() as u16 });
             }
@@ -51,14 +49,10 @@ fn castling_move(board: &mut GameBoard, history: &mut GameHistory, mov: Castling
     if let Some(piece) = board.remove(&mov.from) {
         board.insert(mov.to.clone(), piece);
         if mov.to.col > mov.from.col {
-            if let Some(rook) =
-                board.remove(&Pos { col: mov.to.col + 1, row: mov.to.row })
-            {
+            if let Some(rook) = board.remove(&Pos { col: mov.to.col + 1, row: mov.to.row }) {
                 board.insert(Pos { col: mov.to.col - 1, row: mov.to.row }, rook);
             }
-        } else if let Some(rook) =
-            board.remove(&Pos { col: mov.to.col - 1, row: mov.to.row })
-        {
+        } else if let Some(rook) = board.remove(&Pos { col: mov.to.col - 1, row: mov.to.row }) {
             board.insert(Pos { col: mov.to.col + 1, row: mov.to.row }, rook);
         }
     }
