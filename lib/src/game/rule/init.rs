@@ -86,7 +86,7 @@ mod tests {
             board::{board_of_str, board_to_string},
             game::GameBounds,
             mode::standard_chess,
-            mov::{CaptureMov, DefaultMov, GameMov, game_move_vec_to_string},
+            mov::{CaptureMovOld, DefaultMovOld, GameMovOld, game_move_vec_to_string},
             player::GamePlayer,
         },
         mov::Mov,
@@ -613,35 +613,35 @@ mod tests {
                                 (
                                     Pos::of_str("E2"),
                                     vec![
-                                        GameMov::from(DefaultMov::from(Mov::of('♔', "E2", "F3"))),
-                                        GameMov::from(DefaultMov::from(Mov::of('♔', "E2", "F2"))),
-                                        GameMov::from(DefaultMov::from(Mov::of('♔', "E2", "F1"))), //////
-                                        GameMov::from(DefaultMov::from(Mov::of('♔', "E2", "E1"))), //////
-                                        GameMov::from(CaptureMov::from(Mov::of('♔', "E2", "D1"))),
-                                        GameMov::from(DefaultMov::from(Mov::of('♔', "E2", "D2"))), //////
-                                        GameMov::from(DefaultMov::from(Mov::of('♔', "E2", "D3"))), //////
-                                        GameMov::from(DefaultMov::from(Mov::of('♔', "E2", "E3"))),
+                                        GameMovOld::from(DefaultMovOld::from(Mov::of('♔', "E2", "F3"))),
+                                        GameMovOld::from(DefaultMovOld::from(Mov::of('♔', "E2", "F2"))),
+                                        GameMovOld::from(DefaultMovOld::from(Mov::of('♔', "E2", "F1"))), //////
+                                        GameMovOld::from(DefaultMovOld::from(Mov::of('♔', "E2", "E1"))), //////
+                                        GameMovOld::from(CaptureMovOld::from(Mov::of('♔', "E2", "D1"))),
+                                        GameMovOld::from(DefaultMovOld::from(Mov::of('♔', "E2", "D2"))), //////
+                                        GameMovOld::from(DefaultMovOld::from(Mov::of('♔', "E2", "D3"))), //////
+                                        GameMovOld::from(DefaultMovOld::from(Mov::of('♔', "E2", "E3"))),
                                     ]
                                 ),
                                 (
                                     Pos::of_str("D8"),
                                     vec![
-                                        GameMov::from(DefaultMov::from(Mov::of('♖', "D8", "E8"))),
-                                        GameMov::from(DefaultMov::from(Mov::of('♖', "D8", "F8"))),
-                                        GameMov::from(DefaultMov::from(Mov::of('♖', "D8", "G8"))),
-                                        GameMov::from(DefaultMov::from(Mov::of('♖', "D8", "H8"))),
+                                        GameMovOld::from(DefaultMovOld::from(Mov::of('♖', "D8", "E8"))),
+                                        GameMovOld::from(DefaultMovOld::from(Mov::of('♖', "D8", "F8"))),
+                                        GameMovOld::from(DefaultMovOld::from(Mov::of('♖', "D8", "G8"))),
+                                        GameMovOld::from(DefaultMovOld::from(Mov::of('♖', "D8", "H8"))),
                                         //
-                                        GameMov::from(DefaultMov::from(Mov::of('♖', "D8", "D7"))),
-                                        GameMov::from(DefaultMov::from(Mov::of('♖', "D8", "D6"))),
-                                        GameMov::from(DefaultMov::from(Mov::of('♖', "D8", "D5"))),
-                                        GameMov::from(DefaultMov::from(Mov::of('♖', "D8", "D4"))),
-                                        GameMov::from(DefaultMov::from(Mov::of('♖', "D8", "D3"))),
-                                        GameMov::from(DefaultMov::from(Mov::of('♖', "D8", "D2"))),
-                                        GameMov::from(CaptureMov::from(Mov::of('♖', "D8", "D1"))),
+                                        GameMovOld::from(DefaultMovOld::from(Mov::of('♖', "D8", "D7"))),
+                                        GameMovOld::from(DefaultMovOld::from(Mov::of('♖', "D8", "D6"))),
+                                        GameMovOld::from(DefaultMovOld::from(Mov::of('♖', "D8", "D5"))),
+                                        GameMovOld::from(DefaultMovOld::from(Mov::of('♖', "D8", "D4"))),
+                                        GameMovOld::from(DefaultMovOld::from(Mov::of('♖', "D8", "D3"))),
+                                        GameMovOld::from(DefaultMovOld::from(Mov::of('♖', "D8", "D2"))),
+                                        GameMovOld::from(CaptureMovOld::from(Mov::of('♖', "D8", "D1"))),
                                         //
-                                        GameMov::from(DefaultMov::from(Mov::of('♖', "D8", "C8"))),
-                                        GameMov::from(DefaultMov::from(Mov::of('♖', "D8", "B8"))),
-                                        GameMov::from(DefaultMov::from(Mov::of('♖', "D8", "A8"))),
+                                        GameMovOld::from(DefaultMovOld::from(Mov::of('♖', "D8", "C8"))),
+                                        GameMovOld::from(DefaultMovOld::from(Mov::of('♖', "D8", "B8"))),
+                                        GameMovOld::from(DefaultMovOld::from(Mov::of('♖', "D8", "A8"))),
                                     ]
                                 ),
                             ]),

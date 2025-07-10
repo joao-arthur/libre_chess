@@ -4,7 +4,7 @@ use crate::{
     game::{
         GameBoard,
         game::{GameHistory, GamePlayers},
-        mov::GameMov,
+        mov::GameMovOld,
         rule::turn::evaluate_turn,
     },
     pos::Pos,
@@ -14,8 +14,7 @@ use crate::{
 pub struct Selection {
     pub selected_squares: HashSet<Pos>,
     pub selected_piece: Option<Pos>,
-    // If it gets hard to handle: HashMap<Pos, Vec<GameMov>>
-    pub selected_piece_moves: Vec<GameMov>,
+    pub selected_piece_moves: Vec<GameMovOld>,
 }
 
 pub fn toggle_selection(
@@ -30,9 +29,9 @@ pub fn toggle_selection(
         .selected_piece_moves
         .iter()
         .find(|mov| match mov {
-            GameMov::Default(mov) => mov.mov.to == pos,
-            GameMov::EnPassant(mov) => mov.mov.to == pos,
-            GameMov::Castling(mov) => mov.mov.to == pos,
+            GameMovOld::Default(mov) => mov.mov.to == pos,
+            GameMovOld::EnPassant(mov) => mov.mov.to == pos,
+            GameMovOld::Castling(mov) => mov.mov.to == pos,
             _ => false,
         })
         .is_some()
@@ -95,7 +94,7 @@ mod tests {
             board::board_of_str,
             game::GamePlayers,
             mode::standard_chess,
-            mov::{DefaultMov, EnPassantMov, GameMov, MenaceMov},
+            mov::{DefaultMovOld, EnPassantMovOld, GameMovOld, MenaceMovOld},
             player::GamePlayer,
         },
         mov::Mov,
@@ -185,8 +184,8 @@ mod tests {
                     moves: HashMap::from([(
                         Pos::of_str("B2"),
                         vec![
-                            GameMov::from(DefaultMov::from(Mov::of('♟', "B2", "B3"))),
-                            GameMov::from(DefaultMov::from(Mov::of('♟', "B2", "B4"))),
+                            GameMovOld::from(DefaultMovOld::from(Mov::of('♟', "B2", "B3"))),
+                            GameMovOld::from(DefaultMovOld::from(Mov::of('♟', "B2", "B4"))),
                         ],
                     )]),
                 },
@@ -200,8 +199,8 @@ mod tests {
                 selected_squares: HashSet::new(),
                 selected_piece: Some(Pos::of_str("B2")),
                 selected_piece_moves: vec![
-                    GameMov::from(DefaultMov::from(Mov::of('♟', "B2", "B3"))),
-                    GameMov::from(DefaultMov::from(Mov::of('♟', "B2", "B4"))),
+                    GameMovOld::from(DefaultMovOld::from(Mov::of('♟', "B2", "B3"))),
+                    GameMovOld::from(DefaultMovOld::from(Mov::of('♟', "B2", "B4"))),
                 ],
             }
         );
@@ -276,8 +275,8 @@ mod tests {
                     moves: HashMap::from([(
                         pos.clone(),
                         vec![
-                            GameMov::from(DefaultMov::from(Mov::of('♟', "C2", "C3"))),
-                            GameMov::from(DefaultMov::from(Mov::of('♟', "C2", "C4"))),
+                            GameMovOld::from(DefaultMovOld::from(Mov::of('♟', "C2", "C3"))),
+                            GameMovOld::from(DefaultMovOld::from(Mov::of('♟', "C2", "C4"))),
                         ],
                     )]),
                 },
@@ -291,8 +290,8 @@ mod tests {
                 selected_squares: HashSet::new(),
                 selected_piece: Some(pos.clone()),
                 selected_piece_moves: vec![
-                    GameMov::from(DefaultMov::from(Mov::of('♟', "C2", "C3"))),
-                    GameMov::from(DefaultMov::from(Mov::of('♟', "C2", "C4"))),
+                    GameMovOld::from(DefaultMovOld::from(Mov::of('♟', "C2", "C3"))),
+                    GameMovOld::from(DefaultMovOld::from(Mov::of('♟', "C2", "C4"))),
                 ],
             }
         );
@@ -326,10 +325,10 @@ mod tests {
             selected_squares: HashSet::new(),
             selected_piece: Some(Pos::of_str("D5")),
             selected_piece_moves: vec![
-                GameMov::from(DefaultMov::from(Mov::of('♖', "D5", "E5"))),
-                GameMov::from(DefaultMov::from(Mov::of('♖', "D5", "D4"))),
-                GameMov::from(DefaultMov::from(Mov::of('♖', "D5", "C5"))),
-                GameMov::from(DefaultMov::from(Mov::of('♖', "D5", "D6"))),
+                GameMovOld::from(DefaultMovOld::from(Mov::of('♖', "D5", "E5"))),
+                GameMovOld::from(DefaultMovOld::from(Mov::of('♖', "D5", "D4"))),
+                GameMovOld::from(DefaultMovOld::from(Mov::of('♖', "D5", "C5"))),
+                GameMovOld::from(DefaultMovOld::from(Mov::of('♖', "D5", "D6"))),
             ],
         };
         let mode = standard_chess();
@@ -359,10 +358,10 @@ mod tests {
                     moves: HashMap::from([(
                         Pos::of_str("D5"),
                         vec![
-                            GameMov::from(DefaultMov::from(Mov::of('♖', "D5", "E5"))),
-                            GameMov::from(DefaultMov::from(Mov::of('♖', "D5", "D4"))),
-                            GameMov::from(DefaultMov::from(Mov::of('♖', "D5", "C5"))),
-                            GameMov::from(DefaultMov::from(Mov::of('♖', "D5", "D6"))),
+                            GameMovOld::from(DefaultMovOld::from(Mov::of('♖', "D5", "E5"))),
+                            GameMovOld::from(DefaultMovOld::from(Mov::of('♖', "D5", "D4"))),
+                            GameMovOld::from(DefaultMovOld::from(Mov::of('♖', "D5", "C5"))),
+                            GameMovOld::from(DefaultMovOld::from(Mov::of('♖', "D5", "D6"))),
                         ],
                     )]),
                 },
@@ -386,8 +385,8 @@ mod tests {
             selected_squares: HashSet::new(),
             selected_piece: Some(Pos::of_str("A5")),
             selected_piece_moves: vec![
-                GameMov::from(DefaultMov::from(Mov::of('♙', "A5", "A6"))),
-                GameMov::from(EnPassantMov::from(Mov::of('♙', "A5", "B6"))),
+                GameMovOld::from(DefaultMovOld::from(Mov::of('♙', "A5", "A6"))),
+                GameMovOld::from(EnPassantMovOld::from(Mov::of('♙', "A5", "B6"))),
             ],
         };
         let mode = standard_chess();
@@ -417,8 +416,8 @@ mod tests {
                     moves: HashMap::from([(
                         Pos::of_str("A5"),
                         vec![
-                            GameMov::from(DefaultMov::from(Mov::of('♙', "A5", "A6"))),
-                            GameMov::from(EnPassantMov::from(Mov::of('♙', "A5", "B6"))),
+                            GameMovOld::from(DefaultMovOld::from(Mov::of('♙', "A5", "A6"))),
+                            GameMovOld::from(EnPassantMovOld::from(Mov::of('♙', "A5", "B6"))),
                         ],
                     )]),
                 },
@@ -457,10 +456,10 @@ mod tests {
             selected_squares: HashSet::new(),
             selected_piece: Some(Pos::of_str("E1")),
             selected_piece_moves: vec![
-                GameMov::from(DefaultMov::from(Mov::of('♔', "E1", "A6"))),
-                GameMov::from(EnPassantMov::from(Mov::of('♔', "E1", "B6"))),
-                GameMov::from(EnPassantMov::from(Mov::of('♔', "E1", "B6"))),
-                GameMov::from(EnPassantMov::from(Mov::of('♔', "E1", "B6"))),
+                GameMovOld::from(DefaultMovOld::from(Mov::of('♔', "E1", "A6"))),
+                GameMovOld::from(EnPassantMovOld::from(Mov::of('♔', "E1", "B6"))),
+                GameMovOld::from(EnPassantMovOld::from(Mov::of('♔', "E1", "B6"))),
+                GameMovOld::from(EnPassantMovOld::from(Mov::of('♔', "E1", "B6"))),
             ],
         };
         let mode = standard_chess();
@@ -490,8 +489,8 @@ mod tests {
                     moves: HashMap::from([(
                         Pos::of_str("A5"),
                         vec![
-                            GameMov::from(DefaultMov::from(Mov::of('♙', "A5", "A6"))),
-                            GameMov::from(EnPassantMov::from(Mov::of('♙', "A5", "B6"))),
+                            GameMovOld::from(DefaultMovOld::from(Mov::of('♙', "A5", "A6"))),
+                            GameMovOld::from(EnPassantMovOld::from(Mov::of('♙', "A5", "B6"))),
                         ],
                     )]),
                 },
@@ -549,10 +548,10 @@ mod tests {
             selected_squares: HashSet::new(),
             selected_piece: Some(Pos::of_str("E2")),
             selected_piece_moves: vec![
-                GameMov::from(DefaultMov::from(Mov::of('♙', "E2", "E3"))),
-                GameMov::from(DefaultMov::from(Mov::of('♙', "E2", "E4"))),
-                GameMov::from(MenaceMov::from(Mov::of('♙', "E2", "D3"))),
-                GameMov::from(MenaceMov::from(Mov::of('♙', "E2", "F3"))),
+                GameMovOld::from(DefaultMovOld::from(Mov::of('♙', "E2", "E3"))),
+                GameMovOld::from(DefaultMovOld::from(Mov::of('♙', "E2", "E4"))),
+                GameMovOld::from(MenaceMovOld::from(Mov::of('♙', "E2", "D3"))),
+                GameMovOld::from(MenaceMovOld::from(Mov::of('♙', "E2", "F3"))),
             ],
         };
         let mode = standard_chess();
@@ -582,10 +581,10 @@ mod tests {
                     moves: HashMap::from([(
                         Pos::of_str("E2"),
                         vec![
-                            GameMov::from(DefaultMov::from(Mov::of('♙', "E2", "E3"))),
-                            GameMov::from(DefaultMov::from(Mov::of('♙', "E2", "E4"))),
-                            GameMov::from(MenaceMov::from(Mov::of('♙', "E2", "D3"))),
-                            GameMov::from(MenaceMov::from(Mov::of('♙', "E2", "F3"))),
+                            GameMovOld::from(DefaultMovOld::from(Mov::of('♙', "E2", "E3"))),
+                            GameMovOld::from(DefaultMovOld::from(Mov::of('♙', "E2", "E4"))),
+                            GameMovOld::from(MenaceMovOld::from(Mov::of('♙', "E2", "D3"))),
+                            GameMovOld::from(MenaceMovOld::from(Mov::of('♙', "E2", "F3"))),
                         ],
                     )]),
                 },
@@ -604,6 +603,6 @@ mod tests {
     }
 }
 
-// piece / pos de origem -> hashmap(pos (to) -> GameMov / default ou castling ou tal ou tal).
-// GameMov vai 
+// piece / pos de origem -> hashmap(pos (to) -> GameMovOld / default ou castling ou tal ou tal).
+// GameMovOld vai 
 

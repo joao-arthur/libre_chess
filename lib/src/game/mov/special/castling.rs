@@ -2,7 +2,7 @@ use crate::{
     game::{
         board::GameBoard,
         game::{GameBounds, GameHistory},
-        mov::CastlingMov,
+        mov::CastlingMovOld,
     },
     mov::Mov,
     piece::Type,
@@ -16,8 +16,8 @@ pub fn castling_moves(
     bounds: &GameBounds,
     history: &GameHistory,
     pos: &Pos,
-) -> Vec<CastlingMov> {
-    let mut result: Vec<CastlingMov> = Vec::new();
+) -> Vec<CastlingMovOld> {
+    let mut result: Vec<CastlingMovOld> = Vec::new();
     if let Some(piece) = board.get(pos) {
         let mut col_index = 0;
         loop {
@@ -35,7 +35,7 @@ pub fn castling_moves(
                     && maybe_rook.color == piece.color
                     && !history.iter().any(|mov| mov.piece == *maybe_rook)
                 {
-                    result.push(CastlingMov::from(Mov {
+                    result.push(CastlingMovOld::from(Mov {
                         piece: *piece,
                         from: pos.clone(),
                         to: curr_pos,
@@ -62,7 +62,7 @@ pub fn castling_moves(
                     && maybe_rook.color == piece.color
                     && !history.iter().any(|mov| mov.piece == *maybe_rook)
                 {
-                    result.push(CastlingMov::from(Mov {
+                    result.push(CastlingMovOld::from(Mov {
                         piece: *piece,
                         from: pos.clone(),
                         to: curr_pos,
@@ -77,7 +77,7 @@ pub fn castling_moves(
 /*
 #[cfg(test)]
 mod tests {
-    use crate::{game::{board::board_of_str, mode::standard_chess, mov::{CastlingMov, DefaultMov, GameMov}}, mov::Mov, pos::Pos};
+    use crate::{game::{board::board_of_str, mode::standard_chess, mov::{CastlingMovOld, DefaultMovOld, GameMovOld}}, mov::Mov, pos::Pos};
 
     use super::castling_moves;
 
@@ -101,7 +101,7 @@ mod tests {
         let pos = Pos::of_str("E1");
         assert_eq!(
             castling_moves(&board, &mode.bounds, &history, &pos),
-            [CastlingMov::from(Mov::of('♔', "E1", "H1"))]
+            [CastlingMovOld::from(Mov::of('♔', "E1", "H1"))]
         );
     }
 
@@ -125,7 +125,7 @@ mod tests {
         let pos = Pos::of_str("E1");
         assert_eq!(
             castling_moves(&board, &mode.bounds, &history, &pos),
-            [CastlingMov::from(Mov::of('♔', "E1", "A1"))]
+            [CastlingMovOld::from(Mov::of('♔', "E1", "A1"))]
         );
     }
 
@@ -150,8 +150,8 @@ mod tests {
         assert_eq!(
             castling_moves(&board, &mode.bounds, &history, &pos),
             [
-                CastlingMov::from(Mov::of('♔', "E1", "A1")),
-                CastlingMov::from(Mov::of('♔', "E1", "H1")),
+                CastlingMovOld::from(Mov::of('♔', "E1", "A1")),
+                CastlingMovOld::from(Mov::of('♔', "E1", "H1")),
             ]
         );
     }
@@ -181,18 +181,18 @@ mod tests {
     fn white_king_moved_rooks() {
         let mode = standard_chess();
         let history = vec![
-            GameMov::from(DefaultMov::from(Mov::of('♙', "A2", "A4"))),
-            GameMov::from(DefaultMov::from(Mov::of('♟', "A7", "A6"))),
-            GameMov::from(DefaultMov::from(Mov::of('♙', "H2", "H4"))),
-            GameMov::from(DefaultMov::from(Mov::of('♟', "B7", "B6"))),
-            GameMov::from(DefaultMov::from(Mov::of('♖', "A1", "A3"))),
-            GameMov::from(DefaultMov::from(Mov::of('♟', "C7", "C6"))),
-            GameMov::from(DefaultMov::from(Mov::of('♖', "H1", "H3"))),
-            GameMov::from(DefaultMov::from(Mov::of('♟', "F7", "F6"))),
-            GameMov::from(DefaultMov::from(Mov::of('♖', "A3", "A1"))),
-            GameMov::from(DefaultMov::from(Mov::of('♟', "G7", "G6"))),
-            GameMov::from(DefaultMov::from(Mov::of('♖', "H3", "H1"))),
-            GameMov::from(DefaultMov::from(Mov::of('♟', "H7", "H6"))),
+            GameMovOld::from(DefaultMovOld::from(Mov::of('♙', "A2", "A4"))),
+            GameMovOld::from(DefaultMovOld::from(Mov::of('♟', "A7", "A6"))),
+            GameMovOld::from(DefaultMovOld::from(Mov::of('♙', "H2", "H4"))),
+            GameMovOld::from(DefaultMovOld::from(Mov::of('♟', "B7", "B6"))),
+            GameMovOld::from(DefaultMovOld::from(Mov::of('♖', "A1", "A3"))),
+            GameMovOld::from(DefaultMovOld::from(Mov::of('♟', "C7", "C6"))),
+            GameMovOld::from(DefaultMovOld::from(Mov::of('♖', "H1", "H3"))),
+            GameMovOld::from(DefaultMovOld::from(Mov::of('♟', "F7", "F6"))),
+            GameMovOld::from(DefaultMovOld::from(Mov::of('♖', "A3", "A1"))),
+            GameMovOld::from(DefaultMovOld::from(Mov::of('♟', "G7", "G6"))),
+            GameMovOld::from(DefaultMovOld::from(Mov::of('♖', "H3", "H1"))),
+            GameMovOld::from(DefaultMovOld::from(Mov::of('♟', "H7", "H6"))),
         ];
         let board = board_of_str(
             &mode.bounds,

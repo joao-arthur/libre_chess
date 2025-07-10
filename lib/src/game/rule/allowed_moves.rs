@@ -6,7 +6,7 @@ use crate::{
         GameBoard,
         game::{GameBounds, GameHistory},
         mov::{
-            GameMov,
+            GameMovOld,
             default::default_moves,
             special::{castling::castling_moves, en_passant::en_passant_moves},
         },
@@ -20,15 +20,15 @@ fn allowed_moves_of_piece(
     bounds: &GameBounds,
     history: &GameHistory,
     pos: &Pos,
-) -> Vec<GameMov> {
+) -> Vec<GameMovOld> {
     if let Some(piece) = board.get(pos) {
         match piece.t {
             Type::Pawn => [
-                default_moves(board, bounds, pos).into_iter().collect::<Vec<GameMov>>(),
+                default_moves(board, bounds, pos).into_iter().collect::<Vec<GameMovOld>>(),
                 en_passant_moves(board, history, pos)
                     .into_iter()
-                    .map(GameMov::from)
-                    .collect::<Vec<GameMov>>(),
+                    .map(GameMovOld::from)
+                    .collect::<Vec<GameMovOld>>(),
             ]
             .into_iter()
             .flatten()
@@ -40,17 +40,17 @@ fn allowed_moves_of_piece(
                 //         }
                 //     }
                 [
-                    default_moves(board, bounds, pos).into_iter().collect::<Vec<GameMov>>(),
+                    default_moves(board, bounds, pos).into_iter().collect::<Vec<GameMovOld>>(),
                     castling_moves(board, bounds, history, pos)
                         .into_iter()
-                        .map(GameMov::from)
-                        .collect::<Vec<GameMov>>(),
+                        .map(GameMovOld::from)
+                        .collect::<Vec<GameMovOld>>(),
                 ]
                 .into_iter()
                 .flatten()
                 .collect()
             }
-            _ => default_moves(board, bounds, pos).into_iter().collect::<Vec<GameMov>>(),
+            _ => default_moves(board, bounds, pos).into_iter().collect::<Vec<GameMovOld>>(),
         }
     } else {
         Vec::new()
@@ -62,7 +62,7 @@ pub fn allowed_moves_of_player(
     bounds: &GameBounds,
     history: &GameHistory,
     color: &Color,
-) -> HashMap<Pos, Vec<GameMov>> {
+) -> HashMap<Pos, Vec<GameMovOld>> {
     // is in check?
 
     let mut result = HashMap::new();

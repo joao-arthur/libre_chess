@@ -1,5 +1,5 @@
 use crate::{
-    game::{Game, mov::GameMov, rule::turn::evaluate_turn},
+    game::{Game, mov::GameMovOld, rule::turn::evaluate_turn},
     piece::Type,
 };
 
@@ -14,8 +14,8 @@ pub fn is_in_check(game: &Game) -> bool {
                     for (_, moves) in moves_it {
                         for mov in moves {
                             let maybe_pos = match mov {
-                                GameMov::Default(m) => Some(&m.mov.to),
-                                GameMov::Capture(m) => Some(&m.mov.to),
+                                GameMovOld::Default(m) => Some(&m.mov.to),
+                                GameMovOld::Capture(m) => Some(&m.mov.to),
                                 _ => None,
                             };
                             if let Some(menace_pos) = maybe_pos {
