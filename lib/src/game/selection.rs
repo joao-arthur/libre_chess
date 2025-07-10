@@ -436,6 +436,113 @@ mod tests {
         );
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    #[test]
+    fn player_select_castling_mov() {
+        let mut selection = Selection {
+            selected_squares: HashSet::new(),
+            selected_piece: Some(Pos::of_str("E1")),
+            selected_piece_moves: vec![
+                GameMov::from(DefaultMov::from(Mov::of('♔', "E1", "A6"))),
+                GameMov::from(EnPassantMov::from(Mov::of('♔', "E1", "B6"))),
+                GameMov::from(EnPassantMov::from(Mov::of('♔', "E1", "B6"))),
+                GameMov::from(EnPassantMov::from(Mov::of('♔', "E1", "B6"))),
+            ],
+        };
+        let mode = standard_chess();
+        let board = board_of_str(
+            &mode.bounds,
+            [
+                "♜   ♚  ♜",
+                "        ",
+                "        ",
+                "        ",
+                "        ",
+                "        ",
+                "        ",
+                "♖   ♔  ♖",
+            ],
+        );
+        let players = HashMap::from([
+            (
+                Color::Black,
+                GamePlayer { color: Color::Black, captures: Vec::new(), moves: HashMap::new() },
+            ),
+            (
+                Color::White,
+                GamePlayer {
+                    color: Color::White,
+                    captures: Vec::new(),
+                    moves: HashMap::from([(
+                        Pos::of_str("A5"),
+                        vec![
+                            GameMov::from(DefaultMov::from(Mov::of('♙', "A5", "A6"))),
+                            GameMov::from(EnPassantMov::from(Mov::of('♙', "A5", "B6"))),
+                        ],
+                    )]),
+                },
+            ),
+        ]);
+        let history = Vec::new();
+        toggle_selection(&mut selection, &board, &players, &history, Pos::of_str("B6"));
+        assert_eq!(
+            selection,
+            Selection {
+                selected_squares: HashSet::new(),
+                selected_piece: None,
+                selected_piece_moves: Vec::new(),
+            }
+        );
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     #[test]
     fn player_select_menace_mov() {
         let mut selection = Selection {
@@ -496,3 +603,7 @@ mod tests {
         );
     }
 }
+
+// piece / pos de origem -> hashmap(pos (to) -> GameMov / default ou castling ou tal ou tal).
+// GameMov vai 
+
