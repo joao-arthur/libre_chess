@@ -1,6 +1,6 @@
 use crate::{
     game::{board::GameBoard, game::GameBounds, mov::GameMovOld},
-    piece::Type,
+    piece::PieceType,
     pos::Pos,
 };
 
@@ -19,12 +19,12 @@ mod rook;
 pub fn default_moves(board: &GameBoard, bounds: &GameBounds, pos: &Pos) -> Vec<GameMovOld> {
     if let Some(piece) = board.get(pos) {
         return match piece.t {
-            Type::Rook => rook_moves(board, bounds, pos),
-            Type::Knight => knight_moves(board, bounds, pos),
-            Type::Bishop => bishop_moves(board, bounds, pos),
-            Type::Queen => queen_moves(board, bounds, pos),
-            Type::King => king_moves(board, bounds, pos),
-            Type::Pawn => pawn_moves(board, bounds, pos),
+            PieceType::Rook => rook_moves(board, bounds, pos),
+            PieceType::Knight => knight_moves(board, bounds, pos),
+            PieceType::Bishop => bishop_moves(board, bounds, pos),
+            PieceType::Queen => queen_moves(board, bounds, pos),
+            PieceType::King => king_moves(board, bounds, pos),
+            PieceType::Pawn => pawn_moves(board, bounds, pos),
         };
     }
     Vec::new()

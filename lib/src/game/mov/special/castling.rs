@@ -5,7 +5,7 @@ use crate::{
         mov::CastlingMovOld,
     },
     mov::Mov,
-    piece::Type,
+    piece::PieceType,
     pos::Pos,
 };
 
@@ -31,7 +31,7 @@ pub fn castling_moves(
                 break;
             }
             if let Some(maybe_rook) = board.get(&curr_pos) {
-                if maybe_rook.t == Type::Rook
+                if maybe_rook.t == PieceType::Rook
                     && maybe_rook.color == piece.color
                     && !history.iter().any(|mov| mov.piece == *maybe_rook)
                 {
@@ -58,7 +58,7 @@ pub fn castling_moves(
                 continue;
             }
             if let Some(maybe_rook) = board.get(&curr_pos) {
-                if maybe_rook.t == Type::Rook
+                if maybe_rook.t == PieceType::Rook
                     && maybe_rook.color == piece.color
                     && !history.iter().any(|mov| mov.piece == *maybe_rook)
                 {

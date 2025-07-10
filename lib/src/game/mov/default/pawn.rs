@@ -1,5 +1,5 @@
 use crate::{
-    color::Color,
+    color::PieceColor,
     game::{
         board::GameBoard,
         game::GameBounds,
@@ -13,14 +13,14 @@ pub fn pawn_moves(board: &GameBoard, bounds: &GameBounds, pos: &Pos) -> Vec<Game
     let mut result: Vec<GameMovOld> = Vec::new();
     if let Some(piece) = board.get(pos) {
         let move_base = match &piece.color {
-            Color::White => {
+            PieceColor::White => {
                 if pos.row == 1 {
                     vec![pos.of_rel_idx(1, 0), pos.of_rel_idx(2, 0)]
                 } else {
                     vec![pos.of_rel_idx(1, 0)]
                 }
             }
-            Color::Black => {
+            PieceColor::Black => {
                 if pos.row == 6 {
                     vec![pos.of_rel_idx(-1, 0), pos.of_rel_idx(-2, 0)]
                 } else {
@@ -29,8 +29,8 @@ pub fn pawn_moves(board: &GameBoard, bounds: &GameBounds, pos: &Pos) -> Vec<Game
             }
         };
         let capture_base = match &piece.color {
-            Color::White => [pos.try_of_rel_idx(1, -1), pos.try_of_rel_idx(1, 1)],
-            Color::Black => [pos.try_of_rel_idx(-1, -1), pos.try_of_rel_idx(-1, 1)],
+            PieceColor::White => [pos.try_of_rel_idx(1, -1), pos.try_of_rel_idx(1, 1)],
+            PieceColor::Black => [pos.try_of_rel_idx(-1, -1), pos.try_of_rel_idx(-1, 1)],
         };
         for curr_pos in move_base {
             if board.get(&curr_pos).is_none() {

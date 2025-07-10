@@ -73,7 +73,9 @@ fn move_piece(
 ) {
     match mov {
         GameMovOld::Default(mov) => default_move(board, players, history, mov),
-        GameMovOld::Capture(mov) => default_move(board, players, history, DefaultMovOld::from(mov.mov)),
+        GameMovOld::Capture(mov) => {
+            default_move(board, players, history, DefaultMovOld::from(mov.mov))
+        }
         GameMovOld::Menace(mov) => {}
         GameMovOld::EnPassant(mov) => en_passant_move(board, players, history, mov),
         GameMovOld::Castling(mov) => castling_move(board, history, mov),

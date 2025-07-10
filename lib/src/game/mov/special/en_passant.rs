@@ -1,28 +1,36 @@
 use crate::{
-    color::Color,
+    color::PieceColor,
     game::{board::GameBoard, game::GameHistory, mov::EnPassantMovOld},
     mov::Mov,
-    piece::Type,
+    piece::PieceType,
     pos::Pos,
 };
 
-pub fn en_passant_moves(board: &GameBoard, history: &GameHistory, pos: &Pos) -> Vec<EnPassantMovOld> {
+pub fn en_passant_moves(
+    board: &GameBoard,
+    history: &GameHistory,
+    pos: &Pos,
+) -> Vec<EnPassantMovOld> {
     if let Some(piece) = board.get(pos) {
         return match piece.color {
-            Color::White => white_pawn_en_passant(board, history, pos),
-            Color::Black => black_pawn_en_passant(board, history, pos),
+            PieceColor::White => white_pawn_en_passant(board, history, pos),
+            PieceColor::Black => black_pawn_en_passant(board, history, pos),
         };
     }
     Vec::new()
 }
 
-fn white_pawn_en_passant(board: &GameBoard, history: &GameHistory, pos: &Pos) -> Vec<EnPassantMovOld> {
+fn white_pawn_en_passant(
+    board: &GameBoard,
+    history: &GameHistory,
+    pos: &Pos,
+) -> Vec<EnPassantMovOld> {
     let mut result: Vec<EnPassantMovOld> = Vec::new();
     if let Some(piece) = board.get(pos) {
         if pos.row == 4 {
             if let Some(mov) = history.last() {
-                if mov.piece.t == Type::Pawn
-                    && mov.piece.color == Color::Black
+                if mov.piece.t == PieceType::Pawn
+                    && mov.piece.color == PieceColor::Black
                     && mov.from.row == 6
                     && mov.to.row == 4
                 {
@@ -51,13 +59,17 @@ fn white_pawn_en_passant(board: &GameBoard, history: &GameHistory, pos: &Pos) ->
     result
 }
 
-fn black_pawn_en_passant(board: &GameBoard, history: &GameHistory, pos: &Pos) -> Vec<EnPassantMovOld> {
+fn black_pawn_en_passant(
+    board: &GameBoard,
+    history: &GameHistory,
+    pos: &Pos,
+) -> Vec<EnPassantMovOld> {
     let mut result: Vec<EnPassantMovOld> = Vec::new();
     if let Some(piece) = board.get(pos) {
         if pos.row == 3 {
             if let Some(mov) = history.last() {
-                if mov.piece.t == Type::Pawn
-                    && mov.piece.color == Color::White
+                if mov.piece.t == PieceType::Pawn
+                    && mov.piece.color == PieceColor::White
                     && mov.from.row == 1
                     && mov.to.row == 3
                 {

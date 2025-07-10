@@ -50,32 +50,32 @@ pub fn standard_chess() -> GameMode {
 
 // pub fn chess_960() {
 //     let mut order: [Option<Type>; 8] = [None, None, None, None, None, None, None, None];
-// 
+//
 //     let black_col_bishop_i = random(0, 3) * 2;
 //     let white_col_bishop_i = random(0, 3) * 2 + 1;
-// 
+//
 //     let queen_i = random(0, 5);
 //     let st_knight_i = random(0, 4);
 //     let nd_knight_i = random(0, 3);
-// 
+//
 //     let mut final_queen_i = 0;
 //     let mut final_st_knight_i = 0;
 //     let mut final_nd_knight_i = 0;
-// 
+//
 //     let mut i = 0;
-// 
+//
 //     loop {
 //         if order[i].is_none() {
-// 
+//
 //         }
 //     }
-// 
-//     order[black_col_bishop_i] = Type::Bishop;
-//     order[white_col_bishop_i] = Type::Bishop;
-// 
-//     order[final_queen_i] = Type::Queen;
-//     order[final_st_knight_i] = Type::Knight;
-//     order[final_nd_knight_i] = Type::Knight;
+//
+//     order[black_col_bishop_i] = PieceTypeBishop;
+//     order[white_col_bishop_i] = PieceTypeBishop;
+//
+//     order[final_queen_i] = PieceTypeQueen;
+//     order[final_st_knight_i] = PieceTypeKnight;
+//     order[final_nd_knight_i] = PieceTypeKnight;
 // }
 
 #[cfg(test)]
