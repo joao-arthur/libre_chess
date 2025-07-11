@@ -566,19 +566,39 @@ mod tests {
         );
     }
 
+    #[test]
     fn game_move_from() {
         assert_eq!(GameMoveType::from(DefaultMove), GameMoveType::Default(DefaultMove));
         assert_eq!(GameMoveType::from(CaptureMove), GameMoveType::Capture(CaptureMove));
         assert_eq!(GameMoveType::from(MenaceMove), GameMoveType::Menace(MenaceMove));
         assert_eq!(GameMoveType::from(EnPassantMove), GameMoveType::EnPassant(EnPassantMove));
-        assert_eq!(GameMoveType::from(LongCastlingMove), GameMoveType::LongCastling(LongCastlingMove));
-        assert_eq!(GameMoveType::from(ShortCastlingMove), GameMoveType::ShortCastling(ShortCastlingMove));
-        assert_eq!(GameMoveType::from(PromotionToQueenMove), GameMoveType::PromotionToQueen(PromotionToQueenMove));
-        assert_eq!(GameMoveType::from(PromotionToRookMove), GameMoveType::PromotionToRook(PromotionToRookMove));
-        assert_eq!(GameMoveType::from(PromotionToBishopMove), GameMoveType::PromotionToBishop(PromotionToBishopMove));
-        assert_eq!(GameMoveType::from(PromotionToKnightMove), GameMoveType::PromotionToKnight(PromotionToKnightMove));
+        assert_eq!(
+            GameMoveType::from(LongCastlingMove),
+            GameMoveType::LongCastling(LongCastlingMove)
+        );
+        assert_eq!(
+            GameMoveType::from(ShortCastlingMove),
+            GameMoveType::ShortCastling(ShortCastlingMove)
+        );
+        assert_eq!(
+            GameMoveType::from(PromotionToQueenMove),
+            GameMoveType::PromotionToQueen(PromotionToQueenMove)
+        );
+        assert_eq!(
+            GameMoveType::from(PromotionToRookMove),
+            GameMoveType::PromotionToRook(PromotionToRookMove)
+        );
+        assert_eq!(
+            GameMoveType::from(PromotionToBishopMove),
+            GameMoveType::PromotionToBishop(PromotionToBishopMove)
+        );
+        assert_eq!(
+            GameMoveType::from(PromotionToKnightMove),
+            GameMoveType::PromotionToKnight(PromotionToKnightMove)
+        );
     }
 
+    #[test]
     fn game_move() {
         assert_eq!(GameMoveType::default(), GameMoveType::Default(DefaultMove));
         assert_eq!(GameMoveType::capture(), GameMoveType::Capture(CaptureMove));
@@ -586,63 +606,404 @@ mod tests {
         assert_eq!(GameMoveType::en_passant(), GameMoveType::EnPassant(EnPassantMove));
         assert_eq!(GameMoveType::long_castling(), GameMoveType::LongCastling(LongCastlingMove));
         assert_eq!(GameMoveType::short_castling(), GameMoveType::ShortCastling(ShortCastlingMove));
-        assert_eq!(GameMoveType::promotion_to_queen(), GameMoveType::PromotionToQueen(PromotionToQueenMove));
-        assert_eq!(GameMoveType::promotion_to_rook(), GameMoveType::PromotionToRook(PromotionToRookMove));
-        assert_eq!(GameMoveType::promotion_to_bishop(), GameMoveType::PromotionToBishop(PromotionToBishopMove));
-        assert_eq!(GameMoveType::promotion_to_knight(), GameMoveType::PromotionToKnight(PromotionToKnightMove));
+        assert_eq!(
+            GameMoveType::promotion_to_queen(),
+            GameMoveType::PromotionToQueen(PromotionToQueenMove)
+        );
+        assert_eq!(
+            GameMoveType::promotion_to_rook(),
+            GameMoveType::PromotionToRook(PromotionToRookMove)
+        );
+        assert_eq!(
+            GameMoveType::promotion_to_bishop(),
+            GameMoveType::PromotionToBishop(PromotionToBishopMove)
+        );
+        assert_eq!(
+            GameMoveType::promotion_to_knight(),
+            GameMoveType::PromotionToKnight(PromotionToKnightMove)
+        );
     }
 
+    #[test]
     fn game_move_try_of() {
         assert_eq!(
             GameMove::try_of("A2", "A4", GameMoveType::default()),
             Some(GameMove {
-                from: Pos { col: 0, row: 1 },
-                to: Pos { col: 0, row: 3 },
+                from: Pos::of_str("A2"),
+                to: Pos::of_str("A4"),
                 t: GameMoveType::default()
             })
         );
         assert_eq!(
             GameMove::try_of("D4", "E5", GameMoveType::capture()),
-            Some(GameMove { from: Pos { col: 3, row: 3 }, to: Pos { col: 4, row: 4 }, t: GameMoveType::capture()
+            Some(GameMove {
+                from: Pos::of_str("D4"),
+                to: Pos::of_str("E5"),
+                t: GameMoveType::capture()
+            })
+        );
+        assert_eq!(
+            GameMove::try_of("D6", "C8", GameMoveType::menace()),
+            Some(GameMove {
+                from: Pos::of_str("D6"),
+                to: Pos::of_str("C8"),
+                t: GameMoveType::menace()
+            })
+        );
+        assert_eq!(
+            GameMove::try_of("G6", "F7", GameMoveType::en_passant()),
+            Some(GameMove {
+                from: Pos::of_str("G6"),
+                to: Pos::of_str("F7"),
+                t: GameMoveType::en_passant()
+            })
+        );
+        assert_eq!(
+            GameMove::try_of("E1", "A1", GameMoveType::long_castling()),
+            Some(GameMove {
+                from: Pos::of_str("E1"),
+                to: Pos::of_str("A1"),
+                t: GameMoveType::long_castling()
+            })
+        );
+        assert_eq!(
+            GameMove::try_of("E1", "H1", GameMoveType::short_castling()),
+            Some(GameMove {
+                from: Pos::of_str("E1"),
+                to: Pos::of_str("H1"),
+                t: GameMoveType::short_castling()
+            })
+        );
+        assert_eq!(
+            GameMove::try_of("H7", "H8", GameMoveType::promotion_to_queen()),
+            Some(GameMove {
+                from: Pos::of_str("H7"),
+                to: Pos::of_str("H8"),
+                t: GameMoveType::promotion_to_queen()
+            })
+        );
+        assert_eq!(
+            GameMove::try_of("H7", "H8", GameMoveType::promotion_to_rook()),
+            Some(GameMove {
+                from: Pos::of_str("H7"),
+                to: Pos::of_str("H8"),
+                t: GameMoveType::promotion_to_rook()
+            })
+        );
+        assert_eq!(
+            GameMove::try_of("H7", "H8", GameMoveType::promotion_to_bishop()),
+            Some(GameMove {
+                from: Pos::of_str("H7"),
+                to: Pos::of_str("H8"),
+                t: GameMoveType::promotion_to_bishop()
+            })
+        );
+        assert_eq!(
+            GameMove::try_of("H7", "H8", GameMoveType::promotion_to_knight()),
+            Some(GameMove {
+                from: Pos::of_str("H7"),
+                to: Pos::of_str("H8"),
+                t: GameMoveType::promotion_to_knight()
             })
         );
     }
 
+    #[test]
     fn game_move_of() {
         assert_eq!(
             GameMove::of("A2", "A4", GameMoveType::default()),
-            GameMove { from: Pos { col: 0, row: 1 }, to: Pos { col: 0, row: 3 }, t: GameMoveType::default()
-            }
+            GameMove { from: Pos::of_str("A2"), to: Pos::of_str("A4"), t: GameMoveType::default() }
         );
         assert_eq!(
             GameMove::of("D4", "E5", GameMoveType::capture()),
-            GameMove { from: Pos { col: 3, row: 3 }, to: Pos { col: 4, row: 4 }, t: GameMoveType::capture()
+            GameMove { from: Pos::of_str("D4"), to: Pos::of_str("E5"), t: GameMoveType::capture() }
+        );
+        assert_eq!(
+            GameMove::of("D6", "C8", GameMoveType::menace()),
+            GameMove { from: Pos::of_str("D6"), to: Pos::of_str("C8"), t: GameMoveType::menace() }
+        );
+        assert_eq!(
+            GameMove::of("G6", "F7", GameMoveType::en_passant()),
+            GameMove {
+                from: Pos::of_str("G6"),
+                to: Pos::of_str("F7"),
+                t: GameMoveType::en_passant()
+            }
+        );
+        assert_eq!(
+            GameMove::of("E1", "A1", GameMoveType::long_castling()),
+            GameMove {
+                from: Pos::of_str("E1"),
+                to: Pos::of_str("A1"),
+                t: GameMoveType::long_castling()
+            }
+        );
+        assert_eq!(
+            GameMove::of("E1", "H1", GameMoveType::short_castling()),
+            GameMove {
+                from: Pos::of_str("E1"),
+                to: Pos::of_str("H1"),
+                t: GameMoveType::short_castling()
+            }
+        );
+        assert_eq!(
+            GameMove::of("H7", "H8", GameMoveType::promotion_to_queen()),
+            GameMove {
+                from: Pos::of_str("H7"),
+                to: Pos::of_str("H8"),
+                t: GameMoveType::promotion_to_queen()
+            }
+        );
+        assert_eq!(
+            GameMove::of("H7", "H8", GameMoveType::promotion_to_bishop()),
+            GameMove {
+                from: Pos::of_str("H7"),
+                to: Pos::of_str("H8"),
+                t: GameMoveType::promotion_to_bishop()
+            }
+        );
+        assert_eq!(
+            GameMove::of("H7", "H8", GameMoveType::promotion_to_bishop()),
+            GameMove {
+                from: Pos::of_str("H7"),
+                to: Pos::of_str("H8"),
+                t: GameMoveType::promotion_to_bishop()
+            }
+        );
+        assert_eq!(
+            GameMove::of("H7", "H8", GameMoveType::promotion_to_knight()),
+            GameMove {
+                from: Pos::of_str("H7"),
+                to: Pos::of_str("H8"),
+                t: GameMoveType::promotion_to_knight()
             }
         );
     }
 
-    fn game_move_try_default_of() {
+    #[test]
+    fn game_move_default_try_of() {
         assert_eq!(
             GameMove::default_try_of("A2", "A4"),
-            Some(GameMove { from: Pos { col: 0, row: 1 }, to: Pos { col: 0, row: 3 }, t: GameMoveType::default()
-            })
-        );
-        assert_eq!(
-            GameMove::default_try_of("D4", "E5"),
-            Some(GameMove { from: Pos { col: 3, row: 3 }, to: Pos { col: 4, row: 4 }, t: GameMoveType::capture()
+            Some(GameMove {
+                from: Pos::of_str("A2"),
+                to: Pos::of_str("A4"),
+                t: GameMoveType::default()
             })
         );
     }
 
+    #[test]
     fn game_move_default_of() {
         assert_eq!(
             GameMove::default_of("A2", "A4"),
-            GameMove { from: Pos { col: 0, row: 1 }, to: Pos { col: 0, row: 3 }, t: GameMoveType::default()
+            GameMove { from: Pos::of_str("A2"), to: Pos::of_str("A4"), t: GameMoveType::default() }
+        );
+    }
+
+    #[test]
+    fn game_move_capture_try_of() {
+        assert_eq!(
+            GameMove::capture_try_of("D4", "E5"),
+            Some(GameMove {
+                from: Pos::of_str("D4"),
+                to: Pos::of_str("E5"),
+                t: GameMoveType::capture()
+            })
+        );
+    }
+
+    #[test]
+    fn game_move_capture_of() {
+        assert_eq!(
+            GameMove::capture_of("D4", "E5"),
+            GameMove { from: Pos::of_str("D4"), to: Pos::of_str("E5"), t: GameMoveType::capture() }
+        );
+    }
+
+    #[test]
+    fn game_move_menace_try_of() {
+        assert_eq!(
+            GameMove::menace_try_of("D6", "C8"),
+            Some(GameMove {
+                from: Pos::of_str("D6"),
+                to: Pos::of_str("C8"),
+                t: GameMoveType::menace()
+            })
+        );
+    }
+
+    #[test]
+    fn game_move_menace_of() {
+        assert_eq!(
+            GameMove::menace_of("D6", "C8"),
+            GameMove { from: Pos::of_str("D6"), to: Pos::of_str("C8"), t: GameMoveType::menace() }
+        );
+    }
+
+    #[test]
+    fn game_move_en_passant_try_of() {
+        assert_eq!(
+            GameMove::en_passant_try_of("G6", "F7"),
+            Some(GameMove {
+                from: Pos::of_str("G6"),
+                to: Pos::of_str("F7"),
+                t: GameMoveType::en_passant()
+            })
+        );
+    }
+
+    #[test]
+    fn game_move_en_passant_of() {
+        assert_eq!(
+            GameMove::en_passant_of("G6", "F7"),
+            GameMove {
+                from: Pos::of_str("G6"),
+                to: Pos::of_str("F7"),
+                t: GameMoveType::en_passant()
             }
         );
+    }
+
+    #[test]
+    fn game_move_long_castling_try_of() {
         assert_eq!(
-            GameMove::default_of("D4", "E5"),
-            GameMove { from: Pos { col: 3, row: 3 }, to: Pos { col: 4, row: 4 }, t: GameMoveType::capture()
+            GameMove::long_castling_try_of("E1", "A1"),
+            Some(GameMove {
+                from: Pos::of_str("E1"),
+                to: Pos::of_str("A1"),
+                t: GameMoveType::long_castling()
+            })
+        );
+    }
+
+    #[test]
+    fn game_move_long_castling_of() {
+        assert_eq!(
+            GameMove::long_castling_of("E1", "A1"),
+            GameMove {
+                from: Pos::of_str("E1"),
+                to: Pos::of_str("A1"),
+                t: GameMoveType::long_castling()
+            }
+        );
+    }
+
+    #[test]
+    fn game_move_short_castling_try_of() {
+        assert_eq!(
+            GameMove::short_castling_try_of("E1", "H1"),
+            Some(GameMove {
+                from: Pos::of_str("E1"),
+                to: Pos::of_str("H1"),
+                t: GameMoveType::short_castling()
+            })
+        );
+    }
+
+    #[test]
+    fn game_move_short_castling_of() {
+        assert_eq!(
+            GameMove::short_castling_of("E1", "H1"),
+            GameMove {
+                from: Pos::of_str("E1"),
+                to: Pos::of_str("H1"),
+                t: GameMoveType::short_castling()
+            }
+        );
+    }
+
+    #[test]
+    fn game_move_promotion_to_queen_try_of() {
+        assert_eq!(
+            GameMove::promotion_to_queen_try_of("H7", "H8"),
+            Some(GameMove {
+                from: Pos::of_str("H7"),
+                to: Pos::of_str("H8"),
+                t: GameMoveType::promotion_to_queen()
+            })
+        );
+    }
+
+    #[test]
+    fn game_move_promotion_to_queen_of() {
+        assert_eq!(
+            GameMove::promotion_to_queen_of("H7", "H8"),
+            GameMove {
+                from: Pos::of_str("H7"),
+                to: Pos::of_str("H8"),
+                t: GameMoveType::promotion_to_queen()
+            }
+        );
+    }
+
+    #[test]
+    fn game_move_promotion_to_rook_try_of() {
+        assert_eq!(
+            GameMove::promotion_to_rook_try_of("H7", "H8"),
+            Some(GameMove {
+                from: Pos::of_str("H7"),
+                to: Pos::of_str("H8"),
+                t: GameMoveType::promotion_to_rook()
+            })
+        );
+    }
+
+    #[test]
+    fn game_move_promotion_to_rook_of() {
+        assert_eq!(
+            GameMove::promotion_to_rook_of("H7", "H8"),
+            GameMove {
+                from: Pos::of_str("H7"),
+                to: Pos::of_str("H8"),
+                t: GameMoveType::promotion_to_rook()
+            }
+        );
+    }
+
+    #[test]
+    fn game_move_promotion_to_bishop_try_of() {
+        assert_eq!(
+            GameMove::promotion_to_bishop_try_of("H7", "H8"),
+            Some(GameMove {
+                from: Pos::of_str("H7"),
+                to: Pos::of_str("H8"),
+                t: GameMoveType::promotion_to_bishop()
+            })
+        );
+    }
+
+    #[test]
+    fn game_move_promotion_to_bishop_of() {
+        assert_eq!(
+            GameMove::promotion_to_bishop_of("H7", "H8"),
+            GameMove {
+                from: Pos::of_str("H7"),
+                to: Pos::of_str("H8"),
+                t: GameMoveType::promotion_to_bishop()
+            }
+        );
+    }
+
+    #[test]
+    fn game_move_promotion_to_knight_try_of() {
+        assert_eq!(
+            GameMove::promotion_to_knight_try_of("H7", "H8"),
+            Some(GameMove {
+                from: Pos::of_str("H7"),
+                to: Pos::of_str("H8"),
+                t: GameMoveType::promotion_to_knight()
+            })
+        );
+    }
+
+    #[test]
+    fn game_move_promotion_to_knight_of() {
+        assert_eq!(
+            GameMove::promotion_to_knight_of("H7", "H8"),
+            GameMove {
+                from: Pos::of_str("H7"),
+                to: Pos::of_str("H8"),
+                t: GameMoveType::promotion_to_knight()
             }
         );
     }
