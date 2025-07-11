@@ -1,16 +1,16 @@
 use crate::{
     color::PieceColor,
-    game::{board::GameBoard, game::GameHistory, mov::EnPassantMovOld},
+    game::{
+        board::GameBoard,
+        game::GameHistory,
+        mov::{EnPassantMove, GameMove, GameMoveType},
+    },
     mov::Mov,
     piece::PieceType,
     pos::Pos,
 };
 
-pub fn en_passant_moves(
-    board: &GameBoard,
-    history: &GameHistory,
-    pos: &Pos,
-) -> Vec<EnPassantMovOld> {
+pub fn en_passant_moves(board: &GameBoard, history: &GameHistory, pos: &Pos) -> Vec<GameMove> {
     if let Some(piece) = board.get(pos) {
         return match piece.color {
             PieceColor::White => white_pawn_en_passant(board, history, pos),
@@ -20,12 +20,8 @@ pub fn en_passant_moves(
     Vec::new()
 }
 
-fn white_pawn_en_passant(
-    board: &GameBoard,
-    history: &GameHistory,
-    pos: &Pos,
-) -> Vec<EnPassantMovOld> {
-    let mut result: Vec<EnPassantMovOld> = Vec::new();
+fn white_pawn_en_passant(board: &GameBoard, history: &GameHistory, pos: &Pos) -> Vec<GameMove> {
+    let mut result: Vec<GameMove> = Vec::new();
     if let Some(piece) = board.get(pos) {
         if pos.row == 4 {
             if let Some(mov) = history.last() {
@@ -36,20 +32,20 @@ fn white_pawn_en_passant(
                 {
                     if Some(mov.to.clone()) == pos.try_of_rel_idx(0, -1) {
                         if let Some(capture_pos) = pos.try_of_rel_idx(1, -1) {
-                            result.push(EnPassantMovOld::from(Mov {
-                                piece: *piece,
+                            result.push(GameMove {
                                 from: pos.clone(),
                                 to: Pos { col: capture_pos.col, row: pos.row + 1 },
-                            }));
+                                t: GameMoveType::EnPassant(EnPassantMove),
+                            });
                         }
                     }
                     if Some(mov.to.clone()) == pos.try_of_rel_idx(0, 1) {
                         if let Some(capture_pos) = pos.try_of_rel_idx(1, 1) {
-                            result.push(EnPassantMovOld::from(Mov {
-                                piece: *piece,
+                            result.push(GameMove {
                                 from: pos.clone(),
                                 to: Pos { col: capture_pos.col, row: pos.row + 1 },
-                            }));
+                                t: GameMoveType::EnPassant(EnPassantMove),
+                            });
                         }
                     }
                 }
@@ -59,12 +55,8 @@ fn white_pawn_en_passant(
     result
 }
 
-fn black_pawn_en_passant(
-    board: &GameBoard,
-    history: &GameHistory,
-    pos: &Pos,
-) -> Vec<EnPassantMovOld> {
-    let mut result: Vec<EnPassantMovOld> = Vec::new();
+fn black_pawn_en_passant(board: &GameBoard, history: &GameHistory, pos: &Pos) -> Vec<GameMove> {
+    let mut result: Vec<GameMove> = Vec::new();
     if let Some(piece) = board.get(pos) {
         if pos.row == 3 {
             if let Some(mov) = history.last() {
@@ -75,20 +67,20 @@ fn black_pawn_en_passant(
                 {
                     if Some(mov.to.clone()) == pos.try_of_rel_idx(0, -1) {
                         if let Some(capture_pos) = pos.try_of_rel_idx(-1, -1) {
-                            result.push(EnPassantMovOld::from(Mov {
-                                piece: *piece,
+                            result.push(GameMove {
                                 from: pos.clone(),
                                 to: Pos { col: capture_pos.col, row: pos.row - 1 },
-                            }));
+                                t: GameMoveType::EnPassant(EnPassantMove),
+                            });
                         }
                     }
                     if Some(mov.to.clone()) == pos.try_of_rel_idx(0, 1) {
                         if let Some(capture_pos) = pos.try_of_rel_idx(-1, 1) {
-                            result.push(EnPassantMovOld::from(Mov {
-                                piece: *piece,
+                            result.push(GameMove {
                                 from: pos.clone(),
                                 to: Pos { col: capture_pos.col, row: pos.row - 1 },
-                            }));
+                                t: GameMoveType::EnPassant(EnPassantMove),
+                            });
                         }
                     }
                 }
@@ -103,7 +95,7 @@ mod tests {
     use std::collections::HashMap;
 
     use crate::{
-        game::{mov::EnPassantMovOld, piece::game_piece_of},
+        game::{mov::GameMove, piece::game_piece_of},
         mov::Mov,
         pos::Pos,
     };
@@ -116,7 +108,7 @@ mod tests {
         let history = Vec::from([Mov::of('♟', "A7", "A5")]);
         assert_eq!(
             en_passant_moves(&board, &history, &Pos::of_str("B5")),
-            [EnPassantMovOld::from(Mov::of('♙', "B5", "A6"))]
+            [GameMove::en_passant_of("B5", "A6")]
         );
     }
 
@@ -126,7 +118,7 @@ mod tests {
         let history = Vec::from([Mov::of('♟', "B7", "B5")]);
         assert_eq!(
             en_passant_moves(&board, &history, &Pos::of_str("A5")),
-            [EnPassantMovOld::from(Mov::of('♙', "A5", "B6"))]
+            [GameMove::en_passant_of("A5", "B6")]
         );
     }
 
@@ -136,7 +128,7 @@ mod tests {
         let history = Vec::from([Mov::of('♟', "G7", "G5")]);
         assert_eq!(
             en_passant_moves(&board, &history, &Pos::of_str("H5")),
-            [EnPassantMovOld::from(Mov::of('♙', "H5", "G6"))]
+            [GameMove::en_passant_of("H5", "G6")]
         );
     }
 
@@ -146,7 +138,7 @@ mod tests {
         let history = Vec::from([Mov::of('♟', "H7", "H5")]);
         assert_eq!(
             en_passant_moves(&board, &history, &Pos::of_str("G5")),
-            [EnPassantMovOld::from(Mov::of('♙', "G5", "H6"))]
+            [GameMove::en_passant_of("G5", "H6")]
         );
     }
 
@@ -156,7 +148,7 @@ mod tests {
         let history = Vec::from([Mov::of('♙', "A2", "A4")]);
         assert_eq!(
             en_passant_moves(&board, &history, &Pos::of_str("B4")),
-            [EnPassantMovOld::from(Mov::of('♟', "B4", "A3"))]
+            [GameMove::en_passant_of("B4", "A3")]
         );
     }
 
@@ -166,7 +158,7 @@ mod tests {
         let history = Vec::from([Mov::of('♙', "B2", "B4")]);
         assert_eq!(
             en_passant_moves(&board, &history, &Pos::of_str("A4")),
-            [EnPassantMovOld::from(Mov::of('♟', "A4", "B3"))]
+            [GameMove::en_passant_of("A4", "B3")]
         );
     }
 
@@ -176,7 +168,7 @@ mod tests {
         let history = Vec::from([Mov::of('♙', "G2", "G4")]);
         assert_eq!(
             en_passant_moves(&board, &history, &Pos::of_str("H4")),
-            [EnPassantMovOld::from(Mov::of('♟', "H4", "G3"))]
+            [GameMove::en_passant_of("H4", "G3")]
         );
     }
 
@@ -186,7 +178,7 @@ mod tests {
         let history = Vec::from([Mov::of('♙', "H2", "H4")]);
         assert_eq!(
             en_passant_moves(&board, &history, &Pos::of_str("G4")),
-            [EnPassantMovOld::from(Mov::of('♟', "G4", "H3"))]
+            [GameMove::en_passant_of("G4", "H3")]
         );
     }
 

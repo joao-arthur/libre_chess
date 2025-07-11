@@ -123,7 +123,7 @@ impl From<PromotionMovOld> for GameMovOld {
 pub fn try_game_move_vec_from_str<const N: usize>(
     bounds: &GameBounds,
     rows: [&str; N],
-) -> Result<Vec<GameMovOld>, GameBoardErr> {
+) -> Result<Vec<GameMove>, GameBoardErr> {
     let joined = rows.join("");
     if joined
         .find(|c| c != ' ' && c != '●' && c != '◎' && c != '○' && Piece::try_of(c).is_none())
@@ -525,14 +525,14 @@ mod tests {
                 ]
             ),
             Ok(vec![
-                GameMovOld::from(MenaceMovOld::from(Mov::of('♘', "D4", "C2"))),
-                GameMovOld::from(MenaceMovOld::from(Mov::of('♘', "D4", "E2"))),
-                GameMovOld::from(DefaultMovOld::from(Mov::of('♘', "D4", "B3"))),
-                GameMovOld::from(DefaultMovOld::from(Mov::of('♘', "D4", "F3"))),
-                GameMovOld::from(DefaultMovOld::from(Mov::of('♘', "D4", "B5"))),
-                GameMovOld::from(DefaultMovOld::from(Mov::of('♘', "D4", "F5"))),
-                GameMovOld::from(CaptureMovOld::from(Mov::of('♘', "D4", "C6"))),
-                GameMovOld::from(CaptureMovOld::from(Mov::of('♘', "D4", "E6"))),
+                GameMove::menace_of("D4", "C2"),
+                GameMove::menace_of("D4", "E2"),
+                GameMove::default_of("D4", "B3"),
+                GameMove::default_of("D4", "F3"),
+                GameMove::default_of("D4", "B5"),
+                GameMove::default_of("D4", "F5"),
+                GameMove::capture_of("D4", "C6"),
+                GameMove::capture_of("D4", "E6"),
             ])
         )
     }
@@ -544,14 +544,14 @@ mod tests {
             game_move_vec_to_string(
                 &mode.bounds,
                 &vec![
-                    GameMovOld::from(DefaultMovOld::from(Mov::of('♘', "D4", "B3"))),
-                    GameMovOld::from(DefaultMovOld::from(Mov::of('♘', "D4", "B5"))),
-                    GameMovOld::from(DefaultMovOld::from(Mov::of('♘', "D4", "F3"))),
-                    GameMovOld::from(DefaultMovOld::from(Mov::of('♘', "D4", "F5"))),
-                    GameMovOld::from(MenaceMovOld::from(Mov::of('♘', "D4", "C2"))),
-                    GameMovOld::from(MenaceMovOld::from(Mov::of('♘', "D4", "E2"))),
-                    GameMovOld::from(CaptureMovOld::from(Mov::of('♘', "D4", "C6"))),
-                    GameMovOld::from(CaptureMovOld::from(Mov::of('♘', "D4", "E6"))),
+                    GameMove::default_of("D4", "B3"),
+                    GameMove::default_of("D4", "B5"),
+                    GameMove::default_of("D4", "F3"),
+                    GameMove::default_of("D4", "F5"),
+                    GameMove::menace_of("D4", "C2"),
+                    GameMove::menace_of("D4", "E2"),
+                    GameMove::capture_of("D4", "C6"),
+                    GameMove::capture_of("D4", "E6"),
                 ]
             ),
             "".to_owned()

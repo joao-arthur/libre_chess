@@ -167,7 +167,12 @@ mod tests {
         assert_eq!(
             board_try_of_str(
                 &GameBounds { x1: 10, y1: 10, x2: 13, y2: 13 },
-                [" ♛♚ ", "    ", "    ", " ♕♔ ",]
+                [
+                    " ♛♚ ", //
+                    "    ", //
+                    "    ", //
+                    " ♕♔ ", //
+                ]
             ),
             Ok(HashMap::from([
                 game_piece_of("L14", '♛'),

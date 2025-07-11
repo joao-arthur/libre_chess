@@ -2,7 +2,7 @@ use crate::{
     game::{
         board::GameBoard,
         game::{GameBounds, GameHistory},
-        mov::CastlingMovOld,
+        mov::{CastlingMovOld, GameMove, GameMoveType, LongCastlingMove, ShortCastlingMove},
     },
     mov::Mov,
     piece::PieceType,
@@ -16,8 +16,8 @@ pub fn castling_moves(
     bounds: &GameBounds,
     history: &GameHistory,
     pos: &Pos,
-) -> Vec<CastlingMovOld> {
-    let mut result: Vec<CastlingMovOld> = Vec::new();
+) -> Vec<GameMove> {
+    let mut result: Vec<GameMove> = Vec::new();
     if let Some(piece) = board.get(pos) {
         let mut col_index = 0;
         loop {
@@ -35,11 +35,11 @@ pub fn castling_moves(
                     && maybe_rook.color == piece.color
                     && !history.iter().any(|mov| mov.piece == *maybe_rook)
                 {
-                    result.push(CastlingMovOld::from(Mov {
-                        piece: *piece,
+                    result.push(GameMove {
                         from: pos.clone(),
                         to: curr_pos,
-                    }));
+                        t: GameMoveType::LongCastling(LongCastlingMove),
+                    });
                 }
                 break;
             }
@@ -62,11 +62,11 @@ pub fn castling_moves(
                     && maybe_rook.color == piece.color
                     && !history.iter().any(|mov| mov.piece == *maybe_rook)
                 {
-                    result.push(CastlingMovOld::from(Mov {
-                        piece: *piece,
+                    result.push(GameMove {
                         from: pos.clone(),
                         to: curr_pos,
-                    }));
+                        t: GameMoveType::ShortCastling(ShortCastlingMove),
+                    });
                 }
                 break;
             }
@@ -181,18 +181,18 @@ mod tests {
     fn white_king_moved_rooks() {
         let mode = standard_chess();
         let history = vec![
-            GameMovOld::from(DefaultMovOld::from(Mov::of('♙', "A2", "A4"))),
-            GameMovOld::from(DefaultMovOld::from(Mov::of('♟', "A7", "A6"))),
-            GameMovOld::from(DefaultMovOld::from(Mov::of('♙', "H2", "H4"))),
-            GameMovOld::from(DefaultMovOld::from(Mov::of('♟', "B7", "B6"))),
-            GameMovOld::from(DefaultMovOld::from(Mov::of('♖', "A1", "A3"))),
-            GameMovOld::from(DefaultMovOld::from(Mov::of('♟', "C7", "C6"))),
-            GameMovOld::from(DefaultMovOld::from(Mov::of('♖', "H1", "H3"))),
-            GameMovOld::from(DefaultMovOld::from(Mov::of('♟', "F7", "F6"))),
-            GameMovOld::from(DefaultMovOld::from(Mov::of('♖', "A3", "A1"))),
-            GameMovOld::from(DefaultMovOld::from(Mov::of('♟', "G7", "G6"))),
-            GameMovOld::from(DefaultMovOld::from(Mov::of('♖', "H3", "H1"))),
-            GameMovOld::from(DefaultMovOld::from(Mov::of('♟', "H7", "H6"))),
+            GameMove::default_of('♙', "A2", "A4"))),
+            GameMove::default_of('♟', "A7", "A6"))),
+            GameMove::default_of('♙', "H2", "H4"))),
+            GameMove::default_of('♟', "B7", "B6"))),
+            GameMove::default_of('♖', "A1", "A3"))),
+            GameMove::default_of('♟', "C7", "C6"))),
+            GameMove::default_of('♖', "H1", "H3"))),
+            GameMove::default_of('♟', "F7", "F6"))),
+            GameMove::default_of('♖', "A3", "A1"))),
+            GameMove::default_of('♟', "G7", "G6"))),
+            GameMove::default_of('♖', "H3", "H1"))),
+            GameMove::default_of('♟', "H7", "H6"))),
         ];
         let board = board_of_str(
             &mode.bounds,

@@ -2,14 +2,13 @@ use crate::{
     game::{
         board::GameBoard,
         game::GameBounds,
-        mov::{CaptureMovOld, DefaultMovOld, GameMovOld, MenaceMovOld},
+        mov::{CaptureMove, DefaultMove, GameMove, GameMoveType, MenaceMove},
     },
-    mov::Mov,
     pos::Pos,
 };
 
-pub fn king_moves(board: &GameBoard, bounds: &GameBounds, pos: &Pos) -> Vec<GameMovOld> {
-    let mut result: Vec<GameMovOld> = Vec::new();
+pub fn king_moves(board: &GameBoard, bounds: &GameBounds, pos: &Pos) -> Vec<GameMove> {
+    let mut result: Vec<GameMove> = Vec::new();
     if let Some(piece) = board.get(pos) {
         let base = [
             pos.try_of_rel_idx(1, 1),
@@ -32,24 +31,24 @@ pub fn king_moves(board: &GameBoard, bounds: &GameBounds, pos: &Pos) -> Vec<Game
                 }
                 if let Some(curr_piece) = board.get(&curr_pos) {
                     if curr_piece.color == piece.color {
-                        result.push(GameMovOld::from(MenaceMovOld::from(Mov {
-                            piece: *piece,
+                        result.push(GameMove {
                             from: pos.clone(),
                             to: curr_pos,
-                        })));
+                            t: GameMoveType::Menace(MenaceMove),
+                        });
                     } else {
-                        result.push(GameMovOld::from(CaptureMovOld::from(Mov {
-                            piece: *piece,
+                        result.push(GameMove {
                             from: pos.clone(),
                             to: curr_pos,
-                        })));
+                            t: GameMoveType::Capture(CaptureMove),
+                        });
                     }
                 } else {
-                    result.push(GameMovOld::from(DefaultMovOld::from(Mov {
-                        piece: *piece,
+                    result.push(GameMove {
                         from: pos.clone(),
                         to: curr_pos,
-                    })));
+                        t: GameMoveType::Default(DefaultMove),
+                    });
                 }
             }
         }
@@ -66,10 +65,9 @@ mod tests {
             board::{board_empty, board_of_str},
             game::GameBounds,
             mode::standard_chess,
-            mov::{CaptureMovOld, DefaultMovOld, GameMovOld, MenaceMovOld},
+            mov::GameMove,
             piece::game_piece_of,
         },
-        mov::Mov,
         pos::Pos,
     };
 
@@ -88,14 +86,14 @@ mod tests {
         assert_eq!(
             king_moves(&board, &mode.bounds, &Pos::of_str("D4")),
             [
-                GameMovOld::from(DefaultMovOld::from(Mov::of('♚', "D4", "E5"))),
-                GameMovOld::from(DefaultMovOld::from(Mov::of('♚', "D4", "E4"))),
-                GameMovOld::from(DefaultMovOld::from(Mov::of('♚', "D4", "E3"))),
-                GameMovOld::from(DefaultMovOld::from(Mov::of('♚', "D4", "D3"))),
-                GameMovOld::from(DefaultMovOld::from(Mov::of('♚', "D4", "C3"))),
-                GameMovOld::from(DefaultMovOld::from(Mov::of('♚', "D4", "C4"))),
-                GameMovOld::from(DefaultMovOld::from(Mov::of('♚', "D4", "C5"))),
-                GameMovOld::from(DefaultMovOld::from(Mov::of('♚', "D4", "D5"))),
+                GameMove::default_of("D4", "E5"),
+                GameMove::default_of("D4", "E4"),
+                GameMove::default_of("D4", "E3"),
+                GameMove::default_of("D4", "D3"),
+                GameMove::default_of("D4", "C3"),
+                GameMove::default_of("D4", "C4"),
+                GameMove::default_of("D4", "C5"),
+                GameMove::default_of("D4", "D5"),
             ]
         );
     }
@@ -107,9 +105,9 @@ mod tests {
         assert_eq!(
             king_moves(&board, &mode.bounds, &Pos::of_str("H8")),
             [
-                GameMovOld::from(DefaultMovOld::from(Mov::of('♚', "H8", "H7"))),
-                GameMovOld::from(DefaultMovOld::from(Mov::of('♚', "H8", "G7"))),
-                GameMovOld::from(DefaultMovOld::from(Mov::of('♚', "H8", "G8"))),
+                GameMove::default_of("H8", "H7"),
+                GameMove::default_of("H8", "G7"),
+                GameMove::default_of("H8", "G8"),
             ]
         );
     }
@@ -121,9 +119,9 @@ mod tests {
         assert_eq!(
             king_moves(&board, &mode.bounds, &Pos::of_str("H1")),
             [
-                GameMovOld::from(DefaultMovOld::from(Mov::of('♚', "H1", "G1"))),
-                GameMovOld::from(DefaultMovOld::from(Mov::of('♚', "H1", "G2"))),
-                GameMovOld::from(DefaultMovOld::from(Mov::of('♚', "H1", "H2"))),
+                GameMove::default_of("H1", "G1"),
+                GameMove::default_of("H1", "G2"),
+                GameMove::default_of("H1", "H2"),
             ]
         );
     }
@@ -135,9 +133,9 @@ mod tests {
         assert_eq!(
             king_moves(&board, &mode.bounds, &Pos::of_str("A1")),
             [
-                GameMovOld::from(DefaultMovOld::from(Mov::of('♚', "A1", "B2"))),
-                GameMovOld::from(DefaultMovOld::from(Mov::of('♚', "A1", "B1"))),
-                GameMovOld::from(DefaultMovOld::from(Mov::of('♚', "A1", "A2"))),
+                GameMove::default_of("A1", "B2"),
+                GameMove::default_of("A1", "B1"),
+                GameMove::default_of("A1", "A2"),
             ]
         );
     }
@@ -149,9 +147,9 @@ mod tests {
         assert_eq!(
             king_moves(&board, &mode.bounds, &Pos::of_str("A8")),
             [
-                GameMovOld::from(DefaultMovOld::from(Mov::of('♚', "A8", "B8"))),
-                GameMovOld::from(DefaultMovOld::from(Mov::of('♚', "A8", "B7"))),
-                GameMovOld::from(DefaultMovOld::from(Mov::of('♚', "A8", "A7"))),
+                GameMove::default_of("A8", "B8"),
+                GameMove::default_of("A8", "B7"),
+                GameMove::default_of("A8", "A7"),
             ]
         );
     }
@@ -163,9 +161,9 @@ mod tests {
         assert_eq!(
             king_moves(&board, &bounds, &Pos::of_str("H8")),
             [
-                GameMovOld::from(DefaultMovOld::from(Mov::of('♚', "H8", "H7"))),
-                GameMovOld::from(DefaultMovOld::from(Mov::of('♚', "H8", "G7"))),
-                GameMovOld::from(DefaultMovOld::from(Mov::of('♚', "H8", "G8"))),
+                GameMove::default_of("H8", "H7"),
+                GameMove::default_of("H8", "G7"),
+                GameMove::default_of("H8", "G8"),
             ]
         );
     }
@@ -177,9 +175,9 @@ mod tests {
         assert_eq!(
             king_moves(&board, &bounds, &Pos::of_str("H4")),
             [
-                GameMovOld::from(DefaultMovOld::from(Mov::of('♚', "H4", "G4"))),
-                GameMovOld::from(DefaultMovOld::from(Mov::of('♚', "H4", "G5"))),
-                GameMovOld::from(DefaultMovOld::from(Mov::of('♚', "H4", "H5"))),
+                GameMove::default_of("H4", "G4"),
+                GameMove::default_of("H4", "G5"),
+                GameMove::default_of("H4", "H5"),
             ]
         );
     }
@@ -191,9 +189,9 @@ mod tests {
         assert_eq!(
             king_moves(&board, &bounds, &Pos::of_str("D4")),
             [
-                GameMovOld::from(DefaultMovOld::from(Mov::of('♚', "D4", "E5"))),
-                GameMovOld::from(DefaultMovOld::from(Mov::of('♚', "D4", "E4"))),
-                GameMovOld::from(DefaultMovOld::from(Mov::of('♚', "D4", "D5"))),
+                GameMove::default_of("D4", "E5"),
+                GameMove::default_of("D4", "E4"),
+                GameMove::default_of("D4", "D5"),
             ]
         );
     }
@@ -205,9 +203,9 @@ mod tests {
         assert_eq!(
             king_moves(&board, &bounds, &Pos::of_str("D8")),
             [
-                GameMovOld::from(DefaultMovOld::from(Mov::of('♚', "D8", "E8"))),
-                GameMovOld::from(DefaultMovOld::from(Mov::of('♚', "D8", "E7"))),
-                GameMovOld::from(DefaultMovOld::from(Mov::of('♚', "D8", "D7"))),
+                GameMove::default_of("D8", "E8"),
+                GameMove::default_of("D8", "E7"),
+                GameMove::default_of("D8", "D7"),
             ]
         );
     }
@@ -231,14 +229,14 @@ mod tests {
         assert_eq!(
             king_moves(&board, &mode.bounds, &Pos::of_str("D4")),
             [
-                GameMovOld::from(CaptureMovOld::from(Mov::of('♔', "D4", "E5"))),
-                GameMovOld::from(DefaultMovOld::from(Mov::of('♔', "D4", "E4"))),
-                GameMovOld::from(DefaultMovOld::from(Mov::of('♔', "D4", "E3"))),
-                GameMovOld::from(MenaceMovOld::from(Mov::of('♔', "D4", "D3"))),
-                GameMovOld::from(DefaultMovOld::from(Mov::of('♔', "D4", "C3"))),
-                GameMovOld::from(CaptureMovOld::from(Mov::of('♔', "D4", "C4"))),
-                GameMovOld::from(DefaultMovOld::from(Mov::of('♔', "D4", "C5"))),
-                GameMovOld::from(DefaultMovOld::from(Mov::of('♔', "D4", "D5"))),
+                GameMove::capture_of("D4", "E5"),
+                GameMove::default_of("D4", "E4"),
+                GameMove::default_of("D4", "E3"),
+                GameMove::menace_of("D4", "D3"),
+                GameMove::default_of("D4", "C3"),
+                GameMove::capture_of("D4", "C4"),
+                GameMove::default_of("D4", "C5"),
+                GameMove::default_of("D4", "D5"),
             ]
         );
     }
@@ -262,14 +260,14 @@ mod tests {
         assert_eq!(
             king_moves(&board, &mode.bounds, &Pos::of_str("D4")),
             [
-                GameMovOld::from(CaptureMovOld::from(Mov::of('♚', "D4", "E5"))),
-                GameMovOld::from(DefaultMovOld::from(Mov::of('♚', "D4", "E4"))),
-                GameMovOld::from(DefaultMovOld::from(Mov::of('♚', "D4", "E3"))),
-                GameMovOld::from(MenaceMovOld::from(Mov::of('♚', "D4", "D3"))),
-                GameMovOld::from(DefaultMovOld::from(Mov::of('♚', "D4", "C3"))),
-                GameMovOld::from(CaptureMovOld::from(Mov::of('♚', "D4", "C4"))),
-                GameMovOld::from(DefaultMovOld::from(Mov::of('♚', "D4", "C5"))),
-                GameMovOld::from(DefaultMovOld::from(Mov::of('♚', "D4", "D5"))),
+                GameMove::capture_of("D4", "E5"),
+                GameMove::default_of("D4", "E4"),
+                GameMove::default_of("D4", "E3"),
+                GameMove::menace_of("D4", "D3"),
+                GameMove::default_of("D4", "C3"),
+                GameMove::capture_of("D4", "C4"),
+                GameMove::default_of("D4", "C5"),
+                GameMove::default_of("D4", "D5"),
             ]
         );
     }

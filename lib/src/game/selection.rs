@@ -4,7 +4,7 @@ use crate::{
     game::{
         GameBoard,
         game::{GameHistory, GamePlayers},
-        mov::GameMovOld,
+        mov::{GameMovOld, GameMove},
         rule::turn::evaluate_turn,
     },
     pos::Pos,
@@ -14,7 +14,7 @@ use crate::{
 pub struct Selection {
     pub selected_squares: HashSet<Pos>,
     pub selected_piece: Option<Pos>,
-    pub selected_piece_moves: Vec<GameMovOld>,
+    pub selected_piece_moves: Vec<GameMove>,
 }
 
 pub fn toggle_selection(
@@ -94,7 +94,7 @@ mod tests {
             board::board_of_str,
             game::GamePlayers,
             mode::standard_chess,
-            mov::{DefaultMovOld, EnPassantMovOld, GameMovOld, MenaceMovOld},
+            mov::{DefaultMovOld, EnPassantMovOld, GameMovOld, GameMove, MenaceMovOld},
             player::GamePlayer,
         },
         mov::Mov,
@@ -195,10 +195,7 @@ mod tests {
                     captures: Vec::new(),
                     moves: HashMap::from([(
                         Pos::of_str("B2"),
-                        vec![
-                            GameMovOld::from(DefaultMovOld::from(Mov::of('♟', "B2", "B3"))),
-                            GameMovOld::from(DefaultMovOld::from(Mov::of('♟', "B2", "B4"))),
-                        ],
+                        vec![GameMove::default_of("B2", "B3"), GameMove::default_of("B2", "B4")],
                     )]),
                 },
             ),
@@ -211,8 +208,8 @@ mod tests {
                 selected_squares: HashSet::new(),
                 selected_piece: Some(Pos::of_str("B2")),
                 selected_piece_moves: vec![
-                    GameMovOld::from(DefaultMovOld::from(Mov::of('♟', "B2", "B3"))),
-                    GameMovOld::from(DefaultMovOld::from(Mov::of('♟', "B2", "B4"))),
+                    GameMove::default_of("B2", "B3"),
+                    GameMove::default_of("B2", "B4"),
                 ],
             }
         );
@@ -290,10 +287,7 @@ mod tests {
                     captures: Vec::new(),
                     moves: HashMap::from([(
                         pos.clone(),
-                        vec![
-                            GameMovOld::from(DefaultMovOld::from(Mov::of('♟', "C2", "C3"))),
-                            GameMovOld::from(DefaultMovOld::from(Mov::of('♟', "C2", "C4"))),
-                        ],
+                        vec![GameMove::default_of("C2", "C3"), GameMove::default_of("C2", "C4")],
                     )]),
                 },
             ),
@@ -306,8 +300,8 @@ mod tests {
                 selected_squares: HashSet::new(),
                 selected_piece: Some(pos.clone()),
                 selected_piece_moves: vec![
-                    GameMovOld::from(DefaultMovOld::from(Mov::of('♟', "C2", "C3"))),
-                    GameMovOld::from(DefaultMovOld::from(Mov::of('♟', "C2", "C4"))),
+                    GameMove::default_of("C2", "C3"),
+                    GameMove::default_of("C2", "C4"),
                 ],
             }
         );
@@ -341,10 +335,10 @@ mod tests {
             selected_squares: HashSet::new(),
             selected_piece: Some(Pos::of_str("D5")),
             selected_piece_moves: vec![
-                GameMovOld::from(DefaultMovOld::from(Mov::of('♖', "D5", "E5"))),
-                GameMovOld::from(DefaultMovOld::from(Mov::of('♖', "D5", "D4"))),
-                GameMovOld::from(DefaultMovOld::from(Mov::of('♖', "D5", "C5"))),
-                GameMovOld::from(DefaultMovOld::from(Mov::of('♖', "D5", "D6"))),
+                GameMove::default_of("D5", "E5"),
+                GameMove::default_of("D5", "D4"),
+                GameMove::default_of("D5", "C5"),
+                GameMove::default_of("D5", "D6"),
             ],
         };
         let mode = standard_chess();
@@ -378,10 +372,10 @@ mod tests {
                     moves: HashMap::from([(
                         Pos::of_str("D5"),
                         vec![
-                            GameMovOld::from(DefaultMovOld::from(Mov::of('♖', "D5", "E5"))),
-                            GameMovOld::from(DefaultMovOld::from(Mov::of('♖', "D5", "D4"))),
-                            GameMovOld::from(DefaultMovOld::from(Mov::of('♖', "D5", "C5"))),
-                            GameMovOld::from(DefaultMovOld::from(Mov::of('♖', "D5", "D6"))),
+                            GameMove::default_of("D5", "E5"),
+                            GameMove::default_of("D5", "D4"),
+                            GameMove::default_of("D5", "C5"),
+                            GameMove::default_of("D5", "D6"),
                         ],
                     )]),
                 },
@@ -405,8 +399,8 @@ mod tests {
             selected_squares: HashSet::new(),
             selected_piece: Some(Pos::of_str("A5")),
             selected_piece_moves: vec![
-                GameMovOld::from(DefaultMovOld::from(Mov::of('♙', "A5", "A6"))),
-                GameMovOld::from(EnPassantMovOld::from(Mov::of('♙', "A5", "B6"))),
+                GameMove::default_of("A5", "A6"),
+                GameMove::en_passant_of("A5", "B6"),
             ],
         };
         let mode = standard_chess();
@@ -439,10 +433,7 @@ mod tests {
                     captures: Vec::new(),
                     moves: HashMap::from([(
                         Pos::of_str("A5"),
-                        vec![
-                            GameMovOld::from(DefaultMovOld::from(Mov::of('♙', "A5", "A6"))),
-                            GameMovOld::from(EnPassantMovOld::from(Mov::of('♙', "A5", "B6"))),
-                        ],
+                        vec![GameMove::default_of("A5", "A6"), GameMove::en_passant_of("A5", "B6")],
                     )]),
                 },
             ),
@@ -465,10 +456,10 @@ mod tests {
             selected_squares: HashSet::new(),
             selected_piece: Some(Pos::of_str("E1")),
             selected_piece_moves: vec![
-                GameMovOld::from(DefaultMovOld::from(Mov::of('♔', "E1", "A6"))),
-                GameMovOld::from(EnPassantMovOld::from(Mov::of('♔', "E1", "B6"))),
-                GameMovOld::from(EnPassantMovOld::from(Mov::of('♔', "E1", "B6"))),
-                GameMovOld::from(EnPassantMovOld::from(Mov::of('♔', "E1", "B6"))),
+                GameMove::default_of("E1", "A6"),
+                GameMove::en_passant_of("E1", "B6"),
+                GameMove::en_passant_of("E1", "B6"),
+                GameMove::en_passant_of("E1", "B6"),
             ],
         };
         let mode = standard_chess();
@@ -501,10 +492,7 @@ mod tests {
                     captures: Vec::new(),
                     moves: HashMap::from([(
                         Pos::of_str("A5"),
-                        vec![
-                            GameMovOld::from(DefaultMovOld::from(Mov::of('♙', "A5", "A6"))),
-                            GameMovOld::from(EnPassantMovOld::from(Mov::of('♙', "A5", "B6"))),
-                        ],
+                        vec![GameMove::default_of("A5", "A6"), GameMove::en_passant_of("A5", "B6")],
                     )]),
                 },
             ),
@@ -527,10 +515,10 @@ mod tests {
             selected_squares: HashSet::new(),
             selected_piece: Some(Pos::of_str("E2")),
             selected_piece_moves: vec![
-                GameMovOld::from(DefaultMovOld::from(Mov::of('♙', "E2", "E3"))),
-                GameMovOld::from(DefaultMovOld::from(Mov::of('♙', "E2", "E4"))),
-                GameMovOld::from(MenaceMovOld::from(Mov::of('♙', "E2", "D3"))),
-                GameMovOld::from(MenaceMovOld::from(Mov::of('♙', "E2", "F3"))),
+                GameMove::default_of("E2", "E3"),
+                GameMove::default_of("E2", "E4"),
+                GameMove::menace_of("E2", "D3"),
+                GameMove::menace_of("E2", "F3"),
             ],
         };
         let mode = standard_chess();
@@ -564,10 +552,10 @@ mod tests {
                     moves: HashMap::from([(
                         Pos::of_str("E2"),
                         vec![
-                            GameMovOld::from(DefaultMovOld::from(Mov::of('♙', "E2", "E3"))),
-                            GameMovOld::from(DefaultMovOld::from(Mov::of('♙', "E2", "E4"))),
-                            GameMovOld::from(MenaceMovOld::from(Mov::of('♙', "E2", "D3"))),
-                            GameMovOld::from(MenaceMovOld::from(Mov::of('♙', "E2", "F3"))),
+                            GameMove::default_of("E2", "E3"),
+                            GameMove::default_of("E2", "E4"),
+                            GameMove::menace_of("E2", "D3"),
+                            GameMove::menace_of("E2", "F3"),
                         ],
                     )]),
                 },
