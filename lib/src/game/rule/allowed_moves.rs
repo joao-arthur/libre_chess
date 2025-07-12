@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
 use crate::{
-    color::PieceColor,
+    color::Color,
     game::{
         GameBoard,
         game::{GameBounds, GameHistory},
@@ -22,7 +22,7 @@ fn allowed_moves_of_piece(
 ) -> Vec<GameMove> {
     if let Some(piece) = board.get(pos) {
         match piece.t {
-            PieceTypePawn => [
+            PieceType::Pawn => [
                 default_moves(board, bounds, pos).into_iter().collect::<Vec<GameMove>>(),
                 en_passant_moves(board, history, pos)
                     .into_iter()
@@ -32,7 +32,7 @@ fn allowed_moves_of_piece(
             .into_iter()
             .flatten()
             .collect(),
-            PieceTypeKing => {
+            PieceType::King => {
                 //     for (curr_color, curr_player) in game.players {
                 //         if curr_color != player.color {
                 //             moves.retain(|mov|  !curr_player.menace.contains(mov));
@@ -60,7 +60,7 @@ pub fn allowed_moves_of_player(
     board: &GameBoard,
     bounds: &GameBounds,
     history: &GameHistory,
-    color: &PieceColor,
+    color: &Color,
 ) -> HashMap<Pos, Vec<GameMove>> {
     // is in check?
 

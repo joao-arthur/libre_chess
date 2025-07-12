@@ -4,6 +4,7 @@ use crate::{
         game::GameBounds,
         mov::{CaptureMove, DefaultMove, GameMove, GameMoveType, MenaceMove},
     },
+    mov::Mov,
     pos::Pos,
 };
 
@@ -28,23 +29,20 @@ pub fn rook_moves(board: &GameBoard, bounds: &GameBounds, pos: &Pos) -> Vec<Game
                     if let Some(curr_piece) = board.get(&curr_pos) {
                         if curr_piece.color == piece.color {
                             result.push(GameMove {
-                                from: pos.clone(),
-                                to: curr_pos,
-                                t: GameMoveType::Menace(MenaceMove),
+                                mov: Mov { piece: *piece, from: pos.clone(), to: curr_pos },
+                                typ: GameMoveType::Menace(MenaceMove),
                             });
                         } else {
                             result.push(GameMove {
-                                from: pos.clone(),
-                                to: curr_pos,
-                                t: GameMoveType::Capture(CaptureMove),
+                                mov: Mov { piece: *piece, from: pos.clone(), to: curr_pos },
+                                typ: GameMoveType::Capture(CaptureMove),
                             });
                         }
                         break;
                     } else {
                         result.push(GameMove {
-                            from: pos.clone(),
-                            to: curr_pos,
-                            t: GameMoveType::Default(DefaultMove),
+                            mov: Mov { piece: *piece, from: pos.clone(), to: curr_pos },
+                            typ: GameMoveType::Default(DefaultMove),
                         });
                     }
                 } else {
@@ -65,10 +63,9 @@ mod tests {
             board::{board_empty, board_of_str},
             game::GameBounds,
             mode::standard_chess,
-            mov::{CaptureMovOld, DefaultMovOld, GameMove, MenaceMovOld},
+            mov::GameMove,
             piece::game_piece_of,
         },
-        mov::Mov,
         pos::Pos,
     };
 
@@ -87,20 +84,20 @@ mod tests {
         assert_eq!(
             rook_moves(&board, &mode.bounds, &Pos::of_str("D4")),
             [
-                GameMove::default_of("D4", "E4"),
-                GameMove::default_of("D4", "F4"),
-                GameMove::default_of("D4", "G4"),
-                GameMove::default_of("D4", "H4"),
-                GameMove::default_of("D4", "D3"),
-                GameMove::default_of("D4", "D2"),
-                GameMove::default_of("D4", "D1"),
-                GameMove::default_of("D4", "C4"),
-                GameMove::default_of("D4", "B4"),
-                GameMove::default_of("D4", "A4"),
-                GameMove::default_of("D4", "D5"),
-                GameMove::default_of("D4", "D6"),
-                GameMove::default_of("D4", "D7"),
-                GameMove::default_of("D4", "D8"),
+                GameMove::default_of('♜', "D4", "E4"),
+                GameMove::default_of('♜', "D4", "F4"),
+                GameMove::default_of('♜', "D4", "G4"),
+                GameMove::default_of('♜', "D4", "H4"),
+                GameMove::default_of('♜', "D4", "D3"),
+                GameMove::default_of('♜', "D4", "D2"),
+                GameMove::default_of('♜', "D4", "D1"),
+                GameMove::default_of('♜', "D4", "C4"),
+                GameMove::default_of('♜', "D4", "B4"),
+                GameMove::default_of('♜', "D4", "A4"),
+                GameMove::default_of('♜', "D4", "D5"),
+                GameMove::default_of('♜', "D4", "D6"),
+                GameMove::default_of('♜', "D4", "D7"),
+                GameMove::default_of('♜', "D4", "D8"),
             ]
         );
     }
@@ -112,14 +109,14 @@ mod tests {
         assert_eq!(
             rook_moves(&board, &bounds, &Pos::of_str("F6")),
             [
-                GameMove::default_of("F6", "G6"),
-                GameMove::default_of("F6", "H6"),
-                GameMove::default_of("F6", "F5"),
-                GameMove::default_of("F6", "F4"),
-                GameMove::default_of("F6", "E6"),
-                GameMove::default_of("F6", "D6"),
-                GameMove::default_of("F6", "F7"),
-                GameMove::default_of("F6", "F8")
+                GameMove::default_of('♜', "F6", "G6"),
+                GameMove::default_of('♜', "F6", "H6"),
+                GameMove::default_of('♜', "F6", "F5"),
+                GameMove::default_of('♜', "F6", "F4"),
+                GameMove::default_of('♜', "F6", "E6"),
+                GameMove::default_of('♜', "F6", "D6"),
+                GameMove::default_of('♜', "F6", "F7"),
+                GameMove::default_of('♜', "F6", "F8")
             ]
         );
     }
@@ -131,20 +128,20 @@ mod tests {
         assert_eq!(
             rook_moves(&board, &mode.bounds, &Pos::of_str("H8")),
             [
-                GameMove::default_of("H8", "H7"),
-                GameMove::default_of("H8", "H6"),
-                GameMove::default_of("H8", "H5"),
-                GameMove::default_of("H8", "H4"),
-                GameMove::default_of("H8", "H3"),
-                GameMove::default_of("H8", "H2"),
-                GameMove::default_of("H8", "H1"),
-                GameMove::default_of("H8", "G8"),
-                GameMove::default_of("H8", "F8"),
-                GameMove::default_of("H8", "E8"),
-                GameMove::default_of("H8", "D8"),
-                GameMove::default_of("H8", "C8"),
-                GameMove::default_of("H8", "B8"),
-                GameMove::default_of("H8", "A8"),
+                GameMove::default_of('♜', "H8", "H7"),
+                GameMove::default_of('♜', "H8", "H6"),
+                GameMove::default_of('♜', "H8", "H5"),
+                GameMove::default_of('♜', "H8", "H4"),
+                GameMove::default_of('♜', "H8", "H3"),
+                GameMove::default_of('♜', "H8", "H2"),
+                GameMove::default_of('♜', "H8", "H1"),
+                GameMove::default_of('♜', "H8", "G8"),
+                GameMove::default_of('♜', "H8", "F8"),
+                GameMove::default_of('♜', "H8", "E8"),
+                GameMove::default_of('♜', "H8", "D8"),
+                GameMove::default_of('♜', "H8", "C8"),
+                GameMove::default_of('♜', "H8", "B8"),
+                GameMove::default_of('♜', "H8", "A8"),
             ]
         );
     }
@@ -156,20 +153,20 @@ mod tests {
         assert_eq!(
             rook_moves(&board, &mode.bounds, &Pos::of_str("H1")),
             [
-                GameMove::default_of("H1", "G1"),
-                GameMove::default_of("H1", "F1"),
-                GameMove::default_of("H1", "E1"),
-                GameMove::default_of("H1", "D1"),
-                GameMove::default_of("H1", "C1"),
-                GameMove::default_of("H1", "B1"),
-                GameMove::default_of("H1", "A1"),
-                GameMove::default_of("H1", "H2"),
-                GameMove::default_of("H1", "H3"),
-                GameMove::default_of("H1", "H4"),
-                GameMove::default_of("H1", "H5"),
-                GameMove::default_of("H1", "H6"),
-                GameMove::default_of("H1", "H7"),
-                GameMove::default_of("H1", "H8")
+                GameMove::default_of('♜', "H1", "G1"),
+                GameMove::default_of('♜', "H1", "F1"),
+                GameMove::default_of('♜', "H1", "E1"),
+                GameMove::default_of('♜', "H1", "D1"),
+                GameMove::default_of('♜', "H1", "C1"),
+                GameMove::default_of('♜', "H1", "B1"),
+                GameMove::default_of('♜', "H1", "A1"),
+                GameMove::default_of('♜', "H1", "H2"),
+                GameMove::default_of('♜', "H1", "H3"),
+                GameMove::default_of('♜', "H1", "H4"),
+                GameMove::default_of('♜', "H1", "H5"),
+                GameMove::default_of('♜', "H1", "H6"),
+                GameMove::default_of('♜', "H1", "H7"),
+                GameMove::default_of('♜', "H1", "H8")
             ]
         );
     }
@@ -181,20 +178,20 @@ mod tests {
         assert_eq!(
             rook_moves(&board, &mode.bounds, &Pos::of_str("A1")),
             [
-                GameMove::default_of("A1", "B1"),
-                GameMove::default_of("A1", "C1"),
-                GameMove::default_of("A1", "D1"),
-                GameMove::default_of("A1", "E1"),
-                GameMove::default_of("A1", "F1"),
-                GameMove::default_of("A1", "G1"),
-                GameMove::default_of("A1", "H1"),
-                GameMove::default_of("A1", "A2"),
-                GameMove::default_of("A1", "A3"),
-                GameMove::default_of("A1", "A4"),
-                GameMove::default_of("A1", "A5"),
-                GameMove::default_of("A1", "A6"),
-                GameMove::default_of("A1", "A7"),
-                GameMove::default_of("A1", "A8"),
+                GameMove::default_of('♜', "A1", "B1"),
+                GameMove::default_of('♜', "A1", "C1"),
+                GameMove::default_of('♜', "A1", "D1"),
+                GameMove::default_of('♜', "A1", "E1"),
+                GameMove::default_of('♜', "A1", "F1"),
+                GameMove::default_of('♜', "A1", "G1"),
+                GameMove::default_of('♜', "A1", "H1"),
+                GameMove::default_of('♜', "A1", "A2"),
+                GameMove::default_of('♜', "A1", "A3"),
+                GameMove::default_of('♜', "A1", "A4"),
+                GameMove::default_of('♜', "A1", "A5"),
+                GameMove::default_of('♜', "A1", "A6"),
+                GameMove::default_of('♜', "A1", "A7"),
+                GameMove::default_of('♜', "A1", "A8"),
             ]
         );
     }
@@ -206,20 +203,20 @@ mod tests {
         assert_eq!(
             rook_moves(&board, &mode.bounds, &Pos::of_str("A8")),
             [
-                GameMove::default_of("A8", "B8"),
-                GameMove::default_of("A8", "C8"),
-                GameMove::default_of("A8", "D8"),
-                GameMove::default_of("A8", "E8"),
-                GameMove::default_of("A8", "F8"),
-                GameMove::default_of("A8", "G8"),
-                GameMove::default_of("A8", "H8"),
-                GameMove::default_of("A8", "A7"),
-                GameMove::default_of("A8", "A6"),
-                GameMove::default_of("A8", "A5"),
-                GameMove::default_of("A8", "A4"),
-                GameMove::default_of("A8", "A3"),
-                GameMove::default_of("A8", "A2"),
-                GameMove::default_of("A8", "A1"),
+                GameMove::default_of('♜', "A8", "B8"),
+                GameMove::default_of('♜', "A8", "C8"),
+                GameMove::default_of('♜', "A8", "D8"),
+                GameMove::default_of('♜', "A8", "E8"),
+                GameMove::default_of('♜', "A8", "F8"),
+                GameMove::default_of('♜', "A8", "G8"),
+                GameMove::default_of('♜', "A8", "H8"),
+                GameMove::default_of('♜', "A8", "A7"),
+                GameMove::default_of('♜', "A8", "A6"),
+                GameMove::default_of('♜', "A8", "A5"),
+                GameMove::default_of('♜', "A8", "A4"),
+                GameMove::default_of('♜', "A8", "A3"),
+                GameMove::default_of('♜', "A8", "A2"),
+                GameMove::default_of('♜', "A8", "A1"),
             ]
         );
     }
@@ -243,18 +240,18 @@ mod tests {
         assert_eq!(
             rook_moves(&board, &mode.bounds, &Pos::of_str("D4")),
             [
-                GameMove::default_of("D4", "E4"),
-                GameMove::default_of("D4", "F4"),
-                GameMove::menace_of("D4", "G4"),
-                GameMove::default_of("D4", "D3"),
-                GameMove::default_of("D4", "D2"),
-                GameMove::capture_of("D4", "D1"),
-                GameMove::default_of("D4", "C4"),
-                GameMove::default_of("D4", "B4"),
-                GameMove::default_of("D4", "A4"),
-                GameMove::default_of("D4", "D5"),
-                GameMove::default_of("D4", "D6"),
-                GameMove::capture_of("D4", "D7"),
+                GameMove::default_of('♖', "D4", "E4"),
+                GameMove::default_of('♖', "D4", "F4"),
+                GameMove::menace_of('♖', "D4", "G4"),
+                GameMove::default_of('♖', "D4", "D3"),
+                GameMove::default_of('♖', "D4", "D2"),
+                GameMove::capture_of('♖', "D4", "D1"),
+                GameMove::default_of('♖', "D4", "C4"),
+                GameMove::default_of('♖', "D4", "B4"),
+                GameMove::default_of('♖', "D4", "A4"),
+                GameMove::default_of('♖', "D4", "D5"),
+                GameMove::default_of('♖', "D4", "D6"),
+                GameMove::capture_of('♖', "D4", "D7"),
             ]
         );
     }
@@ -278,18 +275,18 @@ mod tests {
         assert_eq!(
             rook_moves(&board, &mode.bounds, &Pos::of_str("D4")),
             [
-                GameMove::default_of("D4", "E4"),
-                GameMove::default_of("D4", "F4"),
-                GameMove::menace_of("D4", "G4"),
-                GameMove::default_of("D4", "D3"),
-                GameMove::default_of("D4", "D2"),
-                GameMove::capture_of("D4", "D1"),
-                GameMove::default_of("D4", "C4"),
-                GameMove::default_of("D4", "B4"),
-                GameMove::default_of("D4", "A4"),
-                GameMove::default_of("D4", "D5"),
-                GameMove::default_of("D4", "D6"),
-                GameMove::capture_of("D4", "D7")
+                GameMove::default_of('♜', "D4", "E4"),
+                GameMove::default_of('♜', "D4", "F4"),
+                GameMove::menace_of('♜', "D4", "G4"),
+                GameMove::default_of('♜', "D4", "D3"),
+                GameMove::default_of('♜', "D4", "D2"),
+                GameMove::capture_of('♜', "D4", "D1"),
+                GameMove::default_of('♜', "D4", "C4"),
+                GameMove::default_of('♜', "D4", "B4"),
+                GameMove::default_of('♜', "D4", "A4"),
+                GameMove::default_of('♜', "D4", "D5"),
+                GameMove::default_of('♜', "D4", "D6"),
+                GameMove::capture_of('♜', "D4", "D7")
             ]
         );
     }

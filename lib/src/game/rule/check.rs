@@ -7,7 +7,7 @@ pub fn is_in_check(game: &Game) -> bool {
     let curr_turn = evaluate_turn(&game.history);
     let board_it = game.board.iter();
     for (pos, piece) in board_it {
-        if piece.t == PieceType::King && piece.color == curr_turn {
+        if piece.typ == PieceType::King && piece.color == curr_turn {
             for player in game.players.values() {
                 if player.color != curr_turn {
                     let moves_it = player.moves.iter();
@@ -38,7 +38,7 @@ mod tests {
     use std::collections::HashMap;
 
     use crate::{
-        color::PieceColor,
+        color::Color,
         game::{
             Game, board::board_of_str, mode::standard_chess, player::GamePlayer,
             rule::allowed_moves::allowed_moves_of_player,
@@ -68,19 +68,19 @@ mod tests {
         let history = Vec::new();
         let players = HashMap::from([
             (
-                PieceColor::Black,
+                Color::Black,
                 GamePlayer {
-                    color: PieceColor::Black,
+                    color: Color::Black,
                     captures: Vec::new(),
-                    moves: allowed_moves_of_player(&board, &bounds, &history, &PieceColor::Black),
+                    moves: allowed_moves_of_player(&board, &bounds, &history, &Color::Black),
                 },
             ),
             (
-                PieceColor::White,
+                Color::White,
                 GamePlayer {
-                    color: PieceColor::White,
+                    color: Color::White,
                     captures: Vec::new(),
-                    moves: allowed_moves_of_player(&board, &bounds, &history, &PieceColor::White),
+                    moves: allowed_moves_of_player(&board, &bounds, &history, &Color::White),
                 },
             ),
         ]);
@@ -107,19 +107,19 @@ mod tests {
         let history = vec![Mov::of('♙', "D6", "D7")];
         let players = HashMap::from([
             (
-                PieceColor::Black,
+                Color::Black,
                 GamePlayer {
-                    color: PieceColor::Black,
+                    color: Color::Black,
                     captures: Vec::new(),
-                    moves: allowed_moves_of_player(&board, &bounds, &history, &PieceColor::Black),
+                    moves: allowed_moves_of_player(&board, &bounds, &history, &Color::Black),
                 },
             ),
             (
-                PieceColor::White,
+                Color::White,
                 GamePlayer {
-                    color: PieceColor::White,
+                    color: Color::White,
                     captures: Vec::new(),
-                    moves: allowed_moves_of_player(&board, &bounds, &history, &PieceColor::White),
+                    moves: allowed_moves_of_player(&board, &bounds, &history, &Color::White),
                 },
             ),
         ]);

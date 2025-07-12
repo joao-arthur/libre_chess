@@ -1,16 +1,14 @@
 use std::collections::HashMap;
 
 use crate::{
-    color::PieceColor,
-    game::{board::GameBoard, mov::GameMovOld, player::GamePlayer},
+    color::Color,
+    game::{board::GameBoard, mov::GameMove, player::GamePlayer},
     geometry::poligon::rect::RectU8,
-    mov::Mov,
 };
 
 pub type GameBounds = RectU8;
-pub type GamePlayers = HashMap<PieceColor, GamePlayer>;
-pub type GameHistory = Vec<Mov>;
-//pub type GameHistory = Vec<GameMovOld>;
+pub type GamePlayers = HashMap<Color, GamePlayer>;
+pub type GameHistory = Vec<GameMove>;
 
 #[derive(Debug, PartialEq)]
 pub struct Game {

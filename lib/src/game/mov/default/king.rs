@@ -4,6 +4,7 @@ use crate::{
         game::GameBounds,
         mov::{CaptureMove, DefaultMove, GameMove, GameMoveType, MenaceMove},
     },
+    mov::Mov,
     pos::Pos,
 };
 
@@ -32,22 +33,19 @@ pub fn king_moves(board: &GameBoard, bounds: &GameBounds, pos: &Pos) -> Vec<Game
                 if let Some(curr_piece) = board.get(&curr_pos) {
                     if curr_piece.color == piece.color {
                         result.push(GameMove {
-                            from: pos.clone(),
-                            to: curr_pos,
-                            t: GameMoveType::Menace(MenaceMove),
+                            mov: Mov { piece: *piece, from: pos.clone(), to: curr_pos },
+                            typ: GameMoveType::Menace(MenaceMove),
                         });
                     } else {
                         result.push(GameMove {
-                            from: pos.clone(),
-                            to: curr_pos,
-                            t: GameMoveType::Capture(CaptureMove),
+                            mov: Mov { piece: *piece, from: pos.clone(), to: curr_pos },
+                            typ: GameMoveType::Capture(CaptureMove),
                         });
                     }
                 } else {
                     result.push(GameMove {
-                        from: pos.clone(),
-                        to: curr_pos,
-                        t: GameMoveType::Default(DefaultMove),
+                        mov: Mov { piece: *piece, from: pos.clone(), to: curr_pos },
+                        typ: GameMoveType::Default(DefaultMove),
                     });
                 }
             }
@@ -86,14 +84,14 @@ mod tests {
         assert_eq!(
             king_moves(&board, &mode.bounds, &Pos::of_str("D4")),
             [
-                GameMove::default_of("D4", "E5"),
-                GameMove::default_of("D4", "E4"),
-                GameMove::default_of("D4", "E3"),
-                GameMove::default_of("D4", "D3"),
-                GameMove::default_of("D4", "C3"),
-                GameMove::default_of("D4", "C4"),
-                GameMove::default_of("D4", "C5"),
-                GameMove::default_of("D4", "D5"),
+                GameMove::default_of('♚', "D4", "E5"),
+                GameMove::default_of('♚', "D4", "E4"),
+                GameMove::default_of('♚', "D4", "E3"),
+                GameMove::default_of('♚', "D4", "D3"),
+                GameMove::default_of('♚', "D4", "C3"),
+                GameMove::default_of('♚', "D4", "C4"),
+                GameMove::default_of('♚', "D4", "C5"),
+                GameMove::default_of('♚', "D4", "D5"),
             ]
         );
     }
@@ -105,9 +103,9 @@ mod tests {
         assert_eq!(
             king_moves(&board, &mode.bounds, &Pos::of_str("H8")),
             [
-                GameMove::default_of("H8", "H7"),
-                GameMove::default_of("H8", "G7"),
-                GameMove::default_of("H8", "G8"),
+                GameMove::default_of('♚', "H8", "H7"),
+                GameMove::default_of('♚', "H8", "G7"),
+                GameMove::default_of('♚', "H8", "G8"),
             ]
         );
     }
@@ -119,9 +117,9 @@ mod tests {
         assert_eq!(
             king_moves(&board, &mode.bounds, &Pos::of_str("H1")),
             [
-                GameMove::default_of("H1", "G1"),
-                GameMove::default_of("H1", "G2"),
-                GameMove::default_of("H1", "H2"),
+                GameMove::default_of('♚', "H1", "G1"),
+                GameMove::default_of('♚', "H1", "G2"),
+                GameMove::default_of('♚', "H1", "H2"),
             ]
         );
     }
@@ -133,9 +131,9 @@ mod tests {
         assert_eq!(
             king_moves(&board, &mode.bounds, &Pos::of_str("A1")),
             [
-                GameMove::default_of("A1", "B2"),
-                GameMove::default_of("A1", "B1"),
-                GameMove::default_of("A1", "A2"),
+                GameMove::default_of('♚', "A1", "B2"),
+                GameMove::default_of('♚', "A1", "B1"),
+                GameMove::default_of('♚', "A1", "A2"),
             ]
         );
     }
@@ -147,9 +145,9 @@ mod tests {
         assert_eq!(
             king_moves(&board, &mode.bounds, &Pos::of_str("A8")),
             [
-                GameMove::default_of("A8", "B8"),
-                GameMove::default_of("A8", "B7"),
-                GameMove::default_of("A8", "A7"),
+                GameMove::default_of('♚', "A8", "B8"),
+                GameMove::default_of('♚', "A8", "B7"),
+                GameMove::default_of('♚', "A8", "A7"),
             ]
         );
     }
@@ -161,9 +159,9 @@ mod tests {
         assert_eq!(
             king_moves(&board, &bounds, &Pos::of_str("H8")),
             [
-                GameMove::default_of("H8", "H7"),
-                GameMove::default_of("H8", "G7"),
-                GameMove::default_of("H8", "G8"),
+                GameMove::default_of('♚', "H8", "H7"),
+                GameMove::default_of('♚', "H8", "G7"),
+                GameMove::default_of('♚', "H8", "G8"),
             ]
         );
     }
@@ -175,9 +173,9 @@ mod tests {
         assert_eq!(
             king_moves(&board, &bounds, &Pos::of_str("H4")),
             [
-                GameMove::default_of("H4", "G4"),
-                GameMove::default_of("H4", "G5"),
-                GameMove::default_of("H4", "H5"),
+                GameMove::default_of('♚', "H4", "G4"),
+                GameMove::default_of('♚', "H4", "G5"),
+                GameMove::default_of('♚', "H4", "H5"),
             ]
         );
     }
@@ -189,9 +187,9 @@ mod tests {
         assert_eq!(
             king_moves(&board, &bounds, &Pos::of_str("D4")),
             [
-                GameMove::default_of("D4", "E5"),
-                GameMove::default_of("D4", "E4"),
-                GameMove::default_of("D4", "D5"),
+                GameMove::default_of('♚', "D4", "E5"),
+                GameMove::default_of('♚', "D4", "E4"),
+                GameMove::default_of('♚', "D4", "D5"),
             ]
         );
     }
@@ -203,9 +201,9 @@ mod tests {
         assert_eq!(
             king_moves(&board, &bounds, &Pos::of_str("D8")),
             [
-                GameMove::default_of("D8", "E8"),
-                GameMove::default_of("D8", "E7"),
-                GameMove::default_of("D8", "D7"),
+                GameMove::default_of('♚', "D8", "E8"),
+                GameMove::default_of('♚', "D8", "E7"),
+                GameMove::default_of('♚', "D8", "D7"),
             ]
         );
     }
@@ -229,14 +227,14 @@ mod tests {
         assert_eq!(
             king_moves(&board, &mode.bounds, &Pos::of_str("D4")),
             [
-                GameMove::capture_of("D4", "E5"),
-                GameMove::default_of("D4", "E4"),
-                GameMove::default_of("D4", "E3"),
-                GameMove::menace_of("D4", "D3"),
-                GameMove::default_of("D4", "C3"),
-                GameMove::capture_of("D4", "C4"),
-                GameMove::default_of("D4", "C5"),
-                GameMove::default_of("D4", "D5"),
+                GameMove::capture_of('♔', "D4", "E5"),
+                GameMove::default_of('♔', "D4", "E4"),
+                GameMove::default_of('♔', "D4", "E3"),
+                GameMove::menace_of('♔', "D4", "D3"),
+                GameMove::default_of('♔', "D4", "C3"),
+                GameMove::capture_of('♔', "D4", "C4"),
+                GameMove::default_of('♔', "D4", "C5"),
+                GameMove::default_of('♔', "D4", "D5"),
             ]
         );
     }
@@ -260,14 +258,14 @@ mod tests {
         assert_eq!(
             king_moves(&board, &mode.bounds, &Pos::of_str("D4")),
             [
-                GameMove::capture_of("D4", "E5"),
-                GameMove::default_of("D4", "E4"),
-                GameMove::default_of("D4", "E3"),
-                GameMove::menace_of("D4", "D3"),
-                GameMove::default_of("D4", "C3"),
-                GameMove::capture_of("D4", "C4"),
-                GameMove::default_of("D4", "C5"),
-                GameMove::default_of("D4", "D5"),
+                GameMove::capture_of('♚', "D4", "E5"),
+                GameMove::default_of('♚', "D4", "E4"),
+                GameMove::default_of('♚', "D4", "E3"),
+                GameMove::menace_of('♚', "D4", "D3"),
+                GameMove::default_of('♚', "D4", "C3"),
+                GameMove::capture_of('♚', "D4", "C4"),
+                GameMove::default_of('♚', "D4", "C5"),
+                GameMove::default_of('♚', "D4", "D5"),
             ]
         );
     }

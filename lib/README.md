@@ -55,13 +55,13 @@
 {
     board: Map<
         { row: u8, col: u8 },
-        { t: Type, color: PieceColor }
+        { t: Type, color: Color }
     >,
     bounds: { x1: u8, y1: u8, x2: u8, y2: u8 },
     players: Map<
-        PieceColor,
+        Color,
         {
-            color: PieceColor,
+            color: Color,
             captures: Vec<GameCapture>,
             moves: HashMap<Pos, Vec<GameMovOld>>
         }

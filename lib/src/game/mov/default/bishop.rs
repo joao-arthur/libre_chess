@@ -4,6 +4,7 @@ use crate::{
         game::GameBounds,
         mov::{CaptureMove, DefaultMove, GameMove, GameMoveType, MenaceMove},
     },
+    mov::Mov,
     pos::Pos,
 };
 
@@ -28,23 +29,20 @@ pub fn bishop_moves(board: &GameBoard, bounds: &GameBounds, pos: &Pos) -> Vec<Ga
                     if let Some(curr_piece) = board.get(&curr_pos) {
                         if curr_piece.color == piece.color {
                             result.push(GameMove {
-                                from: pos.clone(),
-                                to: curr_pos,
-                                t: GameMoveType::Menace(MenaceMove),
+                                mov: Mov { piece: *piece, from: pos.clone(), to: curr_pos },
+                                typ: GameMoveType::Menace(MenaceMove),
                             });
                         } else {
                             result.push(GameMove {
-                                from: pos.clone(),
-                                to: curr_pos,
-                                t: GameMoveType::Capture(CaptureMove),
+                                mov: Mov { piece: *piece, from: pos.clone(), to: curr_pos },
+                                typ: GameMoveType::Capture(CaptureMove),
                             });
                         }
                         break;
                     } else {
                         result.push(GameMove {
-                            from: pos.clone(),
-                            to: curr_pos,
-                            t: GameMoveType::Default(DefaultMove),
+                            mov: Mov { piece: *piece, from: pos.clone(), to: curr_pos },
+                            typ: GameMoveType::Default(DefaultMove),
                         });
                     }
                 } else {
@@ -86,17 +84,17 @@ mod tests {
         assert_eq!(
             bishop_moves(&board, &mode.bounds, &Pos::of_str("C5")),
             [
-                GameMove::default_of("C5", "D6"),
-                GameMove::default_of("C5", "E7"),
-                GameMove::default_of("C5", "F8"),
-                GameMove::default_of("C5", "D4"),
-                GameMove::default_of("C5", "E3"),
-                GameMove::default_of("C5", "F2"),
-                GameMove::default_of("C5", "G1"),
-                GameMove::default_of("C5", "B4"),
-                GameMove::default_of("C5", "A3"),
-                GameMove::default_of("C5", "B6"),
-                GameMove::default_of("C5", "A7"),
+                GameMove::default_of('♝', "C5", "D6"),
+                GameMove::default_of('♝', "C5", "E7"),
+                GameMove::default_of('♝', "C5", "F8"),
+                GameMove::default_of('♝', "C5", "D4"),
+                GameMove::default_of('♝', "C5", "E3"),
+                GameMove::default_of('♝', "C5", "F2"),
+                GameMove::default_of('♝', "C5", "G1"),
+                GameMove::default_of('♝', "C5", "B4"),
+                GameMove::default_of('♝', "C5", "A3"),
+                GameMove::default_of('♝', "C5", "B6"),
+                GameMove::default_of('♝', "C5", "A7"),
             ]
         );
     }
@@ -108,14 +106,14 @@ mod tests {
         assert_eq!(
             bishop_moves(&board, &bounds, &Pos::of_str("F6")),
             [
-                GameMove::default_of("F6", "G7"),
-                GameMove::default_of("F6", "H8"),
-                GameMove::default_of("F6", "G5"),
-                GameMove::default_of("F6", "H4"),
-                GameMove::default_of("F6", "E5"),
-                GameMove::default_of("F6", "D4"),
-                GameMove::default_of("F6", "E7"),
-                GameMove::default_of("F6", "D8"),
+                GameMove::default_of('♝', "F6", "G7"),
+                GameMove::default_of('♝', "F6", "H8"),
+                GameMove::default_of('♝', "F6", "G5"),
+                GameMove::default_of('♝', "F6", "H4"),
+                GameMove::default_of('♝', "F6", "E5"),
+                GameMove::default_of('♝', "F6", "D4"),
+                GameMove::default_of('♝', "F6", "E7"),
+                GameMove::default_of('♝', "F6", "D8"),
             ]
         );
     }
@@ -127,13 +125,13 @@ mod tests {
         assert_eq!(
             bishop_moves(&board, &mode.bounds, &Pos::of_str("H8")),
             [
-                GameMove::default_of("H8", "G7"),
-                GameMove::default_of("H8", "F6"),
-                GameMove::default_of("H8", "E5"),
-                GameMove::default_of("H8", "D4"),
-                GameMove::default_of("H8", "C3"),
-                GameMove::default_of("H8", "B2"),
-                GameMove::default_of("H8", "A1"),
+                GameMove::default_of('♝', "H8", "G7"),
+                GameMove::default_of('♝', "H8", "F6"),
+                GameMove::default_of('♝', "H8", "E5"),
+                GameMove::default_of('♝', "H8", "D4"),
+                GameMove::default_of('♝', "H8", "C3"),
+                GameMove::default_of('♝', "H8", "B2"),
+                GameMove::default_of('♝', "H8", "A1"),
             ]
         );
     }
@@ -145,13 +143,13 @@ mod tests {
         assert_eq!(
             bishop_moves(&board, &mode.bounds, &Pos::of_str("H1")),
             [
-                GameMove::default_of("H1", "G2"),
-                GameMove::default_of("H1", "F3"),
-                GameMove::default_of("H1", "E4"),
-                GameMove::default_of("H1", "D5"),
-                GameMove::default_of("H1", "C6"),
-                GameMove::default_of("H1", "B7"),
-                GameMove::default_of("H1", "A8"),
+                GameMove::default_of('♝', "H1", "G2"),
+                GameMove::default_of('♝', "H1", "F3"),
+                GameMove::default_of('♝', "H1", "E4"),
+                GameMove::default_of('♝', "H1", "D5"),
+                GameMove::default_of('♝', "H1", "C6"),
+                GameMove::default_of('♝', "H1", "B7"),
+                GameMove::default_of('♝', "H1", "A8"),
             ]
         );
     }
@@ -163,13 +161,13 @@ mod tests {
         assert_eq!(
             bishop_moves(&board, &mode.bounds, &Pos::of_str("A1")),
             [
-                GameMove::default_of("A1", "B2"),
-                GameMove::default_of("A1", "C3"),
-                GameMove::default_of("A1", "D4"),
-                GameMove::default_of("A1", "E5"),
-                GameMove::default_of("A1", "F6"),
-                GameMove::default_of("A1", "G7"),
-                GameMove::default_of("A1", "H8"),
+                GameMove::default_of('♝', "A1", "B2"),
+                GameMove::default_of('♝', "A1", "C3"),
+                GameMove::default_of('♝', "A1", "D4"),
+                GameMove::default_of('♝', "A1", "E5"),
+                GameMove::default_of('♝', "A1", "F6"),
+                GameMove::default_of('♝', "A1", "G7"),
+                GameMove::default_of('♝', "A1", "H8"),
             ]
         );
     }
@@ -181,13 +179,13 @@ mod tests {
         assert_eq!(
             bishop_moves(&board, &mode.bounds, &Pos::of_str("A8")),
             [
-                GameMove::default_of("A8", "B7"),
-                GameMove::default_of("A8", "C6"),
-                GameMove::default_of("A8", "D5"),
-                GameMove::default_of("A8", "E4"),
-                GameMove::default_of("A8", "F3"),
-                GameMove::default_of("A8", "G2"),
-                GameMove::default_of("A8", "H1"),
+                GameMove::default_of('♝', "A8", "B7"),
+                GameMove::default_of('♝', "A8", "C6"),
+                GameMove::default_of('♝', "A8", "D5"),
+                GameMove::default_of('♝', "A8", "E4"),
+                GameMove::default_of('♝', "A8", "F3"),
+                GameMove::default_of('♝', "A8", "G2"),
+                GameMove::default_of('♝', "A8", "H1"),
             ]
         );
     }
@@ -211,13 +209,13 @@ mod tests {
         assert_eq!(
             bishop_moves(&board, &mode.bounds, &Pos::of_str("C5")),
             [
-                GameMove::capture_of("C5", "D6"),
-                GameMove::default_of("C5", "D4"),
-                GameMove::menace_of("C5", "E3"),
-                GameMove::default_of("C5", "B4"),
-                GameMove::capture_of("C5", "A3"),
-                GameMove::default_of("C5", "B6"),
-                GameMove::default_of("C5", "A7"),
+                GameMove::capture_of('♗', "C5", "D6"),
+                GameMove::default_of('♗', "C5", "D4"),
+                GameMove::menace_of('♗', "C5", "E3"),
+                GameMove::default_of('♗', "C5", "B4"),
+                GameMove::capture_of('♗', "C5", "A3"),
+                GameMove::default_of('♗', "C5", "B6"),
+                GameMove::default_of('♗', "C5", "A7"),
             ]
         );
     }
@@ -241,13 +239,13 @@ mod tests {
         assert_eq!(
             bishop_moves(&board, &mode.bounds, &Pos::of_str("C5")),
             [
-                GameMove::capture_of("C5", "D6"),
-                GameMove::default_of("C5", "D4"),
-                GameMove::menace_of("C5", "E3"),
-                GameMove::default_of("C5", "B4"),
-                GameMove::capture_of("C5", "A3"),
-                GameMove::default_of("C5", "B6"),
-                GameMove::default_of("C5", "A7"),
+                GameMove::capture_of('♝', "C5", "D6"),
+                GameMove::default_of('♝', "C5", "D4"),
+                GameMove::menace_of('♝', "C5", "E3"),
+                GameMove::default_of('♝', "C5", "B4"),
+                GameMove::capture_of('♝', "C5", "A3"),
+                GameMove::default_of('♝', "C5", "B6"),
+                GameMove::default_of('♝', "C5", "A7"),
             ]
         );
     }

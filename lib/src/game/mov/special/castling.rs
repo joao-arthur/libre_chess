@@ -2,7 +2,7 @@ use crate::{
     game::{
         board::GameBoard,
         game::{GameBounds, GameHistory},
-        mov::{CastlingMovOld, GameMove, GameMoveType, LongCastlingMove, ShortCastlingMove},
+        mov::{GameMove, GameMoveType, LongCastlingMove, ShortCastlingMove},
     },
     mov::Mov,
     piece::PieceType,
@@ -31,14 +31,17 @@ pub fn castling_moves(
                 break;
             }
             if let Some(maybe_rook) = board.get(&curr_pos) {
-                if maybe_rook.t == PieceType::Rook
+                if maybe_rook.typ == PieceType::Rook
                     && maybe_rook.color == piece.color
-                    && !history.iter().any(|mov| mov.piece == *maybe_rook)
+                    && !history.iter().any(|game_move| game_move.mov.piece == *maybe_rook)
                 {
                     result.push(GameMove {
-                        from: pos.clone(),
-                        to: curr_pos,
-                        t: GameMoveType::LongCastling(LongCastlingMove),
+                        mov: Mov {
+                            piece: *piece,
+                            from: pos.clone(),
+                            to: curr_pos,
+                        },
+                        typ: GameMoveType::LongCastling(LongCastlingMove),
                     });
                 }
                 break;
@@ -58,14 +61,17 @@ pub fn castling_moves(
                 continue;
             }
             if let Some(maybe_rook) = board.get(&curr_pos) {
-                if maybe_rook.t == PieceType::Rook
+                if maybe_rook.typ == PieceType::Rook
                     && maybe_rook.color == piece.color
-                    && !history.iter().any(|mov| mov.piece == *maybe_rook)
+                    && !history.iter().any(|game_move| game_move.mov.piece == *maybe_rook)
                 {
                     result.push(GameMove {
-                        from: pos.clone(),
-                        to: curr_pos,
-                        t: GameMoveType::ShortCastling(ShortCastlingMove),
+                        mov: Mov {
+                            piece: *piece,
+                            from: pos.clone(),
+                            to: curr_pos,
+                        },
+                        typ: GameMoveType::ShortCastling(ShortCastlingMove),
                     });
                 }
                 break;

@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
 use crate::{
-    color::PieceColor,
+    color::Color,
     game::{
         Game,
         game::GameHistory,
@@ -17,19 +17,19 @@ pub fn game_of_mode(mode: GameMode) -> Game {
     let history = Vec::new();
     let players = HashMap::from([
         (
-            PieceColor::Black,
+            Color::Black,
             GamePlayer {
-                color: PieceColor::Black,
+                color: Color::Black,
                 captures: Vec::new(),
-                moves: allowed_moves_of_player(&board, &bounds, &history, &PieceColor::Black),
+                moves: allowed_moves_of_player(&board, &bounds, &history, &Color::Black),
             },
         ),
         (
-            PieceColor::White,
+            Color::White,
             GamePlayer {
-                color: PieceColor::White,
+                color: Color::White,
                 captures: Vec::new(),
-                moves: allowed_moves_of_player(&board, &bounds, &history, &PieceColor::White),
+                moves: allowed_moves_of_player(&board, &bounds, &history, &Color::White),
             },
         ),
     ]);
@@ -48,24 +48,24 @@ pub fn game_of_mode_and_history(mode: GameMode, history: GameHistory) -> Game {
     let turn = evaluate_turn(&history);
     let players = HashMap::from([
         (
-            PieceColor::Black,
+            Color::Black,
             GamePlayer {
-                color: PieceColor::Black,
+                color: Color::Black,
                 captures: Vec::new(),
-                moves: if turn == PieceColor::Black {
-                    allowed_moves_of_player(&board, &bounds, &history, &PieceColor::Black)
+                moves: if turn == Color::Black {
+                    allowed_moves_of_player(&board, &bounds, &history, &Color::Black)
                 } else {
                     HashMap::new()
                 },
             },
         ),
         (
-            PieceColor::White,
+            Color::White,
             GamePlayer {
-                color: PieceColor::White,
+                color: Color::White,
                 captures: Vec::new(),
-                moves: if turn == PieceColor::White {
-                    allowed_moves_of_player(&board, &bounds, &history, &PieceColor::White)
+                moves: if turn == Color::White {
+                    allowed_moves_of_player(&board, &bounds, &history, &Color::White)
                 } else {
                     HashMap::new()
                 },
@@ -80,7 +80,7 @@ mod tests {
     use std::collections::HashMap;
 
     use crate::{
-        color::PieceColor,
+        color::Color,
         game::{
             Game,
             board::{board_of_str, board_to_string},
@@ -119,8 +119,8 @@ mod tests {
     fn game_of_mode_standard_chess_black_player() {
         let mode = standard_chess();
         let game = game_of_mode(standard_chess());
-        let black = game.players.get(&PieceColor::Black).unwrap();
-        assert_eq!(black.color, PieceColor::Black);
+        let black = game.players.get(&Color::Black).unwrap();
+        assert_eq!(black.color, Color::Black);
         assert_eq!(black.captures, Vec::new());
         assert_eq!(
             game_move_vec_to_string(&mode.bounds, black.moves.get(&Pos::of_str("A7")).unwrap()),
@@ -320,8 +320,8 @@ mod tests {
     fn game_of_mode_standard_chess_white_player() {
         let mode = standard_chess();
         let game = game_of_mode(standard_chess());
-        let white = game.players.get(&PieceColor::White).unwrap();
-        assert_eq!(white.color, PieceColor::White);
+        let white = game.players.get(&Color::White).unwrap();
+        assert_eq!(white.color, Color::White);
         assert_eq!(white.captures, Vec::new());
         assert_eq!(
             game_move_vec_to_string(&mode.bounds, white.moves.get(&Pos::of_str("A2")).unwrap()),
@@ -597,17 +597,17 @@ mod tests {
                 bounds: GameBounds { x1: 0, y1: 0, x2: 7, y2: 7 },
                 players: HashMap::from([
                     (
-                        PieceColor::Black,
+                        Color::Black,
                         GamePlayer {
-                            color: PieceColor::Black,
+                            color: Color::Black,
                             captures: Vec::new(),
                             moves: HashMap::new(),
                         },
                     ),
                     (
-                        PieceColor::White,
+                        Color::White,
                         GamePlayer {
-                            color: PieceColor::White,
+                            color: Color::White,
                             captures: Vec::new(),
                             moves: HashMap::from([
                                 (

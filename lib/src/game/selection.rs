@@ -89,7 +89,7 @@ mod tests {
     use std::collections::{HashMap, HashSet};
 
     use crate::{
-        color::PieceColor,
+        color::Color,
         game::{
             board::board_of_str,
             game::GamePlayers,
@@ -106,17 +106,17 @@ mod tests {
     fn empty_players() -> GamePlayers {
         HashMap::from([
             (
-                PieceColor::Black,
+                Color::Black,
                 GamePlayer {
-                    color: PieceColor::Black,
+                    color: Color::Black,
                     captures: Vec::new(),
                     moves: HashMap::new(),
                 },
             ),
             (
-                PieceColor::White,
+                Color::White,
                 GamePlayer {
-                    color: PieceColor::White,
+                    color: Color::White,
                     captures: Vec::new(),
                     moves: HashMap::new(),
                 },
@@ -181,17 +181,17 @@ mod tests {
         let board = mode.initial_board;
         let players = HashMap::from([
             (
-                PieceColor::Black,
+                Color::Black,
                 GamePlayer {
-                    color: PieceColor::Black,
+                    color: Color::Black,
                     captures: Vec::new(),
                     moves: HashMap::new(),
                 },
             ),
             (
-                PieceColor::White,
+                Color::White,
                 GamePlayer {
-                    color: PieceColor::White,
+                    color: Color::White,
                     captures: Vec::new(),
                     moves: HashMap::from([(
                         Pos::of_str("B2"),
@@ -273,17 +273,17 @@ mod tests {
         let pos = Pos::of_str("C2");
         let players = HashMap::from([
             (
-                PieceColor::Black,
+                Color::Black,
                 GamePlayer {
-                    color: PieceColor::Black,
+                    color: Color::Black,
                     captures: Vec::new(),
                     moves: HashMap::new(),
                 },
             ),
             (
-                PieceColor::White,
+                Color::White,
                 GamePlayer {
-                    color: PieceColor::White,
+                    color: Color::White,
                     captures: Vec::new(),
                     moves: HashMap::from([(
                         pos.clone(),
@@ -357,17 +357,17 @@ mod tests {
         );
         let players = HashMap::from([
             (
-                PieceColor::Black,
+                Color::Black,
                 GamePlayer {
-                    color: PieceColor::Black,
+                    color: Color::Black,
                     captures: Vec::new(),
                     moves: HashMap::new(),
                 },
             ),
             (
-                PieceColor::White,
+                Color::White,
                 GamePlayer {
-                    color: PieceColor::White,
+                    color: Color::White,
                     captures: Vec::new(),
                     moves: HashMap::from([(
                         Pos::of_str("D5"),
@@ -419,17 +419,17 @@ mod tests {
         );
         let players = HashMap::from([
             (
-                PieceColor::Black,
+                Color::Black,
                 GamePlayer {
-                    color: PieceColor::Black,
+                    color: Color::Black,
                     captures: Vec::new(),
                     moves: HashMap::new(),
                 },
             ),
             (
-                PieceColor::White,
+                Color::White,
                 GamePlayer {
-                    color: PieceColor::White,
+                    color: Color::White,
                     captures: Vec::new(),
                     moves: HashMap::from([(
                         Pos::of_str("A5"),
@@ -478,17 +478,17 @@ mod tests {
         );
         let players = HashMap::from([
             (
-                PieceColor::Black,
+                Color::Black,
                 GamePlayer {
-                    color: PieceColor::Black,
+                    color: Color::Black,
                     captures: Vec::new(),
                     moves: HashMap::new(),
                 },
             ),
             (
-                PieceColor::White,
+                Color::White,
                 GamePlayer {
-                    color: PieceColor::White,
+                    color: Color::White,
                     captures: Vec::new(),
                     moves: HashMap::from([(
                         Pos::of_str("A5"),
@@ -537,17 +537,17 @@ mod tests {
         );
         let players = HashMap::from([
             (
-                PieceColor::Black,
+                Color::Black,
                 GamePlayer {
-                    color: PieceColor::Black,
+                    color: Color::Black,
                     captures: Vec::new(),
                     moves: HashMap::new(),
                 },
             ),
             (
-                PieceColor::White,
+                Color::White,
                 GamePlayer {
-                    color: PieceColor::White,
+                    color: Color::White,
                     captures: Vec::new(),
                     moves: HashMap::from([(
                         Pos::of_str("E2"),
