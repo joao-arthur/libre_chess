@@ -12,12 +12,13 @@ use crate::{
 
 pub fn en_passant_moves(board: &GameBoard, history: &GameHistory, pos: &Pos) -> Vec<GameMove> {
     if let Some(piece) = board.get(pos) {
-        return match piece.color {
+        match piece.color {
             Color::White => white_pawn_en_passant(board, history, pos),
             Color::Black => black_pawn_en_passant(board, history, pos),
-        };
+        }
+    } else {
+        Vec::new()
     }
-    Vec::new()
 }
 
 fn white_pawn_en_passant(board: &GameBoard, history: &GameHistory, pos: &Pos) -> Vec<GameMove> {
@@ -108,7 +109,6 @@ mod tests {
 
     use crate::{
         game::{mov::GameMove, piece::game_piece_of},
-        mov::Mov,
         pos::Pos,
     };
 
