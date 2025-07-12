@@ -5,5 +5,5 @@ pub mod mode;
 mod mov;
 mod piece;
 mod player;
-//pub mod rule;
-//pub mod selection;
+pub mod rule;
+pub mod selection;

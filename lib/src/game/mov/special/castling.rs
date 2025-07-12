@@ -32,12 +32,16 @@ fn short_castling(
     king_pos: &Pos,
 ) -> Option<GameMove> {
     let king = board.get(&king_pos)?;
-    let (rook_pos, _) = board.iter().find(|(pos, piece)| piece.color == king.color && piece.typ == PieceType::Rook && pos.col > king_pos.col)?;
-    let maybe_moved = history.iter().find(|game_move| &game_move.mov.from == king_pos || &game_move.mov.from == rook_pos);
+    let (rook_pos, _) = board.iter().find(|(pos, piece)| {
+        piece.color == king.color && piece.typ == PieceType::Rook && pos.col > king_pos.col
+    })?;
+    let maybe_moved = history
+        .iter()
+        .find(|game_move| &game_move.mov.from == king_pos || &game_move.mov.from == rook_pos);
     if maybe_moved.is_some() {
         return None;
     }
-    for col in (king_pos.col+1)..rook_pos.col {
+    for col in (king_pos.col + 1)..rook_pos.col {
         if board.get(&Pos { row: king_pos.row, col }).is_some() {
             return None;
         }
@@ -49,14 +53,13 @@ fn short_castling(
                 for (_, player_moves) in player_moves_it {
                     for game_move in player_moves {
                         match game_move.typ {
-                            GameMoveType::Default(_) |
-                            GameMoveType::Menace(_) |
-                            GameMoveType::Capture(_) 
-                                => {
-                                    if game_move.mov.to.col == col {
-                                        return None;
-                                    }
+                            GameMoveType::Default(_)
+                            | GameMoveType::Menace(_)
+                            | GameMoveType::Capture(_) => {
+                                if game_move.mov.to.col == col {
+                                    return None;
                                 }
+                            }
                             _ => {}
                         }
                     }
@@ -66,7 +69,7 @@ fn short_castling(
     }
     return Some(GameMove {
         mov: Mov { from: king_pos.clone(), to: rook_pos.clone(), piece: *king },
-        typ: GameMoveType::ShortCastling(ShortCastlingMove)
+        typ: GameMoveType::ShortCastling(ShortCastlingMove),
     });
 }
 
@@ -77,12 +80,16 @@ fn long_castling(
     king_pos: &Pos,
 ) -> Option<GameMove> {
     let king = board.get(&king_pos)?;
-    let (rook_pos, _) = board.iter().find(|(pos, piece)| piece.color == king.color && piece.typ == PieceType::Rook && pos.col < king_pos.col)?;
-    let maybe_moved = history.iter().find(|game_move| &game_move.mov.from == king_pos || &game_move.mov.from == rook_pos);
+    let (rook_pos, _) = board.iter().find(|(pos, piece)| {
+        piece.color == king.color && piece.typ == PieceType::Rook && pos.col < king_pos.col
+    })?;
+    let maybe_moved = history
+        .iter()
+        .find(|game_move| &game_move.mov.from == king_pos || &game_move.mov.from == rook_pos);
     if maybe_moved.is_some() {
         return None;
     }
-    for col in (rook_pos.col+1)..king_pos.col {
+    for col in (rook_pos.col + 1)..king_pos.col {
         if board.get(&Pos { row: king_pos.row, col }).is_some() {
             return None;
         }
@@ -94,14 +101,13 @@ fn long_castling(
                 for (_, player_moves) in player_moves_it {
                     for game_move in player_moves {
                         match game_move.typ {
-                            GameMoveType::Default(_) |
-                            GameMoveType::Menace(_) |
-                            GameMoveType::Capture(_) 
-                                => {
-                                    if game_move.mov.to.col == col {
-                                        return None;
-                                    }
+                            GameMoveType::Default(_)
+                            | GameMoveType::Menace(_)
+                            | GameMoveType::Capture(_) => {
+                                if game_move.mov.to.col == col {
+                                    return None;
                                 }
+                            }
                             _ => {}
                         }
                     }
@@ -111,7 +117,7 @@ fn long_castling(
     }
     return Some(GameMove {
         mov: Mov { from: king_pos.clone(), to: rook_pos.clone(), piece: *king },
-        typ: GameMoveType::LongCastling(LongCastlingMove)
+        typ: GameMoveType::LongCastling(LongCastlingMove),
     });
 }
 
@@ -120,12 +126,9 @@ mod tests {
     use std::collections::HashMap;
 
     use crate::{
-        color::Color, game::{
-            board::board_of_str,
-            mode::standard_chess,
-            mov::GameMove, player::GamePlayer,
-        },
-        pos::Pos
+        color::Color,
+        game::{board::board_of_str, mode::standard_chess, mov::GameMove, player::GamePlayer},
+        pos::Pos,
     };
 
     use super::castling_moves;
@@ -150,19 +153,11 @@ mod tests {
         let players = HashMap::from([
             (
                 Color::Black,
-                GamePlayer {
-                    color: Color::Black,
-                    captures: Vec::new(),
-                    moves: HashMap::new(),
-                },
+                GamePlayer { color: Color::Black, captures: Vec::new(), moves: HashMap::new() },
             ),
             (
                 Color::White,
-                GamePlayer {
-                    color: Color::White,
-                    captures: Vec::new(),
-                    moves: HashMap::new(),
-                },
+                GamePlayer { color: Color::White, captures: Vec::new(), moves: HashMap::new() },
             ),
         ]);
         let pos = Pos::of_str("E1");
@@ -192,19 +187,11 @@ mod tests {
         let players = HashMap::from([
             (
                 Color::Black,
-                GamePlayer {
-                    color: Color::Black,
-                    captures: Vec::new(),
-                    moves: HashMap::new(),
-                },
+                GamePlayer { color: Color::Black, captures: Vec::new(), moves: HashMap::new() },
             ),
             (
                 Color::White,
-                GamePlayer {
-                    color: Color::White,
-                    captures: Vec::new(),
-                    moves: HashMap::new(),
-                },
+                GamePlayer { color: Color::White, captures: Vec::new(), moves: HashMap::new() },
             ),
         ]);
         let pos = Pos::of_str("E1");
@@ -234,19 +221,11 @@ mod tests {
         let players = HashMap::from([
             (
                 Color::Black,
-                GamePlayer {
-                    color: Color::Black,
-                    captures: Vec::new(),
-                    moves: HashMap::new(),
-                },
+                GamePlayer { color: Color::Black, captures: Vec::new(), moves: HashMap::new() },
             ),
             (
                 Color::White,
-                GamePlayer {
-                    color: Color::White,
-                    captures: Vec::new(),
-                    moves: HashMap::new(),
-                },
+                GamePlayer { color: Color::White, captures: Vec::new(), moves: HashMap::new() },
             ),
         ]);
         let pos = Pos::of_str("E1");
@@ -279,19 +258,11 @@ mod tests {
         let players = HashMap::from([
             (
                 Color::Black,
-                GamePlayer {
-                    color: Color::Black,
-                    captures: Vec::new(),
-                    moves: HashMap::new(),
-                },
+                GamePlayer { color: Color::Black, captures: Vec::new(), moves: HashMap::new() },
             ),
             (
                 Color::White,
-                GamePlayer {
-                    color: Color::White,
-                    captures: Vec::new(),
-                    moves: HashMap::new(),
-                },
+                GamePlayer { color: Color::White, captures: Vec::new(), moves: HashMap::new() },
             ),
         ]);
         let pos = Pos::of_str("E1");
@@ -331,19 +302,11 @@ mod tests {
         let players = HashMap::from([
             (
                 Color::Black,
-                GamePlayer {
-                    color: Color::Black,
-                    captures: Vec::new(),
-                    moves: HashMap::new(),
-                },
+                GamePlayer { color: Color::Black, captures: Vec::new(), moves: HashMap::new() },
             ),
             (
                 Color::White,
-                GamePlayer {
-                    color: Color::White,
-                    captures: Vec::new(),
-                    moves: HashMap::new(),
-                },
+                GamePlayer { color: Color::White, captures: Vec::new(), moves: HashMap::new() },
             ),
         ]);
         let pos = Pos::of_str("E1");
@@ -375,19 +338,11 @@ mod tests {
         let players = HashMap::from([
             (
                 Color::Black,
-                GamePlayer {
-                    color: Color::Black,
-                    captures: Vec::new(),
-                    moves: HashMap::new(),
-                },
+                GamePlayer { color: Color::Black, captures: Vec::new(), moves: HashMap::new() },
             ),
             (
                 Color::White,
-                GamePlayer {
-                    color: Color::White,
-                    captures: Vec::new(),
-                    moves: HashMap::new(),
-                },
+                GamePlayer { color: Color::White, captures: Vec::new(), moves: HashMap::new() },
             ),
         ]);
         let pos = Pos::of_str("E1");

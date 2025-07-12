@@ -159,8 +159,8 @@ impl GameMoveType {
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct GameMove {
-    mov: Mov,
-    typ: GameMoveType,
+    pub mov: Mov,
+    pub typ: GameMoveType,
 }
 
 impl GameMove {
