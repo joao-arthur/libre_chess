@@ -6,7 +6,7 @@ use crate::{
         board::GameBoard,
         game::{GameBounds, GameHistory, GamePlayers},
         mov::{
-            GameMove,
+            GameMove, GameMoveType,
             default::default_moves,
             special::{castling::castling_moves, en_passant::en_passant_moves},
         },
@@ -26,30 +26,39 @@ fn allowed_moves_of_piece(
         match piece.typ {
             PieceType::Pawn => [
                 default_moves(board, bounds, pos).into_iter().collect::<Vec<GameMove>>(),
-                en_passant_moves(board, history, pos)
-                    .into_iter()
-                    .map(GameMove::from)
-                    .collect::<Vec<GameMove>>(),
+                en_passant_moves(board, history, pos).into_iter().collect::<Vec<GameMove>>(),
             ]
             .into_iter()
             .flatten()
             .collect(),
             PieceType::King => {
-                //     for (curr_color, curr_player) in game.players {
-                //         if curr_color != player.color {
-                //             moves.retain(|mov|  !curr_player.menace.contains(mov));
-                //         }
-                //     }
-                [
+                let mut moves = [
                     default_moves(board, bounds, pos).into_iter().collect::<Vec<GameMove>>(),
                     castling_moves(board, history, players, pos)
                         .into_iter()
-                        .map(GameMove::from)
                         .collect::<Vec<GameMove>>(),
                 ]
                 .into_iter()
                 .flatten()
-                .collect()
+                .collect::<Vec<GameMove>>();
+                for (curr_color, curr_player) in players {
+                    if curr_color != &piece.color {
+                        let piece_moves_it = curr_player.moves.iter();
+                        for (_, piece_moves) in piece_moves_it {
+                            for menace_game_move in piece_moves {
+                                if menace_game_move.typ == GameMoveType::Default
+                                    || menace_game_move.typ == GameMoveType::Capture
+                                    || menace_game_move.typ == GameMoveType::Menace
+                                {
+                                    moves.retain(|game_move| {
+                                        game_move.mov.to != menace_game_move.mov.to
+                                    });
+                                }
+                            }
+                        }
+                    }
+                }
+                moves
             }
             _ => default_moves(board, bounds, pos).into_iter().collect::<Vec<GameMove>>(),
         }
@@ -77,4 +86,188 @@ pub fn allowed_moves_of_player(
 }
 
 #[cfg(test)]
-mod tests {}
+mod tests {
+    use std::collections::HashMap;
+
+    use crate::{
+        color::Color,
+        game::{board::board_of_str, mode::standard_chess, mov::GameMove, player::GamePlayer},
+        pos::Pos,
+    };
+
+    use super::allowed_moves_of_player;
+
+    #[test]
+    fn test_allowed_moves_of_player_standard_moves() {
+        let mode = standard_chess();
+        let board = board_of_str(
+            &mode.bounds,
+            [
+                "    ♚   ",
+                "       ♟",
+                "        ",
+                "        ",
+                "        ",
+                "        ",
+                "♙       ",
+                "    ♔   ",
+            ],
+        );
+        let bounds = mode.bounds;
+        let history = Vec::new();
+        let players = HashMap::from([
+            (
+                Color::Black,
+                GamePlayer { color: Color::Black, captures: Vec::new(), moves: HashMap::new() },
+            ),
+            (
+                Color::White,
+                GamePlayer { color: Color::White, captures: Vec::new(), moves: HashMap::new() },
+            ),
+        ]);
+        let color = Color::White;
+        assert_eq!(
+            allowed_moves_of_player(&board, &bounds, &history, &players, &color),
+            HashMap::from([
+                (
+                    Pos::of("A2"),
+                    vec![
+                        GameMove::default_of('♙', "A2", "A3"),
+                        GameMove::default_of('♙', "A2", "A4"),
+                        GameMove::menace_of('♙', "A2", "B3"),
+                    ]
+                ),
+                (
+                    Pos::of("E1"),
+                    vec![
+                        GameMove::default_of('♔', "E1", "F2"),
+                        GameMove::default_of('♔', "E1", "F1"),
+                        GameMove::default_of('♔', "E1", "D1"),
+                        GameMove::default_of('♔', "E1", "D2"),
+                        GameMove::default_of('♔', "E1", "E2"),
+                    ]
+                ),
+            ])
+        )
+    }
+
+    #[test]
+    fn test_allowed_moves_of_player_free_king() {
+        let mode = standard_chess();
+        let board = board_of_str(
+            &mode.bounds,
+            [
+                "        ",
+                "        ",
+                "        ",
+                "        ",
+                "   ♔    ",
+                "        ",
+                "        ",
+                "        ",
+            ],
+        );
+        let bounds = mode.bounds;
+        let history = Vec::new();
+        let players = HashMap::from([
+            (
+                Color::Black,
+                GamePlayer { color: Color::Black, captures: Vec::new(), moves: HashMap::new() },
+            ),
+            (
+                Color::White,
+                GamePlayer { color: Color::White, captures: Vec::new(), moves: HashMap::new() },
+            ),
+        ]);
+        let color = Color::White;
+        assert_eq!(
+            allowed_moves_of_player(&board, &bounds, &history, &players, &color),
+            HashMap::from([(
+                Pos::of("D4"),
+                vec![
+                    GameMove::default_of('♔', "D4", "E5"),
+                    GameMove::default_of('♔', "D4", "E4"),
+                    GameMove::default_of('♔', "D4", "E3"),
+                    GameMove::default_of('♔', "D4", "D3"),
+                    GameMove::default_of('♔', "D4", "C3"),
+                    GameMove::default_of('♔', "D4", "C4"),
+                    GameMove::default_of('♔', "D4", "C5"),
+                    GameMove::default_of('♔', "D4", "D5"),
+                ]
+            )])
+        )
+    }
+
+    #[test]
+    fn test_allowed_moves_of_player_king_blocked_by_menace() {
+        let mode = standard_chess();
+        let board = board_of_str(
+            &mode.bounds,
+            [
+                "        ",
+                "        ",
+                "   ♟    ",
+                "   ♟    ",
+                " ♟ ♔ ♟  ",
+                "        ",
+                "        ",
+                "        ",
+            ],
+        );
+        let bounds = mode.bounds;
+        let history = Vec::new();
+        let players = HashMap::from([
+            (
+                Color::Black,
+                GamePlayer {
+                    color: Color::Black,
+                    captures: Vec::new(),
+                    moves: HashMap::from([
+                        (
+                            Pos::of("D5"),
+                            vec![
+                                GameMove::menace_of('♟', "D5", "C4"),
+                                GameMove::menace_of('♟', "D5", "E4"),
+                            ],
+                        ),
+                        (
+                            Pos::of("D6"),
+                            vec![
+                                GameMove::menace_of('♟', "D6", "C5"),
+                                GameMove::menace_of('♟', "D6", "E5"),
+                            ],
+                        ),
+                        (
+                            Pos::of("B4"),
+                            vec![
+                                GameMove::default_of('♟', "B4", "B3"),
+                                GameMove::menace_of('♟', "B4", "A3"),
+                                GameMove::menace_of('♟', "B4", "C3"),
+                            ],
+                        ),
+                        (
+                            Pos::of("F4"),
+                            vec![
+                                GameMove::default_of('♟', "F4", "F3"),
+                                GameMove::menace_of('♟', "F4", "E3"),
+                                GameMove::menace_of('♟', "F4", "G3"),
+                            ],
+                        ),
+                    ]),
+                },
+            ),
+            (
+                Color::White,
+                GamePlayer { color: Color::White, captures: Vec::new(), moves: HashMap::new() },
+            ),
+        ]);
+        let color = Color::White;
+        assert_eq!(
+            allowed_moves_of_player(&board, &bounds, &history, &players, &color),
+            HashMap::from([(
+                Pos::of("D4"),
+                vec![GameMove::default_of('♔', "D4", "D3"), GameMove::capture_of('♔', "D4", "D5"),]
+            )])
+        );
+    }
+}

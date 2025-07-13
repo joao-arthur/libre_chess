@@ -1,15 +1,15 @@
 use crate::{
     game::{
         board::GameBoard,
-        game::{Game, GameHistory, GamePlayers},
-        mov::{GameMove, GameMoveType},
+        game::{GameHistory, GamePlayers},
+        mov::GameMoveType,
         rule::turn::evaluate_turn,
     },
     piece::PieceType,
 };
 
 pub fn is_in_check(board: &GameBoard, players: &GamePlayers, history: &GameHistory) -> bool {
-    let curr_turn = evaluate_turn(&history);
+    let curr_turn = evaluate_turn(history);
     let maybe_king =
         board.iter().find(|(_, piece)| piece.typ == PieceType::King && piece.color == curr_turn);
     if let Some((king_pos, _)) = maybe_king {

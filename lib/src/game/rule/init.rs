@@ -14,7 +14,7 @@ pub fn game_of_mode(mode: GameMode) -> Game {
     let board = mode.initial_board;
     let bounds = mode.bounds;
     let history = Vec::new();
-    let mut players = HashMap::from([
+    let players = HashMap::from([
         (
             Color::Black,
             GamePlayer {
@@ -181,7 +181,6 @@ mod tests {
             mov::{GameMove, game_move_vec_to_string},
             player::GamePlayer,
         },
-        mov::Mov,
         pos::Pos,
     };
 

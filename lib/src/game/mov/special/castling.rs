@@ -31,7 +31,7 @@ fn short_castling(
     players: &GamePlayers,
     king_pos: &Pos,
 ) -> Option<GameMove> {
-    let king = board.get(&king_pos)?;
+    let king = board.get(king_pos)?;
     let (rook_pos, _) = board.iter().find(|(pos, piece)| {
         piece.color == king.color && piece.typ == PieceType::Rook && pos.col > king_pos.col
     })?;
@@ -64,10 +64,10 @@ fn short_castling(
             }
         }
     }
-    return Some(GameMove {
+    Some(GameMove {
         mov: Mov { from: king_pos.clone(), to: rook_pos.clone(), piece: *king },
         typ: GameMoveType::ShortCastling,
-    });
+    })
 }
 
 fn long_castling(
@@ -76,7 +76,7 @@ fn long_castling(
     players: &GamePlayers,
     king_pos: &Pos,
 ) -> Option<GameMove> {
-    let king = board.get(&king_pos)?;
+    let king = board.get(king_pos)?;
     let (rook_pos, _) = board.iter().find(|(pos, piece)| {
         piece.color == king.color && piece.typ == PieceType::Rook && pos.col < king_pos.col
     })?;
@@ -109,10 +109,10 @@ fn long_castling(
             }
         }
     }
-    return Some(GameMove {
+    Some(GameMove {
         mov: Mov { from: king_pos.clone(), to: rook_pos.clone(), piece: *king },
         typ: GameMoveType::LongCastling,
-    });
+    })
 }
 
 #[cfg(test)]

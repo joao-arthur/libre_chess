@@ -4,7 +4,7 @@ use crate::{
         capture::GameCapture,
         game::{GameBounds, GameHistory, GamePlayers},
         mov::{GameMove, GameMoveType},
-        rule::{allowed_moves::allowed_moves_of_player, turn::evaluate_turn},
+        rule::turn::evaluate_turn,
     },
     pos::Pos,
 };
