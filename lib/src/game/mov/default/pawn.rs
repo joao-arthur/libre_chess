@@ -3,7 +3,7 @@ use crate::{
     game::{
         board::GameBoard,
         game::GameBounds,
-        mov::{CaptureMove, DefaultMove, GameMove, GameMoveType, MenaceMove},
+        mov::{GameMove, GameMoveType},
     },
     mov::Mov,
     pos::Pos,
@@ -36,7 +36,7 @@ pub fn pawn_moves(board: &GameBoard, bounds: &GameBounds, pos: &Pos) -> Vec<Game
             if board.get(&curr_pos).is_none() {
                 result.push(GameMove {
                     mov: Mov { piece: *piece, from: pos.clone(), to: curr_pos },
-                    typ: GameMoveType::Default(DefaultMove),
+                    typ: GameMoveType::Default,
                 });
             }
         }
@@ -53,18 +53,18 @@ pub fn pawn_moves(board: &GameBoard, bounds: &GameBounds, pos: &Pos) -> Vec<Game
                     if curr_piece.color == piece.color {
                         result.push(GameMove {
                             mov: Mov { piece: *piece, from: pos.clone(), to: curr_pos },
-                            typ: GameMoveType::Menace(MenaceMove),
+                            typ: GameMoveType::Menace,
                         });
                     } else {
                         result.push(GameMove {
                             mov: Mov { piece: *piece, from: pos.clone(), to: curr_pos },
-                            typ: GameMoveType::Capture(CaptureMove),
+                            typ: GameMoveType::Capture,
                         });
                     }
                 } else {
                     result.push(GameMove {
                         mov: Mov { piece: *piece, from: pos.clone(), to: curr_pos },
-                        typ: GameMoveType::Menace(MenaceMove),
+                        typ: GameMoveType::Menace,
                     });
                 }
             }

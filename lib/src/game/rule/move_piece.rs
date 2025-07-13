@@ -76,17 +76,17 @@ fn move_piece(
     game_move: &GameMove,
 ) {
     match game_move.typ {
-        GameMoveType::Default(_) => default_move(board, players, history, game_move),
-        GameMoveType::Capture(_) => default_move(board, players, history, game_move),
-        GameMoveType::Menace(_) => {}
-        GameMoveType::EnPassant(_) => en_passant_move(board, players, history, game_move),
-        GameMoveType::LongCastling(_) | GameMoveType::ShortCastling(_) => {
+        GameMoveType::Default => default_move(board, players, history, game_move),
+        GameMoveType::Capture => default_move(board, players, history, game_move),
+        GameMoveType::Menace => {}
+        GameMoveType::EnPassant => en_passant_move(board, players, history, game_move),
+        GameMoveType::LongCastling | GameMoveType::ShortCastling => {
             castling_move(board, history, game_move)
         }
-        GameMoveType::PromotionToQueen(_)
-        | GameMoveType::PromotionToKnight(_)
-        | GameMoveType::PromotionToRook(_)
-        | GameMoveType::PromotionToBishop(_) => promotion_move(board, history, game_move),
+        GameMoveType::PromotionToQueen
+        | GameMoveType::PromotionToKnight
+        | GameMoveType::PromotionToRook
+        | GameMoveType::PromotionToBishop => promotion_move(board, history, game_move),
     }
 }
 
@@ -103,7 +103,7 @@ pub fn app_move_piece(
         if &turn == color {
             player.moves.drain();
         } else {
-         //   player.moves.extend(allowed_moves_of_player(board, bounds, history, players, color));
+            //   player.moves.extend(allowed_moves_of_player(board, bounds, history, players, color));
         }
     }
 }

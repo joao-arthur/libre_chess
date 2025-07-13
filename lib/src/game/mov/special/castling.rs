@@ -1,8 +1,8 @@
 use crate::{
     game::{
         board::GameBoard,
-        game::{GameBounds, GameHistory, GamePlayers},
-        mov::{GameMove, GameMoveType, LongCastlingMove, ShortCastlingMove},
+        game::{GameHistory, GamePlayers},
+        mov::{GameMove, GameMoveType},
     },
     mov::Mov,
     piece::PieceType,
@@ -52,15 +52,12 @@ fn short_castling(
                 let player_moves_it = player.moves.iter();
                 for (_, player_moves) in player_moves_it {
                     for game_move in player_moves {
-                        match game_move.typ {
-                            GameMoveType::Default(_)
-                            | GameMoveType::Menace(_)
-                            | GameMoveType::Capture(_) => {
-                                if game_move.mov.to.col == col {
-                                    return None;
-                                }
-                            }
-                            _ => {}
+                        if (game_move.typ == GameMoveType::Default
+                            || game_move.typ == GameMoveType::Menace
+                            || game_move.typ == GameMoveType::Capture)
+                            && game_move.mov.to.col == col
+                        {
+                            return None;
                         }
                     }
                 }
@@ -69,7 +66,7 @@ fn short_castling(
     }
     return Some(GameMove {
         mov: Mov { from: king_pos.clone(), to: rook_pos.clone(), piece: *king },
-        typ: GameMoveType::ShortCastling(ShortCastlingMove),
+        typ: GameMoveType::ShortCastling,
     });
 }
 
@@ -100,15 +97,12 @@ fn long_castling(
                 let player_moves_it = player.moves.iter();
                 for (_, player_moves) in player_moves_it {
                     for game_move in player_moves {
-                        match game_move.typ {
-                            GameMoveType::Default(_)
-                            | GameMoveType::Menace(_)
-                            | GameMoveType::Capture(_) => {
-                                if game_move.mov.to.col == col {
-                                    return None;
-                                }
-                            }
-                            _ => {}
+                        if (game_move.typ == GameMoveType::Default
+                            || game_move.typ == GameMoveType::Menace
+                            || game_move.typ == GameMoveType::Capture)
+                            && game_move.mov.to.col == col
+                        {
+                            return None;
                         }
                     }
                 }
@@ -117,7 +111,7 @@ fn long_castling(
     }
     return Some(GameMove {
         mov: Mov { from: king_pos.clone(), to: rook_pos.clone(), piece: *king },
-        typ: GameMoveType::LongCastling(LongCastlingMove),
+        typ: GameMoveType::LongCastling,
     });
 }
 

@@ -76,7 +76,6 @@
 }
 ```
 
-hoje o gamemov carrega toda a informação, qual a peça, de onde para onde...
 
 mas eu não preciso disso tudo...
 

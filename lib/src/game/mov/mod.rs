@@ -12,149 +12,17 @@ pub mod default;
 pub mod special;
 
 #[derive(Debug, PartialEq, Clone)]
-pub struct DefaultMove;
-
-#[derive(Debug, PartialEq, Clone)]
-pub struct CaptureMove;
-
-#[derive(Debug, PartialEq, Clone)]
-pub struct MenaceMove;
-
-#[derive(Debug, PartialEq, Clone)]
-pub struct EnPassantMove;
-
-#[derive(Debug, PartialEq, Clone)]
-pub struct LongCastlingMove;
-
-#[derive(Debug, PartialEq, Clone)]
-pub struct ShortCastlingMove;
-
-#[derive(Debug, PartialEq, Clone)]
-pub struct PromotionToQueenMove;
-
-#[derive(Debug, PartialEq, Clone)]
-pub struct PromotionToRookMove;
-
-#[derive(Debug, PartialEq, Clone)]
-pub struct PromotionToBishopMove;
-
-#[derive(Debug, PartialEq, Clone)]
-pub struct PromotionToKnightMove;
-
-#[derive(Debug, PartialEq, Clone)]
 pub enum GameMoveType {
-    Default(DefaultMove),
-    Capture(CaptureMove),
-    Menace(MenaceMove),
-    EnPassant(EnPassantMove),
-    LongCastling(LongCastlingMove),
-    ShortCastling(ShortCastlingMove),
-    PromotionToQueen(PromotionToQueenMove),
-    PromotionToRook(PromotionToRookMove),
-    PromotionToBishop(PromotionToBishopMove),
-    PromotionToKnight(PromotionToKnightMove),
-}
-
-impl From<DefaultMove> for GameMoveType {
-    fn from(mov: DefaultMove) -> Self {
-        GameMoveType::Default(mov)
-    }
-}
-
-impl From<CaptureMove> for GameMoveType {
-    fn from(mov: CaptureMove) -> Self {
-        GameMoveType::Capture(mov)
-    }
-}
-
-impl From<MenaceMove> for GameMoveType {
-    fn from(mov: MenaceMove) -> Self {
-        GameMoveType::Menace(mov)
-    }
-}
-
-impl From<EnPassantMove> for GameMoveType {
-    fn from(mov: EnPassantMove) -> Self {
-        GameMoveType::EnPassant(mov)
-    }
-}
-
-impl From<LongCastlingMove> for GameMoveType {
-    fn from(mov: LongCastlingMove) -> Self {
-        GameMoveType::LongCastling(mov)
-    }
-}
-
-impl From<ShortCastlingMove> for GameMoveType {
-    fn from(mov: ShortCastlingMove) -> Self {
-        GameMoveType::ShortCastling(mov)
-    }
-}
-
-impl From<PromotionToQueenMove> for GameMoveType {
-    fn from(mov: PromotionToQueenMove) -> Self {
-        GameMoveType::PromotionToQueen(mov)
-    }
-}
-
-impl From<PromotionToRookMove> for GameMoveType {
-    fn from(mov: PromotionToRookMove) -> Self {
-        GameMoveType::PromotionToRook(mov)
-    }
-}
-
-impl From<PromotionToBishopMove> for GameMoveType {
-    fn from(mov: PromotionToBishopMove) -> Self {
-        GameMoveType::PromotionToBishop(mov)
-    }
-}
-
-impl From<PromotionToKnightMove> for GameMoveType {
-    fn from(mov: PromotionToKnightMove) -> Self {
-        GameMoveType::PromotionToKnight(mov)
-    }
-}
-
-impl GameMoveType {
-    fn default() -> Self {
-        GameMoveType::from(DefaultMove)
-    }
-
-    fn capture() -> Self {
-        GameMoveType::from(CaptureMove)
-    }
-
-    fn menace() -> Self {
-        GameMoveType::from(MenaceMove)
-    }
-
-    fn en_passant() -> Self {
-        GameMoveType::from(EnPassantMove)
-    }
-
-    fn long_castling() -> Self {
-        GameMoveType::from(LongCastlingMove)
-    }
-
-    fn short_castling() -> Self {
-        GameMoveType::from(ShortCastlingMove)
-    }
-
-    fn promotion_to_queen() -> Self {
-        GameMoveType::from(PromotionToQueenMove)
-    }
-
-    fn promotion_to_rook() -> Self {
-        GameMoveType::from(PromotionToRookMove)
-    }
-
-    fn promotion_to_bishop() -> Self {
-        GameMoveType::from(PromotionToBishopMove)
-    }
-
-    fn promotion_to_knight() -> Self {
-        GameMoveType::from(PromotionToKnightMove)
-    }
+    Default,
+    Capture,
+    Menace,
+    EnPassant,
+    LongCastling,
+    ShortCastling,
+    PromotionToQueen,
+    PromotionToRook,
+    PromotionToBishop,
+    PromotionToKnight,
 }
 
 #[derive(Debug, PartialEq, Clone)]
@@ -174,83 +42,83 @@ impl GameMove {
     }
 
     pub fn default_try_of(piece: char, from: &str, to: &str) -> Option<Self> {
-        Self::try_of(piece, from, to, GameMoveType::default())
+        Self::try_of(piece, from, to, GameMoveType::Default)
     }
 
     pub fn default_of(piece: char, from: &str, to: &str) -> Self {
-        Self::of(piece, from, to, GameMoveType::default())
+        Self::of(piece, from, to, GameMoveType::Default)
     }
 
     pub fn capture_try_of(piece: char, from: &str, to: &str) -> Option<Self> {
-        Self::try_of(piece, from, to, GameMoveType::capture())
+        Self::try_of(piece, from, to, GameMoveType::Capture)
     }
 
     pub fn capture_of(piece: char, from: &str, to: &str) -> Self {
-        Self::of(piece, from, to, GameMoveType::capture())
+        Self::of(piece, from, to, GameMoveType::Capture)
     }
 
     pub fn menace_try_of(piece: char, from: &str, to: &str) -> Option<Self> {
-        Self::try_of(piece, from, to, GameMoveType::menace())
+        Self::try_of(piece, from, to, GameMoveType::Menace)
     }
 
     pub fn menace_of(piece: char, from: &str, to: &str) -> Self {
-        Self::of(piece, from, to, GameMoveType::menace())
+        Self::of(piece, from, to, GameMoveType::Menace)
     }
 
     pub fn en_passant_try_of(piece: char, from: &str, to: &str) -> Option<Self> {
-        Self::try_of(piece, from, to, GameMoveType::en_passant())
+        Self::try_of(piece, from, to, GameMoveType::EnPassant)
     }
 
     pub fn en_passant_of(piece: char, from: &str, to: &str) -> Self {
-        Self::of(piece, from, to, GameMoveType::en_passant())
+        Self::of(piece, from, to, GameMoveType::EnPassant)
     }
 
     pub fn long_castling_try_of(piece: char, from: &str, to: &str) -> Option<Self> {
-        Self::try_of(piece, from, to, GameMoveType::long_castling())
+        Self::try_of(piece, from, to, GameMoveType::LongCastling)
     }
 
     pub fn long_castling_of(piece: char, from: &str, to: &str) -> Self {
-        Self::of(piece, from, to, GameMoveType::long_castling())
+        Self::of(piece, from, to, GameMoveType::LongCastling)
     }
 
     pub fn short_castling_try_of(piece: char, from: &str, to: &str) -> Option<Self> {
-        Self::try_of(piece, from, to, GameMoveType::short_castling())
+        Self::try_of(piece, from, to, GameMoveType::ShortCastling)
     }
 
     pub fn short_castling_of(piece: char, from: &str, to: &str) -> Self {
-        Self::of(piece, from, to, GameMoveType::short_castling())
+        Self::of(piece, from, to, GameMoveType::ShortCastling)
     }
 
     pub fn promotion_to_queen_try_of(piece: char, from: &str, to: &str) -> Option<Self> {
-        Self::try_of(piece, from, to, GameMoveType::promotion_to_queen())
+        Self::try_of(piece, from, to, GameMoveType::PromotionToQueen)
     }
 
     pub fn promotion_to_queen_of(piece: char, from: &str, to: &str) -> Self {
-        Self::of(piece, from, to, GameMoveType::promotion_to_queen())
+        Self::of(piece, from, to, GameMoveType::PromotionToQueen)
     }
 
     pub fn promotion_to_rook_try_of(piece: char, from: &str, to: &str) -> Option<Self> {
-        Self::try_of(piece, from, to, GameMoveType::promotion_to_rook())
+        Self::try_of(piece, from, to, GameMoveType::PromotionToRook)
     }
 
     pub fn promotion_to_rook_of(piece: char, from: &str, to: &str) -> Self {
-        Self::of(piece, from, to, GameMoveType::promotion_to_rook())
+        Self::of(piece, from, to, GameMoveType::PromotionToRook)
     }
 
     pub fn promotion_to_bishop_try_of(piece: char, from: &str, to: &str) -> Option<Self> {
-        Self::try_of(piece, from, to, GameMoveType::promotion_to_bishop())
+        Self::try_of(piece, from, to, GameMoveType::PromotionToBishop)
     }
 
     pub fn promotion_to_bishop_of(piece: char, from: &str, to: &str) -> Self {
-        Self::of(piece, from, to, GameMoveType::promotion_to_bishop())
+        Self::of(piece, from, to, GameMoveType::PromotionToBishop)
     }
 
     pub fn promotion_to_knight_try_of(piece: char, from: &str, to: &str) -> Option<Self> {
-        Self::try_of(piece, from, to, GameMoveType::promotion_to_knight())
+        Self::try_of(piece, from, to, GameMoveType::PromotionToKnight)
     }
 
     pub fn promotion_to_knight_of(piece: char, from: &str, to: &str) -> Self {
-        Self::of(piece, from, to, GameMoveType::promotion_to_knight())
+        Self::of(piece, from, to, GameMoveType::PromotionToKnight)
     }
 }
 
@@ -305,19 +173,19 @@ pub fn try_game_move_vec_from_str<const N: usize>(
             match str_col {
                 '○' => res.push(GameMove {
                     mov: Mov { piece, from: from.clone(), to },
-                    typ: GameMoveType::Default(DefaultMove),
+                    typ: GameMoveType::Default,
                 }),
                 '◎' => res.push(GameMove {
                     mov: Mov { piece, from: from.clone(), to },
-                    typ: GameMoveType::Capture(CaptureMove),
+                    typ: GameMoveType::Capture,
                 }),
                 '◌' => res.push(GameMove {
                     mov: Mov { piece, from: from.clone(), to },
-                    typ: GameMoveType::Menace(MenaceMove),
+                    typ: GameMoveType::Menace,
                 }),
                 '◍' => res.push(GameMove {
                     mov: Mov { piece, from: from.clone(), to },
-                    typ: GameMoveType::EnPassant(EnPassantMove),
+                    typ: GameMoveType::EnPassant,
                 }),
                 _ => {}
             }
@@ -336,15 +204,15 @@ pub fn game_move_vec_to_string(bounds: &GameBounds, moves: &Vec<GameMove>) -> St
             let maybe_mov = moves.iter().find(|game_move| game_move.mov.to == pos);
             if let Some(mov) = maybe_mov {
                 match mov.typ {
-                    GameMoveType::Default(_) => res.push('○'),
-                    GameMoveType::Capture(_) => res.push('◎'),
-                    GameMoveType::Menace(_) => res.push('◌'),
-                    GameMoveType::EnPassant(_) => res.push('◍'),
-                    GameMoveType::LongCastling(_) | GameMoveType::ShortCastling(_) => res.push('✚'),
-                    GameMoveType::PromotionToQueen(_)
-                    | GameMoveType::PromotionToRook(_)
-                    | GameMoveType::PromotionToBishop(_)
-                    | GameMoveType::PromotionToKnight(_) => res.push('●'),
+                    GameMoveType::Default => res.push('○'),
+                    GameMoveType::Capture => res.push('◎'),
+                    GameMoveType::Menace => res.push('◌'),
+                    GameMoveType::EnPassant => res.push('◍'),
+                    GameMoveType::LongCastling | GameMoveType::ShortCastling => res.push('✚'),
+                    GameMoveType::PromotionToQueen
+                    | GameMoveType::PromotionToRook
+                    | GameMoveType::PromotionToBishop
+                    | GameMoveType::PromotionToKnight => res.push('●'),
                 };
                 continue;
             }
@@ -364,12 +232,7 @@ pub fn game_move_vec_to_string(bounds: &GameBounds, moves: &Vec<GameMove>) -> St
 mod tests {
     use crate::{game::mode::standard_chess, mov::Mov};
 
-    use super::{
-        CaptureMove, DefaultMove, EnPassantMove, GameMove, GameMoveType, LongCastlingMove,
-        MenaceMove, PromotionToBishopMove, PromotionToKnightMove, PromotionToQueenMove,
-        PromotionToRookMove, ShortCastlingMove, game_move_vec_to_string,
-        try_game_move_vec_from_str,
-    };
+    use super::{GameMove, GameMoveType, game_move_vec_to_string, try_game_move_vec_from_str};
 
     #[test]
     fn test_try_game_move_vec_from_str() {
@@ -512,115 +375,49 @@ mod tests {
     }
 
     #[test]
-    fn game_move_from() {
-        assert_eq!(GameMoveType::from(DefaultMove), GameMoveType::Default(DefaultMove));
-        assert_eq!(GameMoveType::from(CaptureMove), GameMoveType::Capture(CaptureMove));
-        assert_eq!(GameMoveType::from(MenaceMove), GameMoveType::Menace(MenaceMove));
-        assert_eq!(GameMoveType::from(EnPassantMove), GameMoveType::EnPassant(EnPassantMove));
-        assert_eq!(
-            GameMoveType::from(LongCastlingMove),
-            GameMoveType::LongCastling(LongCastlingMove)
-        );
-        assert_eq!(
-            GameMoveType::from(ShortCastlingMove),
-            GameMoveType::ShortCastling(ShortCastlingMove)
-        );
-        assert_eq!(
-            GameMoveType::from(PromotionToQueenMove),
-            GameMoveType::PromotionToQueen(PromotionToQueenMove)
-        );
-        assert_eq!(
-            GameMoveType::from(PromotionToRookMove),
-            GameMoveType::PromotionToRook(PromotionToRookMove)
-        );
-        assert_eq!(
-            GameMoveType::from(PromotionToBishopMove),
-            GameMoveType::PromotionToBishop(PromotionToBishopMove)
-        );
-        assert_eq!(
-            GameMoveType::from(PromotionToKnightMove),
-            GameMoveType::PromotionToKnight(PromotionToKnightMove)
-        );
-    }
-
-    #[test]
-    fn game_move() {
-        assert_eq!(GameMoveType::default(), GameMoveType::Default(DefaultMove));
-        assert_eq!(GameMoveType::capture(), GameMoveType::Capture(CaptureMove));
-        assert_eq!(GameMoveType::menace(), GameMoveType::Menace(MenaceMove));
-        assert_eq!(GameMoveType::en_passant(), GameMoveType::EnPassant(EnPassantMove));
-        assert_eq!(GameMoveType::long_castling(), GameMoveType::LongCastling(LongCastlingMove));
-        assert_eq!(GameMoveType::short_castling(), GameMoveType::ShortCastling(ShortCastlingMove));
-        assert_eq!(
-            GameMoveType::promotion_to_queen(),
-            GameMoveType::PromotionToQueen(PromotionToQueenMove)
-        );
-        assert_eq!(
-            GameMoveType::promotion_to_rook(),
-            GameMoveType::PromotionToRook(PromotionToRookMove)
-        );
-        assert_eq!(
-            GameMoveType::promotion_to_bishop(),
-            GameMoveType::PromotionToBishop(PromotionToBishopMove)
-        );
-        assert_eq!(
-            GameMoveType::promotion_to_knight(),
-            GameMoveType::PromotionToKnight(PromotionToKnightMove)
-        );
-    }
-
-    #[test]
     fn game_move_try_of() {
         assert_eq!(
-            GameMove::try_of('♙', "A2", "A4", GameMoveType::default()),
-            Some(GameMove { mov: Mov::of('♙', "A2", "A4"), typ: GameMoveType::default() })
+            GameMove::try_of('♙', "A2", "A4", GameMoveType::Default),
+            Some(GameMove { mov: Mov::of('♙', "A2", "A4"), typ: GameMoveType::Default })
         );
         assert_eq!(
-            GameMove::try_of('♙', "D4", "E5", GameMoveType::capture()),
-            Some(GameMove { mov: Mov::of('♙', "D4", "E5"), typ: GameMoveType::capture() })
+            GameMove::try_of('♙', "D4", "E5", GameMoveType::Capture),
+            Some(GameMove { mov: Mov::of('♙', "D4", "E5"), typ: GameMoveType::Capture })
         );
         assert_eq!(
-            GameMove::try_of('♘', "D6", "C8", GameMoveType::menace()),
-            Some(GameMove { mov: Mov::of('♘', "D6", "C8"), typ: GameMoveType::menace() })
+            GameMove::try_of('♘', "D6", "C8", GameMoveType::Menace),
+            Some(GameMove { mov: Mov::of('♘', "D6", "C8"), typ: GameMoveType::Menace })
         );
         assert_eq!(
-            GameMove::try_of('♙', "G6", "F7", GameMoveType::en_passant()),
-            Some(GameMove { mov: Mov::of('♙', "G6", "F7"), typ: GameMoveType::en_passant() })
+            GameMove::try_of('♙', "G6", "F7", GameMoveType::EnPassant),
+            Some(GameMove { mov: Mov::of('♙', "G6", "F7"), typ: GameMoveType::EnPassant })
         );
         assert_eq!(
-            GameMove::try_of('♔', "E1", "A1", GameMoveType::long_castling()),
-            Some(GameMove { mov: Mov::of('♔', "E1", "A1"), typ: GameMoveType::long_castling() })
+            GameMove::try_of('♔', "E1", "A1", GameMoveType::LongCastling),
+            Some(GameMove { mov: Mov::of('♔', "E1", "A1"), typ: GameMoveType::LongCastling })
         );
         assert_eq!(
-            GameMove::try_of('♔', "E1", "H1", GameMoveType::short_castling()),
-            Some(GameMove { mov: Mov::of('♔', "E1", "H1"), typ: GameMoveType::short_castling() })
+            GameMove::try_of('♔', "E1", "H1", GameMoveType::ShortCastling),
+            Some(GameMove { mov: Mov::of('♔', "E1", "H1"), typ: GameMoveType::ShortCastling })
         );
         assert_eq!(
-            GameMove::try_of('♙', "H7", "H8", GameMoveType::promotion_to_queen()),
+            GameMove::try_of('♙', "H7", "H8", GameMoveType::PromotionToQueen),
+            Some(GameMove { mov: Mov::of('♙', "H7", "H8"), typ: GameMoveType::PromotionToQueen })
+        );
+        assert_eq!(
+            GameMove::try_of('♙', "H7", "H8", GameMoveType::PromotionToRook),
+            Some(GameMove { mov: Mov::of('♙', "H7", "H8"), typ: GameMoveType::PromotionToRook })
+        );
+        assert_eq!(
+            GameMove::try_of('♙', "H7", "H8", GameMoveType::PromotionToBishop),
             Some(GameMove {
-                mov: Mov::of('♙', "H7", "H8"),
-                typ: GameMoveType::promotion_to_queen()
+                mov: Mov::of('♙', "H7", "H8"), typ: GameMoveType::PromotionToBishop
             })
         );
         assert_eq!(
-            GameMove::try_of('♙', "H7", "H8", GameMoveType::promotion_to_rook()),
+            GameMove::try_of('♙', "H7", "H8", GameMoveType::PromotionToKnight),
             Some(GameMove {
-                mov: Mov::of('♙', "H7", "H8"),
-                typ: GameMoveType::promotion_to_rook()
-            })
-        );
-        assert_eq!(
-            GameMove::try_of('♙', "H7", "H8", GameMoveType::promotion_to_bishop()),
-            Some(GameMove {
-                mov: Mov::of('♙', "H7", "H8"),
-                typ: GameMoveType::promotion_to_bishop()
-            })
-        );
-        assert_eq!(
-            GameMove::try_of('♙', "H7", "H8", GameMoveType::promotion_to_knight()),
-            Some(GameMove {
-                mov: Mov::of('♙', "H7", "H8"),
-                typ: GameMoveType::promotion_to_knight()
+                mov: Mov::of('♙', "H7", "H8"), typ: GameMoveType::PromotionToKnight
             })
         );
     }
@@ -628,44 +425,44 @@ mod tests {
     #[test]
     fn game_move_of() {
         assert_eq!(
-            GameMove::of('♙', "A2", "A4", GameMoveType::default()),
-            GameMove { mov: Mov::of('♙', "A2", "A4"), typ: GameMoveType::default() }
+            GameMove::of('♙', "A2", "A4", GameMoveType::Default),
+            GameMove { mov: Mov::of('♙', "A2", "A4"), typ: GameMoveType::Default }
         );
         assert_eq!(
-            GameMove::of('♙', "D4", "E5", GameMoveType::capture()),
-            GameMove { mov: Mov::of('♙', "D4", "E5"), typ: GameMoveType::capture() }
+            GameMove::of('♙', "D4", "E5", GameMoveType::Capture),
+            GameMove { mov: Mov::of('♙', "D4", "E5"), typ: GameMoveType::Capture }
         );
         assert_eq!(
-            GameMove::of('♘', "D6", "C8", GameMoveType::menace()),
-            GameMove { mov: Mov::of('♘', "D6", "C8"), typ: GameMoveType::menace() }
+            GameMove::of('♘', "D6", "C8", GameMoveType::Menace),
+            GameMove { mov: Mov::of('♘', "D6", "C8"), typ: GameMoveType::Menace }
         );
         assert_eq!(
-            GameMove::of('♙', "G6", "F7", GameMoveType::en_passant()),
-            GameMove { mov: Mov::of('♙', "G6", "F7"), typ: GameMoveType::en_passant() }
+            GameMove::of('♙', "G6", "F7", GameMoveType::EnPassant),
+            GameMove { mov: Mov::of('♙', "G6", "F7"), typ: GameMoveType::EnPassant }
         );
         assert_eq!(
-            GameMove::of('♔', "E1", "A1", GameMoveType::long_castling()),
-            GameMove { mov: Mov::of('♔', "E1", "A1"), typ: GameMoveType::long_castling() }
+            GameMove::of('♔', "E1", "A1", GameMoveType::LongCastling),
+            GameMove { mov: Mov::of('♔', "E1", "A1"), typ: GameMoveType::LongCastling }
         );
         assert_eq!(
-            GameMove::of('♔', "E1", "H1", GameMoveType::short_castling()),
-            GameMove { mov: Mov::of('♔', "E1", "H1"), typ: GameMoveType::short_castling() }
+            GameMove::of('♔', "E1", "H1", GameMoveType::ShortCastling),
+            GameMove { mov: Mov::of('♔', "E1", "H1"), typ: GameMoveType::ShortCastling }
         );
         assert_eq!(
-            GameMove::of('♙', "H7", "H8", GameMoveType::promotion_to_queen()),
-            GameMove { mov: Mov::of('♙', "H7", "H8"), typ: GameMoveType::promotion_to_queen() }
+            GameMove::of('♙', "H7", "H8", GameMoveType::PromotionToQueen),
+            GameMove { mov: Mov::of('♙', "H7", "H8"), typ: GameMoveType::PromotionToQueen }
         );
         assert_eq!(
-            GameMove::of('♙', "H7", "H8", GameMoveType::promotion_to_bishop()),
-            GameMove { mov: Mov::of('♙', "H7", "H8"), typ: GameMoveType::promotion_to_bishop() }
+            GameMove::of('♙', "H7", "H8", GameMoveType::PromotionToBishop),
+            GameMove { mov: Mov::of('♙', "H7", "H8"), typ: GameMoveType::PromotionToBishop }
         );
         assert_eq!(
-            GameMove::of('♙', "H7", "H8", GameMoveType::promotion_to_bishop()),
-            GameMove { mov: Mov::of('♙', "H7", "H8"), typ: GameMoveType::promotion_to_bishop() }
+            GameMove::of('♙', "H7", "H8", GameMoveType::PromotionToBishop),
+            GameMove { mov: Mov::of('♙', "H7", "H8"), typ: GameMoveType::PromotionToBishop }
         );
         assert_eq!(
-            GameMove::of('♙', "H7", "H8", GameMoveType::promotion_to_knight()),
-            GameMove { mov: Mov::of('♙', "H7", "H8"), typ: GameMoveType::promotion_to_knight() }
+            GameMove::of('♙', "H7", "H8", GameMoveType::PromotionToKnight),
+            GameMove { mov: Mov::of('♙', "H7", "H8"), typ: GameMoveType::PromotionToKnight }
         );
     }
 
@@ -673,7 +470,7 @@ mod tests {
     fn game_move_default_try_of() {
         assert_eq!(
             GameMove::default_try_of('♙', "A2", "A4"),
-            Some(GameMove { mov: Mov::of('♙', "A2", "A4"), typ: GameMoveType::default() })
+            Some(GameMove { mov: Mov::of('♙', "A2", "A4"), typ: GameMoveType::Default })
         );
     }
 
@@ -681,7 +478,7 @@ mod tests {
     fn game_move_default_of() {
         assert_eq!(
             GameMove::default_of('♙', "A2", "A4"),
-            GameMove { mov: Mov::of('♙', "A2", "A4"), typ: GameMoveType::default() }
+            GameMove { mov: Mov::of('♙', "A2", "A4"), typ: GameMoveType::Default }
         );
     }
 
@@ -689,7 +486,7 @@ mod tests {
     fn game_move_capture_try_of() {
         assert_eq!(
             GameMove::capture_try_of('♙', "D4", "E5"),
-            Some(GameMove { mov: Mov::of('♙', "D4", "E5"), typ: GameMoveType::capture() })
+            Some(GameMove { mov: Mov::of('♙', "D4", "E5"), typ: GameMoveType::Capture })
         );
     }
 
@@ -697,7 +494,7 @@ mod tests {
     fn game_move_capture_of() {
         assert_eq!(
             GameMove::capture_of('♙', "D4", "E5"),
-            GameMove { mov: Mov::of('♙', "D4", "E5"), typ: GameMoveType::capture() }
+            GameMove { mov: Mov::of('♙', "D4", "E5"), typ: GameMoveType::Capture }
         );
     }
 
@@ -705,7 +502,7 @@ mod tests {
     fn game_move_menace_try_of() {
         assert_eq!(
             GameMove::menace_try_of('♘', "D6", "C8"),
-            Some(GameMove { mov: Mov::of('♘', "D6", "C8"), typ: GameMoveType::menace() })
+            Some(GameMove { mov: Mov::of('♘', "D6", "C8"), typ: GameMoveType::Menace })
         );
     }
 
@@ -713,7 +510,7 @@ mod tests {
     fn game_move_menace_of() {
         assert_eq!(
             GameMove::menace_of('♘', "D6", "C8"),
-            GameMove { mov: Mov::of('♘', "D6", "C8"), typ: GameMoveType::menace() }
+            GameMove { mov: Mov::of('♘', "D6", "C8"), typ: GameMoveType::Menace }
         );
     }
 
@@ -721,7 +518,7 @@ mod tests {
     fn game_move_en_passant_try_of() {
         assert_eq!(
             GameMove::en_passant_try_of('♙', "G6", "F7"),
-            Some(GameMove { mov: Mov::of('♙', "G6", "F7"), typ: GameMoveType::en_passant() })
+            Some(GameMove { mov: Mov::of('♙', "G6", "F7"), typ: GameMoveType::EnPassant })
         );
     }
 
@@ -729,7 +526,7 @@ mod tests {
     fn game_move_en_passant_of() {
         assert_eq!(
             GameMove::en_passant_of('♙', "G6", "F7"),
-            GameMove { mov: Mov::of('♙', "G6", "F7"), typ: GameMoveType::en_passant() }
+            GameMove { mov: Mov::of('♙', "G6", "F7"), typ: GameMoveType::EnPassant }
         );
     }
 
@@ -737,7 +534,7 @@ mod tests {
     fn game_move_long_castling_try_of() {
         assert_eq!(
             GameMove::long_castling_try_of('♔', "E1", "A1"),
-            Some(GameMove { mov: Mov::of('♔', "E1", "A1"), typ: GameMoveType::long_castling() })
+            Some(GameMove { mov: Mov::of('♔', "E1", "A1"), typ: GameMoveType::LongCastling })
         );
     }
 
@@ -745,7 +542,7 @@ mod tests {
     fn game_move_long_castling_of() {
         assert_eq!(
             GameMove::long_castling_of('♔', "E1", "A1"),
-            GameMove { mov: Mov::of('♔', "E1", "A1"), typ: GameMoveType::long_castling() }
+            GameMove { mov: Mov::of('♔', "E1", "A1"), typ: GameMoveType::LongCastling }
         );
     }
 
@@ -753,7 +550,7 @@ mod tests {
     fn game_move_short_castling_try_of() {
         assert_eq!(
             GameMove::short_castling_try_of('♔', "E1", "H1"),
-            Some(GameMove { mov: Mov::of('♔', "E1", "H1"), typ: GameMoveType::short_castling() })
+            Some(GameMove { mov: Mov::of('♔', "E1", "H1"), typ: GameMoveType::ShortCastling })
         );
     }
 
@@ -761,7 +558,7 @@ mod tests {
     fn game_move_short_castling_of() {
         assert_eq!(
             GameMove::short_castling_of('♔', "E1", "H1"),
-            GameMove { mov: Mov::of('♔', "E1", "H1"), typ: GameMoveType::short_castling() }
+            GameMove { mov: Mov::of('♔', "E1", "H1"), typ: GameMoveType::ShortCastling }
         );
     }
 
@@ -769,10 +566,7 @@ mod tests {
     fn game_move_promotion_to_queen_try_of() {
         assert_eq!(
             GameMove::promotion_to_queen_try_of('♙', "H7", "H8"),
-            Some(GameMove {
-                mov: Mov::of('♙', "H7", "H8"),
-                typ: GameMoveType::promotion_to_queen()
-            })
+            Some(GameMove { mov: Mov::of('♙', "H7", "H8"), typ: GameMoveType::PromotionToQueen })
         );
     }
 
@@ -780,7 +574,7 @@ mod tests {
     fn game_move_promotion_to_queen_of() {
         assert_eq!(
             GameMove::promotion_to_queen_of('♙', "H7", "H8"),
-            GameMove { mov: Mov::of('♙', "H7", "H8"), typ: GameMoveType::promotion_to_queen() }
+            GameMove { mov: Mov::of('♙', "H7", "H8"), typ: GameMoveType::PromotionToQueen }
         );
     }
 
@@ -788,10 +582,7 @@ mod tests {
     fn game_move_promotion_to_rook_try_of() {
         assert_eq!(
             GameMove::promotion_to_rook_try_of('♙', "H7", "H8"),
-            Some(GameMove {
-                mov: Mov::of('♙', "H7", "H8"),
-                typ: GameMoveType::promotion_to_rook()
-            })
+            Some(GameMove { mov: Mov::of('♙', "H7", "H8"), typ: GameMoveType::PromotionToRook })
         );
     }
 
@@ -799,7 +590,7 @@ mod tests {
     fn game_move_promotion_to_rook_of() {
         assert_eq!(
             GameMove::promotion_to_rook_of('♙', "H7", "H8"),
-            GameMove { mov: Mov::of('♙', "H7", "H8"), typ: GameMoveType::promotion_to_rook() }
+            GameMove { mov: Mov::of('♙', "H7", "H8"), typ: GameMoveType::PromotionToRook }
         );
     }
 
@@ -808,8 +599,7 @@ mod tests {
         assert_eq!(
             GameMove::promotion_to_bishop_try_of('♙', "H7", "H8"),
             Some(GameMove {
-                mov: Mov::of('♙', "H7", "H8"),
-                typ: GameMoveType::promotion_to_bishop()
+                mov: Mov::of('♙', "H7", "H8"), typ: GameMoveType::PromotionToBishop
             })
         );
     }
@@ -818,7 +608,7 @@ mod tests {
     fn game_move_promotion_to_bishop_of() {
         assert_eq!(
             GameMove::promotion_to_bishop_of('♙', "H7", "H8"),
-            GameMove { mov: Mov::of('♙', "H7", "H8"), typ: GameMoveType::promotion_to_bishop() }
+            GameMove { mov: Mov::of('♙', "H7", "H8"), typ: GameMoveType::PromotionToBishop }
         );
     }
 
@@ -827,8 +617,7 @@ mod tests {
         assert_eq!(
             GameMove::promotion_to_knight_try_of('♙', "H7", "H8"),
             Some(GameMove {
-                mov: Mov::of('♙', "H7", "H8"),
-                typ: GameMoveType::promotion_to_knight()
+                mov: Mov::of('♙', "H7", "H8"), typ: GameMoveType::PromotionToKnight
             })
         );
     }
@@ -837,7 +626,7 @@ mod tests {
     fn game_move_promotion_to_knight_of() {
         assert_eq!(
             GameMove::promotion_to_knight_of('♙', "H7", "H8"),
-            GameMove { mov: Mov::of('♙', "H7", "H8"), typ: GameMoveType::promotion_to_knight() }
+            GameMove { mov: Mov::of('♙', "H7", "H8"), typ: GameMoveType::PromotionToKnight }
         );
     }
 }

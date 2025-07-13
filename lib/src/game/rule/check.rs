@@ -18,13 +18,11 @@ pub fn is_in_check(board: &GameBoard, players: &GamePlayers, history: &GameHisto
                 let moves_it = player.moves.iter();
                 for (_, moves) in moves_it {
                     for game_move in moves {
-                        match game_move.typ {
-                            GameMoveType::Default(_) | GameMoveType::Capture(_) => {
-                                if &game_move.mov.to == king_pos {
-                                    return true;
-                                }
-                            }
-                            _ => {}
+                        if (game_move.typ == GameMoveType::Default
+                            || game_move.typ == GameMoveType::Capture)
+                            && &game_move.mov.to == king_pos
+                        {
+                            return true;
                         }
                     }
                 }

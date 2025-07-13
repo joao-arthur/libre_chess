@@ -3,7 +3,7 @@ use crate::{
     game::{
         board::GameBoard,
         game::GameHistory,
-        mov::{EnPassantMove, GameMove, GameMoveType},
+        mov::{GameMove, GameMoveType},
     },
     mov::Mov,
     piece::PieceType,
@@ -39,7 +39,7 @@ fn white_pawn_en_passant(board: &GameBoard, history: &GameHistory, pos: &Pos) ->
                                     from: pos.clone(),
                                     to: Pos { col: capture_pos.col, row: pos.row + 1 },
                                 },
-                                typ: GameMoveType::EnPassant(EnPassantMove),
+                                typ: GameMoveType::EnPassant,
                             });
                         }
                     }
@@ -51,7 +51,7 @@ fn white_pawn_en_passant(board: &GameBoard, history: &GameHistory, pos: &Pos) ->
                                     from: pos.clone(),
                                     to: Pos { col: capture_pos.col, row: pos.row + 1 },
                                 },
-                                typ: GameMoveType::EnPassant(EnPassantMove),
+                                typ: GameMoveType::EnPassant,
                             });
                         }
                     }
@@ -80,7 +80,7 @@ fn black_pawn_en_passant(board: &GameBoard, history: &GameHistory, pos: &Pos) ->
                                     from: pos.clone(),
                                     to: Pos { col: capture_pos.col, row: pos.row - 1 },
                                 },
-                                typ: GameMoveType::EnPassant(EnPassantMove),
+                                typ: GameMoveType::EnPassant,
                             });
                         }
                     }
@@ -92,7 +92,7 @@ fn black_pawn_en_passant(board: &GameBoard, history: &GameHistory, pos: &Pos) ->
                                     from: pos.clone(),
                                     to: Pos { col: capture_pos.col, row: pos.row - 1 },
                                 },
-                                typ: GameMoveType::EnPassant(EnPassantMove),
+                                typ: GameMoveType::EnPassant,
                             });
                         }
                     }

@@ -31,11 +31,11 @@ pub fn toggle_selection(
                     if selected_piece_moves
                         .iter()
                         .find(|game_move| match game_move.typ {
-                            GameMoveType::Default(_)
-                            | GameMoveType::EnPassant(_)
-                            | GameMoveType::Capture(_)
-                            | GameMoveType::ShortCastling(_)
-                            | GameMoveType::LongCastling(_) => game_move.mov.to == pos,
+                            GameMoveType::Default
+                            | GameMoveType::EnPassant
+                            | GameMoveType::Capture
+                            | GameMoveType::ShortCastling
+                            | GameMoveType::LongCastling => game_move.mov.to == pos,
                             _ => false,
                         })
                         .is_some()
@@ -61,16 +61,16 @@ pub fn toggle_selection(
             if let Some(player) = players.get(&turn) {
                 if let Some(moves) = player.moves.get(&pos) {
                     if moves.iter().any(|game_move| match game_move.typ {
-                        GameMoveType::Default(_) => true,
-                        GameMoveType::Capture(_) => true,
-                        GameMoveType::Menace(_) => false,
-                        GameMoveType::EnPassant(_) => true,
-                        GameMoveType::LongCastling(_) => true,
-                        GameMoveType::ShortCastling(_) => true,
-                        GameMoveType::PromotionToQueen(_) => true,
-                        GameMoveType::PromotionToRook(_) => true,
-                        GameMoveType::PromotionToBishop(_) => true,
-                        GameMoveType::PromotionToKnight(_) => true,
+                        GameMoveType::Default => true,
+                        GameMoveType::Capture => true,
+                        GameMoveType::Menace => false,
+                        GameMoveType::EnPassant => true,
+                        GameMoveType::LongCastling => true,
+                        GameMoveType::ShortCastling => true,
+                        GameMoveType::PromotionToQueen => true,
+                        GameMoveType::PromotionToRook => true,
+                        GameMoveType::PromotionToBishop => true,
+                        GameMoveType::PromotionToKnight => true,
                     }) {
                         // Player selected another piece of himself
                         selection.selected_squares.clear();
