@@ -160,7 +160,7 @@ mod tests {
                 GamePlayer { color: Color::White, captures: Vec::new(), moves: HashMap::new() },
             ),
         ]);
-        let pos = Pos::of_str("E1");
+        let pos = Pos::of("E1");
         assert_eq!(
             castling_moves(&board, &history, &players, &pos),
             [GameMove::short_castling_of('♔', "E1", "H1")]
@@ -194,7 +194,7 @@ mod tests {
                 GamePlayer { color: Color::White, captures: Vec::new(), moves: HashMap::new() },
             ),
         ]);
-        let pos = Pos::of_str("E1");
+        let pos = Pos::of("E1");
         assert_eq!(
             castling_moves(&board, &history, &players, &pos),
             [GameMove::long_castling_of('♔', "E1", "A1")]
@@ -228,7 +228,7 @@ mod tests {
                 GamePlayer { color: Color::White, captures: Vec::new(), moves: HashMap::new() },
             ),
         ]);
-        let pos = Pos::of_str("E1");
+        let pos = Pos::of("E1");
         assert_eq!(
             castling_moves(&board, &history, &players, &pos),
             [
@@ -265,7 +265,7 @@ mod tests {
                 GamePlayer { color: Color::White, captures: Vec::new(), moves: HashMap::new() },
             ),
         ]);
-        let pos = Pos::of_str("E1");
+        let pos = Pos::of("E1");
         assert_eq!(castling_moves(&board, &history, &players, &pos), []);
     }
 
@@ -309,7 +309,7 @@ mod tests {
                 GamePlayer { color: Color::White, captures: Vec::new(), moves: HashMap::new() },
             ),
         ]);
-        let pos = Pos::of_str("E1");
+        let pos = Pos::of("E1");
         assert_eq!(castling_moves(&board, &history, &players, &pos), []);
     }
 
@@ -345,7 +345,7 @@ mod tests {
                 GamePlayer { color: Color::White, captures: Vec::new(), moves: HashMap::new() },
             ),
         ]);
-        let pos = Pos::of_str("E1");
+        let pos = Pos::of("E1");
         assert_eq!(castling_moves(&board, &history, &players, &pos), []);
     }
 }

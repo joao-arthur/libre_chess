@@ -15,22 +15,22 @@ pub fn pawn_moves(board: &GameBoard, bounds: &GameBounds, pos: &Pos) -> Vec<Game
         let move_base = match &piece.color {
             Color::White => {
                 if pos.row == 1 {
-                    vec![pos.of_rel_idx(1, 0), pos.of_rel_idx(2, 0)]
+                    vec![pos.rel_idx(1, 0), pos.rel_idx(2, 0)]
                 } else {
-                    vec![pos.of_rel_idx(1, 0)]
+                    vec![pos.rel_idx(1, 0)]
                 }
             }
             Color::Black => {
                 if pos.row == 6 {
-                    vec![pos.of_rel_idx(-1, 0), pos.of_rel_idx(-2, 0)]
+                    vec![pos.rel_idx(-1, 0), pos.rel_idx(-2, 0)]
                 } else {
-                    vec![pos.of_rel_idx(-1, 0)]
+                    vec![pos.rel_idx(-1, 0)]
                 }
             }
         };
         let capture_base = match &piece.color {
-            Color::White => [pos.try_of_rel_idx(1, -1), pos.try_of_rel_idx(1, 1)],
-            Color::Black => [pos.try_of_rel_idx(-1, -1), pos.try_of_rel_idx(-1, 1)],
+            Color::White => [pos.try_rel_idx(1, -1), pos.try_rel_idx(1, 1)],
+            Color::Black => [pos.try_rel_idx(-1, -1), pos.try_rel_idx(-1, 1)],
         };
         for curr_pos in move_base {
             if board.get(&curr_pos).is_none() {
@@ -92,7 +92,7 @@ mod tests {
     #[test]
     fn pawn_moves_empty_board() {
         let mode = standard_chess();
-        assert_eq!(pawn_moves(&board_empty(), &mode.bounds, &Pos::of_str("A1")), []);
+        assert_eq!(pawn_moves(&board_empty(), &mode.bounds, &Pos::of("A1")), []);
     }
 
     #[test]
@@ -100,7 +100,7 @@ mod tests {
         let mode = standard_chess();
         let board = HashMap::from([game_piece_of("C5", '♙')]);
         assert_eq!(
-            pawn_moves(&board, &mode.bounds, &Pos::of_str("C5")),
+            pawn_moves(&board, &mode.bounds, &Pos::of("C5")),
             [
                 GameMove::default_of('♙', "C5", "C6"),
                 GameMove::menace_of('♙', "C5", "B6"),
@@ -114,7 +114,7 @@ mod tests {
         let mode = standard_chess();
         let board = HashMap::from([game_piece_of("C5", '♟')]);
         assert_eq!(
-            pawn_moves(&board, &mode.bounds, &Pos::of_str("C5")),
+            pawn_moves(&board, &mode.bounds, &Pos::of("C5")),
             [
                 GameMove::default_of('♟', "C5", "C4"),
                 GameMove::menace_of('♟', "C5", "B4"),
@@ -128,7 +128,7 @@ mod tests {
         let mode = standard_chess();
         let board = HashMap::from([game_piece_of("A2", '♙')]);
         assert_eq!(
-            pawn_moves(&board, &mode.bounds, &Pos::of_str("A2")),
+            pawn_moves(&board, &mode.bounds, &Pos::of("A2")),
             [
                 GameMove::default_of('♙', "A2", "A3"),
                 GameMove::default_of('♙', "A2", "A4"),
@@ -142,7 +142,7 @@ mod tests {
         let mode = standard_chess();
         let board = HashMap::from([game_piece_of("H7", '♟')]);
         assert_eq!(
-            pawn_moves(&board, &mode.bounds, &Pos::of_str("H7")),
+            pawn_moves(&board, &mode.bounds, &Pos::of("H7")),
             [
                 GameMove::default_of('♟', "H7", "H6"),
                 GameMove::default_of('♟', "H7", "H5"),
@@ -156,7 +156,7 @@ mod tests {
         let mode = standard_chess();
         let board = HashMap::from([game_piece_of("C5", '♙'), game_piece_of("C6", '♟')]);
         assert_eq!(
-            pawn_moves(&board, &mode.bounds, &Pos::of_str("C5")),
+            pawn_moves(&board, &mode.bounds, &Pos::of("C5")),
             [GameMove::menace_of('♙', "C5", "B6"), GameMove::menace_of('♙', "C5", "D6")]
         );
     }
@@ -166,7 +166,7 @@ mod tests {
         let mode = standard_chess();
         let board = HashMap::from([game_piece_of("C5", '♟'), game_piece_of("C4", '♙')]);
         assert_eq!(
-            pawn_moves(&board, &mode.bounds, &Pos::of_str("C5")),
+            pawn_moves(&board, &mode.bounds, &Pos::of("C5")),
             [GameMove::menace_of('♟', "C5", "B4"), GameMove::menace_of('♟', "C5", "D4")]
         );
     }
@@ -176,7 +176,7 @@ mod tests {
         let mode = standard_chess();
         let board = HashMap::from([game_piece_of("A3", '♙')]);
         assert_eq!(
-            pawn_moves(&board, &mode.bounds, &Pos::of_str("A3")),
+            pawn_moves(&board, &mode.bounds, &Pos::of("A3")),
             [GameMove::default_of('♙', "A3", "A4"), GameMove::menace_of('♙', "A3", "B4")]
         );
     }
@@ -186,7 +186,7 @@ mod tests {
         let mode = standard_chess();
         let board = HashMap::from([game_piece_of("H3", '♙')]);
         assert_eq!(
-            pawn_moves(&board, &mode.bounds, &Pos::of_str("H3")),
+            pawn_moves(&board, &mode.bounds, &Pos::of("H3")),
             [GameMove::default_of('♙', "H3", "H4"), GameMove::menace_of('♙', "H3", "G4")]
         );
     }
@@ -196,7 +196,7 @@ mod tests {
         let mode = standard_chess();
         let board = HashMap::from([game_piece_of("A6", '♟')]);
         assert_eq!(
-            pawn_moves(&board, &mode.bounds, &Pos::of_str("A6")),
+            pawn_moves(&board, &mode.bounds, &Pos::of("A6")),
             [GameMove::default_of('♟', "A6", "A5"), GameMove::menace_of('♟', "A6", "B5")]
         );
     }
@@ -206,7 +206,7 @@ mod tests {
         let mode = standard_chess();
         let board = HashMap::from([game_piece_of("H6", '♟')]);
         assert_eq!(
-            pawn_moves(&board, &mode.bounds, &Pos::of_str("H6")),
+            pawn_moves(&board, &mode.bounds, &Pos::of("H6")),
             [GameMove::default_of('♟', "H6", "H5"), GameMove::menace_of('♟', "H6", "G5")]
         );
     }
@@ -228,7 +228,7 @@ mod tests {
             ],
         );
         assert_eq!(
-            pawn_moves(&board, &mode.bounds, &Pos::of_str("C5")),
+            pawn_moves(&board, &mode.bounds, &Pos::of("C5")),
             [
                 GameMove::default_of('♙', "C5", "C6"),
                 GameMove::capture_of('♙', "C5", "B6"),
@@ -254,7 +254,7 @@ mod tests {
             ],
         );
         assert_eq!(
-            pawn_moves(&board, &mode.bounds, &Pos::of_str("C5")),
+            pawn_moves(&board, &mode.bounds, &Pos::of("C5")),
             [
                 GameMove::default_of('♟', "C5", "C4"),
                 GameMove::menace_of('♟', "C5", "B4"),

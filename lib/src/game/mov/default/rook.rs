@@ -18,7 +18,7 @@ pub fn rook_moves(board: &GameBoard, bounds: &GameBounds, pos: &Pos) -> Vec<Game
             loop {
                 rel_row += modifier[0];
                 rel_col += modifier[1];
-                if let Some(curr_pos) = pos.try_of_rel_idx(rel_row, rel_col) {
+                if let Some(curr_pos) = pos.try_rel_idx(rel_row, rel_col) {
                     if curr_pos.col < bounds.x1
                         || curr_pos.col > bounds.x2
                         || curr_pos.row < bounds.y1
@@ -74,7 +74,7 @@ mod tests {
     #[test]
     fn rook_moves_empty_board() {
         let mode = standard_chess();
-        assert_eq!(rook_moves(&board_empty(), &mode.bounds, &Pos::of_str("A1")), []);
+        assert_eq!(rook_moves(&board_empty(), &mode.bounds, &Pos::of("A1")), []);
     }
 
     #[test]
@@ -82,7 +82,7 @@ mod tests {
         let mode = standard_chess();
         let board = HashMap::from([game_piece_of("D4", '♜')]);
         assert_eq!(
-            rook_moves(&board, &mode.bounds, &Pos::of_str("D4")),
+            rook_moves(&board, &mode.bounds, &Pos::of("D4")),
             [
                 GameMove::default_of('♜', "D4", "E4"),
                 GameMove::default_of('♜', "D4", "F4"),
@@ -107,7 +107,7 @@ mod tests {
         let board = HashMap::from([game_piece_of("F6", '♜')]);
         let bounds = GameBounds { x1: 3, y1: 3, x2: 7, y2: 7 };
         assert_eq!(
-            rook_moves(&board, &bounds, &Pos::of_str("F6")),
+            rook_moves(&board, &bounds, &Pos::of("F6")),
             [
                 GameMove::default_of('♜', "F6", "G6"),
                 GameMove::default_of('♜', "F6", "H6"),
@@ -126,7 +126,7 @@ mod tests {
         let mode = standard_chess();
         let board = HashMap::from([game_piece_of("H8", '♜')]);
         assert_eq!(
-            rook_moves(&board, &mode.bounds, &Pos::of_str("H8")),
+            rook_moves(&board, &mode.bounds, &Pos::of("H8")),
             [
                 GameMove::default_of('♜', "H8", "H7"),
                 GameMove::default_of('♜', "H8", "H6"),
@@ -151,7 +151,7 @@ mod tests {
         let mode = standard_chess();
         let board = HashMap::from([game_piece_of("H1", '♜')]);
         assert_eq!(
-            rook_moves(&board, &mode.bounds, &Pos::of_str("H1")),
+            rook_moves(&board, &mode.bounds, &Pos::of("H1")),
             [
                 GameMove::default_of('♜', "H1", "G1"),
                 GameMove::default_of('♜', "H1", "F1"),
@@ -176,7 +176,7 @@ mod tests {
         let mode = standard_chess();
         let board = HashMap::from([game_piece_of("A1", '♜')]);
         assert_eq!(
-            rook_moves(&board, &mode.bounds, &Pos::of_str("A1")),
+            rook_moves(&board, &mode.bounds, &Pos::of("A1")),
             [
                 GameMove::default_of('♜', "A1", "B1"),
                 GameMove::default_of('♜', "A1", "C1"),
@@ -201,7 +201,7 @@ mod tests {
         let mode = standard_chess();
         let board = HashMap::from([game_piece_of("A8", '♜')]);
         assert_eq!(
-            rook_moves(&board, &mode.bounds, &Pos::of_str("A8")),
+            rook_moves(&board, &mode.bounds, &Pos::of("A8")),
             [
                 GameMove::default_of('♜', "A8", "B8"),
                 GameMove::default_of('♜', "A8", "C8"),
@@ -238,7 +238,7 @@ mod tests {
             ],
         );
         assert_eq!(
-            rook_moves(&board, &mode.bounds, &Pos::of_str("D4")),
+            rook_moves(&board, &mode.bounds, &Pos::of("D4")),
             [
                 GameMove::default_of('♖', "D4", "E4"),
                 GameMove::default_of('♖', "D4", "F4"),
@@ -273,7 +273,7 @@ mod tests {
             ],
         );
         assert_eq!(
-            rook_moves(&board, &mode.bounds, &Pos::of_str("D4")),
+            rook_moves(&board, &mode.bounds, &Pos::of("D4")),
             [
                 GameMove::default_of('♜', "D4", "E4"),
                 GameMove::default_of('♜', "D4", "F4"),

@@ -72,7 +72,7 @@ mod tests {
                     captures: Vec::new(),
                     moves: HashMap::from([
                         (
-                            Pos::of_str("E8"),
+                            Pos::of("E8"),
                             vec![
                                 GameMove::default_of('♚', "E8", "F8"),
                                 GameMove::default_of('♚', "E8", "F7"),
@@ -82,7 +82,7 @@ mod tests {
                             ],
                         ),
                         (
-                            Pos::of_str("E6"),
+                            Pos::of("E6"),
                             vec![
                                 GameMove::default_of('♟', "E7", "E6"),
                                 GameMove::default_of('♟', "E7", "E5"),
@@ -100,7 +100,7 @@ mod tests {
                     captures: Vec::new(),
                     moves: HashMap::from([
                         (
-                            Pos::of_str("E1"),
+                            Pos::of("E1"),
                             vec![
                                 GameMove::default_of('♔', "E1", "F2"),
                                 GameMove::default_of('♔', "E1", "F1"),
@@ -110,7 +110,7 @@ mod tests {
                             ],
                         ),
                         (
-                            Pos::of_str("E2"),
+                            Pos::of("E2"),
                             vec![
                                 GameMove::default_of('♙', "E2", "E3"),
                                 GameMove::default_of('♙', "E2", "E4"),
@@ -151,7 +151,7 @@ mod tests {
                     captures: Vec::new(),
                     moves: HashMap::from([
                         (
-                            Pos::of_str("E8"),
+                            Pos::of("E8"),
                             vec![
                                 GameMove::default_of('♚', "E8", "F8"),
                                 GameMove::default_of('♚', "E8", "F7"),
@@ -161,7 +161,7 @@ mod tests {
                             ],
                         ),
                         (
-                            Pos::of_str("E6"),
+                            Pos::of("E6"),
                             vec![
                                 GameMove::default_of('♟', "E7", "E6"),
                                 GameMove::default_of('♟', "E7", "E5"),
@@ -179,7 +179,7 @@ mod tests {
                     captures: Vec::new(),
                     moves: HashMap::from([
                         (
-                            Pos::of_str("D7"),
+                            Pos::of("D7"),
                             vec![
                                 GameMove::default_of('♙', "D7", "D8"),
                                 GameMove::capture_of('♙', "D7", "E8"),
@@ -187,7 +187,7 @@ mod tests {
                             ],
                         ),
                         (
-                            Pos::of_str("E1"),
+                            Pos::of("E1"),
                             vec![
                                 GameMove::default_of('♔', "E1", "F2"),
                                 GameMove::default_of('♔', "E1", "F1"),

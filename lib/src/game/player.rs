@@ -10,3 +10,5 @@ pub struct GamePlayer {
     pub captures: Vec<GameCapture>,
     pub moves: HashMap<Pos, Vec<GameMove>>,
 }
+
+// impl From<Color> for Player { }

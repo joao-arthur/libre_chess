@@ -12,14 +12,14 @@ pub fn king_moves(board: &GameBoard, bounds: &GameBounds, pos: &Pos) -> Vec<Game
     let mut result: Vec<GameMove> = Vec::new();
     if let Some(piece) = board.get(pos) {
         let base = [
-            pos.try_of_rel_idx(1, 1),
-            pos.try_of_rel_idx(0, 1),
-            pos.try_of_rel_idx(-1, 1),
-            pos.try_of_rel_idx(-1, 0),
-            pos.try_of_rel_idx(-1, -1),
-            pos.try_of_rel_idx(0, -1),
-            pos.try_of_rel_idx(1, -1),
-            pos.try_of_rel_idx(1, 0),
+            pos.try_rel_idx(1, 1),
+            pos.try_rel_idx(0, 1),
+            pos.try_rel_idx(-1, 1),
+            pos.try_rel_idx(-1, 0),
+            pos.try_rel_idx(-1, -1),
+            pos.try_rel_idx(0, -1),
+            pos.try_rel_idx(1, -1),
+            pos.try_rel_idx(1, 0),
         ];
         for curr_pos in base {
             if let Some(curr_pos) = curr_pos {
@@ -74,7 +74,7 @@ mod tests {
     #[test]
     fn king_moves_empty_board() {
         let mode = standard_chess();
-        assert_eq!(king_moves(&board_empty(), &mode.bounds, &Pos::of_str("A1")), []);
+        assert_eq!(king_moves(&board_empty(), &mode.bounds, &Pos::of("A1")), []);
     }
 
     #[test]
@@ -82,7 +82,7 @@ mod tests {
         let mode = standard_chess();
         let board = HashMap::from([game_piece_of("D4", '♚')]);
         assert_eq!(
-            king_moves(&board, &mode.bounds, &Pos::of_str("D4")),
+            king_moves(&board, &mode.bounds, &Pos::of("D4")),
             [
                 GameMove::default_of('♚', "D4", "E5"),
                 GameMove::default_of('♚', "D4", "E4"),
@@ -101,7 +101,7 @@ mod tests {
         let mode = standard_chess();
         let board = HashMap::from([game_piece_of("H8", '♚')]);
         assert_eq!(
-            king_moves(&board, &mode.bounds, &Pos::of_str("H8")),
+            king_moves(&board, &mode.bounds, &Pos::of("H8")),
             [
                 GameMove::default_of('♚', "H8", "H7"),
                 GameMove::default_of('♚', "H8", "G7"),
@@ -115,7 +115,7 @@ mod tests {
         let mode = standard_chess();
         let board = HashMap::from([game_piece_of("H1", '♚')]);
         assert_eq!(
-            king_moves(&board, &mode.bounds, &Pos::of_str("H1")),
+            king_moves(&board, &mode.bounds, &Pos::of("H1")),
             [
                 GameMove::default_of('♚', "H1", "G1"),
                 GameMove::default_of('♚', "H1", "G2"),
@@ -129,7 +129,7 @@ mod tests {
         let mode = standard_chess();
         let board = HashMap::from([game_piece_of("A1", '♚')]);
         assert_eq!(
-            king_moves(&board, &mode.bounds, &Pos::of_str("A1")),
+            king_moves(&board, &mode.bounds, &Pos::of("A1")),
             [
                 GameMove::default_of('♚', "A1", "B2"),
                 GameMove::default_of('♚', "A1", "B1"),
@@ -143,7 +143,7 @@ mod tests {
         let mode = standard_chess();
         let board = HashMap::from([game_piece_of("A8", '♚')]);
         assert_eq!(
-            king_moves(&board, &mode.bounds, &Pos::of_str("A8")),
+            king_moves(&board, &mode.bounds, &Pos::of("A8")),
             [
                 GameMove::default_of('♚', "A8", "B8"),
                 GameMove::default_of('♚', "A8", "B7"),
@@ -157,7 +157,7 @@ mod tests {
         let board = HashMap::from([game_piece_of("H8", '♚')]);
         let bounds = GameBounds { x1: 3, y1: 3, x2: 7, y2: 7 };
         assert_eq!(
-            king_moves(&board, &bounds, &Pos::of_str("H8")),
+            king_moves(&board, &bounds, &Pos::of("H8")),
             [
                 GameMove::default_of('♚', "H8", "H7"),
                 GameMove::default_of('♚', "H8", "G7"),
@@ -171,7 +171,7 @@ mod tests {
         let board = HashMap::from([game_piece_of("H4", '♚')]);
         let bounds = GameBounds { x1: 3, y1: 3, x2: 7, y2: 7 };
         assert_eq!(
-            king_moves(&board, &bounds, &Pos::of_str("H4")),
+            king_moves(&board, &bounds, &Pos::of("H4")),
             [
                 GameMove::default_of('♚', "H4", "G4"),
                 GameMove::default_of('♚', "H4", "G5"),
@@ -185,7 +185,7 @@ mod tests {
         let board = HashMap::from([game_piece_of("D4 ", '♚')]);
         let bounds = GameBounds { x1: 3, y1: 3, x2: 7, y2: 7 };
         assert_eq!(
-            king_moves(&board, &bounds, &Pos::of_str("D4")),
+            king_moves(&board, &bounds, &Pos::of("D4")),
             [
                 GameMove::default_of('♚', "D4", "E5"),
                 GameMove::default_of('♚', "D4", "E4"),
@@ -199,7 +199,7 @@ mod tests {
         let board = HashMap::from([game_piece_of("D8", '♚')]);
         let bounds = GameBounds { x1: 3, y1: 3, x2: 7, y2: 7 };
         assert_eq!(
-            king_moves(&board, &bounds, &Pos::of_str("D8")),
+            king_moves(&board, &bounds, &Pos::of("D8")),
             [
                 GameMove::default_of('♚', "D8", "E8"),
                 GameMove::default_of('♚', "D8", "E7"),
@@ -225,7 +225,7 @@ mod tests {
             ],
         );
         assert_eq!(
-            king_moves(&board, &mode.bounds, &Pos::of_str("D4")),
+            king_moves(&board, &mode.bounds, &Pos::of("D4")),
             [
                 GameMove::capture_of('♔', "D4", "E5"),
                 GameMove::default_of('♔', "D4", "E4"),
@@ -256,7 +256,7 @@ mod tests {
             ],
         );
         assert_eq!(
-            king_moves(&board, &mode.bounds, &Pos::of_str("D4")),
+            king_moves(&board, &mode.bounds, &Pos::of("D4")),
             [
                 GameMove::capture_of('♚', "D4", "E5"),
                 GameMove::default_of('♚', "D4", "E4"),

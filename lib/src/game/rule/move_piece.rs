@@ -109,6 +109,8 @@ pub fn app_move_piece(
 }
 
 #[cfg(test)]
-mod tests {}
+mod tests {
+    ////
+}
 
 // work on selection

@@ -32,7 +32,7 @@ mod tests {
     #[test]
     fn queen_moves_empty_board() {
         let mode = standard_chess();
-        assert_eq!(queen_moves(&board_empty(), &mode.bounds, &Pos::of_str("A1")), []);
+        assert_eq!(queen_moves(&board_empty(), &mode.bounds, &Pos::of("A1")), []);
     }
 
     #[test]
@@ -40,7 +40,7 @@ mod tests {
         let mode = standard_chess();
         let board = HashMap::from([game_piece_of("C5", '♛')]);
         assert_eq!(
-            queen_moves(&board, &mode.bounds, &Pos::of_str("C5")),
+            queen_moves(&board, &mode.bounds, &Pos::of("C5")),
             [
                 GameMove::default_of('♛', "C5", "D6"),
                 GameMove::default_of('♛', "C5", "E7"),
@@ -76,7 +76,7 @@ mod tests {
         let mode = standard_chess();
         let board = HashMap::from([game_piece_of("H8", '♛')]);
         assert_eq!(
-            queen_moves(&board, &mode.bounds, &Pos::of_str("H8")),
+            queen_moves(&board, &mode.bounds, &Pos::of("H8")),
             [
                 GameMove::default_of('♛', "H8", "G7"),
                 GameMove::default_of('♛', "H8", "F6"),
@@ -108,7 +108,7 @@ mod tests {
         let mode = standard_chess();
         let board = HashMap::from([game_piece_of("H1", '♛')]);
         assert_eq!(
-            queen_moves(&board, &mode.bounds, &Pos::of_str("H1")),
+            queen_moves(&board, &mode.bounds, &Pos::of("H1")),
             [
                 GameMove::default_of('♛', "H1", "G2"),
                 GameMove::default_of('♛', "H1", "F3"),
@@ -140,7 +140,7 @@ mod tests {
         let mode = standard_chess();
         let board = HashMap::from([game_piece_of("A1", '♛')]);
         assert_eq!(
-            queen_moves(&board, &mode.bounds, &Pos::of_str("A1")),
+            queen_moves(&board, &mode.bounds, &Pos::of("A1")),
             [
                 GameMove::default_of('♛', "A1", "B2"),
                 GameMove::default_of('♛', "A1", "C3"),
@@ -172,7 +172,7 @@ mod tests {
         let mode = standard_chess();
         let board = HashMap::from([game_piece_of("A8", '♛')]);
         assert_eq!(
-            queen_moves(&board, &mode.bounds, &Pos::of_str("A8")),
+            queen_moves(&board, &mode.bounds, &Pos::of("A8")),
             [
                 GameMove::default_of('♛', "A8", "B7"),
                 GameMove::default_of('♛', "A8", "C6"),
@@ -204,7 +204,7 @@ mod tests {
         let board = HashMap::from([game_piece_of("F6", '♛')]);
         let bounds = GameBounds { x1: 3, y1: 3, x2: 7, y2: 7 };
         assert_eq!(
-            queen_moves(&board, &bounds, &Pos::of_str("F6")),
+            queen_moves(&board, &bounds, &Pos::of("F6")),
             [
                 GameMove::default_of('♛', "F6", "G7"),
                 GameMove::default_of('♛', "F6", "H8"),
@@ -243,7 +243,7 @@ mod tests {
             ],
         );
         assert_eq!(
-            queen_moves(&board, &mode.bounds, &Pos::of_str("C5")),
+            queen_moves(&board, &mode.bounds, &Pos::of("C5")),
             [
                 GameMove::capture_of('♕', "C5", "D6"),
                 GameMove::default_of('♕', "C5", "D4"),
@@ -284,7 +284,7 @@ mod tests {
             ],
         );
         assert_eq!(
-            queen_moves(&board, &mode.bounds, &Pos::of_str("C5")),
+            queen_moves(&board, &mode.bounds, &Pos::of("C5")),
             [
                 GameMove::capture_of('♛', "C5", "D6"),
                 GameMove::default_of('♛', "C5", "D4"),
