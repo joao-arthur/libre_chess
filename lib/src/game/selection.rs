@@ -60,6 +60,8 @@ pub fn toggle_selection(
         if turn == piece.color {
             if let Some(player) = players.get(&turn) {
                 if let Some(moves) = player.moves.get(&pos) {
+                    // if moves.is_empty() {} -> blocked king
+
                     if moves.iter().any(|game_move| match game_move.typ {
                         GameMoveType::Default => true,
                         GameMoveType::Capture => true,
