@@ -127,7 +127,6 @@ o usuário vai selecionar a posição de destino (to)
 #### move_piece
 
 - [ ] Create the `GameMove` when moving the piece
-    - [ ] Stop differing `Capture` and `Default`
 
 #### allowed_moves_of_player
 
