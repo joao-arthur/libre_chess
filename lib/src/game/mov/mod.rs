@@ -11,6 +11,31 @@ use crate::{
 pub mod default;
 pub mod special;
 
+pub enum HistoryMoveType {
+    Default,
+    Capture,
+    Menace,
+    EnPassant,
+    LongCastling,
+    ShortCastling,
+    PromotionToQueen,
+    PromotionToRook,
+    PromotionToBishop,
+    PromotionToKnight,
+}
+
+#[derive(Debug, PartialEq, Clone)]
+pub enum GameMoveType2 {
+    Default,
+    EnPassant,
+    LongCastling,
+    ShortCastling,
+    PromotionToQueen,
+    PromotionToRook,
+    PromotionToBishop,
+    PromotionToKnight,
+}
+
 #[derive(Debug, PartialEq, Clone)]
 pub enum GameMoveType {
     Default,

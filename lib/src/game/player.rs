@@ -4,7 +4,7 @@ use crate::{color::Color, game::mov::GameMove, pos::Pos};
 
 use super::capture::GameCapture;
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct GamePlayer {
     pub color: Color,
     pub captures: Vec<GameCapture>,

@@ -269,7 +269,7 @@ mod tests {
             allowed_moves_of_player(&board, &bounds, &history, &players, &color),
             HashMap::from([(
                 Pos::of("D4"),
-                vec![GameMove::default_of('♔', "D4", "D3"), GameMove::capture_of('♔', "D4", "D5"),]
+                vec![GameMove::default_of('♔', "D4", "D3"), GameMove::capture_of('♔', "D4", "D5")]
             )])
         );
     }
