@@ -124,10 +124,6 @@ o usuário vai selecionar a posição de destino (to)
 
 
 
-#### move_piece
-
-- [ ] Create the `GameMove` when moving the piece
-
 #### allowed_moves_of_player
 
 - [ ] King moves will verify check, instead of menace moves 

@@ -407,12 +407,12 @@ mod tests {
             ],
         );
         let bounds = mode.bounds;
-        let history = Vec::from([
+        let history = vec![
             GameMove::default_of('♙', "D2", "D4"),
             GameMove::default_of('♟', "D7", "D6"),
             GameMove::default_of('♙', "D4", "D5"),
             GameMove::default_of('♟', "E7", "E5"),
-        ]);
+        ];
         let players = HashMap::from([
             (
                 Color::Black,
@@ -478,4 +478,110 @@ mod tests {
             ])
         );
     }
+
+
+
+    #[test]
+    fn test_allowed_moves_of_player_in_check_rook() {
+        let mode = standard_chess();
+        let board = board_of_str(
+            &mode.bounds,
+            [
+                "    ♚   ",
+                "        ",
+                "    ♜   ",
+                "        ",
+                "  ♗  ♗  ",
+                "♖       ",
+                "        ",
+                "    ♔   ",
+            ],
+        );
+        let bounds = mode.bounds;
+        let history = Vec::new();
+        let players = HashMap::from([
+            (
+                Color::Black,
+                GamePlayer {
+                    color: Color::Black,
+                    captures: Vec::new(),
+                    moves: HashMap::from([
+                        (
+                            Pos::of("E8"),
+                            vec![
+                                GameMove::default_of('♚', "E8", "F8"),
+                                GameMove::default_of('♚', "E8", "F7"),
+                                GameMove::default_of('♚', "E8", "D7"),
+                                GameMove::default_of('♚', "E8", "E7"),
+                                GameMove::default_of('♚', "E8", "E8"),
+                            ],
+                        ),
+                        (
+                            Pos::of("E6"),
+                            vec![
+                                GameMove::default_of('♜', "E6", "F6"),
+                                GameMove::default_of('♜', "E6", "G6"),
+                                GameMove::default_of('♜', "E6", "H6"),
+
+                                GameMove::default_of('♜', "E6", "E5"),
+                                GameMove::default_of('♜', "E6", "E4"),
+                                GameMove::default_of('♜', "E6", "E3"),
+                                GameMove::default_of('♜', "E6", "E2"),
+                                GameMove::capture_of('♜', "E6", "E1"),
+                                //
+                                GameMove::default_of('♜', "E6", "D6"),
+                                GameMove::default_of('♜', "E6", "C6"),
+                                GameMove::default_of('♜', "E6", "B6"),
+                                GameMove::default_of('♜', "E6", "A6"),
+                                //
+                                GameMove::default_of('♜', "E6", "E7"),
+                                GameMove::menace_of('♜', "E6", "E8"),
+                            ],
+                        ),
+                    ]),
+                },
+            ),
+            (
+                Color::White,
+                GamePlayer {
+                    color: Color::White, 
+                    captures: Vec::new(),
+                    moves: HashMap::new(),
+                },
+            ),
+        ]);
+        let color = Color::White;
+        assert_eq!(
+            allowed_moves_of_player(&board, &bounds, &history, &players, &color),
+            HashMap::from([
+                (
+                    Pos::of("C4"),
+                    vec![
+                        GameMove::default_of('♗', "C4", "E6"),
+                        GameMove::default_of('♗', "C4", "E2"),
+                    ]
+                ),
+                (
+                    Pos::of("F4"),
+                    vec![
+                        GameMove::default_of('♗', "F4", "E5"),
+                        GameMove::default_of('♗', "F4", "E3"),
+                    ]
+                ),
+                (
+                    Pos::of("A3"),
+                    vec![
+                        GameMove::default_of('♖', "A3", "E3"),
+                    ]
+                ),
+            ])
+        );
+    }
+
+
+    #[test]
+    fn test_allowed_moves_of_player_in_double_check() {
+
+    }
+
 }

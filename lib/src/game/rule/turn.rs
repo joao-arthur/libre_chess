@@ -14,14 +14,14 @@ mod tests {
     fn test_get_turn() {
         assert_eq!(evaluate_turn(&Vec::new()), Color::White);
         assert_eq!(
-            evaluate_turn(&Vec::from([GameMove::default_of('♙', "D2", "D4")])),
+            evaluate_turn(&vec![GameMove::default_of('♙', "D2", "D4")]),
             Color::Black
         );
         assert_eq!(
-            evaluate_turn(&Vec::from([
+            evaluate_turn(&vec![
                 GameMove::default_of('♙', "D2", "D4"),
                 GameMove::default_of('♟', "A7", "A5")
-            ])),
+            ]),
             Color::White
         );
     }

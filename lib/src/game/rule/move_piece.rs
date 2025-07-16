@@ -432,7 +432,7 @@ mod tests {
                 Color::White,
                 GamePlayer {
                     color: Color::White,
-                    captures: Vec::from([GameCapture { at: 0, piece: Piece::of('♟') }]),
+                    captures: vec![GameCapture { at: 0, piece: Piece::of('♟') }],
                     moves: HashMap::from([
                         (
                             Pos::of("D6"),
@@ -585,7 +585,7 @@ mod tests {
                 Color::White,
                 GamePlayer {
                     color: Color::White,
-                    captures: Vec::from([GameCapture { at: 0, piece: Piece::of('♟') }]),
+                    captures: vec![GameCapture { at: 0, piece: Piece::of('♟') }],
                     moves: HashMap::from([
                         (
                             Pos::of("D6"),
