@@ -5,10 +5,9 @@ use crate::{
         game::{GameBounds, GameHistory, GamePlayers},
         mov::{GameMove, GameMoveType},
         player::GamePlayer,
-        rule::turn::evaluate_turn,
+        rule::{allowed_moves::allowed_moves_of_player, turn::evaluate_turn},
         selection::Selection,
-    },
-    pos::Pos,
+    }, mov::Mov, pos::Pos
 };
 
 fn default_move(
@@ -17,14 +16,7 @@ fn default_move(
     history: &mut GameHistory,
     game_move: &GameMove,
 ) {
-    if let Some(piece) = board.remove(&game_move.mov.from) {
-        if let Some(captured) = board.insert(game_move.mov.to.clone(), piece) {
-            player.captures.push(GameCapture { piece: captured, at: history.len() as u16 });
-            history.push(game_move.clone());
-        } else {
-            history.push(game_move.clone());
-        }
-    }
+
 }
 
 fn en_passant_move(
@@ -73,9 +65,11 @@ pub fn move_piece(
     board: &mut GameBoard,
     history: &mut GameHistory,
     players: &mut GamePlayers,
+    bounds: &GameBounds,
     selection: &Selection,
     pos: &Pos,
 ) {
+    let mut changed = false;
     let turn = evaluate_turn(history);
     if let Some(selected_pos) = &selection.selected_pos {
         if let Some(selected_piece) = board.get(selected_pos) {
@@ -96,29 +90,53 @@ pub fn move_piece(
                                 || game_move.typ == GameMoveType::PromotionToBishop)
                                 && &game_move.mov.to == pos
                         });
-                        // se eu refatorar, e ter aqui só o type, eu posso simplesmente montar o GameMove
-                        // eu tenho o from, to, piece, e type
                         if let Some(game_move) = maybe_move {
                             match game_move.typ {
-                                GameMoveType::Default => {
-                                    default_move(board, selected_player, history, game_move)
+                                GameMoveType::Default | GameMoveType::Capture => {
+                                    changed = true;
+                                    if let Some(piece) = board.remove(&game_move.mov.from) {
+                                        let maybe_captured = board.insert(game_move.mov.to.clone(), piece);
+                                        if let Some(captured) = maybe_captured {
+                                            selected_player.captures.push(GameCapture { piece: captured, at: history.len() as u16 });
+                                            history.push(
+                                                GameMove {
+                                                    mov: Mov {
+                                                        from: selected_pos.clone(),
+                                                        to: pos.clone(),
+                                                        piece
+                                                    },
+                                                    typ: GameMoveType::Capture
+                                                }
+                                            );
+                                        } else {
+                                            history.push(
+                                                GameMove {
+                                                    mov: Mov {
+                                                        from: selected_pos.clone(),
+                                                        to: pos.clone(),
+                                                        piece
+                                                    }, 
+                                                    typ: GameMoveType::Default
+                                                });
+                                        }
+                                    }
                                 }
-                                GameMoveType::Capture => {
-                                    default_move(board, selected_player, history, game_move)
-                                }
-                                GameMoveType::Menace => {}
                                 GameMoveType::EnPassant => {
+                                    changed = true;
                                     en_passant_move(board, selected_player, history, game_move)
                                 }
                                 GameMoveType::LongCastling | GameMoveType::ShortCastling => {
+                                    changed = true;
                                     castling_move(board, history, game_move)
                                 }
                                 GameMoveType::PromotionToQueen
                                 | GameMoveType::PromotionToKnight
                                 | GameMoveType::PromotionToRook
                                 | GameMoveType::PromotionToBishop => {
+                                    changed = true;
                                     promotion_move(board, history, game_move)
                                 }
+                                GameMoveType::Menace => {}
                             }
                         }
                     }
@@ -126,14 +144,16 @@ pub fn move_piece(
             }
         }
     }
-    //internal_move_piece(board, players, history, game_move);
-    //for (color, player) in players.iter_mut() {
-    //    if &turn == color {
-    //        player.moves.drain();
-    //    } else {
-    //        //   player.moves.extend(allowed_moves_of_player(board, bounds, history, players, color));
-    //    }
-    //}
+    if changed {
+        let new_moves = allowed_moves_of_player(
+            board,
+            bounds,
+            history,
+            &players.clone(),
+            &turn,
+        );
+        players.get_mut(&turn).unwrap().moves = new_moves;
+    }
 }
 
 #[cfg(test)]
@@ -152,7 +172,7 @@ mod tests {
     use super::move_piece;
 
     #[test]
-    fn test_move_piece() {
+    fn test_move_piece_default_move() {
         let mode = standard_chess();
         let selection =
             Selection { selected_pos: Some(Pos::of("A2")), selected_squares: HashSet::new() };
@@ -229,7 +249,14 @@ mod tests {
             ),
         ]);
 
-        move_piece(&mut board, &mut history, &mut players, &selection, &Pos::of("A4"));
+        move_piece(
+            &mut board,
+            &mut history,
+            &mut players,
+            &mode.bounds,
+            &selection,
+            &Pos::of("A4"),
+        );
 
         let board_after = board_of_str(
             &mode.bounds,
@@ -245,8 +272,65 @@ mod tests {
             ],
         );
         let history_after = vec![GameMove::default_of('♙', "A2", "A4")];
+        let players_after = HashMap::from([
+            (
+                Color::Black,
+                GamePlayer {
+                    color: Color::Black,
+                    captures: Vec::new(),
+                    moves: HashMap::from([
+                        (
+                            Pos::of("E8"),
+                            vec![
+                                GameMove::default_of('♚', "E8", "F8"),
+                                GameMove::default_of('♚', "E8", "F7"),
+                                GameMove::default_of('♚', "E8", "E7"),
+                                GameMove::default_of('♚', "E8", "D7"),
+                                GameMove::default_of('♚', "E8", "D8"),
+                            ],
+                        ),
+                        (
+                            Pos::of("A7"),
+                            vec![
+                                GameMove::default_of('♟', "A7", "A6"),
+                                GameMove::default_of('♟', "A7", "A5"),
+                                GameMove::menace_of('♟', "A7", "D6"),
+                                GameMove::menace_of('♟', "A7", "F6"),
+                            ],
+                        ),
+                    ]),
+                },
+            ),
+            (
+                Color::White,
+                GamePlayer {
+                    color: Color::White,
+                    captures: Vec::new(),
+                    moves: HashMap::from([
+                        (
+                            Pos::of("A4"),
+                            vec![
+                                GameMove::default_of('♙', "A4", "A5"),
+                                GameMove::menace_of('♙', "A4", "B5"),
+                            ],
+                        ),
+                        (
+                            Pos::of("E1"),
+                            vec![
+                                GameMove::default_of('♔', "E1", "F2"),
+                                GameMove::default_of('♔', "E1", "F1"),
+                                GameMove::default_of('♔', "E1", "D1"),
+                                GameMove::default_of('♔', "E1", "D2"),
+                                GameMove::default_of('♔', "E1", "E2"),
+                            ],
+                        ),
+                    ]),
+                },
+            ),
+        ]);
 
         assert_eq!(board, board_after);
         assert_eq!(history, history_after);
+        assert_eq!(players, players_after);
     }
 }

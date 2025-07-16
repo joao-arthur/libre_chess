@@ -92,3 +92,48 @@ o usuário vai selecionar a posição de destino (to)
 
 
 // remover comentários do código e jogar pra cá
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#### move_piece
+
+- [ ] Create the `GameMove` when moving the piece
+    - [ ] Stop differing `Capture` and `Default`
+
+#### allowed_moves_of_player
+
+- [ ] King moves will verify check, instead of menace moves 
+
+
+#### After that
+
+- [ ] Moves will be `HashMap<Pos, HashMap<Pos, GameMoveType>>`, that is, for each piece, possible destination (positions) of moves
