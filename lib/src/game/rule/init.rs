@@ -124,10 +124,10 @@ mod tests {
     use crate::{
         color::Color,
         game::{
-            board::{board_of_str, board_to_string},
+            board::board_of_str,
             game::{Game, GameBounds},
             mode::standard_chess,
-            mov::{GameMove, PieceMoveType, game_move_vec_to_string},
+            mov::{GameMove, PieceMoveType},
             player::GamePlayer,
         },
         piece::Piece,

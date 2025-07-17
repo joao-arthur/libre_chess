@@ -16,7 +16,7 @@ pub fn is_in_check(board: &GameBoard, players: &GamePlayers, history: &GameHisto
             if player.color != turn {
                 let moves_it = player.moves.iter();
                 for (_, moves) in moves_it {
-                    if moves.contains_key(&king_pos) {
+                    if moves.contains_key(king_pos) {
                         return true;
                     }
                 }
@@ -28,7 +28,6 @@ pub fn is_in_check(board: &GameBoard, players: &GamePlayers, history: &GameHisto
 
 #[cfg(test)]
 mod tests {
-    use std::collections::HashMap;
 
     use crate::{
         color::Color,

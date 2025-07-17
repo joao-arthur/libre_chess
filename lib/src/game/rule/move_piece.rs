@@ -27,8 +27,8 @@ pub fn move_piece(
         if selected_player.color == turn {
             let selected_piece_moves = selected_player.moves.get(&from).cloned()?;
             let game_move = selected_piece_moves.get(to)?;
-            match game_move {
-                &PieceMoveType::Default => {
+            match *game_move {
+                PieceMoveType::Default => {
                     let piece = board.remove(&from)?;
                     let maybe_captured_piece = board.insert(to.clone(), piece);
                     if let Some(captured_piece) = maybe_captured_piece {
@@ -49,7 +49,7 @@ pub fn move_piece(
                         });
                     }
                 }
-                &PieceMoveType::EnPassant => {
+                PieceMoveType::EnPassant => {
                     let pawn = board.remove(&from)?;
                     board.insert(to.clone(), pawn);
                     let capture_pos = Pos { col: to.col, row: from.row };
@@ -66,7 +66,7 @@ pub fn move_piece(
                         }
                     }
                 }
-                &PieceMoveType::ShortCastling => {
+                PieceMoveType::ShortCastling => {
                     let king = board.remove(&from)?;
                     let new_king_pos = Pos { row: from.row, col: 6 };
                     board.insert(new_king_pos, king);
@@ -78,7 +78,7 @@ pub fn move_piece(
                         typ: GameMoveType::ShortCastling,
                     });
                 }
-                &PieceMoveType::LongCastling => {
+                PieceMoveType::LongCastling => {
                     let king = board.remove(&from)?;
                     let new_king_pos = Pos { row: from.row, col: 2 };
                     board.insert(new_king_pos, king);
@@ -90,19 +90,19 @@ pub fn move_piece(
                         typ: GameMoveType::LongCastling,
                     });
                 }
-                &PieceMoveType::PromotionToQueen => {
+                PieceMoveType::PromotionToQueen => {
                     // board.insert(game_move.mov.to.clone(), promotion.piece);
                     // edit the pawn mov
                 }
-                &PieceMoveType::PromotionToKnight => {
+                PieceMoveType::PromotionToKnight => {
                     // board.insert(game_move.mov.to.clone(), promotion.piece);
                     // edit the pawn mov
                 }
-                &PieceMoveType::PromotionToRook => {
+                PieceMoveType::PromotionToRook => {
                     // board.insert(game_move.mov.to.clone(), promotion.piece);
                     // edit the pawn mov
                 }
-                &PieceMoveType::PromotionToBishop => {
+                PieceMoveType::PromotionToBishop => {
                     // board.insert(game_move.mov.to.clone(), promotion.piece);
                     // edit the pawn mov
                 }
@@ -116,7 +116,7 @@ pub fn move_piece(
 
 #[cfg(test)]
 mod tests {
-    use std::collections::{HashMap, HashSet};
+    use std::collections::HashSet;
 
     use crate::{
         color::Color,

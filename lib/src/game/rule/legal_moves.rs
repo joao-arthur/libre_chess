@@ -77,7 +77,6 @@ mod tests {
             mov::{GameMove, PieceMoveType},
             player::GamePlayer,
         },
-        piece::Piece,
         pos::Pos,
     };
 

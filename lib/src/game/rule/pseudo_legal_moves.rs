@@ -6,7 +6,6 @@ use crate::{
         board::GameBoard,
         game::{GameBounds, GameHistory, GamePlayers},
         mov::{
-            GameMove,
             default::default_moves,
             special::{castling::castling_moves, en_passant::en_passant_moves},
         },
@@ -40,7 +39,6 @@ pub fn pseudo_legal_moves_of_player(
 
 #[cfg(test)]
 mod tests {
-    use std::collections::HashMap;
 
     use crate::{
         color::Color,

@@ -86,7 +86,6 @@ pub fn board_to_string(bounds: &GameBounds, board: &GameBoard) -> String {
 
 #[cfg(test)]
 mod tests {
-    use std::collections::HashMap;
 
     use crate::{
         game::{game::GameBounds, mode::standard_chess},

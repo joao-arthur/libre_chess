@@ -27,7 +27,7 @@ pub fn toggle_selection(
         if let Some(selected_piece) = board.get(selected_pos) {
             if let Some(player) = players.get(&selected_piece.color) {
                 if let Some(selected_piece_moves) = player.moves.get(selected_pos) {
-                    if selected_piece_moves.iter().find(|(to, _)| to == &&pos).is_some() {
+                    if selected_piece_moves.iter().any(|(to, _)| to == &pos) {
                         selection.selected_squares.clear();
                         selection.selected_pos = None;
                         return;
@@ -81,18 +81,14 @@ pub fn toggle_selection(
 
 #[cfg(test)]
 mod tests {
-    use std::collections::{HashMap, HashSet};
+    use std::collections::HashSet;
 
     use crate::{
         color::Color,
         game::{
-            board::board_of_str,
-            game::GamePlayers,
-            mode::standard_chess,
-            mov::{GameMove, PieceMoveType},
+            board::board_of_str, game::GamePlayers, mode::standard_chess, mov::PieceMoveType,
             player::GamePlayer,
         },
-        piece::Piece,
         pos::Pos,
     };
 
