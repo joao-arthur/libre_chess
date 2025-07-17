@@ -10,14 +10,17 @@ use crate::{
 
 pub fn is_in_check(board: &GameBoard, players: &GamePlayers, history: &GameHistory) -> bool {
     let turn = evaluate_turn(history);
-    let maybe_king = board.iter().find(|(_, piece)| piece.typ == PieceType::King && piece.color == turn);
+    let maybe_king =
+        board.iter().find(|(_, piece)| piece.typ == PieceType::King && piece.color == turn);
     if let Some((king_pos, _)) = maybe_king {
         for player in players.values() {
             if player.color != turn {
                 let moves_it = player.moves.iter();
                 for (_, moves) in moves_it {
                     for game_move in moves {
-                        if (game_move.typ == GameMoveType::Default || game_move.typ == GameMoveType::Capture) && &game_move.mov.to == king_pos
+                        if (game_move.typ == GameMoveType::Default
+                            || game_move.typ == GameMoveType::Capture)
+                            && &game_move.mov.to == king_pos
                         {
                             return true;
                         }

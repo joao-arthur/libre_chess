@@ -4,7 +4,7 @@ use crate::{
         capture::GameCapture,
         game::{GameBounds, GameHistory, GamePlayers},
         mov::{GameMove, GameMoveType},
-        rule::{allowed_moves::legal_moves_of_player, turn::evaluate_turn},
+        rule::{legal_moves::legal_moves_of_player, turn::evaluate_turn},
         selection::Selection,
     },
     mov::Mov,
@@ -119,8 +119,7 @@ pub fn move_piece(
                 }
                 GameMoveType::Menace => {}
             }
-            let new_moves =
-                legal_moves_of_player(board, bounds, history, &players.clone(), &turn);
+            let new_moves = legal_moves_of_player(board, bounds, history, &players.clone(), &turn);
             players.get_mut(&turn).unwrap().moves = new_moves;
         }
         None

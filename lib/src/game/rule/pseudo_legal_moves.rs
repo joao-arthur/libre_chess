@@ -6,7 +6,9 @@ use crate::{
         board::GameBoard,
         game::{GameBounds, GameHistory, GamePlayers},
         mov::{
-            default::default_moves, special::{castling::castling_moves, en_passant::en_passant_moves}, GameMove,
+            GameMove,
+            default::default_moves,
+            special::{castling::castling_moves, en_passant::en_passant_moves},
         },
     },
     piece::PieceType,
@@ -42,10 +44,7 @@ mod tests {
 
     use crate::{
         color::Color,
-        game::{
-            board::board_of_str, mode::standard_chess, mov::GameMove,
-            player::GamePlayer,
-        },
+        game::{board::board_of_str, mode::standard_chess, mov::GameMove, player::GamePlayer},
         pos::Pos,
     };
 
@@ -104,5 +103,4 @@ mod tests {
             ])
         )
     }
-
 }

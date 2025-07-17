@@ -6,7 +6,7 @@ use crate::{
         game::{Game, GameHistory},
         mode::GameMode,
         player::GamePlayer,
-        rule::{allowed_moves::legal_moves_of_player, turn::evaluate_turn},
+        rule::{legal_moves::legal_moves_of_player, turn::evaluate_turn},
     },
 };
 
