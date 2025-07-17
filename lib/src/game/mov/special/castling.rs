@@ -36,10 +36,9 @@ fn short_castling(
     let (rook_pos, rook) = board.iter().find(|(pos, piece)| {
         piece.color == king.color && piece.typ == PieceType::Rook && pos.col > king_pos.col
     })?;
-    // FIX
     let maybe_moved = history
         .iter()
-        .find(|game_move| &game_move.mov.from == king_pos || &game_move.mov.from == rook_pos);
+        .find(|game_move| &game_move.mov.piece == king || &game_move.mov.piece == rook);
     if maybe_moved.is_some() {
         return None;
     }
@@ -70,17 +69,17 @@ fn long_castling(
     king_pos: &Pos,
 ) -> Option<Pos> {
     let king = board.get(king_pos)?;
-    let (rook_pos, _) = board.iter().find(|(pos, piece)| {
+    let (rook_pos, rook) = board.iter().find(|(pos, piece)| {
         piece.color == king.color && piece.typ == PieceType::Rook && pos.col < king_pos.col
     })?;
     let maybe_moved = history
         .iter()
-        .find(|game_move| &game_move.mov.from == king_pos || &game_move.mov.from == rook_pos);
+        .find(|game_move| &game_move.mov.piece == king || &game_move.mov.piece == rook);
     if maybe_moved.is_some() {
         return None;
     }
     for col in (rook_pos.col + 1)..king_pos.col {
-        if board.get(&Pos { row: king_pos.row, col }).is_some() {
+        if board.contains_key(&Pos { row: king_pos.row, col }) {
             return None;
         }
     }
@@ -89,7 +88,7 @@ fn long_castling(
             if color != &king.color {
                 let player_moves_it = player.moves.iter();
                 for (_, player_moves) in player_moves_it {
-                    if player_moves.get(&Pos { row: king_pos.row, col }).is_some() {
+                    if player_moves.contains_key(&Pos { row: king_pos.row, col }) {
                         return None;
                     }
                 }

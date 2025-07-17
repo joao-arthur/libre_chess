@@ -25,20 +25,19 @@ pub fn legal_moves_of_player(
 ) -> PlayerMoves {
     let turn = evaluate_turn(history);
     let in_check = is_in_check(board, players, history);
-    let mut pseudo_legal_moves =
-        pseudo_legal_moves_of_player(board, bounds, history, players, color);
+    let mut pseudo_legal_moves = pseudo_legal_moves_of_player(board, bounds, history, players, color);
 
-    for (from, piece_moves) in pseudo_legal_moves.clone() {
-        for (to, move_type) in piece_moves {
-            let mut temp_board = board.clone();
-            if let Some(piece) = temp_board.remove(&from) {
-                temp_board.insert(to.clone(), piece);
-                if is_in_check(&temp_board, players, history) {
-                    pseudo_legal_moves.get_mut(&from).unwrap().remove(&to);
-                }
-            }
-        }
-    }
+    //for (from, piece_moves) in pseudo_legal_moves.clone() {
+    //    for (to, move_type) in piece_moves {
+    //        let mut temp_board = board.clone();
+    //        if let Some(piece) = temp_board.remove(&from) {
+    //            temp_board.insert(to.clone(), piece);
+    //            if is_in_check(&temp_board, players, history) {
+    //                pseudo_legal_moves.get_mut(&from).unwrap().remove(&to);
+    //            }
+    //        }
+    //    }
+    //}
 
     //let _: Option<()> = (|| {
     //    let (king_pos, _) =

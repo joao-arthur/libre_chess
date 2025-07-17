@@ -569,8 +569,7 @@ mod tests {
     #[test]
     fn move_piece_capture_short_castling_move() {
         let mode = standard_chess();
-        let selection =
-            Selection { selected_pos: Some(Pos::of("E1")), selected_squares: HashSet::new() };
+        let selection = Selection { selected_pos: Some(Pos::of("E1")), selected_squares: HashSet::new() };
 
         let mut board = board_of_str(
             &mode.bounds,
