@@ -87,14 +87,8 @@ mod tests {
         let bounds = mode.bounds;
         let history = Vec::new();
         let players = HashMap::from([
-            (
-                Color::Black,
-                GamePlayer { color: Color::Black, captures: Vec::new(), moves: HashMap::new() },
-            ),
-            (
-                Color::White,
-                GamePlayer { color: Color::White, captures: Vec::new(), moves: HashMap::new() },
-            ),
+            (Color::Black, GamePlayer::from(Color::Black)),
+            (Color::White, GamePlayer::from(Color::White)),
         ]);
         let color = Color::White;
         assert_eq!(
@@ -235,14 +229,8 @@ mod tests {
         let bounds = mode.bounds;
         let history = Vec::new();
         let players = HashMap::from([
-            (
-                Color::Black,
-                GamePlayer { color: Color::Black, captures: Vec::new(), moves: HashMap::new() },
-            ),
-            (
-                Color::White,
-                GamePlayer { color: Color::White, captures: Vec::new(), moves: HashMap::new() },
-            ),
+            (Color::Black, GamePlayer::from(Color::Black)),
+            (Color::White, GamePlayer::from(Color::White)),
         ]);
         let color = Color::White;
         assert_eq!(
@@ -321,10 +309,7 @@ mod tests {
                     ]),
                 },
             ),
-            (
-                Color::White,
-                GamePlayer { color: Color::White, captures: Vec::new(), moves: HashMap::new() },
-            ),
+            (Color::White, GamePlayer::from(Color::White)),
         ]);
         let color = Color::White;
         assert_eq!(
@@ -440,10 +425,7 @@ mod tests {
                     ]),
                 },
             ),
-            (
-                Color::White,
-                GamePlayer { color: Color::White, captures: Vec::new(), moves: HashMap::new() },
-            ),
+            (Color::White, GamePlayer::from(Color::White)),
         ]);
         let color = Color::White;
         assert_eq!(
@@ -510,10 +492,7 @@ mod tests {
                     ]),
                 },
             ),
-            (
-                Color::White,
-                GamePlayer { color: Color::White, captures: Vec::new(), moves: HashMap::new() },
-            ),
+            (Color::White, GamePlayer::from(Color::White)),
         ]);
         let color = Color::White;
         assert_eq!(
@@ -600,10 +579,7 @@ mod tests {
                     ]),
                 },
             ),
-            (
-                Color::White,
-                GamePlayer { color: Color::White, captures: Vec::new(), moves: HashMap::new() },
-            ),
+            (Color::White, GamePlayer::from(Color::White)),
         ]);
         let color = Color::White;
         assert_eq!(

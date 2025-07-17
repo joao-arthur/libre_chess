@@ -119,14 +119,8 @@ mod tests {
 
     fn empty_players() -> GamePlayers {
         HashMap::from([
-            (
-                Color::Black,
-                GamePlayer { color: Color::Black, captures: Vec::new(), moves: HashMap::new() },
-            ),
-            (
-                Color::White,
-                GamePlayer { color: Color::White, captures: Vec::new(), moves: HashMap::new() },
-            ),
+            (Color::Black, GamePlayer::from(Color::Black)),
+            (Color::White, GamePlayer::from(Color::White)),
         ])
     }
 
@@ -165,10 +159,7 @@ mod tests {
             Selection { selected_squares: HashSet::from([Pos::of("D4")]), selected_pos: None };
         let board = mode.initial_board;
         let players = HashMap::from([
-            (
-                Color::Black,
-                GamePlayer { color: Color::Black, captures: Vec::new(), moves: HashMap::new() },
-            ),
+            (Color::Black, GamePlayer::from(Color::Black)),
             (
                 Color::White,
                 GamePlayer {
@@ -235,10 +226,7 @@ mod tests {
         let board = mode.initial_board;
         let pos = Pos::of("C2");
         let players = HashMap::from([
-            (
-                Color::Black,
-                GamePlayer { color: Color::Black, captures: Vec::new(), moves: HashMap::new() },
-            ),
+            (Color::Black, GamePlayer::from(Color::Black)),
             (
                 Color::White,
                 GamePlayer {
@@ -297,10 +285,7 @@ mod tests {
             ],
         );
         let players = HashMap::from([
-            (
-                Color::Black,
-                GamePlayer { color: Color::Black, captures: Vec::new(), moves: HashMap::new() },
-            ),
+            (Color::Black, GamePlayer::from(Color::Black)),
             (
                 Color::White,
                 GamePlayer {
@@ -342,10 +327,7 @@ mod tests {
             ],
         );
         let players = HashMap::from([
-            (
-                Color::Black,
-                GamePlayer { color: Color::Black, captures: Vec::new(), moves: HashMap::new() },
-            ),
+            (Color::Black, GamePlayer::from(Color::Black)),
             (
                 Color::White,
                 GamePlayer {
@@ -386,10 +368,7 @@ mod tests {
             ],
         );
         let players = HashMap::from([
-            (
-                Color::Black,
-                GamePlayer { color: Color::Black, captures: Vec::new(), moves: HashMap::new() },
-            ),
+            (Color::Black, GamePlayer::from(Color::Black)),
             (
                 Color::White,
                 GamePlayer {
@@ -434,10 +413,7 @@ mod tests {
             ],
         );
         let players = HashMap::from([
-            (
-                Color::Black,
-                GamePlayer { color: Color::Black, captures: Vec::new(), moves: HashMap::new() },
-            ),
+            (Color::Black, GamePlayer::from(Color::Black)),
             (
                 Color::White,
                 GamePlayer {
