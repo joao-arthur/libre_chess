@@ -11,10 +11,6 @@ use crate::{
     pos::Pos,
 };
 
-fn castling_move(board: &mut GameBoard, history: &mut GameHistory, game_move: &GameMove) {}
-
-fn promotion_move(board: &mut GameBoard, history: &mut GameHistory, game_move: &GameMove) {}
-
 pub fn move_piece(
     board: &mut GameBoard,
     history: &mut GameHistory,
