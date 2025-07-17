@@ -99,10 +99,11 @@ mod tests {
     use super::{Selection, toggle_selection};
 
     fn empty_players() -> GamePlayers {
-        HashMap::from([
+        [
             (Color::Black, GamePlayer::from(Color::Black)),
             (Color::White, GamePlayer::from(Color::White)),
-        ])
+        ]
+        .into()
     }
 
     #[test]
@@ -139,23 +140,26 @@ mod tests {
         let mut selection =
             Selection { selected_squares: HashSet::from([Pos::of("D4")]), selected_pos: None };
         let board = mode.initial_board;
-        let players = HashMap::from([
+        let players = [
             (Color::Black, GamePlayer::from(Color::Black)),
             (
                 Color::White,
                 GamePlayer {
                     color: Color::White,
                     captures: Vec::new(),
-                    moves: HashMap::from([(
+                    moves: [(
                         Pos::of("B2"),
-                        HashMap::from([
+                        [
                             (Pos::of("B3"), PieceMoveType::Default),
                             (Pos::of("B4"), PieceMoveType::Default),
-                        ]),
-                    )]),
+                        ]
+                        .into(),
+                    )]
+                    .into(),
                 },
             ),
-        ]);
+        ]
+        .into();
         let history = Vec::new();
         toggle_selection(&mut selection, &board, &players, &history, Pos::of("B2"));
         assert_eq!(
@@ -204,23 +208,26 @@ mod tests {
         };
         let board = mode.initial_board;
         let pos = Pos::of("C2");
-        let players = HashMap::from([
+        let players = [
             (Color::Black, GamePlayer::from(Color::Black)),
             (
                 Color::White,
                 GamePlayer {
                     color: Color::White,
                     captures: Vec::new(),
-                    moves: HashMap::from([(
+                    moves: [(
                         pos.clone(),
-                        HashMap::from([
+                        [
                             (Pos::of("C3"), PieceMoveType::Default),
                             (Pos::of("C4"), PieceMoveType::Default),
-                        ]),
-                    )]),
+                        ]
+                        .into(),
+                    )]
+                    .into(),
                 },
             ),
-        ]);
+        ]
+        .into();
         let history = Vec::new();
         toggle_selection(&mut selection, &board, &players, &history, pos.clone());
         assert_eq!(
@@ -261,25 +268,28 @@ mod tests {
                 "    ♔   ",
             ],
         );
-        let players = HashMap::from([
+        let players = [
             (Color::Black, GamePlayer::from(Color::Black)),
             (
                 Color::White,
                 GamePlayer {
                     color: Color::White,
                     captures: Vec::new(),
-                    moves: HashMap::from([(
+                    moves: [(
                         Pos::of("D5"),
-                        HashMap::from([
+                        [
                             (Pos::of("E5"), PieceMoveType::Default),
                             (Pos::of("D4"), PieceMoveType::Default),
                             (Pos::of("C5"), PieceMoveType::Default),
                             (Pos::of("D6"), PieceMoveType::Default),
-                        ]),
-                    )]),
+                        ]
+                        .into(),
+                    )]
+                    .into(),
                 },
             ),
-        ]);
+        ]
+        .into();
         let history = Vec::new();
         toggle_selection(&mut selection, &board, &players, &history, Pos::of("E5"));
         assert_eq!(selection, Selection { selected_squares: HashSet::new(), selected_pos: None });
@@ -303,23 +313,26 @@ mod tests {
                 "       ♔",
             ],
         );
-        let players = HashMap::from([
+        let players = [
             (Color::Black, GamePlayer::from(Color::Black)),
             (
                 Color::White,
                 GamePlayer {
                     color: Color::White,
                     captures: Vec::new(),
-                    moves: HashMap::from([(
+                    moves: [(
                         Pos::of("A5"),
-                        HashMap::from([
+                        [
                             (Pos::of("A6"), PieceMoveType::Default),
                             (Pos::of("B6"), PieceMoveType::EnPassant),
-                        ]),
-                    )]),
+                        ]
+                        .into(),
+                    )]
+                    .into(),
                 },
             ),
-        ]);
+        ]
+        .into();
         let history = Vec::new();
         toggle_selection(&mut selection, &board, &players, &history, Pos::of("B6"));
         assert_eq!(selection, Selection { selected_squares: HashSet::new(), selected_pos: None });
@@ -343,16 +356,16 @@ mod tests {
                 "♖   ♔  ♖",
             ],
         );
-        let players = HashMap::from([
+        let players = [
             (Color::Black, GamePlayer::from(Color::Black)),
             (
                 Color::White,
                 GamePlayer {
                     color: Color::White,
                     captures: Vec::new(),
-                    moves: HashMap::from([(
+                    moves: [(
                         Pos::of("E1"),
-                        HashMap::from([
+                        [
                             (Pos::of("A1"), PieceMoveType::ShortCastling),
                             (Pos::of("H1"), PieceMoveType::LongCastling),
                             (Pos::of("F2"), PieceMoveType::Default),
@@ -360,11 +373,14 @@ mod tests {
                             (Pos::of("D1"), PieceMoveType::Default),
                             (Pos::of("D2"), PieceMoveType::Default),
                             (Pos::of("E2"), PieceMoveType::Default),
-                        ]),
-                    )]),
+                        ]
+                        .into(),
+                    )]
+                    .into(),
                 },
             ),
-        ]);
+        ]
+        .into();
         let history = Vec::new();
         toggle_selection(&mut selection, &board, &players, &history, Pos::of("A1"));
         assert_eq!(selection, Selection { selected_squares: HashSet::new(), selected_pos: None });
@@ -388,23 +404,26 @@ mod tests {
                 "    ♔   ",
             ],
         );
-        let players = HashMap::from([
+        let players = [
             (Color::Black, GamePlayer::from(Color::Black)),
             (
                 Color::White,
                 GamePlayer {
                     color: Color::White,
                     captures: Vec::new(),
-                    moves: HashMap::from([(
+                    moves: [(
                         Pos::of("E2"),
-                        HashMap::from([
+                        [
                             (Pos::of("E3"), PieceMoveType::Default),
                             (Pos::of("E4"), PieceMoveType::Default),
-                        ]),
-                    )]),
+                        ]
+                        .into(),
+                    )]
+                    .into(),
                 },
             ),
-        ]);
+        ]
+        .into();
         let history = Vec::new();
         toggle_selection(&mut selection, &board, &players, &history, Pos::of("F3"));
         assert_eq!(

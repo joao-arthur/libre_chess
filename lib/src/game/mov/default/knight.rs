@@ -54,8 +54,8 @@ mod tests {
             game::GameBounds,
             mode::standard_chess,
             mov::PieceMoveType,
-            piece::game_piece_of,
         },
+        piece::Piece,
         pos::Pos,
     };
 
@@ -70,10 +70,10 @@ mod tests {
     #[test]
     fn knight_moves_lonely_piece() {
         let mode = standard_chess();
-        let board = HashMap::from([game_piece_of("D4", '♞')]);
+        let board = [(Pos::of("D4"), Piece::of('♞'))].into();
         assert_eq!(
             knight_moves(&board, &mode.bounds, &Pos::of("D4")),
-            HashMap::from([
+            [
                 (Pos::of("E6"), PieceMoveType::Default),
                 (Pos::of("F5"), PieceMoveType::Default),
                 (Pos::of("F3"), PieceMoveType::Default),
@@ -82,119 +82,116 @@ mod tests {
                 (Pos::of("B3"), PieceMoveType::Default),
                 (Pos::of("B5"), PieceMoveType::Default),
                 (Pos::of("C6"), PieceMoveType::Default),
-            ])
+            ]
+            .into()
         );
     }
 
     #[test]
     fn knight_moves_top_right_edge() {
         let mode = standard_chess();
-        let board = HashMap::from([game_piece_of("H8", '♞')]);
+        let board = [(Pos::of("H8"), Piece::of('♞'))].into();
         assert_eq!(
             knight_moves(&board, &mode.bounds, &Pos::of("H8")),
-            HashMap::from([
-                (Pos::of("G6"), PieceMoveType::Default),
-                (Pos::of("F7"), PieceMoveType::Default)
-            ])
+            [(Pos::of("G6"), PieceMoveType::Default), (Pos::of("F7"), PieceMoveType::Default)]
+                .into()
         );
     }
 
     #[test]
     fn knight_moves_bottom_right_edge() {
         let mode = standard_chess();
-        let board = HashMap::from([game_piece_of("H1", '♞')]);
+        let board = [(Pos::of("H1"), Piece::of('♞'))].into();
         assert_eq!(
             knight_moves(&board, &mode.bounds, &Pos::of("H1")),
-            HashMap::from([
-                (Pos::of("F2"), PieceMoveType::Default),
-                (Pos::of("G3"), PieceMoveType::Default)
-            ])
+            [(Pos::of("F2"), PieceMoveType::Default), (Pos::of("G3"), PieceMoveType::Default)]
+                .into()
         );
     }
 
     #[test]
     fn knight_moves_bottom_left_edge() {
         let mode = standard_chess();
-        let board = HashMap::from([game_piece_of("A1", '♞')]);
+        let board = [(Pos::of("A1"), Piece::of('♞'))].into();
         assert_eq!(
             knight_moves(&board, &mode.bounds, &Pos::of("A1")),
-            HashMap::from([
-                (Pos::of("B3"), PieceMoveType::Default),
-                (Pos::of("C2"), PieceMoveType::Default),
-            ])
+            [(Pos::of("B3"), PieceMoveType::Default), (Pos::of("C2"), PieceMoveType::Default)]
+                .into()
         );
     }
 
     #[test]
     fn knight_moves_top_left_edge() {
         let mode = standard_chess();
-        let board = HashMap::from([game_piece_of("A8", '♞')]);
+        let board = [(Pos::of("A8"), Piece::of('♞'))].into();
         assert_eq!(
             knight_moves(&board, &mode.bounds, &Pos::of("A8")),
-            HashMap::from([
-                (Pos::of("C7"), PieceMoveType::Default),
-                (Pos::of("B6"), PieceMoveType::Default),
-            ])
+            [(Pos::of("C7"), PieceMoveType::Default), (Pos::of("B6"), PieceMoveType::Default)]
+                .into()
         );
     }
 
     #[test]
     fn knight_moves_small_bounds_top_right_edge() {
-        let board = HashMap::from([game_piece_of("G7", '♞')]);
+        let board = [(Pos::of("G7"), Piece::of('♞'))].into();
         let bounds = GameBounds { x1: 3, y1: 3, x2: 7, y2: 7 };
         assert_eq!(
             knight_moves(&board, &bounds, &Pos::of("G7")),
-            HashMap::from([
+            [
                 (Pos::of("H5"), PieceMoveType::Default),
                 (Pos::of("F5"), PieceMoveType::Default),
                 (Pos::of("E6"), PieceMoveType::Default),
                 (Pos::of("E8"), PieceMoveType::Default),
-            ])
+            ]
+            .into()
         );
     }
 
     #[test]
     fn knight_moves_small_bounds_bottom_right_edge() {
-        let board = HashMap::from([game_piece_of("G5", '♞')]);
+        let board = [(Pos::of("G5"), Piece::of('♞'))].into();
         let bounds = GameBounds { x1: 3, y1: 3, x2: 7, y2: 7 };
         assert_eq!(
             knight_moves(&board, &bounds, &Pos::of("G5")),
-            HashMap::from([
+            [
                 (Pos::of("H7"), PieceMoveType::Default),
                 (Pos::of("E4"), PieceMoveType::Default),
                 (Pos::of("E6"), PieceMoveType::Default),
                 (Pos::of("F7"), PieceMoveType::Default)
-            ])
+            ]
+            .into()
         );
     }
 
     #[test]
     fn knight_moves_small_bounds_bottom_left_edge() {
-        let board = HashMap::from([game_piece_of("E5", '♞')]);
+        let board = [(Pos::of("E5"), Piece::of('♞'))].into();
         let bounds = GameBounds { x1: 3, y1: 3, x2: 7, y2: 7 };
         assert_eq!(
             knight_moves(&board, &bounds, &Pos::of("E5")),
-            HashMap::from([
+            [
                 (Pos::of("F7"), PieceMoveType::Default),
                 (Pos::of("G6"), PieceMoveType::Default),
                 (Pos::of("G4"), PieceMoveType::Default),
                 (Pos::of("D7"), PieceMoveType::Default)
-            ])
+            ]
+            .into()
         );
     }
 
     #[test]
     fn knight_moves_small_bounds_top_left_edge() {
-        let board = HashMap::from([game_piece_of("E7", '♞')]);
+        let board = [(Pos::of("E7"), Piece::of('♞'))].into();
         let bounds = GameBounds { x1: 3, y1: 3, x2: 7, y2: 7 };
         assert_eq!(
             knight_moves(&board, &bounds, &Pos::of("E7")),
-            HashMap::from([
+            [
                 (Pos::of("G8"), PieceMoveType::Default),
                 (Pos::of("G6"), PieceMoveType::Default),
                 (Pos::of("F5"), PieceMoveType::Default),
                 (Pos::of("D5"), PieceMoveType::Default),
-            ])
+            ]
+            .into()
         );
     }
 
@@ -216,7 +213,7 @@ mod tests {
         );
         assert_eq!(
             knight_moves(&board, &mode.bounds, &Pos::of("D4")),
-            HashMap::from([
+            [
                 (Pos::of("E6"), PieceMoveType::Default),
                 (Pos::of("F5"), PieceMoveType::Default),
                 (Pos::of("F3"), PieceMoveType::Default),
@@ -224,7 +221,8 @@ mod tests {
                 (Pos::of("C2"), PieceMoveType::Default),
                 (Pos::of("B5"), PieceMoveType::Default),
                 (Pos::of("C6"), PieceMoveType::Default),
-            ])
+            ]
+            .into()
         );
     }
 
@@ -246,7 +244,7 @@ mod tests {
         );
         assert_eq!(
             knight_moves(&board, &mode.bounds, &Pos::of("D4")),
-            HashMap::from([
+            [
                 (Pos::of("E6"), PieceMoveType::Default),
                 (Pos::of("F5"), PieceMoveType::Default),
                 (Pos::of("F3"), PieceMoveType::Default),
@@ -254,7 +252,8 @@ mod tests {
                 (Pos::of("C2"), PieceMoveType::Default),
                 (Pos::of("B5"), PieceMoveType::Default),
                 (Pos::of("C6"), PieceMoveType::Default)
-            ])
+            ]
+            .into()
         );
     }
 }

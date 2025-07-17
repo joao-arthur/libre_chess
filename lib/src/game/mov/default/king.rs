@@ -54,8 +54,8 @@ mod tests {
             game::GameBounds,
             mode::standard_chess,
             mov::PieceMoveType,
-            piece::game_piece_of,
         },
+        piece::Piece,
         pos::Pos,
     };
 
@@ -70,10 +70,10 @@ mod tests {
     #[test]
     fn king_moves_lonely_piece() {
         let mode = standard_chess();
-        let board = HashMap::from([game_piece_of("D4", '♚')]);
+        let board = [(Pos::of("D4"), Piece::of('♚'))].into();
         assert_eq!(
             king_moves(&board, &mode.bounds, &Pos::of("D4")),
-            HashMap::from([
+            [
                 (Pos::of("E5"), PieceMoveType::Default),
                 (Pos::of("E4"), PieceMoveType::Default),
                 (Pos::of("E3"), PieceMoveType::Default),
@@ -82,119 +82,128 @@ mod tests {
                 (Pos::of("C4"), PieceMoveType::Default),
                 (Pos::of("C5"), PieceMoveType::Default),
                 (Pos::of("D5"), PieceMoveType::Default),
-            ])
+            ]
+            .into()
         );
     }
 
     #[test]
     fn king_moves_top_right_edge() {
         let mode = standard_chess();
-        let board = HashMap::from([game_piece_of("H8", '♚')]);
+        let board = [(Pos::of("H8"), Piece::of('♚'))].into();
         assert_eq!(
             king_moves(&board, &mode.bounds, &Pos::of("H8")),
-            HashMap::from([
+            [
                 (Pos::of("H7"), PieceMoveType::Default),
                 (Pos::of("G7"), PieceMoveType::Default),
                 (Pos::of("G8"), PieceMoveType::Default),
-            ])
+            ]
+            .into()
         );
     }
 
     #[test]
     fn king_moves_bottom_right_edge() {
         let mode = standard_chess();
-        let board = HashMap::from([game_piece_of("H1", '♚')]);
+        let board = [(Pos::of("H1"), Piece::of('♚'))].into();
         assert_eq!(
             king_moves(&board, &mode.bounds, &Pos::of("H1")),
-            HashMap::from([
+            [
                 (Pos::of("G1"), PieceMoveType::Default),
                 (Pos::of("G2"), PieceMoveType::Default),
                 (Pos::of("H2"), PieceMoveType::Default),
-            ])
+            ]
+            .into()
         );
     }
 
     #[test]
     fn king_moves_bottom_left_edge() {
         let mode = standard_chess();
-        let board = HashMap::from([game_piece_of("A1", '♚')]);
+        let board = [(Pos::of("A1"), Piece::of('♚'))].into();
         assert_eq!(
             king_moves(&board, &mode.bounds, &Pos::of("A1")),
-            HashMap::from([
+            [
                 (Pos::of("B2"), PieceMoveType::Default),
                 (Pos::of("B1"), PieceMoveType::Default),
                 (Pos::of("A2"), PieceMoveType::Default),
-            ])
+            ]
+            .into()
         );
     }
 
     #[test]
     fn king_moves_top_left_edge() {
         let mode = standard_chess();
-        let board = HashMap::from([game_piece_of("A8", '♚')]);
+        let board = [(Pos::of("A8"), Piece::of('♚'))].into();
         assert_eq!(
             king_moves(&board, &mode.bounds, &Pos::of("A8")),
-            HashMap::from([
+            [
                 (Pos::of("B8"), PieceMoveType::Default),
                 (Pos::of("B7"), PieceMoveType::Default),
                 (Pos::of("A7"), PieceMoveType::Default),
-            ])
+            ]
+            .into()
         );
     }
 
     #[test]
     fn king_moves_small_bounds_top_right_edge() {
-        let board = HashMap::from([game_piece_of("H8", '♚')]);
+        let board = [(Pos::of("H8"), Piece::of('♚'))].into();
         let bounds = GameBounds { x1: 3, y1: 3, x2: 7, y2: 7 };
         assert_eq!(
             king_moves(&board, &bounds, &Pos::of("H8")),
-            HashMap::from([
+            [
                 (Pos::of("H7"), PieceMoveType::Default),
                 (Pos::of("G7"), PieceMoveType::Default),
                 (Pos::of("G8"), PieceMoveType::Default),
-            ])
+            ]
+            .into()
         );
     }
 
     #[test]
     fn king_moves_small_bounds_bottom_right_edge() {
-        let board = HashMap::from([game_piece_of("H4", '♚')]);
+        let board = [(Pos::of("H4"), Piece::of('♚'))].into();
         let bounds = GameBounds { x1: 3, y1: 3, x2: 7, y2: 7 };
         assert_eq!(
             king_moves(&board, &bounds, &Pos::of("H4")),
-            HashMap::from([
+            [
                 (Pos::of("G4"), PieceMoveType::Default),
                 (Pos::of("G5"), PieceMoveType::Default),
                 (Pos::of("H5"), PieceMoveType::Default),
-            ])
+            ]
+            .into()
         );
     }
 
     #[test]
     fn king_moves_small_bounds_bottom_left_edge() {
-        let board = HashMap::from([game_piece_of("D4 ", '♚')]);
+        let board = [(Pos::of("D4"), Piece::of('♚'))].into();
         let bounds = GameBounds { x1: 3, y1: 3, x2: 7, y2: 7 };
         assert_eq!(
             king_moves(&board, &bounds, &Pos::of("D4")),
-            HashMap::from([
+            [
                 (Pos::of("E5"), PieceMoveType::Default),
                 (Pos::of("E4"), PieceMoveType::Default),
                 (Pos::of("D5"), PieceMoveType::Default),
-            ])
+            ]
+            .into()
         );
     }
 
     #[test]
     fn king_moves_small_bounds_top_left_edge() {
-        let board = HashMap::from([game_piece_of("D8", '♚')]);
+        let board = [(Pos::of("D8"), Piece::of('♚'))].into();
         let bounds = GameBounds { x1: 3, y1: 3, x2: 7, y2: 7 };
         assert_eq!(
             king_moves(&board, &bounds, &Pos::of("D8")),
-            HashMap::from([
+            [
                 (Pos::of("E8"), PieceMoveType::Default),
                 (Pos::of("E7"), PieceMoveType::Default),
                 (Pos::of("D7"), PieceMoveType::Default),
-            ])
+            ]
+            .into()
         );
     }
 
@@ -216,7 +225,7 @@ mod tests {
         );
         assert_eq!(
             king_moves(&board, &mode.bounds, &Pos::of("D4")),
-            HashMap::from([
+            [
                 (Pos::of("E5"), PieceMoveType::Default),
                 (Pos::of("E4"), PieceMoveType::Default),
                 (Pos::of("E3"), PieceMoveType::Default),
@@ -224,7 +233,8 @@ mod tests {
                 (Pos::of("C4"), PieceMoveType::Default),
                 (Pos::of("C5"), PieceMoveType::Default),
                 (Pos::of("D5"), PieceMoveType::Default),
-            ])
+            ]
+            .into()
         );
     }
 
@@ -246,7 +256,7 @@ mod tests {
         );
         assert_eq!(
             king_moves(&board, &mode.bounds, &Pos::of("D4")),
-            HashMap::from([
+            [
                 (Pos::of("E5"), PieceMoveType::Default),
                 (Pos::of("E4"), PieceMoveType::Default),
                 (Pos::of("E3"), PieceMoveType::Default),
@@ -254,7 +264,8 @@ mod tests {
                 (Pos::of("C4"), PieceMoveType::Default),
                 (Pos::of("C5"), PieceMoveType::Default),
                 (Pos::of("D5"), PieceMoveType::Default),
-            ])
+            ]
+            .into()
         );
     }
 }

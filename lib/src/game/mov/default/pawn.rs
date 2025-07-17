@@ -67,8 +67,8 @@ mod tests {
             board::{board_empty, board_of_str},
             mode::standard_chess,
             mov::PieceMoveType,
-            piece::game_piece_of,
         },
+        piece::Piece,
         pos::Pos,
     };
 
@@ -83,100 +83,96 @@ mod tests {
     #[test]
     fn pawn_moves_lonely_white_pawn() {
         let mode = standard_chess();
-        let board = HashMap::from([game_piece_of("C5", '♙')]);
+        let board = [(Pos::of("C5"), Piece::of('♙'))].into();
         assert_eq!(
             pawn_moves(&board, &mode.bounds, &Pos::of("C5")),
-            HashMap::from([(Pos::of("C6"), PieceMoveType::Default),])
+            [(Pos::of("C6"), PieceMoveType::Default)].into()
         );
     }
 
     #[test]
     fn pawn_moves_lonely_black_pawn() {
         let mode = standard_chess();
-        let board = HashMap::from([game_piece_of("C5", '♟')]);
+        let board = [(Pos::of("C5"), Piece::of('♟'))].into();
         assert_eq!(
             pawn_moves(&board, &mode.bounds, &Pos::of("C5")),
-            HashMap::from([(Pos::of("C4"), PieceMoveType::Default),])
+            [(Pos::of("C4"), PieceMoveType::Default)].into()
         );
     }
 
     #[test]
     fn pawn_moves_first_move_white_pawn() {
         let mode = standard_chess();
-        let board = HashMap::from([game_piece_of("A2", '♙')]);
+        let board = [(Pos::of("A2"), Piece::of('♙'))].into();
         assert_eq!(
             pawn_moves(&board, &mode.bounds, &Pos::of("A2")),
-            HashMap::from([
-                (Pos::of("A3"), PieceMoveType::Default),
-                (Pos::of("A4"), PieceMoveType::Default),
-            ])
+            [(Pos::of("A3"), PieceMoveType::Default), (Pos::of("A4"), PieceMoveType::Default)]
+                .into()
         );
     }
 
     #[test]
     fn pawn_moves_first_move_black_pawn() {
         let mode = standard_chess();
-        let board = HashMap::from([game_piece_of("H7", '♟')]);
+        let board = [(Pos::of("H7"), Piece::of('♟'))].into();
         assert_eq!(
             pawn_moves(&board, &mode.bounds, &Pos::of("H7")),
-            HashMap::from([
-                (Pos::of("H6"), PieceMoveType::Default),
-                (Pos::of("H5"), PieceMoveType::Default),
-            ])
+            [(Pos::of("H6"), PieceMoveType::Default), (Pos::of("H5"), PieceMoveType::Default)]
+                .into()
         );
     }
 
     #[test]
     fn pawn_moves_blocked_white_pawn() {
         let mode = standard_chess();
-        let board = HashMap::from([game_piece_of("C5", '♙'), game_piece_of("C6", '♟')]);
+        let board = [(Pos::of("C5"), Piece::of('♙')), (Pos::of("C6"), Piece::of('♟'))].into();
         assert_eq!(pawn_moves(&board, &mode.bounds, &Pos::of("C5")), HashMap::new());
     }
 
     #[test]
     fn pawn_moves_blocked_black_pawn() {
         let mode = standard_chess();
-        let board = HashMap::from([game_piece_of("C5", '♟'), game_piece_of("C4", '♙')]);
+        let board = [(Pos::of("C5"), Piece::of('♟')), (Pos::of("C4"), Piece::of('♙'))].into();
         assert_eq!(pawn_moves(&board, &mode.bounds, &Pos::of("C5")), HashMap::new());
     }
 
     #[test]
     fn pawn_moves_left_bounds_white_pawn() {
         let mode = standard_chess();
-        let board = HashMap::from([game_piece_of("A3", '♙')]);
+        let board = [(Pos::of("A3"), Piece::of('♙'))].into();
         assert_eq!(
             pawn_moves(&board, &mode.bounds, &Pos::of("A3")),
-            HashMap::from([(Pos::of("A4"), PieceMoveType::Default),])
+            [(Pos::of("A4"), PieceMoveType::Default)].into()
         );
     }
 
     #[test]
     fn pawn_moves_right_bounds_white_pawn() {
         let mode = standard_chess();
-        let board = HashMap::from([game_piece_of("H3", '♙')]);
+        let board = [(Pos::of("H3"), Piece::of('♙'))].into();
         assert_eq!(
             pawn_moves(&board, &mode.bounds, &Pos::of("H3")),
-            HashMap::from([(Pos::of("H4"), PieceMoveType::Default),])
+            [(Pos::of("H4"), PieceMoveType::Default)].into()
         );
     }
 
     #[test]
     fn pawn_moves_left_bounds_black_pawn() {
         let mode = standard_chess();
-        let board = HashMap::from([game_piece_of("A6", '♟')]);
+        let board = [(Pos::of("A6"), Piece::of('♟'))].into();
         assert_eq!(
             pawn_moves(&board, &mode.bounds, &Pos::of("A6")),
-            HashMap::from([(Pos::of("A5"), PieceMoveType::Default)])
+            [(Pos::of("A5"), PieceMoveType::Default)].into()
         );
     }
 
     #[test]
     fn pawn_moves_right_bounds_black_pawn() {
         let mode = standard_chess();
-        let board = HashMap::from([game_piece_of("H6", '♟')]);
+        let board = [(Pos::of("H6"), Piece::of('♟'))].into();
         assert_eq!(
             pawn_moves(&board, &mode.bounds, &Pos::of("H6")),
-            HashMap::from([(Pos::of("H5"), PieceMoveType::Default)])
+            [(Pos::of("H5"), PieceMoveType::Default)].into()
         );
     }
 
@@ -198,10 +194,8 @@ mod tests {
         );
         assert_eq!(
             pawn_moves(&board, &mode.bounds, &Pos::of("C5")),
-            HashMap::from([
-                (Pos::of("C6"), PieceMoveType::Default),
-                (Pos::of("B6"), PieceMoveType::Default),
-            ])
+            [(Pos::of("C6"), PieceMoveType::Default), (Pos::of("B6"), PieceMoveType::Default)]
+                .into()
         );
     }
 
@@ -223,10 +217,8 @@ mod tests {
         );
         assert_eq!(
             pawn_moves(&board, &mode.bounds, &Pos::of("C5")),
-            HashMap::from([
-                (Pos::of("C4"), PieceMoveType::Default),
-                (Pos::of("D4"), PieceMoveType::Default),
-            ])
+            [(Pos::of("C4"), PieceMoveType::Default), (Pos::of("D4"), PieceMoveType::Default)]
+                .into()
         );
     }
 }

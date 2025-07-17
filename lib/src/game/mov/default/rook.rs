@@ -54,8 +54,8 @@ mod tests {
             game::GameBounds,
             mode::standard_chess,
             mov::PieceMoveType,
-            piece::game_piece_of,
         },
+        piece::Piece,
         pos::Pos,
     };
 
@@ -70,10 +70,10 @@ mod tests {
     #[test]
     fn rook_moves_lonely_piece() {
         let mode = standard_chess();
-        let board = HashMap::from([game_piece_of("D4", '♜')]);
+        let board = [(Pos::of("D4"), Piece::of('♜'))].into();
         assert_eq!(
             rook_moves(&board, &mode.bounds, &Pos::of("D4")),
-            HashMap::from([
+            [
                 (Pos::of("E4"), PieceMoveType::Default),
                 (Pos::of("F4"), PieceMoveType::Default),
                 (Pos::of("G4"), PieceMoveType::Default),
@@ -88,17 +88,18 @@ mod tests {
                 (Pos::of("D6"), PieceMoveType::Default),
                 (Pos::of("D7"), PieceMoveType::Default),
                 (Pos::of("D8"), PieceMoveType::Default),
-            ])
+            ]
+            .into()
         );
     }
 
     #[test]
     fn rook_moves_small_bounds() {
-        let board = HashMap::from([game_piece_of("F6", '♜')]);
+        let board = [(Pos::of("F6"), Piece::of('♜'))].into();
         let bounds = GameBounds { x1: 3, y1: 3, x2: 7, y2: 7 };
         assert_eq!(
             rook_moves(&board, &bounds, &Pos::of("F6")),
-            HashMap::from([
+            [
                 (Pos::of("G6"), PieceMoveType::Default),
                 (Pos::of("H6"), PieceMoveType::Default),
                 (Pos::of("F5"), PieceMoveType::Default),
@@ -107,17 +108,18 @@ mod tests {
                 (Pos::of("D6"), PieceMoveType::Default),
                 (Pos::of("F7"), PieceMoveType::Default),
                 (Pos::of("F8"), PieceMoveType::Default)
-            ])
+            ]
+            .into()
         );
     }
 
     #[test]
     fn rook_moves_top_right_edge() {
         let mode = standard_chess();
-        let board = HashMap::from([game_piece_of("H8", '♜')]);
+        let board = [(Pos::of("H8"), Piece::of('♜'))].into();
         assert_eq!(
             rook_moves(&board, &mode.bounds, &Pos::of("H8")),
-            HashMap::from([
+            [
                 (Pos::of("H7"), PieceMoveType::Default),
                 (Pos::of("H6"), PieceMoveType::Default),
                 (Pos::of("H5"), PieceMoveType::Default),
@@ -132,17 +134,18 @@ mod tests {
                 (Pos::of("C8"), PieceMoveType::Default),
                 (Pos::of("B8"), PieceMoveType::Default),
                 (Pos::of("A8"), PieceMoveType::Default),
-            ])
+            ]
+            .into()
         );
     }
 
     #[test]
     fn rook_moves_bottom_right_edge() {
         let mode = standard_chess();
-        let board = HashMap::from([game_piece_of("H1", '♜')]);
+        let board = [(Pos::of("H1"), Piece::of('♜'))].into();
         assert_eq!(
             rook_moves(&board, &mode.bounds, &Pos::of("H1")),
-            HashMap::from([
+            [
                 (Pos::of("G1"), PieceMoveType::Default),
                 (Pos::of("F1"), PieceMoveType::Default),
                 (Pos::of("E1"), PieceMoveType::Default),
@@ -157,17 +160,18 @@ mod tests {
                 (Pos::of("H6"), PieceMoveType::Default),
                 (Pos::of("H7"), PieceMoveType::Default),
                 (Pos::of("H8"), PieceMoveType::Default)
-            ])
+            ]
+            .into()
         );
     }
 
     #[test]
     fn rook_moves_bottom_left_edge() {
         let mode = standard_chess();
-        let board = HashMap::from([game_piece_of("A1", '♜')]);
+        let board = [(Pos::of("A1"), Piece::of('♜'))].into();
         assert_eq!(
             rook_moves(&board, &mode.bounds, &Pos::of("A1")),
-            HashMap::from([
+            [
                 (Pos::of("B1"), PieceMoveType::Default),
                 (Pos::of("C1"), PieceMoveType::Default),
                 (Pos::of("D1"), PieceMoveType::Default),
@@ -182,17 +186,18 @@ mod tests {
                 (Pos::of("A6"), PieceMoveType::Default),
                 (Pos::of("A7"), PieceMoveType::Default),
                 (Pos::of("A8"), PieceMoveType::Default),
-            ])
+            ]
+            .into()
         );
     }
 
     #[test]
     fn rook_moves_top_left_edge() {
         let mode = standard_chess();
-        let board = HashMap::from([game_piece_of("A8", '♜')]);
+        let board = [(Pos::of("A8"), Piece::of('♜'))].into();
         assert_eq!(
             rook_moves(&board, &mode.bounds, &Pos::of("A8")),
-            HashMap::from([
+            [
                 (Pos::of("B8"), PieceMoveType::Default),
                 (Pos::of("C8"), PieceMoveType::Default),
                 (Pos::of("D8"), PieceMoveType::Default),
@@ -207,7 +212,8 @@ mod tests {
                 (Pos::of("A3"), PieceMoveType::Default),
                 (Pos::of("A2"), PieceMoveType::Default),
                 (Pos::of("A1"), PieceMoveType::Default),
-            ])
+            ]
+            .into()
         );
     }
 
@@ -229,7 +235,7 @@ mod tests {
         );
         assert_eq!(
             rook_moves(&board, &mode.bounds, &Pos::of("D4")),
-            HashMap::from([
+            [
                 (Pos::of("E4"), PieceMoveType::Default),
                 (Pos::of("F4"), PieceMoveType::Default),
                 (Pos::of("D3"), PieceMoveType::Default),
@@ -241,7 +247,8 @@ mod tests {
                 (Pos::of("D5"), PieceMoveType::Default),
                 (Pos::of("D6"), PieceMoveType::Default),
                 (Pos::of("D7"), PieceMoveType::Default),
-            ])
+            ]
+            .into()
         );
     }
 
@@ -263,7 +270,7 @@ mod tests {
         );
         assert_eq!(
             rook_moves(&board, &mode.bounds, &Pos::of("D4")),
-            HashMap::from([
+            [
                 (Pos::of("E4"), PieceMoveType::Default),
                 (Pos::of("F4"), PieceMoveType::Default),
                 (Pos::of("D3"), PieceMoveType::Default),
@@ -275,7 +282,8 @@ mod tests {
                 (Pos::of("D5"), PieceMoveType::Default),
                 (Pos::of("D6"), PieceMoveType::Default),
                 (Pos::of("D7"), PieceMoveType::Default)
-            ])
+            ]
+            .into()
         );
     }
 }

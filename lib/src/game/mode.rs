@@ -1,6 +1,10 @@
 use std::collections::HashMap;
 
-use crate::game::{board::GameBoard, game::GameBounds, piece::game_piece_of};
+use crate::{
+    game::{board::GameBoard, game::GameBounds},
+    piece::Piece,
+    pos::Pos,
+};
 
 #[derive(Debug, PartialEq)]
 pub struct GameMode {
@@ -11,40 +15,41 @@ pub struct GameMode {
 pub fn standard_chess() -> GameMode {
     GameMode {
         bounds: GameBounds { x1: 0, y1: 0, x2: 7, y2: 7 },
-        initial_board: HashMap::from([
-            game_piece_of("A8", '♜'),
-            game_piece_of("B8", '♞'),
-            game_piece_of("C8", '♝'),
-            game_piece_of("D8", '♛'),
-            game_piece_of("E8", '♚'),
-            game_piece_of("F8", '♝'),
-            game_piece_of("G8", '♞'),
-            game_piece_of("H8", '♜'),
-            game_piece_of("A7", '♟'),
-            game_piece_of("B7", '♟'),
-            game_piece_of("C7", '♟'),
-            game_piece_of("D7", '♟'),
-            game_piece_of("E7", '♟'),
-            game_piece_of("F7", '♟'),
-            game_piece_of("G7", '♟'),
-            game_piece_of("H7", '♟'),
-            game_piece_of("A2", '♙'),
-            game_piece_of("B2", '♙'),
-            game_piece_of("C2", '♙'),
-            game_piece_of("D2", '♙'),
-            game_piece_of("E2", '♙'),
-            game_piece_of("F2", '♙'),
-            game_piece_of("G2", '♙'),
-            game_piece_of("H2", '♙'),
-            game_piece_of("A1", '♖'),
-            game_piece_of("B1", '♘'),
-            game_piece_of("C1", '♗'),
-            game_piece_of("D1", '♕'),
-            game_piece_of("E1", '♔'),
-            game_piece_of("F1", '♗'),
-            game_piece_of("G1", '♘'),
-            game_piece_of("H1", '♖'),
-        ]),
+        initial_board: [
+            (Pos::of("A8"), Piece::of('♜')),
+            (Pos::of("B8"), Piece::of('♞')),
+            (Pos::of("C8"), Piece::of('♝')),
+            (Pos::of("D8"), Piece::of('♛')),
+            (Pos::of("E8"), Piece::of('♚')),
+            (Pos::of("F8"), Piece::of('♝')),
+            (Pos::of("G8"), Piece::of('♞')),
+            (Pos::of("H8"), Piece::of('♜')),
+            (Pos::of("A7"), Piece::of('♟')),
+            (Pos::of("B7"), Piece::of('♟')),
+            (Pos::of("C7"), Piece::of('♟')),
+            (Pos::of("D7"), Piece::of('♟')),
+            (Pos::of("E7"), Piece::of('♟')),
+            (Pos::of("F7"), Piece::of('♟')),
+            (Pos::of("G7"), Piece::of('♟')),
+            (Pos::of("H7"), Piece::of('♟')),
+            (Pos::of("A2"), Piece::of('♙')),
+            (Pos::of("B2"), Piece::of('♙')),
+            (Pos::of("C2"), Piece::of('♙')),
+            (Pos::of("D2"), Piece::of('♙')),
+            (Pos::of("E2"), Piece::of('♙')),
+            (Pos::of("F2"), Piece::of('♙')),
+            (Pos::of("G2"), Piece::of('♙')),
+            (Pos::of("H2"), Piece::of('♙')),
+            (Pos::of("A1"), Piece::of('♖')),
+            (Pos::of("B1"), Piece::of('♘')),
+            (Pos::of("C1"), Piece::of('♗')),
+            (Pos::of("D1"), Piece::of('♕')),
+            (Pos::of("E1"), Piece::of('♔')),
+            (Pos::of("F1"), Piece::of('♗')),
+            (Pos::of("G1"), Piece::of('♘')),
+            (Pos::of("H1"), Piece::of('♖')),
+        ]
+        .into(),
     }
 }
 

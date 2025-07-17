@@ -42,9 +42,8 @@ mod tests {
     use std::collections::HashMap;
 
     use crate::{
-        game::{
-            board::board_empty, mode::standard_chess, mov::PieceMoveType, piece::game_piece_of,
-        },
+        game::{board::board_empty, mode::standard_chess, mov::PieceMoveType},
+        piece::Piece,
         pos::Pos,
     };
 
@@ -59,10 +58,10 @@ mod tests {
     #[test]
     fn default_moves_rook() {
         let mode = standard_chess();
-        let board = HashMap::from([game_piece_of("D4", '♜')]);
+        let board = [(Pos::of("D4"), Piece::of('♜'))].into();
         assert_eq!(
             default_moves(&board, &mode.bounds, &Pos::of("D4")),
-            HashMap::from([
+            [
                 (Pos::of("E4"), PieceMoveType::Default),
                 (Pos::of("F4"), PieceMoveType::Default),
                 (Pos::of("G4"), PieceMoveType::Default),
@@ -77,17 +76,18 @@ mod tests {
                 (Pos::of("D6"), PieceMoveType::Default),
                 (Pos::of("D7"), PieceMoveType::Default),
                 (Pos::of("D8"), PieceMoveType::Default),
-            ])
+            ]
+            .into()
         );
     }
 
     #[test]
     fn default_moves_knight() {
         let mode = standard_chess();
-        let board = HashMap::from([game_piece_of("D4", '♞')]);
+        let board = [(Pos::of("D4"), Piece::of('♞'))].into();
         assert_eq!(
             default_moves(&board, &mode.bounds, &Pos::of("D4")),
-            HashMap::from([
+            [
                 (Pos::of("E6"), PieceMoveType::Default),
                 (Pos::of("F5"), PieceMoveType::Default),
                 (Pos::of("F3"), PieceMoveType::Default),
@@ -96,17 +96,18 @@ mod tests {
                 (Pos::of("B3"), PieceMoveType::Default),
                 (Pos::of("B5"), PieceMoveType::Default),
                 (Pos::of("C6"), PieceMoveType::Default),
-            ])
+            ]
+            .into()
         );
     }
 
     #[test]
     fn default_moves_bishop() {
         let mode = standard_chess();
-        let board = HashMap::from([game_piece_of("C5", '♝')]);
+        let board = [(Pos::of("C5"), Piece::of('♝'))].into();
         assert_eq!(
             default_moves(&board, &mode.bounds, &Pos::of("C5")),
-            HashMap::from([
+            [
                 (Pos::of("D6"), PieceMoveType::Default),
                 (Pos::of("E7"), PieceMoveType::Default),
                 (Pos::of("F8"), PieceMoveType::Default),
@@ -118,17 +119,18 @@ mod tests {
                 (Pos::of("A3"), PieceMoveType::Default),
                 (Pos::of("B6"), PieceMoveType::Default),
                 (Pos::of("A7"), PieceMoveType::Default),
-            ])
+            ]
+            .into()
         );
     }
 
     #[test]
     fn default_moves_queen() {
         let mode = standard_chess();
-        let board = HashMap::from([game_piece_of("C5", '♛')]);
+        let board = [(Pos::of("C5"), Piece::of('♛'))].into();
         assert_eq!(
             default_moves(&board, &mode.bounds, &Pos::of("C5")),
-            HashMap::from([
+            [
                 (Pos::of("D6"), PieceMoveType::Default),
                 (Pos::of("E7"), PieceMoveType::Default),
                 (Pos::of("F8"), PieceMoveType::Default),
@@ -154,17 +156,18 @@ mod tests {
                 (Pos::of("C6"), PieceMoveType::Default),
                 (Pos::of("C7"), PieceMoveType::Default),
                 (Pos::of("C8"), PieceMoveType::Default),
-            ])
+            ]
+            .into()
         );
     }
 
     #[test]
     fn default_moves_king() {
         let mode = standard_chess();
-        let board = HashMap::from([game_piece_of("D4", '♚')]);
+        let board = [(Pos::of("D4"), Piece::of('♚'))].into();
         assert_eq!(
             default_moves(&board, &mode.bounds, &Pos::of("D4")),
-            HashMap::from([
+            [
                 (Pos::of("E5"), PieceMoveType::Default),
                 (Pos::of("E4"), PieceMoveType::Default),
                 (Pos::of("E3"), PieceMoveType::Default),
@@ -173,17 +176,18 @@ mod tests {
                 (Pos::of("C4"), PieceMoveType::Default),
                 (Pos::of("C5"), PieceMoveType::Default),
                 (Pos::of("D5"), PieceMoveType::Default),
-            ])
+            ]
+            .into()
         );
     }
 
     #[test]
     fn default_moves_pawn() {
         let mode = standard_chess();
-        let board = HashMap::from([game_piece_of("C5", '♙')]);
+        let board = [(Pos::of("C5"), Piece::of('♙'))].into();
         assert_eq!(
             default_moves(&board, &mode.bounds, &Pos::of("C5")),
-            HashMap::from([(Pos::of("C6"), PieceMoveType::Default),])
+            [(Pos::of("C6"), PieceMoveType::Default)].into()
         );
     }
 }

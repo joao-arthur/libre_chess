@@ -132,14 +132,15 @@ mod tests {
                 "♖♘♗♕♔  ♖",
             ],
         );
-        let players = HashMap::from([
+        let players = [
             (Color::Black, GamePlayer::from(Color::Black)),
             (Color::White, GamePlayer::from(Color::White)),
-        ]);
+        ]
+        .into();
         let pos = Pos::of("E1");
         assert_eq!(
             castling_moves(&board, &history, &players, &pos),
-            HashMap::from([(Pos::of("H1"), PieceMoveType::ShortCastling)])
+            [(Pos::of("H1"), PieceMoveType::ShortCastling)].into()
         );
     }
 
@@ -160,14 +161,15 @@ mod tests {
                 "♖   ♔♗♘♖",
             ],
         );
-        let players = HashMap::from([
+        let players = [
             (Color::Black, GamePlayer::from(Color::Black)),
             (Color::White, GamePlayer::from(Color::White)),
-        ]);
+        ]
+        .into();
         let pos = Pos::of("E1");
         assert_eq!(
             castling_moves(&board, &history, &players, &pos),
-            HashMap::from([(Pos::of("A1"), PieceMoveType::LongCastling)])
+            [(Pos::of("A1"), PieceMoveType::LongCastling)].into()
         );
     }
 
@@ -188,17 +190,19 @@ mod tests {
                 "♖   ♔  ♖",
             ],
         );
-        let players = HashMap::from([
+        let players = [
             (Color::Black, GamePlayer::from(Color::Black)),
             (Color::White, GamePlayer::from(Color::White)),
-        ]);
+        ]
+        .into();
         let pos = Pos::of("E1");
         assert_eq!(
             castling_moves(&board, &history, &players, &pos),
-            HashMap::from([
+            [
                 (Pos::of("H1"), PieceMoveType::ShortCastling),
                 (Pos::of("A1"), PieceMoveType::LongCastling),
-            ])
+            ]
+            .into()
         );
     }
 
@@ -219,10 +223,11 @@ mod tests {
                 "♖♘♗♕♔♗♘♖",
             ],
         );
-        let players = HashMap::from([
+        let players = [
             (Color::Black, GamePlayer::from(Color::Black)),
             (Color::White, GamePlayer::from(Color::White)),
-        ]);
+        ]
+        .into();
         let pos = Pos::of("E1");
         assert_eq!(castling_moves(&board, &history, &players, &pos), HashMap::new());
     }
@@ -257,10 +262,11 @@ mod tests {
                 "♖   ♔  ♖",
             ],
         );
-        let players = HashMap::from([
+        let players = [
             (Color::Black, GamePlayer::from(Color::Black)),
             (Color::White, GamePlayer::from(Color::White)),
-        ]);
+        ]
+        .into();
         let pos = Pos::of("E1");
         assert_eq!(castling_moves(&board, &history, &players, &pos), HashMap::new());
     }
@@ -287,10 +293,11 @@ mod tests {
                 "♖   ♔  ♖",
             ],
         );
-        let players = HashMap::from([
+        let players = [
             (Color::Black, GamePlayer::from(Color::Black)),
             (Color::White, GamePlayer::from(Color::White)),
-        ]);
+        ]
+        .into();
         let pos = Pos::of("E1");
         assert_eq!(castling_moves(&board, &history, &players, &pos), HashMap::new());
     }

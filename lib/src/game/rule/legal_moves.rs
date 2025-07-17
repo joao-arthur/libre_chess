@@ -25,7 +25,8 @@ pub fn legal_moves_of_player(
 ) -> PlayerMoves {
     let turn = evaluate_turn(history);
     let in_check = is_in_check(board, players, history);
-    let mut pseudo_legal_moves = pseudo_legal_moves_of_player(board, bounds, history, players, color);
+    let mut pseudo_legal_moves =
+        pseudo_legal_moves_of_player(board, bounds, history, players, color);
 
     //for (from, piece_moves) in pseudo_legal_moves.clone() {
     //    for (to, move_type) in piece_moves {
@@ -100,32 +101,36 @@ mod tests {
         );
         let bounds = mode.bounds;
         let history = Vec::new();
-        let players = HashMap::from([
+        let players = [
             (Color::Black, GamePlayer::from(Color::Black)),
             (Color::White, GamePlayer::from(Color::White)),
-        ]);
+        ]
+        .into();
         let color = Color::White;
         assert_eq!(
             legal_moves_of_player(&board, &bounds, &history, &players, &color),
-            HashMap::from([
+            [
                 (
                     Pos::of("A2"),
-                    HashMap::from([
+                    [
                         (Pos::of("A3"), PieceMoveType::Default),
                         (Pos::of("A4"), PieceMoveType::Default),
-                    ])
+                    ]
+                    .into()
                 ),
                 (
                     Pos::of("E1"),
-                    HashMap::from([
+                    [
                         (Pos::of("F2"), PieceMoveType::Default),
                         (Pos::of("F1"), PieceMoveType::Default),
                         (Pos::of("D1"), PieceMoveType::Default),
                         (Pos::of("D2"), PieceMoveType::Default),
                         (Pos::of("E2"), PieceMoveType::Default),
-                    ])
+                    ]
+                    .into()
                 ),
-            ])
+            ]
+            .into()
         )
     }
 
@@ -147,32 +152,35 @@ mod tests {
         );
         let bounds = mode.bounds;
         let history = vec![GameMove::default_of('♙', "H2", "H4")];
-        let players = HashMap::from([
+        let players = [
             (Color::Black, GamePlayer::from(Color::Black)),
             (Color::White, GamePlayer::from(Color::White)),
-        ]);
+        ]
+        .into();
         let color = Color::Black;
         assert_eq!(
             legal_moves_of_player(&board, &bounds, &history, &players, &color),
-            HashMap::from([
+            [
                 (
                     Pos::of("A8"),
-                    HashMap::from([
+                    [
                         (Pos::of("B8"), PieceMoveType::Default),
                         (Pos::of("C8"), PieceMoveType::Default),
                         (Pos::of("D8"), PieceMoveType::Default),
-                    ])
+                    ]
+                    .into()
                 ),
                 (
                     Pos::of("H8"),
-                    HashMap::from([
+                    [
                         (Pos::of("G8"), PieceMoveType::Default),
                         (Pos::of("F8"), PieceMoveType::Default),
-                    ])
+                    ]
+                    .into()
                 ),
                 (
                     Pos::of("E8"),
-                    HashMap::from([
+                    [
                         (Pos::of("F8"), PieceMoveType::Default),
                         (Pos::of("F7"), PieceMoveType::Default),
                         (Pos::of("E7"), PieceMoveType::Default),
@@ -180,31 +188,36 @@ mod tests {
                         (Pos::of("D8"), PieceMoveType::Default),
                         (Pos::of("H8"), PieceMoveType::ShortCastling),
                         (Pos::of("A8"), PieceMoveType::LongCastling),
-                    ])
+                    ]
+                    .into()
                 ),
                 (
                     Pos::of("A7"),
-                    HashMap::from([
+                    [
                         (Pos::of("A6"), PieceMoveType::Default),
                         (Pos::of("A5"), PieceMoveType::Default),
-                    ]),
+                    ]
+                    .into(),
                 ),
-                (Pos::of("H7"), HashMap::from([(Pos::of("H6"), PieceMoveType::Default),]),),
+                (Pos::of("H7"), [(Pos::of("H6"), PieceMoveType::Default)].into()),
                 (
                     Pos::of("H5"),
-                    HashMap::from([
+                    [
                         (Pos::of("G6"), PieceMoveType::Default),
                         (Pos::of("F7"), PieceMoveType::Default),
-                    ]),
+                    ]
+                    .into(),
                 ),
                 (
                     Pos::of("G4"),
-                    HashMap::from([
+                    [
                         (Pos::of("G3"), PieceMoveType::Default),
                         (Pos::of("H3"), PieceMoveType::EnPassant),
-                    ]),
+                    ]
+                    .into(),
                 ),
-            ])
+            ]
+            .into()
         );
     }
 
@@ -226,16 +239,17 @@ mod tests {
         );
         let bounds = mode.bounds;
         let history = Vec::new();
-        let players = HashMap::from([
+        let players = [
             (Color::Black, GamePlayer::from(Color::Black)),
             (Color::White, GamePlayer::from(Color::White)),
-        ]);
+        ]
+        .into();
         let color = Color::White;
         assert_eq!(
             legal_moves_of_player(&board, &bounds, &history, &players, &color),
-            HashMap::from([(
+            [(
                 Pos::of("D4"),
-                HashMap::from([
+                [
                     (Pos::of("E5"), PieceMoveType::Default),
                     (Pos::of("E4"), PieceMoveType::Default),
                     (Pos::of("E3"), PieceMoveType::Default),
@@ -244,8 +258,10 @@ mod tests {
                     (Pos::of("C4"), PieceMoveType::Default),
                     (Pos::of("C5"), PieceMoveType::Default),
                     (Pos::of("D5"), PieceMoveType::Default),
-                ])
-            )])
+                ]
+                .into()
+            )]
+            .into()
         )
     }
 
@@ -267,30 +283,31 @@ mod tests {
         );
         let bounds = mode.bounds;
         let history = Vec::new();
-        let players = HashMap::from([
+        let players = [
             (
                 Color::Black,
                 GamePlayer {
                     color: Color::Black,
                     captures: Vec::new(),
-                    moves: HashMap::from([
-                        (Pos::of("B4"), HashMap::from([(Pos::of("B3"), PieceMoveType::Default)])),
-                        (Pos::of("F4"), HashMap::from([(Pos::of("F3"), PieceMoveType::Default)])),
-                    ]),
+                    moves: [
+                        (Pos::of("B4"), [(Pos::of("B3"), PieceMoveType::Default)].into()),
+                        (Pos::of("F4"), [(Pos::of("F3"), PieceMoveType::Default)].into()),
+                    ]
+                    .into(),
                 },
             ),
             (Color::White, GamePlayer::from(Color::White)),
-        ]);
+        ]
+        .into();
         let color = Color::White;
         assert_eq!(
             legal_moves_of_player(&board, &bounds, &history, &players, &color),
-            HashMap::from([(
+            [(
                 Pos::of("D4"),
-                HashMap::from([
-                    (Pos::of("D3"), PieceMoveType::Default),
-                    (Pos::of("D5"), PieceMoveType::Default),
-                ])
-            )])
+                [(Pos::of("D3"), PieceMoveType::Default), (Pos::of("D5"), PieceMoveType::Default)]
+                    .into()
+            )]
+            .into()
         );
     }
 
@@ -312,16 +329,16 @@ mod tests {
         );
         let bounds = mode.bounds;
         let history = Vec::new();
-        let players = HashMap::from([
+        let players = [
             (
                 Color::Black,
                 GamePlayer {
                     color: Color::Black,
                     captures: Vec::new(),
-                    moves: HashMap::from([
+                    moves: [
                         (
                             Pos::of("C8"),
-                            HashMap::from([
+                            [
                                 (Pos::of("D8"), PieceMoveType::Default),
                                 (Pos::of("E8"), PieceMoveType::Default),
                                 (Pos::of("F8"), PieceMoveType::Default),
@@ -336,11 +353,12 @@ mod tests {
                                 (Pos::of("C1"), PieceMoveType::Default),
                                 (Pos::of("B8"), PieceMoveType::Default),
                                 (Pos::of("A8"), PieceMoveType::Default),
-                            ]),
+                            ]
+                            .into(),
                         ),
                         (
                             Pos::of("H5"),
-                            HashMap::from([
+                            [
                                 (Pos::of("H4"), PieceMoveType::Default),
                                 (Pos::of("H3"), PieceMoveType::Default),
                                 (Pos::of("H2"), PieceMoveType::Default),
@@ -355,11 +373,12 @@ mod tests {
                                 (Pos::of("H6"), PieceMoveType::Default),
                                 (Pos::of("H7"), PieceMoveType::Default),
                                 (Pos::of("H8"), PieceMoveType::Default),
-                            ]),
+                            ]
+                            .into(),
                         ),
                         (
                             Pos::of("A3"),
-                            HashMap::from([
+                            [
                                 (Pos::of("B3"), PieceMoveType::Default),
                                 (Pos::of("C3"), PieceMoveType::Default),
                                 (Pos::of("D3"), PieceMoveType::Default),
@@ -374,11 +393,12 @@ mod tests {
                                 (Pos::of("A6"), PieceMoveType::Default),
                                 (Pos::of("A7"), PieceMoveType::Default),
                                 (Pos::of("A8"), PieceMoveType::Default),
-                            ]),
+                            ]
+                            .into(),
                         ),
                         (
                             Pos::of("E1"),
-                            HashMap::from([
+                            [
                                 (Pos::of("F1"), PieceMoveType::Default),
                                 (Pos::of("G1"), PieceMoveType::Default),
                                 (Pos::of("H1"), PieceMoveType::Default),
@@ -393,17 +413,20 @@ mod tests {
                                 (Pos::of("E6"), PieceMoveType::Default),
                                 (Pos::of("E7"), PieceMoveType::Default),
                                 (Pos::of("E8"), PieceMoveType::Default),
-                            ]),
+                            ]
+                            .into(),
                         ),
-                    ]),
+                    ]
+                    .into(),
                 },
             ),
             (Color::White, GamePlayer::from(Color::White)),
-        ]);
+        ]
+        .into();
         let color = Color::White;
         assert_eq!(
             legal_moves_of_player(&board, &bounds, &history, &players, &color),
-            HashMap::from([(Pos::of("D4"), HashMap::new())])
+            [(Pos::of("D4"), HashMap::new())].into()
         );
     }
 
@@ -430,46 +453,51 @@ mod tests {
             GameMove::default_of('♙', "D4", "D5"),
             GameMove::default_of('♟', "E7", "E5"),
         ];
-        let players = HashMap::from([
+        let players = [
             (
                 Color::Black,
                 GamePlayer {
                     color: Color::Black,
                     captures: Vec::new(),
-                    moves: HashMap::from([
+                    moves: [
                         (
                             Pos::of("E8"),
-                            HashMap::from([
+                            [
                                 (Pos::of("F8"), PieceMoveType::Default),
                                 (Pos::of("F7"), PieceMoveType::Default),
                                 (Pos::of("D7"), PieceMoveType::Default),
                                 (Pos::of("E7"), PieceMoveType::Default),
                                 (Pos::of("E8"), PieceMoveType::Default),
-                            ]),
+                            ]
+                            .into(),
                         ),
-                        (Pos::of("D6"), HashMap::from([])),
-                        (Pos::of("E5"), HashMap::from([(Pos::of("E4"), PieceMoveType::Default)])),
-                    ]),
+                        (Pos::of("D6"), [].into()),
+                        (Pos::of("E5"), [(Pos::of("E4"), PieceMoveType::Default)].into()),
+                    ]
+                    .into(),
                 },
             ),
             (Color::White, GamePlayer::from(Color::White)),
-        ]);
+        ]
+        .into();
         let color = Color::White;
         assert_eq!(
             legal_moves_of_player(&board, &bounds, &history, &players, &color),
-            HashMap::from([
+            [
                 (
                     Pos::of("E1"),
-                    HashMap::from([
+                    [
                         (Pos::of("F2"), PieceMoveType::Default),
                         (Pos::of("F1"), PieceMoveType::Default),
                         (Pos::of("D1"), PieceMoveType::Default),
                         (Pos::of("D2"), PieceMoveType::Default),
                         (Pos::of("E2"), PieceMoveType::Default),
-                    ]),
+                    ]
+                    .into(),
                 ),
-                (Pos::of("D5"), HashMap::from([(Pos::of("E6"), PieceMoveType::EnPassant),]),),
-            ])
+                (Pos::of("D5"), [(Pos::of("E6"), PieceMoveType::EnPassant)].into()),
+            ]
+            .into()
         );
     }
 
@@ -491,26 +519,27 @@ mod tests {
         );
         let bounds = mode.bounds;
         let history = Vec::new();
-        let players = HashMap::from([
+        let players = [
             (
                 Color::Black,
                 GamePlayer {
                     color: Color::Black,
                     captures: Vec::new(),
-                    moves: HashMap::from([
+                    moves: [
                         (
                             Pos::of("E8"),
-                            HashMap::from([
+                            [
                                 (Pos::of("F8"), PieceMoveType::Default),
                                 (Pos::of("F7"), PieceMoveType::Default),
                                 (Pos::of("D7"), PieceMoveType::Default),
                                 (Pos::of("E7"), PieceMoveType::Default),
                                 (Pos::of("E8"), PieceMoveType::Default),
-                            ]),
+                            ]
+                            .into(),
                         ),
                         (
                             Pos::of("E6"),
-                            HashMap::from([
+                            [
                                 (Pos::of("F6"), PieceMoveType::Default),
                                 (Pos::of("G6"), PieceMoveType::Default),
                                 (Pos::of("H6"), PieceMoveType::Default),
@@ -526,42 +555,49 @@ mod tests {
                                 (Pos::of("A6"), PieceMoveType::Default),
                                 //
                                 (Pos::of("E7"), PieceMoveType::Default),
-                            ]),
+                            ]
+                            .into(),
                         ),
-                    ]),
+                    ]
+                    .into(),
                 },
             ),
             (Color::White, GamePlayer::from(Color::White)),
-        ]);
+        ]
+        .into();
         let color = Color::White;
         assert_eq!(
             legal_moves_of_player(&board, &bounds, &history, &players, &color),
-            HashMap::from([
+            [
                 (
                     Pos::of("C4"),
-                    HashMap::from([
+                    [
                         (Pos::of("E6"), PieceMoveType::Default),
                         (Pos::of("E2"), PieceMoveType::Default),
-                    ]),
+                    ]
+                    .into(),
                 ),
                 (
                     Pos::of("F4"),
-                    HashMap::from([
+                    [
                         (Pos::of("E5"), PieceMoveType::Default),
                         (Pos::of("E3"), PieceMoveType::Default),
-                    ]),
+                    ]
+                    .into(),
                 ),
-                (Pos::of("A3"), HashMap::from([(Pos::of("E3"), PieceMoveType::Default)])),
+                (Pos::of("A3"), [(Pos::of("E3"), PieceMoveType::Default)].into()),
                 (
                     Pos::of("E1"),
-                    HashMap::from([
+                    [
                         (Pos::of("F2"), PieceMoveType::Default),
                         (Pos::of("F1"), PieceMoveType::Default),
                         (Pos::of("D1"), PieceMoveType::Default),
                         (Pos::of("D2"), PieceMoveType::Default),
-                    ]),
+                    ]
+                    .into(),
                 ),
-            ])
+            ]
+            .into()
         );
     }
 

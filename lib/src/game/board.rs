@@ -88,7 +88,11 @@ pub fn board_to_string(bounds: &GameBounds, board: &GameBoard) -> String {
 mod tests {
     use std::collections::HashMap;
 
-    use crate::game::{game::GameBounds, mode::standard_chess, piece::game_piece_of};
+    use crate::{
+        game::{game::GameBounds, mode::standard_chess},
+        piece::Piece,
+        pos::Pos,
+    };
 
     use super::{
         GameBoardErr, InvalidCharacterErr, InvalidLengthErr, board_of_str, board_to_string,
@@ -125,40 +129,41 @@ mod tests {
                     "♖♘♗♕♔♗♘♖",
                 ]
             ),
-            Ok(HashMap::from([
-                game_piece_of("A8", '♜'),
-                game_piece_of("B8", '♞'),
-                game_piece_of("C8", '♝'),
-                game_piece_of("D8", '♛'),
-                game_piece_of("E8", '♚'),
-                game_piece_of("F8", '♝'),
-                game_piece_of("G8", '♞'),
-                game_piece_of("H8", '♜'),
-                game_piece_of("A7", '♟'),
-                game_piece_of("B7", '♟'),
-                game_piece_of("C7", '♟'),
-                game_piece_of("D7", '♟'),
-                game_piece_of("E7", '♟'),
-                game_piece_of("F7", '♟'),
-                game_piece_of("G7", '♟'),
-                game_piece_of("H7", '♟'),
-                game_piece_of("A2", '♙'),
-                game_piece_of("B2", '♙'),
-                game_piece_of("C2", '♙'),
-                game_piece_of("D2", '♙'),
-                game_piece_of("E2", '♙'),
-                game_piece_of("F2", '♙'),
-                game_piece_of("G2", '♙'),
-                game_piece_of("H2", '♙'),
-                game_piece_of("A1", '♖'),
-                game_piece_of("B1", '♘'),
-                game_piece_of("C1", '♗'),
-                game_piece_of("D1", '♕'),
-                game_piece_of("E1", '♔'),
-                game_piece_of("F1", '♗'),
-                game_piece_of("G1", '♘'),
-                game_piece_of("H1", '♖'),
-            ]))
+            Ok([
+                (Pos::of("A8"), Piece::of('♜')),
+                (Pos::of("B8"), Piece::of('♞')),
+                (Pos::of("C8"), Piece::of('♝')),
+                (Pos::of("D8"), Piece::of('♛')),
+                (Pos::of("E8"), Piece::of('♚')),
+                (Pos::of("F8"), Piece::of('♝')),
+                (Pos::of("G8"), Piece::of('♞')),
+                (Pos::of("H8"), Piece::of('♜')),
+                (Pos::of("A7"), Piece::of('♟')),
+                (Pos::of("B7"), Piece::of('♟')),
+                (Pos::of("C7"), Piece::of('♟')),
+                (Pos::of("D7"), Piece::of('♟')),
+                (Pos::of("E7"), Piece::of('♟')),
+                (Pos::of("F7"), Piece::of('♟')),
+                (Pos::of("G7"), Piece::of('♟')),
+                (Pos::of("H7"), Piece::of('♟')),
+                (Pos::of("A2"), Piece::of('♙')),
+                (Pos::of("B2"), Piece::of('♙')),
+                (Pos::of("C2"), Piece::of('♙')),
+                (Pos::of("D2"), Piece::of('♙')),
+                (Pos::of("E2"), Piece::of('♙')),
+                (Pos::of("F2"), Piece::of('♙')),
+                (Pos::of("G2"), Piece::of('♙')),
+                (Pos::of("H2"), Piece::of('♙')),
+                (Pos::of("A1"), Piece::of('♖')),
+                (Pos::of("B1"), Piece::of('♘')),
+                (Pos::of("C1"), Piece::of('♗')),
+                (Pos::of("D1"), Piece::of('♕')),
+                (Pos::of("E1"), Piece::of('♔')),
+                (Pos::of("F1"), Piece::of('♗')),
+                (Pos::of("G1"), Piece::of('♘')),
+                (Pos::of("H1"), Piece::of('♖')),
+            ]
+            .into())
         );
     }
 
@@ -174,12 +179,13 @@ mod tests {
                     " ♕♔ ", //
                 ]
             ),
-            Ok(HashMap::from([
-                game_piece_of("L14", '♛'),
-                game_piece_of("M14", '♚'),
-                game_piece_of("L11", '♕'),
-                game_piece_of("M11", '♔'),
-            ]))
+            Ok([
+                (Pos::of("L14"), Piece::of('♛')),
+                (Pos::of("M14"), Piece::of('♚')),
+                (Pos::of("L11"), Piece::of('♕')),
+                (Pos::of("M11"), Piece::of('♔')),
+            ]
+            .into())
         );
     }
 
@@ -262,40 +268,41 @@ mod tests {
                     "♖♘♗♕♔♗♘♖",
                 ]
             ),
-            HashMap::from([
-                game_piece_of("A8", '♜'),
-                game_piece_of("B8", '♞'),
-                game_piece_of("C8", '♝'),
-                game_piece_of("D8", '♛'),
-                game_piece_of("E8", '♚'),
-                game_piece_of("F8", '♝'),
-                game_piece_of("G8", '♞'),
-                game_piece_of("H8", '♜'),
-                game_piece_of("A7", '♟'),
-                game_piece_of("B7", '♟'),
-                game_piece_of("C7", '♟'),
-                game_piece_of("D7", '♟'),
-                game_piece_of("E7", '♟'),
-                game_piece_of("F7", '♟'),
-                game_piece_of("G7", '♟'),
-                game_piece_of("H7", '♟'),
-                game_piece_of("A2", '♙'),
-                game_piece_of("B2", '♙'),
-                game_piece_of("C2", '♙'),
-                game_piece_of("D2", '♙'),
-                game_piece_of("E2", '♙'),
-                game_piece_of("F2", '♙'),
-                game_piece_of("G2", '♙'),
-                game_piece_of("H2", '♙'),
-                game_piece_of("A1", '♖'),
-                game_piece_of("B1", '♘'),
-                game_piece_of("C1", '♗'),
-                game_piece_of("D1", '♕'),
-                game_piece_of("E1", '♔'),
-                game_piece_of("F1", '♗'),
-                game_piece_of("G1", '♘'),
-                game_piece_of("H1", '♖'),
-            ])
+            [
+                (Pos::of("A8"), Piece::of('♜')),
+                (Pos::of("B8"), Piece::of('♞')),
+                (Pos::of("C8"), Piece::of('♝')),
+                (Pos::of("D8"), Piece::of('♛')),
+                (Pos::of("E8"), Piece::of('♚')),
+                (Pos::of("F8"), Piece::of('♝')),
+                (Pos::of("G8"), Piece::of('♞')),
+                (Pos::of("H8"), Piece::of('♜')),
+                (Pos::of("A7"), Piece::of('♟')),
+                (Pos::of("B7"), Piece::of('♟')),
+                (Pos::of("C7"), Piece::of('♟')),
+                (Pos::of("D7"), Piece::of('♟')),
+                (Pos::of("E7"), Piece::of('♟')),
+                (Pos::of("F7"), Piece::of('♟')),
+                (Pos::of("G7"), Piece::of('♟')),
+                (Pos::of("H7"), Piece::of('♟')),
+                (Pos::of("A2"), Piece::of('♙')),
+                (Pos::of("B2"), Piece::of('♙')),
+                (Pos::of("C2"), Piece::of('♙')),
+                (Pos::of("D2"), Piece::of('♙')),
+                (Pos::of("E2"), Piece::of('♙')),
+                (Pos::of("F2"), Piece::of('♙')),
+                (Pos::of("G2"), Piece::of('♙')),
+                (Pos::of("H2"), Piece::of('♙')),
+                (Pos::of("A1"), Piece::of('♖')),
+                (Pos::of("B1"), Piece::of('♘')),
+                (Pos::of("C1"), Piece::of('♗')),
+                (Pos::of("D1"), Piece::of('♕')),
+                (Pos::of("E1"), Piece::of('♔')),
+                (Pos::of("F1"), Piece::of('♗')),
+                (Pos::of("G1"), Piece::of('♘')),
+                (Pos::of("H1"), Piece::of('♖')),
+            ]
+            .into()
         );
     }
 

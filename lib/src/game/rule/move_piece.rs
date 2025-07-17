@@ -154,31 +154,34 @@ mod tests {
             ],
         );
         let mut history = Vec::new();
-        let mut players = HashMap::from([
+        let mut players = [
             (
                 Color::Black,
                 GamePlayer {
                     color: Color::Black,
                     captures: Vec::new(),
-                    moves: HashMap::from([
+                    moves: [
                         (
                             Pos::of("E8"),
-                            HashMap::from([
+                            [
                                 (Pos::of("F8"), PieceMoveType::Default),
                                 (Pos::of("F7"), PieceMoveType::Default),
                                 (Pos::of("E7"), PieceMoveType::Default),
                                 (Pos::of("D7"), PieceMoveType::Default),
                                 (Pos::of("D8"), PieceMoveType::Default),
-                            ]),
+                            ]
+                            .into(),
                         ),
                         (
                             Pos::of("A7"),
-                            HashMap::from([
+                            [
                                 (Pos::of("A6"), PieceMoveType::Default),
                                 (Pos::of("A5"), PieceMoveType::Default),
-                            ]),
+                            ]
+                            .into(),
                         ),
-                    ]),
+                    ]
+                    .into(),
                 },
             ),
             (
@@ -186,28 +189,32 @@ mod tests {
                 GamePlayer {
                     color: Color::White,
                     captures: Vec::new(),
-                    moves: HashMap::from([
+                    moves: [
                         (
                             Pos::of("A2"),
-                            HashMap::from([
+                            [
                                 (Pos::of("A3"), PieceMoveType::Default),
                                 (Pos::of("A4"), PieceMoveType::Default),
-                            ]),
+                            ]
+                            .into(),
                         ),
                         (
                             Pos::of("E1"),
-                            HashMap::from([
+                            [
                                 (Pos::of("F2"), PieceMoveType::Default),
                                 (Pos::of("F1"), PieceMoveType::Default),
                                 (Pos::of("D1"), PieceMoveType::Default),
                                 (Pos::of("D2"), PieceMoveType::Default),
                                 (Pos::of("E2"), PieceMoveType::Default),
-                            ]),
+                            ]
+                            .into(),
                         ),
-                    ]),
+                    ]
+                    .into(),
                 },
             ),
-        ]);
+        ]
+        .into();
 
         move_piece(
             &mut board,
@@ -232,31 +239,34 @@ mod tests {
             ],
         );
         let history_after = vec![GameMove::default_of('♙', "A2", "A4")];
-        let players_after = HashMap::from([
+        let players_after = [
             (
                 Color::Black,
                 GamePlayer {
                     color: Color::Black,
                     captures: Vec::new(),
-                    moves: HashMap::from([
+                    moves: [
                         (
                             Pos::of("E8"),
-                            HashMap::from([
+                            [
                                 (Pos::of("F8"), PieceMoveType::Default),
                                 (Pos::of("F7"), PieceMoveType::Default),
                                 (Pos::of("E7"), PieceMoveType::Default),
                                 (Pos::of("D7"), PieceMoveType::Default),
                                 (Pos::of("D8"), PieceMoveType::Default),
-                            ]),
+                            ]
+                            .into(),
                         ),
                         (
                             Pos::of("A7"),
-                            HashMap::from([
+                            [
                                 (Pos::of("A6"), PieceMoveType::Default),
                                 (Pos::of("A5"), PieceMoveType::Default),
-                            ]),
+                            ]
+                            .into(),
                         ),
-                    ]),
+                    ]
+                    .into(),
                 },
             ),
             (
@@ -264,22 +274,25 @@ mod tests {
                 GamePlayer {
                     color: Color::White,
                     captures: Vec::new(),
-                    moves: HashMap::from([
-                        (Pos::of("A4"), HashMap::from([(Pos::of("A5"), PieceMoveType::Default)])),
+                    moves: [
+                        (Pos::of("A4"), [(Pos::of("A5"), PieceMoveType::Default)].into()),
                         (
                             Pos::of("E1"),
-                            HashMap::from([
+                            [
                                 (Pos::of("F2"), PieceMoveType::Default),
                                 (Pos::of("F1"), PieceMoveType::Default),
                                 (Pos::of("D1"), PieceMoveType::Default),
                                 (Pos::of("D2"), PieceMoveType::Default),
                                 (Pos::of("E2"), PieceMoveType::Default),
-                            ]),
+                            ]
+                            .into(),
                         ),
-                    ]),
+                    ]
+                    .into(),
                 },
             ),
-        ]);
+        ]
+        .into();
 
         assert_eq!(board, board_after);
         assert_eq!(history, history_after);
@@ -306,31 +319,34 @@ mod tests {
             ],
         );
         let mut history = Vec::new();
-        let mut players = HashMap::from([
+        let mut players = [
             (
                 Color::Black,
                 GamePlayer {
                     color: Color::Black,
                     captures: Vec::new(),
-                    moves: HashMap::from([
+                    moves: [
                         (
                             Pos::of("E8"),
-                            HashMap::from([
+                            [
                                 (Pos::of("F8"), PieceMoveType::Default),
                                 (Pos::of("F7"), PieceMoveType::Default),
                                 (Pos::of("E7"), PieceMoveType::Default),
                                 (Pos::of("D7"), PieceMoveType::Default),
                                 (Pos::of("D8"), PieceMoveType::Default),
-                            ]),
+                            ]
+                            .into(),
                         ),
                         (
                             Pos::of("D6"),
-                            HashMap::from([
+                            [
                                 (Pos::of("D5"), PieceMoveType::Default),
                                 (Pos::of("E5"), PieceMoveType::Default),
-                            ]),
+                            ]
+                            .into(),
                         ),
-                    ]),
+                    ]
+                    .into(),
                 },
             ),
             (
@@ -338,28 +354,32 @@ mod tests {
                 GamePlayer {
                     color: Color::White,
                     captures: Vec::new(),
-                    moves: HashMap::from([
+                    moves: [
                         (
                             Pos::of("E5"),
-                            HashMap::from([
+                            [
                                 (Pos::of("E6"), PieceMoveType::Default),
                                 (Pos::of("D6"), PieceMoveType::Default),
-                            ]),
+                            ]
+                            .into(),
                         ),
                         (
                             Pos::of("E1"),
-                            HashMap::from([
+                            [
                                 (Pos::of("F2"), PieceMoveType::Default),
                                 (Pos::of("F1"), PieceMoveType::Default),
                                 (Pos::of("D1"), PieceMoveType::Default),
                                 (Pos::of("D2"), PieceMoveType::Default),
                                 (Pos::of("E2"), PieceMoveType::Default),
-                            ]),
+                            ]
+                            .into(),
                         ),
-                    ]),
+                    ]
+                    .into(),
                 },
             ),
-        ]);
+        ]
+        .into();
 
         move_piece(
             &mut board,
@@ -384,22 +404,24 @@ mod tests {
             ],
         );
         let history_after = vec![GameMove::capture_of('♙', "E5", "D6")];
-        let players_after = HashMap::from([
+        let players_after = [
             (
                 Color::Black,
                 GamePlayer {
                     color: Color::Black,
                     captures: Vec::new(),
-                    moves: HashMap::from([(
+                    moves: [(
                         Pos::of("E8"),
-                        HashMap::from([
+                        [
                             (Pos::of("F8"), PieceMoveType::Default),
                             (Pos::of("F7"), PieceMoveType::Default),
                             (Pos::of("E7"), PieceMoveType::Default),
                             (Pos::of("D7"), PieceMoveType::Default),
                             (Pos::of("D8"), PieceMoveType::Default),
-                        ]),
-                    )]),
+                        ]
+                        .into(),
+                    )]
+                    .into(),
                 },
             ),
             (
@@ -407,22 +429,25 @@ mod tests {
                 GamePlayer {
                     color: Color::White,
                     captures: vec![GameCapture { at: 0, piece: Piece::of('♟') }],
-                    moves: HashMap::from([
-                        (Pos::of("D6"), HashMap::from([(Pos::of("D7"), PieceMoveType::Default)])),
+                    moves: [
+                        (Pos::of("D6"), [(Pos::of("D7"), PieceMoveType::Default)].into()),
                         (
                             Pos::of("E1"),
-                            HashMap::from([
+                            [
                                 (Pos::of("F2"), PieceMoveType::Default),
                                 (Pos::of("F1"), PieceMoveType::Default),
                                 (Pos::of("D1"), PieceMoveType::Default),
                                 (Pos::of("D2"), PieceMoveType::Default),
                                 (Pos::of("E2"), PieceMoveType::Default),
-                            ]),
+                            ]
+                            .into(),
                         ),
-                    ]),
+                    ]
+                    .into(),
                 },
             ),
-        ]);
+        ]
+        .into();
 
         assert_eq!(board, board_after);
         assert_eq!(history, history_after);
@@ -449,25 +474,27 @@ mod tests {
             ],
         );
         let mut history = Vec::new();
-        let mut players = HashMap::from([
+        let mut players = [
             (
                 Color::Black,
                 GamePlayer {
                     color: Color::Black,
                     captures: Vec::new(),
-                    moves: HashMap::from([
+                    moves: [
                         (
                             Pos::of("E8"),
-                            HashMap::from([
+                            [
                                 (Pos::of("F8"), PieceMoveType::Default),
                                 (Pos::of("F7"), PieceMoveType::Default),
                                 (Pos::of("E7"), PieceMoveType::Default),
                                 (Pos::of("D7"), PieceMoveType::Default),
                                 (Pos::of("D8"), PieceMoveType::Default),
-                            ]),
+                            ]
+                            .into(),
                         ),
-                        (Pos::of("D5"), HashMap::from([(Pos::of("D5"), PieceMoveType::Default)])),
-                    ]),
+                        (Pos::of("D5"), [(Pos::of("D5"), PieceMoveType::Default)].into()),
+                    ]
+                    .into(),
                 },
             ),
             (
@@ -475,28 +502,32 @@ mod tests {
                 GamePlayer {
                     color: Color::White,
                     captures: Vec::new(),
-                    moves: HashMap::from([
+                    moves: [
                         (
                             Pos::of("E5"),
-                            HashMap::from([
+                            [
                                 (Pos::of("E6"), PieceMoveType::Default),
                                 (Pos::of("D6"), PieceMoveType::EnPassant),
-                            ]),
+                            ]
+                            .into(),
                         ),
                         (
                             Pos::of("E1"),
-                            HashMap::from([
+                            [
                                 (Pos::of("F2"), PieceMoveType::Default),
                                 (Pos::of("F1"), PieceMoveType::Default),
                                 (Pos::of("D1"), PieceMoveType::Default),
                                 (Pos::of("D2"), PieceMoveType::Default),
                                 (Pos::of("E2"), PieceMoveType::Default),
-                            ]),
+                            ]
+                            .into(),
                         ),
-                    ]),
+                    ]
+                    .into(),
                 },
             ),
-        ]);
+        ]
+        .into();
 
         move_piece(
             &mut board,
@@ -521,22 +552,24 @@ mod tests {
             ],
         );
         let history_after = vec![GameMove::en_passant_of('♙', "E5", "D6")];
-        let players_after = HashMap::from([
+        let players_after = [
             (
                 Color::Black,
                 GamePlayer {
                     color: Color::Black,
                     captures: Vec::new(),
-                    moves: HashMap::from([(
+                    moves: [(
                         Pos::of("E8"),
-                        HashMap::from([
+                        [
                             (Pos::of("F8"), PieceMoveType::Default),
                             (Pos::of("F7"), PieceMoveType::Default),
                             (Pos::of("E7"), PieceMoveType::Default),
                             (Pos::of("D7"), PieceMoveType::Default),
                             (Pos::of("D8"), PieceMoveType::Default),
-                        ]),
-                    )]),
+                        ]
+                        .into(),
+                    )]
+                    .into(),
                 },
             ),
             (
@@ -544,22 +577,25 @@ mod tests {
                 GamePlayer {
                     color: Color::White,
                     captures: vec![GameCapture { at: 0, piece: Piece::of('♟') }],
-                    moves: HashMap::from([
-                        (Pos::of("D6"), HashMap::from([(Pos::of("D7"), PieceMoveType::Default)])),
+                    moves: [
+                        (Pos::of("D6"), [(Pos::of("D7"), PieceMoveType::Default)].into()),
                         (
                             Pos::of("E1"),
-                            HashMap::from([
+                            [
                                 (Pos::of("F2"), PieceMoveType::Default),
                                 (Pos::of("F1"), PieceMoveType::Default),
                                 (Pos::of("D1"), PieceMoveType::Default),
                                 (Pos::of("D2"), PieceMoveType::Default),
                                 (Pos::of("E2"), PieceMoveType::Default),
-                            ]),
+                            ]
+                            .into(),
                         ),
-                    ]),
+                    ]
+                    .into(),
                 },
             ),
-        ]);
+        ]
+        .into();
 
         assert_eq!(board, board_after);
         assert_eq!(history, history_after);
@@ -569,7 +605,8 @@ mod tests {
     #[test]
     fn move_piece_capture_short_castling_move() {
         let mode = standard_chess();
-        let selection = Selection { selected_pos: Some(Pos::of("E1")), selected_squares: HashSet::new() };
+        let selection =
+            Selection { selected_pos: Some(Pos::of("E1")), selected_squares: HashSet::new() };
 
         let mut board = board_of_str(
             &mode.bounds,
@@ -585,22 +622,24 @@ mod tests {
             ],
         );
         let mut history = Vec::new();
-        let mut players = HashMap::from([
+        let mut players = [
             (
                 Color::Black,
                 GamePlayer {
                     color: Color::Black,
                     captures: Vec::new(),
-                    moves: HashMap::from([(
+                    moves: [(
                         Pos::of("E8"),
-                        HashMap::from([
+                        [
                             (Pos::of("F8"), PieceMoveType::Default),
                             (Pos::of("F7"), PieceMoveType::Default),
                             (Pos::of("E7"), PieceMoveType::Default),
                             (Pos::of("D7"), PieceMoveType::Default),
                             (Pos::of("D8"), PieceMoveType::Default),
-                        ]),
-                    )]),
+                        ]
+                        .into(),
+                    )]
+                    .into(),
                 },
             ),
             (
@@ -608,42 +647,48 @@ mod tests {
                 GamePlayer {
                     color: Color::White,
                     captures: Vec::new(),
-                    moves: HashMap::from([
+                    moves: [
                         (
                             Pos::of("F2"),
-                            HashMap::from([
+                            [
                                 (Pos::of("F3"), PieceMoveType::Default),
                                 (Pos::of("F4"), PieceMoveType::Default),
-                            ]),
+                            ]
+                            .into(),
                         ),
                         (
                             Pos::of("H2"),
-                            HashMap::from([
+                            [
                                 (Pos::of("H3"), PieceMoveType::Default),
                                 (Pos::of("H4"), PieceMoveType::Default),
-                            ]),
+                            ]
+                            .into(),
                         ),
                         (
                             Pos::of("E1"),
-                            HashMap::from([
+                            [
                                 (Pos::of("F1"), PieceMoveType::Default),
                                 (Pos::of("D1"), PieceMoveType::Default),
                                 (Pos::of("D2"), PieceMoveType::Default),
                                 (Pos::of("E2"), PieceMoveType::Default),
                                 (Pos::of("H1"), PieceMoveType::ShortCastling),
-                            ]),
+                            ]
+                            .into(),
                         ),
                         (
                             Pos::of("H1"),
-                            HashMap::from([
+                            [
                                 (Pos::of("G1"), PieceMoveType::Default),
                                 (Pos::of("F1"), PieceMoveType::Default),
-                            ]),
+                            ]
+                            .into(),
                         ),
-                    ]),
+                    ]
+                    .into(),
                 },
             ),
-        ]);
+        ]
+        .into();
 
         move_piece(
             &mut board,
@@ -668,22 +713,24 @@ mod tests {
             ],
         );
         let history_after = vec![GameMove::short_castling_of('♔', "E1", "H1")];
-        let players_after = HashMap::from([
+        let players_after = [
             (
                 Color::Black,
                 GamePlayer {
                     color: Color::Black,
                     captures: Vec::new(),
-                    moves: HashMap::from([(
+                    moves: [(
                         Pos::of("E8"),
-                        HashMap::from([
+                        [
                             (Pos::of("F8"), PieceMoveType::Default),
                             (Pos::of("F7"), PieceMoveType::Default),
                             (Pos::of("E7"), PieceMoveType::Default),
                             (Pos::of("D7"), PieceMoveType::Default),
                             (Pos::of("D8"), PieceMoveType::Default),
-                        ]),
-                    )]),
+                        ]
+                        .into(),
+                    )]
+                    .into(),
                 },
             ),
             (
@@ -691,42 +738,48 @@ mod tests {
                 GamePlayer {
                     color: Color::White,
                     captures: Vec::new(),
-                    moves: HashMap::from([
+                    moves: [
                         (
                             Pos::of("F2"),
-                            HashMap::from([
+                            [
                                 (Pos::of("F3"), PieceMoveType::Default),
                                 (Pos::of("F4"), PieceMoveType::Default),
-                            ]),
+                            ]
+                            .into(),
                         ),
                         (
                             Pos::of("H2"),
-                            HashMap::from([
+                            [
                                 (Pos::of("H3"), PieceMoveType::Default),
                                 (Pos::of("H4"), PieceMoveType::Default),
-                            ]),
+                            ]
+                            .into(),
                         ),
                         (
                             Pos::of("G1"),
-                            HashMap::from([
+                            [
                                 (Pos::of("H1"), PieceMoveType::Default),
                                 (Pos::of("G2"), PieceMoveType::Default),
-                            ]),
+                            ]
+                            .into(),
                         ),
                         (
                             Pos::of("F1"),
-                            HashMap::from([
+                            [
                                 (Pos::of("E1"), PieceMoveType::Default),
                                 (Pos::of("D1"), PieceMoveType::Default),
                                 (Pos::of("C1"), PieceMoveType::Default),
                                 (Pos::of("B1"), PieceMoveType::Default),
                                 (Pos::of("A1"), PieceMoveType::Default),
-                            ]),
+                            ]
+                            .into(),
                         ),
-                    ]),
+                    ]
+                    .into(),
                 },
             ),
-        ]);
+        ]
+        .into();
 
         assert_eq!(board, board_after);
         assert_eq!(history, history_after);
@@ -753,22 +806,24 @@ mod tests {
             ],
         );
         let mut history = Vec::new();
-        let mut players = HashMap::from([
+        let mut players = [
             (
                 Color::Black,
                 GamePlayer {
                     color: Color::Black,
                     captures: Vec::new(),
-                    moves: HashMap::from([(
+                    moves: [(
                         Pos::of("E8"),
-                        HashMap::from([
+                        [
                             (Pos::of("F8"), PieceMoveType::Default),
                             (Pos::of("F7"), PieceMoveType::Default),
                             (Pos::of("E7"), PieceMoveType::Default),
                             (Pos::of("D7"), PieceMoveType::Default),
                             (Pos::of("D8"), PieceMoveType::Default),
-                        ]),
-                    )]),
+                        ]
+                        .into(),
+                    )]
+                    .into(),
                 },
             ),
             (
@@ -776,43 +831,49 @@ mod tests {
                 GamePlayer {
                     color: Color::White,
                     captures: Vec::new(),
-                    moves: HashMap::from([
+                    moves: [
                         (
                             Pos::of("A2"),
-                            HashMap::from([
+                            [
                                 (Pos::of("A3"), PieceMoveType::Default),
                                 (Pos::of("A4"), PieceMoveType::Default),
-                            ]),
+                            ]
+                            .into(),
                         ),
                         (
                             Pos::of("D2"),
-                            HashMap::from([
+                            [
                                 (Pos::of("D3"), PieceMoveType::Default),
                                 (Pos::of("D4"), PieceMoveType::Default),
-                            ]),
+                            ]
+                            .into(),
                         ),
                         (
                             Pos::of("A1"),
-                            HashMap::from([
+                            [
                                 (Pos::of("B1"), PieceMoveType::Default),
                                 (Pos::of("C1"), PieceMoveType::Default),
                                 (Pos::of("D1"), PieceMoveType::Default),
-                            ]),
+                            ]
+                            .into(),
                         ),
                         (
                             Pos::of("E1"),
-                            HashMap::from([
+                            [
                                 (Pos::of("F2"), PieceMoveType::Default),
                                 (Pos::of("F1"), PieceMoveType::Default),
                                 (Pos::of("D1"), PieceMoveType::Default),
                                 (Pos::of("E2"), PieceMoveType::Default),
                                 (Pos::of("A1"), PieceMoveType::LongCastling),
-                            ]),
+                            ]
+                            .into(),
                         ),
-                    ]),
+                    ]
+                    .into(),
                 },
             ),
-        ]);
+        ]
+        .into();
 
         move_piece(
             &mut board,
@@ -837,22 +898,24 @@ mod tests {
             ],
         );
         let history_after = vec![GameMove::long_castling_of('♔', "E1", "A1")];
-        let players_after = HashMap::from([
+        let players_after = [
             (
                 Color::Black,
                 GamePlayer {
                     color: Color::Black,
                     captures: Vec::new(),
-                    moves: HashMap::from([(
+                    moves: [(
                         Pos::of("E8"),
-                        HashMap::from([
+                        [
                             (Pos::of("F8"), PieceMoveType::Default),
                             (Pos::of("F7"), PieceMoveType::Default),
                             (Pos::of("E7"), PieceMoveType::Default),
                             (Pos::of("D7"), PieceMoveType::Default),
                             (Pos::of("D8"), PieceMoveType::Default),
-                        ]),
-                    )]),
+                        ]
+                        .into(),
+                    )]
+                    .into(),
                 },
             ),
             (
@@ -860,42 +923,48 @@ mod tests {
                 GamePlayer {
                     color: Color::White,
                     captures: Vec::new(),
-                    moves: HashMap::from([
+                    moves: [
                         (
                             Pos::of("A2"),
-                            HashMap::from([
+                            [
                                 (Pos::of("A3"), PieceMoveType::Default),
                                 (Pos::of("A4"), PieceMoveType::Default),
-                            ]),
+                            ]
+                            .into(),
                         ),
                         (
                             Pos::of("D2"),
-                            HashMap::from([
+                            [
                                 (Pos::of("D3"), PieceMoveType::Default),
                                 (Pos::of("D4"), PieceMoveType::Default),
-                            ]),
+                            ]
+                            .into(),
                         ),
                         (
                             Pos::of("C1"),
-                            HashMap::from([
+                            [
                                 (Pos::of("B1"), PieceMoveType::Default),
                                 (Pos::of("B2"), PieceMoveType::Default),
                                 (Pos::of("C2"), PieceMoveType::Default),
-                            ]),
+                            ]
+                            .into(),
                         ),
                         (
                             Pos::of("D1"),
-                            HashMap::from([
+                            [
                                 (Pos::of("E1"), PieceMoveType::Default),
                                 (Pos::of("F1"), PieceMoveType::Default),
                                 (Pos::of("G1"), PieceMoveType::Default),
                                 (Pos::of("H1"), PieceMoveType::Default),
-                            ]),
+                            ]
+                            .into(),
                         ),
-                    ]),
+                    ]
+                    .into(),
                 },
             ),
-        ]);
+        ]
+        .into();
 
         assert_eq!(board, board_after);
         assert_eq!(history, history_after);

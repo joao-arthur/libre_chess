@@ -73,32 +73,36 @@ mod tests {
         );
         let bounds = mode.bounds;
         let history = Vec::new();
-        let players = HashMap::from([
+        let players = [
             (Color::Black, GamePlayer::from(Color::Black)),
             (Color::White, GamePlayer::from(Color::White)),
-        ]);
+        ]
+        .into();
         let color = Color::White;
         assert_eq!(
             pseudo_legal_moves_of_player(&board, &bounds, &history, &players, &color),
-            HashMap::from([
+            [
                 (
                     Pos::of("A2"),
-                    HashMap::from([
+                    [
                         (Pos::of("A3"), PieceMoveType::Default),
                         (Pos::of("A4"), PieceMoveType::Default),
-                    ]),
+                    ]
+                    .into(),
                 ),
                 (
                     Pos::of("E1"),
-                    HashMap::from([
+                    [
                         (Pos::of("F2"), PieceMoveType::Default),
                         (Pos::of("F1"), PieceMoveType::Default),
                         (Pos::of("D1"), PieceMoveType::Default),
                         (Pos::of("D2"), PieceMoveType::Default),
                         (Pos::of("E2"), PieceMoveType::Default),
-                    ]),
+                    ]
+                    .into(),
                 ),
-            ]),
+            ]
+            .into(),
         );
     }
 
@@ -120,32 +124,35 @@ mod tests {
         );
         let bounds = mode.bounds;
         let history = vec![GameMove::default_of('♙', "H2", "H4")];
-        let players = HashMap::from([
+        let players = [
             (Color::Black, GamePlayer::from(Color::Black)),
             (Color::White, GamePlayer::from(Color::White)),
-        ]);
+        ]
+        .into();
         let color = Color::Black;
         assert_eq!(
             pseudo_legal_moves_of_player(&board, &bounds, &history, &players, &color),
-            HashMap::from([
+            [
                 (
                     Pos::of("A8"),
-                    HashMap::from([
+                    [
                         (Pos::of("B8"), PieceMoveType::Default),
                         (Pos::of("C8"), PieceMoveType::Default),
                         (Pos::of("D8"), PieceMoveType::Default),
-                    ]),
+                    ]
+                    .into(),
                 ),
                 (
                     Pos::of("H8"),
-                    HashMap::from([
+                    [
                         (Pos::of("G8"), PieceMoveType::Default),
                         (Pos::of("F8"), PieceMoveType::Default),
-                    ]),
+                    ]
+                    .into(),
                 ),
                 (
                     Pos::of("E8"),
-                    HashMap::from([
+                    [
                         (Pos::of("F8"), PieceMoveType::Default),
                         (Pos::of("F7"), PieceMoveType::Default),
                         (Pos::of("E7"), PieceMoveType::Default),
@@ -153,31 +160,36 @@ mod tests {
                         (Pos::of("D8"), PieceMoveType::Default),
                         (Pos::of("H8"), PieceMoveType::ShortCastling),
                         (Pos::of("A8"), PieceMoveType::LongCastling),
-                    ]),
+                    ]
+                    .into(),
                 ),
                 (
                     Pos::of("A7"),
-                    HashMap::from([
+                    [
                         (Pos::of("A6"), PieceMoveType::Default),
                         (Pos::of("A5"), PieceMoveType::Default),
-                    ]),
+                    ]
+                    .into(),
                 ),
-                (Pos::of("H7"), HashMap::from([(Pos::of("H6"), PieceMoveType::Default),])),
+                (Pos::of("H7"), [(Pos::of("H6"), PieceMoveType::Default)].into()),
                 (
                     Pos::of("H5"),
-                    HashMap::from([
+                    [
                         (Pos::of("G6"), PieceMoveType::Default),
                         (Pos::of("F7"), PieceMoveType::Default),
-                    ]),
+                    ]
+                    .into(),
                 ),
                 (
                     Pos::of("G4"),
-                    HashMap::from([
+                    [
                         (Pos::of("G3"), PieceMoveType::Default),
                         (Pos::of("H3"), PieceMoveType::EnPassant),
-                    ]),
+                    ]
+                    .into(),
                 ),
-            ]),
+            ]
+            .into(),
         );
     }
 }
