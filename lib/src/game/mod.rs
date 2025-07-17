@@ -1,8 +1,8 @@
-mod board;
+pub mod board;
 mod capture;
-mod game;
+pub mod game;
 pub mod mode;
-mod mov;
+pub mod mov;
 mod player;
 pub mod rule;
 pub mod selection;

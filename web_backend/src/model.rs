@@ -3,7 +3,7 @@ use std::collections::HashSet;
 use web_sys::CanvasRenderingContext2d;
 
 use libre_chess_lib::game::{
-    mode::standard_chess, rule::init::game_of_mode, selection::Selection, Game,
+    mode::standard_chess, rule::init::game_of_mode, selection::Selection, game::Game,
 };
 
 use crate::{
@@ -43,8 +43,7 @@ impl Default for Model {
             context: None,
             selection: Selection {
                 selected_squares: HashSet::new(),
-                selected_piece: None,
-                selected_piece_movements: Vec::new(),
+                selected_pos: None,
             },
         }
     }
