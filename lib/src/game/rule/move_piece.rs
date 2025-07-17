@@ -53,17 +53,16 @@ pub fn move_piece(
                     let pawn = board.remove(&from)?;
                     board.insert(to.clone(), pawn);
                     let capture_pos = Pos { col: to.col, row: from.row };
-                    if let Some(captured_piece) = board.remove(&capture_pos) {
-                        selected_player
-                            .captures
-                            .push(GameCapture { piece: captured_piece, at: history.len() as u16 });
-                        history.push(GameMove {
-                            mov: Mov { from: from.clone(), to: to.clone(), piece: pawn },
-                            typ: GameMoveType::EnPassant,
-                        });
-                        if let Some(affected_player) = players.get_mut(&captured_piece.color) {
-                            affected_player.moves.remove(&capture_pos);
-                        }
+                    let captured_piece = board.remove(&capture_pos)?;
+                    selected_player
+                        .captures
+                        .push(GameCapture { piece: captured_piece, at: history.len() as u16 });
+                    history.push(GameMove {
+                        mov: Mov { from: from.clone(), to: to.clone(), piece: pawn },
+                        typ: GameMoveType::EnPassant,
+                    });
+                    if let Some(affected_player) = players.get_mut(&captured_piece.color) {
+                        affected_player.moves.remove(&capture_pos);
                     }
                 }
                 PieceMoveType::ShortCastling => {

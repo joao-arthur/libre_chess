@@ -17,3 +17,11 @@ pub struct Game {
     pub players: GamePlayers,
     pub history: GameHistory,
 }
+
+pub fn empty_players() -> GamePlayers {
+    [
+        (Color::Black, GamePlayer::from(Color::Black)),
+        (Color::White, GamePlayer::from(Color::White)),
+    ]
+    .into()
+}

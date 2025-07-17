@@ -31,7 +31,9 @@ pub fn pseudo_legal_moves_of_player(
             if piece.typ == PieceType::King {
                 moves.extend(castling_moves(board, history, players, pos));
             }
-            result.insert(pos.clone(), moves);
+            if !moves.is_empty() {
+                result.insert(pos.clone(), moves);
+            }
         }
     }
     result
@@ -43,10 +45,7 @@ mod tests {
     use crate::{
         color::Color,
         game::{
-            board::board_of_str,
-            mode::standard_chess,
-            mov::{GameMove, PieceMoveType},
-            player::GamePlayer,
+            board::board_of_str, game::empty_players, mode::standard_chess, mov::{GameMove, PieceMoveType}, player::GamePlayer
         },
         pos::Pos,
     };
@@ -71,11 +70,7 @@ mod tests {
         );
         let bounds = mode.bounds;
         let history = Vec::new();
-        let players = [
-            (Color::Black, GamePlayer::from(Color::Black)),
-            (Color::White, GamePlayer::from(Color::White)),
-        ]
-        .into();
+        let players =empty_players();
         let color = Color::White;
         assert_eq!(
             pseudo_legal_moves_of_player(&board, &bounds, &history, &players, &color),
@@ -122,11 +117,7 @@ mod tests {
         );
         let bounds = mode.bounds;
         let history = vec![GameMove::default_of('♙', "H2", "H4")];
-        let players = [
-            (Color::Black, GamePlayer::from(Color::Black)),
-            (Color::White, GamePlayer::from(Color::White)),
-        ]
-        .into();
+        let players = empty_players();
         let color = Color::Black;
         assert_eq!(
             pseudo_legal_moves_of_player(&board, &bounds, &history, &players, &color),

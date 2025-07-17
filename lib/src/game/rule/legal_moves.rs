@@ -25,20 +25,25 @@ pub fn legal_moves_of_player(
 ) -> PlayerMoves {
     let turn = evaluate_turn(history);
     let in_check = is_in_check(board, players, history);
-    let mut pseudo_legal_moves =
-        pseudo_legal_moves_of_player(board, bounds, history, players, color);
-
-    //for (from, piece_moves) in pseudo_legal_moves.clone() {
-    //    for (to, move_type) in piece_moves {
-    //        let mut temp_board = board.clone();
-    //        if let Some(piece) = temp_board.remove(&from) {
-    //            temp_board.insert(to.clone(), piece);
-    //            if is_in_check(&temp_board, players, history) {
-    //                pseudo_legal_moves.get_mut(&from).unwrap().remove(&to);
-    //            }
-    //        }
-    //    }
-    //}
+    let mut pseudo_legal_moves = pseudo_legal_moves_of_player(board, bounds, history, players, color);
+    for (from, piece_moves) in pseudo_legal_moves.clone() {
+        let actual_moves = pseudo_legal_moves.get_mut(&from).unwrap();
+        for (to, move_type) in piece_moves {
+            let mut temp_board = board.clone();
+            if let Some(piece) = temp_board.remove(&from) {
+                temp_board.insert(to.clone(), piece);
+                let mut temp_players = players.clone();
+                for player in temp_players.values_mut() {
+                    if &player.color != color {
+                        player.moves = pseudo_legal_moves_of_player(&temp_board, bounds, history, players, &player.color);
+                    }
+                }
+                if is_in_check(&temp_board, &temp_players, history) {
+                    actual_moves.remove(&to);
+                }
+            }
+        }
+    }
 
     //let _: Option<()> = (|| {
     //    let (king_pos, _) =
@@ -72,10 +77,7 @@ mod tests {
     use crate::{
         color::Color,
         game::{
-            board::board_of_str,
-            mode::standard_chess,
-            mov::{GameMove, PieceMoveType},
-            player::GamePlayer,
+            board::board_of_str, game::empty_players, mode::standard_chess, mov::{GameMove, PieceMoveType}, player::GamePlayer
         },
         pos::Pos,
     };
@@ -100,11 +102,7 @@ mod tests {
         );
         let bounds = mode.bounds;
         let history = Vec::new();
-        let players = [
-            (Color::Black, GamePlayer::from(Color::Black)),
-            (Color::White, GamePlayer::from(Color::White)),
-        ]
-        .into();
+        let players = empty_players();
         let color = Color::White;
         assert_eq!(
             legal_moves_of_player(&board, &bounds, &history, &players, &color),
@@ -151,11 +149,7 @@ mod tests {
         );
         let bounds = mode.bounds;
         let history = vec![GameMove::default_of('♙', "H2", "H4")];
-        let players = [
-            (Color::Black, GamePlayer::from(Color::Black)),
-            (Color::White, GamePlayer::from(Color::White)),
-        ]
-        .into();
+        let players = empty_players();
         let color = Color::Black;
         assert_eq!(
             legal_moves_of_player(&board, &bounds, &history, &players, &color),
@@ -238,11 +232,7 @@ mod tests {
         );
         let bounds = mode.bounds;
         let history = Vec::new();
-        let players = [
-            (Color::Black, GamePlayer::from(Color::Black)),
-            (Color::White, GamePlayer::from(Color::White)),
-        ]
-        .into();
+        let players = empty_players();
         let color = Color::White;
         assert_eq!(
             legal_moves_of_player(&board, &bounds, &history, &players, &color),

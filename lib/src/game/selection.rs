@@ -86,21 +86,13 @@ mod tests {
     use crate::{
         color::Color,
         game::{
-            board::board_of_str, game::GamePlayers, mode::standard_chess, mov::PieceMoveType,
+            board::board_of_str, game::{empty_players, GamePlayers}, mode::standard_chess, mov::PieceMoveType,
             player::GamePlayer,
         },
         pos::Pos,
     };
 
     use super::{Selection, toggle_selection};
-
-    fn empty_players() -> GamePlayers {
-        [
-            (Color::Black, GamePlayer::from(Color::Black)),
-            (Color::White, GamePlayer::from(Color::White)),
-        ]
-        .into()
-    }
 
     #[test]
     fn player_selected_empty_square() {
