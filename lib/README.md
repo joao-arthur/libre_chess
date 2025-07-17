@@ -32,7 +32,7 @@
 - [ ] game_of_mode_and_history
     - [ ] Captures
 
-- [ ] allowed_moves_of_player
+- [ ] legal_moves_of_player
     - [ ] King menaces
 
 - [ ] Selection
@@ -124,7 +124,7 @@ o usuário vai selecionar a posição de destino (to)
 
 
 
-#### allowed_moves_of_player
+#### legal_moves_of_player
 
 - [ ] King moves will verify check, instead of menace moves 
 

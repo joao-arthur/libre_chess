@@ -6,7 +6,7 @@ use crate::{
         game::{Game, GameHistory},
         mode::GameMode,
         player::GamePlayer,
-        rule::{allowed_moves::allowed_moves_of_player, turn::evaluate_turn},
+        rule::{allowed_moves::legal_moves_of_player, turn::evaluate_turn},
     },
 };
 
@@ -20,7 +20,7 @@ pub fn game_of_mode(mode: GameMode) -> Game {
             GamePlayer {
                 color: Color::Black,
                 captures: Vec::new(),
-                moves: allowed_moves_of_player(
+                moves: legal_moves_of_player(
                     &board,
                     &bounds,
                     &history,
@@ -51,7 +51,7 @@ pub fn game_of_mode(mode: GameMode) -> Game {
             GamePlayer {
                 color: Color::White,
                 captures: Vec::new(),
-                moves: allowed_moves_of_player(
+                moves: legal_moves_of_player(
                     &board,
                     &bounds,
                     &history,
@@ -99,7 +99,7 @@ pub fn game_of_mode_and_history(mode: GameMode, history: GameHistory) -> Game {
                 color: Color::Black,
                 captures: Vec::new(),
                 moves: if turn == Color::Black {
-                    allowed_moves_of_player(
+                    legal_moves_of_player(
                         &board,
                         &bounds,
                         &history,
@@ -134,7 +134,7 @@ pub fn game_of_mode_and_history(mode: GameMode, history: GameHistory) -> Game {
                 color: Color::White,
                 captures: Vec::new(),
                 moves: if turn == Color::White {
-                    allowed_moves_of_player(
+                    legal_moves_of_player(
                         &board,
                         &bounds,
                         &history,

@@ -6,84 +6,86 @@ use crate::{
         board::GameBoard,
         game::{GameBounds, GameHistory, GamePlayers},
         mov::{
-            GameMove, GameMoveType,
-            default::default_moves,
-            special::{castling::castling_moves, en_passant::en_passant_moves},
-        },
+            default::default_moves, special::{castling::castling_moves, en_passant::en_passant_moves}, GameMove, GameMoveType
+        }, rule::{check::is_in_check, turn::evaluate_turn},
     },
     piece::PieceType,
     pos::Pos,
 };
 
-fn allowed_moves_of_piece(
-    board: &GameBoard,
-    bounds: &GameBounds,
-    history: &GameHistory,
-    players: &GamePlayers,
-    pos: &Pos,
-) -> Vec<GameMove> {
-    if let Some(piece) = board.get(pos) {
-        match piece.typ {
-            PieceType::Pawn => [
-                default_moves(board, bounds, pos).into_iter().collect::<Vec<GameMove>>(),
-                en_passant_moves(board, history, pos).into_iter().collect::<Vec<GameMove>>(),
-            ]
-            .into_iter()
-            .flatten()
-            .collect(),
-            PieceType::King => {
-                let mut moves = [
-                    default_moves(board, bounds, pos).into_iter().collect::<Vec<GameMove>>(),
-                    castling_moves(board, history, players, pos)
-                        .into_iter()
-                        .collect::<Vec<GameMove>>(),
-                ]
-                .into_iter()
-                .flatten()
-                .collect::<Vec<GameMove>>();
-                for (curr_color, curr_player) in players {
-                    if curr_color != &piece.color {
-                        let piece_moves_it = curr_player.moves.iter();
-                        for (_, piece_moves) in piece_moves_it {
-                            for menace_game_move in piece_moves {
-                                if menace_game_move.typ == GameMoveType::Default
-                                    || menace_game_move.typ == GameMoveType::Capture
-                                    || menace_game_move.typ == GameMoveType::Menace
-                                {
-                                    moves.retain(|game_move| {
-                                        game_move.mov.to != menace_game_move.mov.to
-                                    });
-                                }
-                            }
-                        }
-                    }
-                }
-                moves
-            }
-            _ => default_moves(board, bounds, pos).into_iter().collect::<Vec<GameMove>>(),
-        }
-    } else {
-        Vec::new()
-    }
-}
-
-pub fn allowed_moves_of_player(
+pub fn pseudo_legal_moves_of_player(
     board: &GameBoard,
     bounds: &GameBounds,
     history: &GameHistory,
     players: &GamePlayers,
     color: &Color,
 ) -> HashMap<Pos, Vec<GameMove>> {
-    // is in check?
     let mut result = HashMap::new();
     for (pos, piece) in board {
         if &piece.color == color {
-            let moves = allowed_moves_of_piece(board, bounds, history, players, pos);
+            let mut moves = default_moves(board, bounds, pos);
+            if piece.typ == PieceType::Pawn {
+                moves.extend(en_passant_moves(board, history, pos));
+            }
+            if piece.typ == PieceType::King {
+                moves.extend(castling_moves(board, history, players, pos));
+            }
             result.insert(pos.clone(), moves);
         }
     }
     result
 }
+
+pub fn legal_moves_of_player(
+    board: &GameBoard,
+    bounds: &GameBounds,
+    history: &GameHistory,
+    players: &GamePlayers,
+    color: &Color,
+) -> HashMap<Pos, Vec<GameMove>> {
+    let turn = evaluate_turn(history);
+    let in_check = is_in_check(board, players, history);
+
+    let mut pseudo_legal_moves = pseudo_legal_moves_of_player(
+        board,
+        bounds,
+        history,
+        players,
+        color,
+    );
+
+    let maybe_king = board.iter().find(|(_, piece)| piece.typ == PieceType::King && piece.color == turn);
+
+    // find the king
+    // change the king
+
+    let player = players.get_mut(&color);
+
+    if let Some((king_pos, _)) = maybe_king {
+
+    }
+
+    for (curr_color, curr_player) in players {
+        if curr_color != &piece.color {
+            let piece_moves_it = curr_player.moves.iter();
+            for (_, piece_moves) in piece_moves_it {
+                for menace_game_move in piece_moves {
+                    if menace_game_move.typ == GameMoveType::Default
+                        || menace_game_move.typ == GameMoveType::Capture
+                        || menace_game_move.typ == GameMoveType::Menace
+                    {
+                        moves.retain(|game_move| {
+                            game_move.mov.to != menace_game_move.mov.to
+                        });
+                    }
+                }
+            }
+        }
+    }
+    pseudo_legal_moves
+}
+
+
 
 #[cfg(test)]
 mod tests {
@@ -98,7 +100,7 @@ mod tests {
         pos::Pos,
     };
 
-    use super::allowed_moves_of_player;
+    use super::legal_moves_of_player;
 
     #[test]
     fn test_allowed_moves_of_player_standard_moves() {
@@ -130,7 +132,7 @@ mod tests {
         ]);
         let color = Color::White;
         assert_eq!(
-            allowed_moves_of_player(&board, &bounds, &history, &players, &color),
+            legal_moves_of_player(&board, &bounds, &history, &players, &color),
             HashMap::from([
                 (
                     Pos::of("A2"),
@@ -184,7 +186,7 @@ mod tests {
         ]);
         let color = Color::White;
         assert_eq!(
-            allowed_moves_of_player(&board, &bounds, &history, &players, &color),
+            legal_moves_of_player(&board, &bounds, &history, &players, &color),
             HashMap::from([(
                 Pos::of("D4"),
                 vec![
@@ -266,7 +268,7 @@ mod tests {
         ]);
         let color = Color::White;
         assert_eq!(
-            allowed_moves_of_player(&board, &bounds, &history, &players, &color),
+            legal_moves_of_player(&board, &bounds, &history, &players, &color),
             HashMap::from([(
                 Pos::of("D4"),
                 vec![GameMove::default_of('♔', "D4", "D3"), GameMove::capture_of('♔', "D4", "D5")]
@@ -385,7 +387,7 @@ mod tests {
         ]);
         let color = Color::White;
         assert_eq!(
-            allowed_moves_of_player(&board, &bounds, &history, &players, &color),
+            legal_moves_of_player(&board, &bounds, &history, &players, &color),
             HashMap::from([(Pos::of("D4"), vec![])])
         );
     }
@@ -455,7 +457,7 @@ mod tests {
         ]);
         let color = Color::White;
         assert_eq!(
-            allowed_moves_of_player(&board, &bounds, &history, &players, &color),
+            legal_moves_of_player(&board, &bounds, &history, &players, &color),
             HashMap::from([
                 (
                     Pos::of("E1"),
@@ -552,7 +554,7 @@ mod tests {
         ]);
         let color = Color::White;
         assert_eq!(
-            allowed_moves_of_player(&board, &bounds, &history, &players, &color),
+            legal_moves_of_player(&board, &bounds, &history, &players, &color),
             HashMap::from([
                 (
                     Pos::of("C4"),
