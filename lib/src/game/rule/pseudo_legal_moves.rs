@@ -45,7 +45,11 @@ mod tests {
     use crate::{
         color::Color,
         game::{
-            board::board_of_str, game::empty_players, mode::standard_chess, mov::{GameMove, PieceMoveType}, player::GamePlayer
+            board::board_of_str,
+            game::empty_players,
+            mode::standard_chess,
+            mov::{GameMove, PieceMoveType},
+            player::GamePlayer,
         },
         pos::Pos,
     };
@@ -70,7 +74,7 @@ mod tests {
         );
         let bounds = mode.bounds;
         let history = Vec::new();
-        let players =empty_players();
+        let players = empty_players();
         let color = Color::White;
         assert_eq!(
             pseudo_legal_moves_of_player(&board, &bounds, &history, &players, &color),

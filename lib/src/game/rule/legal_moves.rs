@@ -25,7 +25,8 @@ pub fn legal_moves_of_player(
 ) -> PlayerMoves {
     let turn = evaluate_turn(history);
     let in_check = is_in_check(board, players, history);
-    let mut pseudo_legal_moves = pseudo_legal_moves_of_player(board, bounds, history, players, color);
+    let mut pseudo_legal_moves =
+        pseudo_legal_moves_of_player(board, bounds, history, players, color);
     for (from, piece_moves) in pseudo_legal_moves.clone() {
         let actual_moves = pseudo_legal_moves.get_mut(&from).unwrap();
         for (to, move_type) in piece_moves {
@@ -35,7 +36,13 @@ pub fn legal_moves_of_player(
                 let mut temp_players = players.clone();
                 for player in temp_players.values_mut() {
                     if &player.color != color {
-                        player.moves = pseudo_legal_moves_of_player(&temp_board, bounds, history, players, &player.color);
+                        player.moves = pseudo_legal_moves_of_player(
+                            &temp_board,
+                            bounds,
+                            history,
+                            players,
+                            &player.color,
+                        );
                     }
                 }
                 if is_in_check(&temp_board, &temp_players, history) {
@@ -77,7 +84,11 @@ mod tests {
     use crate::{
         color::Color,
         game::{
-            board::board_of_str, game::empty_players, mode::standard_chess, mov::{GameMove, PieceMoveType}, player::GamePlayer
+            board::board_of_str,
+            game::empty_players,
+            mode::standard_chess,
+            mov::{GameMove, PieceMoveType},
+            player::GamePlayer,
         },
         pos::Pos,
     };

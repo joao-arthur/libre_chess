@@ -21,19 +21,5 @@
 
 ## Fix
 
-- [ ] Remove Selection.selected_piece_moves
-- [ ] { from: Pos, to: Pos, mov: GameMovOld } 
-
-
-
-
-
-
 - [ ] game_of_mode_and_history
     - [ ] Captures
-
-- [ ] legal_moves_of_player
-    - [ ] King menaces
-
-- [ ] Selection
-    - [ ] use it in web_backend

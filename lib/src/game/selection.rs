@@ -86,7 +86,10 @@ mod tests {
     use crate::{
         color::Color,
         game::{
-            board::board_of_str, game::{empty_players, GamePlayers}, mode::standard_chess, mov::PieceMoveType,
+            board::board_of_str,
+            game::{GamePlayers, empty_players},
+            mode::standard_chess,
+            mov::PieceMoveType,
             player::GamePlayer,
         },
         pos::Pos,

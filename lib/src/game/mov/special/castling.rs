@@ -105,7 +105,11 @@ mod tests {
     use crate::{
         color::Color,
         game::{
-            board::board_of_str, game::empty_players, mode::standard_chess, mov::{GameMove, PieceMoveType}, player::GamePlayer
+            board::board_of_str,
+            game::empty_players,
+            mode::standard_chess,
+            mov::{GameMove, PieceMoveType},
+            player::GamePlayer,
         },
         pos::Pos,
     };
@@ -208,7 +212,7 @@ mod tests {
                 "♖♘♗♕♔♗♘♖",
             ],
         );
-        let players =empty_players();
+        let players = empty_players();
         let pos = Pos::of("E1");
         assert_eq!(castling_moves(&board, &history, &players, &pos), HashMap::new());
     }

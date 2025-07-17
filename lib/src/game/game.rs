@@ -19,9 +19,6 @@ pub struct Game {
 }
 
 pub fn empty_players() -> GamePlayers {
-    [
-        (Color::Black, GamePlayer::from(Color::Black)),
-        (Color::White, GamePlayer::from(Color::White)),
-    ]
-    .into()
+    [(Color::Black, GamePlayer::from(Color::Black)), (Color::White, GamePlayer::from(Color::White))]
+        .into()
 }
