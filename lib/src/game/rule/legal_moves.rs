@@ -24,35 +24,32 @@ pub fn legal_moves_of_player(
 ) -> HashMap<Pos, Vec<GameMove>> {
     let turn = evaluate_turn(history);
     let in_check = is_in_check(board, players, history);
-
     let mut pseudo_legal_moves =
         pseudo_legal_moves_of_player(board, bounds, history, players, color);
 
-    let maybe_king =
-        board.iter().find(|(_, piece)| piece.typ == PieceType::King && piece.color == turn);
-
-    // find the king
-    // change the king
-
-    let player = players.get_mut(&color);
-
-    if let Some((king_pos, _)) = maybe_king {}
-
-    for (curr_color, curr_player) in players {
-        if curr_color != &piece.color {
-            let piece_moves_it = curr_player.moves.iter();
-            for (_, piece_moves) in piece_moves_it {
-                for menace_game_move in piece_moves {
-                    if menace_game_move.typ == GameMoveType::Default
-                        || menace_game_move.typ == GameMoveType::Capture
-                        || menace_game_move.typ == GameMoveType::Menace
-                    {
-                        moves.retain(|game_move| game_move.mov.to != menace_game_move.mov.to);
+    let _: Option<()> = (|| {
+        let (king_pos, _) =
+            board.iter().find(|(_, piece)| piece.typ == PieceType::King && piece.color == turn)?;
+        let king_moves = pseudo_legal_moves.get_mut(&king_pos)?;
+        for (curr_color, curr_player) in players {
+            if curr_color != color {
+                let piece_moves_it = curr_player.moves.iter();
+                for (_, curr_piece_moves) in piece_moves_it {
+                    for menace_game_move in curr_piece_moves {
+                        if menace_game_move.typ == GameMoveType::Default
+                            || menace_game_move.typ == GameMoveType::Capture
+                            || menace_game_move.typ == GameMoveType::Menace
+                        {
+                            king_moves
+                                .retain(|game_move| game_move.mov.to != menace_game_move.mov.to);
+                        }
                     }
                 }
             }
         }
-    }
+        None
+    })();
+
     pseudo_legal_moves
 }
 
@@ -72,7 +69,7 @@ mod tests {
     use super::legal_moves_of_player;
 
     #[test]
-    fn test_allowed_moves_of_player_standard_moves() {
+    fn legal_moves_of_player_standard_moves() {
         let mode = standard_chess();
         let board = board_of_str(
             &mode.bounds,
@@ -126,7 +123,101 @@ mod tests {
     }
 
     #[test]
-    fn test_allowed_moves_of_player_free_king() {
+    fn legal_moves_of_player_special_moves() {
+        let mode = standard_chess();
+        let board = board_of_str(
+            &mode.bounds,
+            [
+                "♜   ♚  ♜",
+                "♟      ♟",
+                "        ",
+                "       ♝",
+                "      ♟♙",
+                "        ",
+                "        ",
+                "    ♔   ",
+            ],
+        );
+        let bounds = mode.bounds;
+        let history = vec![GameMove::default_of('♙', "H2", "H4")];
+        let players = HashMap::from([
+            (Color::Black, GamePlayer::from(Color::Black)),
+            (Color::White, GamePlayer::from(Color::White)),
+        ]);
+        let color = Color::Black;
+        assert_eq!(
+            legal_moves_of_player(&board, &bounds, &history, &players, &color),
+            HashMap::from([
+                (
+                    Pos::of("A8"),
+                    vec![
+                        GameMove::default_of('♜', "A8", "B8"),
+                        GameMove::default_of('♜', "A8", "C8"),
+                        GameMove::default_of('♜', "A8", "D8"),
+                        GameMove::menace_of('♜', "A8", "E8"),
+                        GameMove::menace_of('♜', "A8", "A7"),
+                    ]
+                ),
+                (
+                    Pos::of("H8"),
+                    vec![
+                        GameMove::menace_of('♜', "H8", "H7"),
+                        GameMove::default_of('♜', "H8", "G8"),
+                        GameMove::default_of('♜', "H8", "F8"),
+                        GameMove::menace_of('♜', "H8", "E8"),
+                    ]
+                ),
+                (
+                    Pos::of("E8"),
+                    vec![
+                        GameMove::default_of('♚', "E8", "F8"),
+                        GameMove::default_of('♚', "E8", "F7"),
+                        GameMove::default_of('♚', "E8", "E7"),
+                        GameMove::default_of('♚', "E8", "D7"),
+                        GameMove::default_of('♚', "E8", "D8"),
+                        GameMove::short_castling_of('♚', "E8", "H8"),
+                        GameMove::long_castling_of('♚', "E8", "A8"),
+                    ]
+                ),
+                (
+                    Pos::of("A7"),
+                    vec![
+                        GameMove::default_of('♟', "A7", "A6"),
+                        GameMove::default_of('♟', "A7", "A5"),
+                        GameMove::menace_of('♟', "A7", "B6"),
+                    ]
+                ),
+                (
+                    Pos::of("H7"),
+                    vec![
+                        GameMove::default_of('♟', "H7", "H6"),
+                        GameMove::menace_of('♟', "H7", "G6"),
+                    ]
+                ),
+                (
+                    Pos::of("H5"),
+                    vec![
+                        GameMove::menace_of('♝', "H5", "G4"),
+                        GameMove::default_of('♝', "H5", "G6"),
+                        GameMove::default_of('♝', "H5", "F7"),
+                        GameMove::menace_of('♝', "H5", "E8"),
+                    ]
+                ),
+                (
+                    Pos::of("G4"),
+                    vec![
+                        GameMove::default_of('♟', "G4", "G3"),
+                        GameMove::menace_of('♟', "G4", "F3"),
+                        GameMove::menace_of('♟', "G4", "H3"),
+                        GameMove::en_passant_of('♟', "G4", "H3"),
+                    ]
+                ),
+            ])
+        );
+    }
+
+    #[test]
+    fn legal_moves_of_player_free_king() {
         let mode = standard_chess();
         let board = board_of_str(
             &mode.bounds,
@@ -173,7 +264,7 @@ mod tests {
     }
 
     #[test]
-    fn test_allowed_moves_of_player_king_blocked_by_menace() {
+    fn legal_moves_of_player_king_blocked_by_menace() {
         let mode = standard_chess();
         let board = board_of_str(
             &mode.bounds,
@@ -246,7 +337,7 @@ mod tests {
     }
 
     #[test]
-    fn test_allowed_moves_of_player_king_blocked_by_default() {
+    fn legal_moves_of_player_king_blocked_by_default() {
         let mode = standard_chess();
         let board = board_of_str(
             &mode.bounds,
@@ -362,7 +453,7 @@ mod tests {
     }
 
     #[test]
-    fn test_allowed_moves_of_player_pawn_en_passant() {
+    fn legal_moves_of_player_pawn_en_passant() {
         let mode = standard_chess();
         let board = board_of_str(
             &mode.bounds,
@@ -451,7 +542,7 @@ mod tests {
     }
 
     #[test]
-    fn test_allowed_moves_of_player_in_check_rook() {
+    fn legal_moves_of_player_in_check_rook() {
         let mode = standard_chess();
         let board = board_of_str(
             &mode.bounds,
@@ -538,5 +629,5 @@ mod tests {
     }
 
     #[test]
-    fn test_allowed_moves_of_player_in_double_check() {}
+    fn legal_moves_of_player_in_double_check() {}
 }

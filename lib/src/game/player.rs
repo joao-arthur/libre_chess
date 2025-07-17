@@ -11,4 +11,8 @@ pub struct GamePlayer {
     pub moves: HashMap<Pos, Vec<GameMove>>,
 }
 
-// impl From<Color> for Player { }
+impl From<Color> for GamePlayer {
+    fn from(color: Color) -> Self {
+        GamePlayer { color, captures: Vec::new(), moves: HashMap::new() }
+    }
+}
