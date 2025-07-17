@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use crate::{
     color::Color,
     game::{
-        board::GameBoard,
+        board::{board_to_string, GameBoard},
         game::{GameBounds, GameHistory, GamePlayers},
         mov::{GameMove, GameMoveType},
     },
@@ -24,8 +24,38 @@ pub fn legal_moves_of_player(
 ) -> HashMap<Pos, Vec<GameMove>> {
     let turn = evaluate_turn(history);
     let in_check = is_in_check(board, players, history);
-    let mut pseudo_legal_moves =
-        pseudo_legal_moves_of_player(board, bounds, history, players, color);
+    let mut pseudo_legal_moves = pseudo_legal_moves_of_player(board, bounds, history, players, color);
+
+    for (from, piece_moves) in pseudo_legal_moves.clone() {
+        for game_move in piece_moves {
+            let mut temp_board = board.clone();
+            if let Some(piece) = temp_board.remove(&from) {
+                temp_board.insert(game_move.mov.to.clone(), piece);
+               // println!("===[board]===");
+               // println!("{}", board_to_string(bounds, board));
+               // println!("===[temp board]===");
+                println!("{}", board_to_string(bounds, &temp_board));
+                println!("===[in check: {}]===", is_in_check(&temp_board, players, history) );
+                println!("======");
+                if is_in_check(&temp_board, players, history) {
+                    let mut i = 0;
+                    let temp_from = pseudo_legal_moves.get_mut(&from).unwrap();
+                    for temp_game_move in temp_from.iter() {
+                        if 
+                            &temp_game_move.mov.from == &game_move.mov.from && 
+                            &temp_game_move.mov.to == &game_move.mov.to && 
+                            &temp_game_move.mov.piece == &game_move.mov.piece && 
+                            &temp_game_move.typ == &game_move.typ 
+                        {
+                            break;
+                        }
+                        i += 1;
+                    }
+                    temp_from.swap_remove(i);
+                }
+            }
+        }
+    }
 
     let _: Option<()> = (|| {
         let (king_pos, _) =
@@ -60,7 +90,7 @@ mod tests {
     use crate::{
         color::Color,
         game::{
-            board::board_of_str, game::Game, mode::standard_chess, mov::GameMove,
+            board::board_of_str, mode::standard_chess, mov::GameMove,
             player::GamePlayer,
         },
         pos::Pos,
@@ -599,7 +629,16 @@ mod tests {
                         GameMove::default_of('♗', "F4", "E3"),
                     ]
                 ),
-                (Pos::of("A3"), vec![GameMove::default_of('♖', "A3", "E3"),]),
+                (Pos::of("A3"), vec![GameMove::default_of('♖', "A3", "E3")]),
+                (
+                    Pos::of("E1"),
+                    vec![
+                        GameMove::default_of('♔', "E1", "F2"),
+                        GameMove::default_of('♔', "E1", "F1"),
+                        GameMove::default_of('♔', "E1", "D1"),
+                        GameMove::default_of('♔', "E1", "D2"),
+                    ]
+                ),
             ])
         );
     }

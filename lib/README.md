@@ -128,7 +128,6 @@ o usuário vai selecionar a posição de destino (to)
 
 - [ ] King moves will verify check, instead of menace moves 
 
-
 #### After that
 
 - [ ] Moves will be `HashMap<Pos, HashMap<Pos, GameMoveType>>`, that is, for each piece, possible destination (positions) of moves
