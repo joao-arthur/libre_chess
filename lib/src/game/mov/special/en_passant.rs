@@ -1,59 +1,50 @@
+use std::collections::HashMap;
+
 use crate::{
     color::Color,
-    game::{
-        board::GameBoard,
-        game::GameHistory,
-        mov::{GameMove, GameMoveType},
-    },
-    mov::Mov,
+    game::{board::GameBoard, game::GameHistory, mov::PieceMoveType},
     piece::PieceType,
     pos::Pos,
 };
 
-pub fn en_passant_moves(board: &GameBoard, history: &GameHistory, pos: &Pos) -> Vec<GameMove> {
+pub fn en_passant_moves(
+    board: &GameBoard,
+    history: &GameHistory,
+    pos: &Pos,
+) -> HashMap<Pos, PieceMoveType> {
     if let Some(piece) = board.get(pos) {
         match piece.color {
-            Color::White => white_pawn_en_passant(board, history, pos),
-            Color::Black => black_pawn_en_passant(board, history, pos),
+            Color::White => white_pawn_en_passant(history, pos),
+            Color::Black => black_pawn_en_passant(history, pos),
         }
     } else {
-        Vec::new()
+        HashMap::new()
     }
 }
 
-fn white_pawn_en_passant(board: &GameBoard, history: &GameHistory, pos: &Pos) -> Vec<GameMove> {
-    let mut result: Vec<GameMove> = Vec::new();
-    if let Some(piece) = board.get(pos) {
-        if pos.row == 4 {
-            if let Some(game_move) = history.last() {
-                if game_move.mov.piece.typ == PieceType::Pawn
-                    && game_move.mov.piece.color == Color::Black
-                    && game_move.mov.from.row == 6
-                    && game_move.mov.to.row == 4
-                {
-                    if Some(game_move.mov.to.clone()) == pos.try_rel_idx(0, -1) {
-                        if let Some(capture_pos) = pos.try_rel_idx(1, -1) {
-                            result.push(GameMove {
-                                mov: Mov {
-                                    piece: *piece,
-                                    from: pos.clone(),
-                                    to: Pos { col: capture_pos.col, row: pos.row + 1 },
-                                },
-                                typ: GameMoveType::EnPassant,
-                            });
-                        }
+fn white_pawn_en_passant(history: &GameHistory, pos: &Pos) -> HashMap<Pos, PieceMoveType> {
+    let mut result = HashMap::new();
+    if pos.row == 4 {
+        if let Some(game_move) = history.last() {
+            if game_move.mov.piece.typ == PieceType::Pawn
+                && game_move.mov.piece.color == Color::Black
+                && game_move.mov.from.row == 6
+                && game_move.mov.to.row == 4
+            {
+                if Some(game_move.mov.to.clone()) == pos.try_rel_idx(0, -1) {
+                    if let Some(capture_pos) = pos.try_rel_idx(1, -1) {
+                        result.insert(
+                            Pos { col: capture_pos.col, row: pos.row + 1 },
+                            PieceMoveType::EnPassant,
+                        );
                     }
-                    if Some(game_move.mov.to.clone()) == pos.try_rel_idx(0, 1) {
-                        if let Some(capture_pos) = pos.try_rel_idx(1, 1) {
-                            result.push(GameMove {
-                                mov: Mov {
-                                    piece: *piece,
-                                    from: pos.clone(),
-                                    to: Pos { col: capture_pos.col, row: pos.row + 1 },
-                                },
-                                typ: GameMoveType::EnPassant,
-                            });
-                        }
+                }
+                if Some(game_move.mov.to.clone()) == pos.try_rel_idx(0, 1) {
+                    if let Some(capture_pos) = pos.try_rel_idx(1, 1) {
+                        result.insert(
+                            Pos { col: capture_pos.col, row: pos.row + 1 },
+                            PieceMoveType::EnPassant,
+                        );
                     }
                 }
             }
@@ -62,39 +53,29 @@ fn white_pawn_en_passant(board: &GameBoard, history: &GameHistory, pos: &Pos) ->
     result
 }
 
-fn black_pawn_en_passant(board: &GameBoard, history: &GameHistory, pos: &Pos) -> Vec<GameMove> {
-    let mut result: Vec<GameMove> = Vec::new();
-    if let Some(piece) = board.get(pos) {
-        if pos.row == 3 {
-            if let Some(game_move) = history.last() {
-                if game_move.mov.piece.typ == PieceType::Pawn
-                    && game_move.mov.piece.color == Color::White
-                    && game_move.mov.from.row == 1
-                    && game_move.mov.to.row == 3
-                {
-                    if Some(game_move.mov.to.clone()) == pos.try_rel_idx(0, -1) {
-                        if let Some(capture_pos) = pos.try_rel_idx(-1, -1) {
-                            result.push(GameMove {
-                                mov: Mov {
-                                    piece: *piece,
-                                    from: pos.clone(),
-                                    to: Pos { col: capture_pos.col, row: pos.row - 1 },
-                                },
-                                typ: GameMoveType::EnPassant,
-                            });
-                        }
+fn black_pawn_en_passant(history: &GameHistory, pos: &Pos) -> HashMap<Pos, PieceMoveType> {
+    let mut result = HashMap::new();
+    if pos.row == 3 {
+        if let Some(game_move) = history.last() {
+            if game_move.mov.piece.typ == PieceType::Pawn
+                && game_move.mov.piece.color == Color::White
+                && game_move.mov.from.row == 1
+                && game_move.mov.to.row == 3
+            {
+                if Some(game_move.mov.to.clone()) == pos.try_rel_idx(0, -1) {
+                    if let Some(capture_pos) = pos.try_rel_idx(-1, -1) {
+                        result.insert(
+                            Pos { col: capture_pos.col, row: pos.row - 1 },
+                            PieceMoveType::EnPassant,
+                        );
                     }
-                    if Some(game_move.mov.to.clone()) == pos.try_rel_idx(0, 1) {
-                        if let Some(capture_pos) = pos.try_rel_idx(-1, 1) {
-                            result.push(GameMove {
-                                mov: Mov {
-                                    piece: *piece,
-                                    from: pos.clone(),
-                                    to: Pos { col: capture_pos.col, row: pos.row - 1 },
-                                },
-                                typ: GameMoveType::EnPassant,
-                            });
-                        }
+                }
+                if Some(game_move.mov.to.clone()) == pos.try_rel_idx(0, 1) {
+                    if let Some(capture_pos) = pos.try_rel_idx(-1, 1) {
+                        result.insert(
+                            Pos { col: capture_pos.col, row: pos.row - 1 },
+                            PieceMoveType::EnPassant,
+                        );
                     }
                 }
             }
@@ -108,7 +89,10 @@ mod tests {
     use std::collections::HashMap;
 
     use crate::{
-        game::{mov::GameMove, piece::game_piece_of},
+        game::{
+            mov::{GameMove, PieceMoveType},
+            piece::game_piece_of,
+        },
         pos::Pos,
     };
 
@@ -120,7 +104,7 @@ mod tests {
         let history = vec![GameMove::default_of('♟', "A7", "A5")];
         assert_eq!(
             en_passant_moves(&board, &history, &Pos::of("B5")),
-            [GameMove::en_passant_of('♙', "B5", "A6")]
+            HashMap::from([(Pos::of("A6"), PieceMoveType::EnPassant)])
         );
     }
 
@@ -130,7 +114,7 @@ mod tests {
         let history = vec![GameMove::default_of('♟', "B7", "B5")];
         assert_eq!(
             en_passant_moves(&board, &history, &Pos::of("A5")),
-            [GameMove::en_passant_of('♙', "A5", "B6")]
+            HashMap::from([(Pos::of("B6"), PieceMoveType::EnPassant)])
         );
     }
 
@@ -140,7 +124,7 @@ mod tests {
         let history = vec![GameMove::default_of('♟', "G7", "G5")];
         assert_eq!(
             en_passant_moves(&board, &history, &Pos::of("H5")),
-            [GameMove::en_passant_of('♙', "H5", "G6")]
+            HashMap::from([(Pos::of("G6"), PieceMoveType::EnPassant)])
         );
     }
 
@@ -150,7 +134,7 @@ mod tests {
         let history = vec![GameMove::default_of('♟', "H7", "H5")];
         assert_eq!(
             en_passant_moves(&board, &history, &Pos::of("G5")),
-            [GameMove::en_passant_of('♙', "G5", "H6")]
+            HashMap::from([(Pos::of("H6"), PieceMoveType::EnPassant)])
         );
     }
 
@@ -160,7 +144,7 @@ mod tests {
         let history = vec![GameMove::default_of('♙', "A2", "A4")];
         assert_eq!(
             en_passant_moves(&board, &history, &Pos::of("B4")),
-            [GameMove::en_passant_of('♟', "B4", "A3")]
+            HashMap::from([(Pos::of("A3"), PieceMoveType::EnPassant)])
         );
     }
 
@@ -170,7 +154,7 @@ mod tests {
         let history = vec![GameMove::default_of('♙', "B2", "B4")];
         assert_eq!(
             en_passant_moves(&board, &history, &Pos::of("A4")),
-            [GameMove::en_passant_of('♟', "A4", "B3")]
+            HashMap::from([(Pos::of("B3"), PieceMoveType::EnPassant)])
         );
     }
 
@@ -180,7 +164,7 @@ mod tests {
         let history = vec![GameMove::default_of('♙', "G2", "G4")];
         assert_eq!(
             en_passant_moves(&board, &history, &Pos::of("H4")),
-            [GameMove::en_passant_of('♟', "H4", "G3")]
+            HashMap::from([(Pos::of("G3"), PieceMoveType::EnPassant)])
         );
     }
 
@@ -190,7 +174,7 @@ mod tests {
         let history = vec![GameMove::default_of('♙', "H2", "H4")];
         assert_eq!(
             en_passant_moves(&board, &history, &Pos::of("G4")),
-            [GameMove::en_passant_of('♟', "G4", "H3")]
+            HashMap::from([(Pos::of("H3"), PieceMoveType::EnPassant)])
         );
     }
 
@@ -198,13 +182,13 @@ mod tests {
     fn pawn_moved_e6_to_e5() {
         let board = HashMap::from([game_piece_of("E5", '♟'), game_piece_of("D5", '♙')]);
         let history = vec![GameMove::default_of('♟', "E6", "E5")];
-        assert_eq!(en_passant_moves(&board, &history, &Pos::of("D5")), []);
+        assert_eq!(en_passant_moves(&board, &history, &Pos::of("D5")), HashMap::new());
     }
 
     #[test]
     fn pawn_moved_d3_to_d4() {
         let board = HashMap::from([game_piece_of("D4", '♙'), game_piece_of("E4", '♟')]);
         let history = vec![GameMove::default_of('♙', "D3", "D4")];
-        assert_eq!(en_passant_moves(&board, &history, &Pos::of("E4")), []);
+        assert_eq!(en_passant_moves(&board, &history, &Pos::of("E4")), HashMap::new());
     }
 }

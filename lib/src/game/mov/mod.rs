@@ -25,7 +25,7 @@ pub enum HistoryMoveType {
 }
 
 #[derive(Debug, PartialEq, Clone)]
-pub enum GameMoveType2 {
+pub enum PieceMoveType {
     Default,
     EnPassant,
     LongCastling,

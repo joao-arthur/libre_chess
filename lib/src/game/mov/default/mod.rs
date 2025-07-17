@@ -1,5 +1,7 @@
+use std::collections::HashMap;
+
 use crate::{
-    game::{board::GameBoard, game::GameBounds, mov::GameMove},
+    game::{board::GameBoard, game::GameBounds, mov::PieceMoveType},
     piece::PieceType,
     pos::Pos,
 };
@@ -16,18 +18,23 @@ mod pawn;
 mod queen;
 mod rook;
 
-pub fn default_moves(board: &GameBoard, bounds: &GameBounds, pos: &Pos) -> Vec<GameMove> {
+pub fn default_moves(
+    board: &GameBoard,
+    bounds: &GameBounds,
+    pos: &Pos,
+) -> HashMap<Pos, PieceMoveType> {
     if let Some(piece) = board.get(pos) {
-        return match piece.typ {
+        match piece.typ {
             PieceType::Rook => rook_moves(board, bounds, pos),
             PieceType::Knight => knight_moves(board, bounds, pos),
             PieceType::Bishop => bishop_moves(board, bounds, pos),
             PieceType::Queen => queen_moves(board, bounds, pos),
             PieceType::King => king_moves(board, bounds, pos),
             PieceType::Pawn => pawn_moves(board, bounds, pos),
-        };
+        }
+    } else {
+        HashMap::new()
     }
-    Vec::new()
 }
 
 #[cfg(test)]
@@ -35,7 +42,9 @@ mod tests {
     use std::collections::HashMap;
 
     use crate::{
-        game::{board::board_empty, mode::standard_chess, mov::GameMove, piece::game_piece_of},
+        game::{
+            board::board_empty, mode::standard_chess, mov::PieceMoveType, piece::game_piece_of,
+        },
         pos::Pos,
     };
 
@@ -44,7 +53,7 @@ mod tests {
     #[test]
     fn default_moves_empty_board() {
         let mode = standard_chess();
-        assert_eq!(default_moves(&board_empty(), &mode.bounds, &Pos::of("A1")), []);
+        assert_eq!(default_moves(&board_empty(), &mode.bounds, &Pos::of("A1")), HashMap::new());
     }
 
     #[test]
@@ -53,22 +62,22 @@ mod tests {
         let board = HashMap::from([game_piece_of("D4", '♜')]);
         assert_eq!(
             default_moves(&board, &mode.bounds, &Pos::of("D4")),
-            [
-                GameMove::default_of('♜', "D4", "E4"),
-                GameMove::default_of('♜', "D4", "F4"),
-                GameMove::default_of('♜', "D4", "G4"),
-                GameMove::default_of('♜', "D4", "H4"),
-                GameMove::default_of('♜', "D4", "D3"),
-                GameMove::default_of('♜', "D4", "D2"),
-                GameMove::default_of('♜', "D4", "D1"),
-                GameMove::default_of('♜', "D4", "C4"),
-                GameMove::default_of('♜', "D4", "B4"),
-                GameMove::default_of('♜', "D4", "A4"),
-                GameMove::default_of('♜', "D4", "D5"),
-                GameMove::default_of('♜', "D4", "D6"),
-                GameMove::default_of('♜', "D4", "D7"),
-                GameMove::default_of('♜', "D4", "D8"),
-            ]
+            HashMap::from([
+                (Pos::of("E4"), PieceMoveType::Default),
+                (Pos::of("F4"), PieceMoveType::Default),
+                (Pos::of("G4"), PieceMoveType::Default),
+                (Pos::of("H4"), PieceMoveType::Default),
+                (Pos::of("D3"), PieceMoveType::Default),
+                (Pos::of("D2"), PieceMoveType::Default),
+                (Pos::of("D1"), PieceMoveType::Default),
+                (Pos::of("C4"), PieceMoveType::Default),
+                (Pos::of("B4"), PieceMoveType::Default),
+                (Pos::of("A4"), PieceMoveType::Default),
+                (Pos::of("D5"), PieceMoveType::Default),
+                (Pos::of("D6"), PieceMoveType::Default),
+                (Pos::of("D7"), PieceMoveType::Default),
+                (Pos::of("D8"), PieceMoveType::Default),
+            ])
         );
     }
 
@@ -78,16 +87,16 @@ mod tests {
         let board = HashMap::from([game_piece_of("D4", '♞')]);
         assert_eq!(
             default_moves(&board, &mode.bounds, &Pos::of("D4")),
-            [
-                GameMove::default_of('♞', "D4", "E6"),
-                GameMove::default_of('♞', "D4", "F5"),
-                GameMove::default_of('♞', "D4", "F3"),
-                GameMove::default_of('♞', "D4", "E2"),
-                GameMove::default_of('♞', "D4", "C2"),
-                GameMove::default_of('♞', "D4", "B3"),
-                GameMove::default_of('♞', "D4", "B5"),
-                GameMove::default_of('♞', "D4", "C6"),
-            ]
+            HashMap::from([
+                (Pos::of("E6"), PieceMoveType::Default),
+                (Pos::of("F5"), PieceMoveType::Default),
+                (Pos::of("F3"), PieceMoveType::Default),
+                (Pos::of("E2"), PieceMoveType::Default),
+                (Pos::of("C2"), PieceMoveType::Default),
+                (Pos::of("B3"), PieceMoveType::Default),
+                (Pos::of("B5"), PieceMoveType::Default),
+                (Pos::of("C6"), PieceMoveType::Default),
+            ])
         );
     }
 
@@ -97,19 +106,19 @@ mod tests {
         let board = HashMap::from([game_piece_of("C5", '♝')]);
         assert_eq!(
             default_moves(&board, &mode.bounds, &Pos::of("C5")),
-            [
-                GameMove::default_of('♝', "C5", "D6"),
-                GameMove::default_of('♝', "C5", "E7"),
-                GameMove::default_of('♝', "C5", "F8"),
-                GameMove::default_of('♝', "C5", "D4"),
-                GameMove::default_of('♝', "C5", "E3"),
-                GameMove::default_of('♝', "C5", "F2"),
-                GameMove::default_of('♝', "C5", "G1"),
-                GameMove::default_of('♝', "C5", "B4"),
-                GameMove::default_of('♝', "C5", "A3"),
-                GameMove::default_of('♝', "C5", "B6"),
-                GameMove::default_of('♝', "C5", "A7"),
-            ]
+            HashMap::from([
+                (Pos::of("D6"), PieceMoveType::Default),
+                (Pos::of("E7"), PieceMoveType::Default),
+                (Pos::of("F8"), PieceMoveType::Default),
+                (Pos::of("D4"), PieceMoveType::Default),
+                (Pos::of("E3"), PieceMoveType::Default),
+                (Pos::of("F2"), PieceMoveType::Default),
+                (Pos::of("G1"), PieceMoveType::Default),
+                (Pos::of("B4"), PieceMoveType::Default),
+                (Pos::of("A3"), PieceMoveType::Default),
+                (Pos::of("B6"), PieceMoveType::Default),
+                (Pos::of("A7"), PieceMoveType::Default),
+            ])
         );
     }
 
@@ -119,33 +128,33 @@ mod tests {
         let board = HashMap::from([game_piece_of("C5", '♛')]);
         assert_eq!(
             default_moves(&board, &mode.bounds, &Pos::of("C5")),
-            [
-                GameMove::default_of('♛', "C5", "D6"),
-                GameMove::default_of('♛', "C5", "E7"),
-                GameMove::default_of('♛', "C5", "F8"),
-                GameMove::default_of('♛', "C5", "D4"),
-                GameMove::default_of('♛', "C5", "E3"),
-                GameMove::default_of('♛', "C5", "F2"),
-                GameMove::default_of('♛', "C5", "G1"),
-                GameMove::default_of('♛', "C5", "B4"),
-                GameMove::default_of('♛', "C5", "A3"),
-                GameMove::default_of('♛', "C5", "B6"),
-                GameMove::default_of('♛', "C5", "A7"),
-                GameMove::default_of('♛', "C5", "D5"),
-                GameMove::default_of('♛', "C5", "E5"),
-                GameMove::default_of('♛', "C5", "F5"),
-                GameMove::default_of('♛', "C5", "G5"),
-                GameMove::default_of('♛', "C5", "H5"),
-                GameMove::default_of('♛', "C5", "C4"),
-                GameMove::default_of('♛', "C5", "C3"),
-                GameMove::default_of('♛', "C5", "C2"),
-                GameMove::default_of('♛', "C5", "C1"),
-                GameMove::default_of('♛', "C5", "B5"),
-                GameMove::default_of('♛', "C5", "A5"),
-                GameMove::default_of('♛', "C5", "C6"),
-                GameMove::default_of('♛', "C5", "C7"),
-                GameMove::default_of('♛', "C5", "C8"),
-            ]
+            HashMap::from([
+                (Pos::of("D6"), PieceMoveType::Default),
+                (Pos::of("E7"), PieceMoveType::Default),
+                (Pos::of("F8"), PieceMoveType::Default),
+                (Pos::of("D4"), PieceMoveType::Default),
+                (Pos::of("E3"), PieceMoveType::Default),
+                (Pos::of("F2"), PieceMoveType::Default),
+                (Pos::of("G1"), PieceMoveType::Default),
+                (Pos::of("B4"), PieceMoveType::Default),
+                (Pos::of("A3"), PieceMoveType::Default),
+                (Pos::of("B6"), PieceMoveType::Default),
+                (Pos::of("A7"), PieceMoveType::Default),
+                (Pos::of("D5"), PieceMoveType::Default),
+                (Pos::of("E5"), PieceMoveType::Default),
+                (Pos::of("F5"), PieceMoveType::Default),
+                (Pos::of("G5"), PieceMoveType::Default),
+                (Pos::of("H5"), PieceMoveType::Default),
+                (Pos::of("C4"), PieceMoveType::Default),
+                (Pos::of("C3"), PieceMoveType::Default),
+                (Pos::of("C2"), PieceMoveType::Default),
+                (Pos::of("C1"), PieceMoveType::Default),
+                (Pos::of("B5"), PieceMoveType::Default),
+                (Pos::of("A5"), PieceMoveType::Default),
+                (Pos::of("C6"), PieceMoveType::Default),
+                (Pos::of("C7"), PieceMoveType::Default),
+                (Pos::of("C8"), PieceMoveType::Default),
+            ])
         );
     }
 
@@ -155,16 +164,16 @@ mod tests {
         let board = HashMap::from([game_piece_of("D4", '♚')]);
         assert_eq!(
             default_moves(&board, &mode.bounds, &Pos::of("D4")),
-            [
-                GameMove::default_of('♚', "D4", "E5"),
-                GameMove::default_of('♚', "D4", "E4"),
-                GameMove::default_of('♚', "D4", "E3"),
-                GameMove::default_of('♚', "D4", "D3"),
-                GameMove::default_of('♚', "D4", "C3"),
-                GameMove::default_of('♚', "D4", "C4"),
-                GameMove::default_of('♚', "D4", "C5"),
-                GameMove::default_of('♚', "D4", "D5"),
-            ]
+            HashMap::from([
+                (Pos::of("E5"), PieceMoveType::Default),
+                (Pos::of("E4"), PieceMoveType::Default),
+                (Pos::of("E3"), PieceMoveType::Default),
+                (Pos::of("D3"), PieceMoveType::Default),
+                (Pos::of("C3"), PieceMoveType::Default),
+                (Pos::of("C4"), PieceMoveType::Default),
+                (Pos::of("C5"), PieceMoveType::Default),
+                (Pos::of("D5"), PieceMoveType::Default),
+            ])
         );
     }
 
@@ -174,11 +183,7 @@ mod tests {
         let board = HashMap::from([game_piece_of("C5", '♙')]);
         assert_eq!(
             default_moves(&board, &mode.bounds, &Pos::of("C5")),
-            [
-                GameMove::default_of('♙', "C5", "C6"),
-                GameMove::menace_of('♙', "C5", "B6"),
-                GameMove::menace_of('♙', "C5", "D6"),
-            ]
+            HashMap::from([(Pos::of("C6"), PieceMoveType::Default),])
         );
     }
 }

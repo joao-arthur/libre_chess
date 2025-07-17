@@ -1,14 +1,16 @@
 use std::collections::HashMap;
 
-use crate::{color::Color, game::mov::GameMove, pos::Pos};
+use crate::{color::Color, game::mov::PieceMoveType, pos::Pos};
 
 use super::capture::GameCapture;
+
+pub type PlayerMoves = HashMap<Pos, HashMap<Pos, PieceMoveType>>;
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct GamePlayer {
     pub color: Color,
     pub captures: Vec<GameCapture>,
-    pub moves: HashMap<Pos, Vec<GameMove>>,
+    pub moves: PlayerMoves,
 }
 
 impl From<Color> for GamePlayer {

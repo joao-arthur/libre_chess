@@ -1,15 +1,16 @@
+use std::collections::HashMap;
+
 use crate::{
-    game::{
-        board::GameBoard,
-        game::GameBounds,
-        mov::{GameMove, GameMoveType},
-    },
-    mov::Mov,
+    game::{board::GameBoard, game::GameBounds, mov::PieceMoveType},
     pos::Pos,
 };
 
-pub fn bishop_moves(board: &GameBoard, bounds: &GameBounds, pos: &Pos) -> Vec<GameMove> {
-    let mut result: Vec<GameMove> = Vec::new();
+pub fn bishop_moves(
+    board: &GameBoard,
+    bounds: &GameBounds,
+    pos: &Pos,
+) -> HashMap<Pos, PieceMoveType> {
+    let mut result = HashMap::new();
     if let Some(piece) = board.get(pos) {
         let modifiers: [[i8; 2]; 4] = [[1, 1], [-1, 1], [-1, -1], [1, -1]];
         for modifier in modifiers {
@@ -27,23 +28,12 @@ pub fn bishop_moves(board: &GameBoard, bounds: &GameBounds, pos: &Pos) -> Vec<Ga
                         break;
                     }
                     if let Some(curr_piece) = board.get(&curr_pos) {
-                        if curr_piece.color == piece.color {
-                            result.push(GameMove {
-                                mov: Mov { piece: *piece, from: pos.clone(), to: curr_pos },
-                                typ: GameMoveType::Menace,
-                            });
-                        } else {
-                            result.push(GameMove {
-                                mov: Mov { piece: *piece, from: pos.clone(), to: curr_pos },
-                                typ: GameMoveType::Capture,
-                            });
+                        if curr_piece.color != piece.color {
+                            result.insert(curr_pos, PieceMoveType::Default);
                         }
                         break;
                     } else {
-                        result.push(GameMove {
-                            mov: Mov { piece: *piece, from: pos.clone(), to: curr_pos },
-                            typ: GameMoveType::Default,
-                        });
+                        result.insert(curr_pos, PieceMoveType::Default);
                     }
                 } else {
                     break;
@@ -63,7 +53,7 @@ mod tests {
             board::{board_empty, board_of_str},
             game::GameBounds,
             mode::standard_chess,
-            mov::GameMove,
+            mov::PieceMoveType,
             piece::game_piece_of,
         },
         pos::Pos,
@@ -74,7 +64,7 @@ mod tests {
     #[test]
     fn bishop_moves_empty_board() {
         let mode = standard_chess();
-        assert_eq!(bishop_moves(&board_empty(), &mode.bounds, &Pos::of("A1")), []);
+        assert_eq!(bishop_moves(&board_empty(), &mode.bounds, &Pos::of("A1")), HashMap::new());
     }
 
     #[test]
@@ -83,19 +73,19 @@ mod tests {
         let board = HashMap::from([game_piece_of("C5", '♝')]);
         assert_eq!(
             bishop_moves(&board, &mode.bounds, &Pos::of("C5")),
-            [
-                GameMove::default_of('♝', "C5", "D6"),
-                GameMove::default_of('♝', "C5", "E7"),
-                GameMove::default_of('♝', "C5", "F8"),
-                GameMove::default_of('♝', "C5", "D4"),
-                GameMove::default_of('♝', "C5", "E3"),
-                GameMove::default_of('♝', "C5", "F2"),
-                GameMove::default_of('♝', "C5", "G1"),
-                GameMove::default_of('♝', "C5", "B4"),
-                GameMove::default_of('♝', "C5", "A3"),
-                GameMove::default_of('♝', "C5", "B6"),
-                GameMove::default_of('♝', "C5", "A7"),
-            ]
+            HashMap::from([
+                (Pos::of("D6"), PieceMoveType::Default),
+                (Pos::of("E7"), PieceMoveType::Default),
+                (Pos::of("F8"), PieceMoveType::Default),
+                (Pos::of("D4"), PieceMoveType::Default),
+                (Pos::of("E3"), PieceMoveType::Default),
+                (Pos::of("F2"), PieceMoveType::Default),
+                (Pos::of("G1"), PieceMoveType::Default),
+                (Pos::of("B4"), PieceMoveType::Default),
+                (Pos::of("A3"), PieceMoveType::Default),
+                (Pos::of("B6"), PieceMoveType::Default),
+                (Pos::of("A7"), PieceMoveType::Default),
+            ])
         );
     }
 
@@ -105,16 +95,16 @@ mod tests {
         let bounds = GameBounds { x1: 3, y1: 3, x2: 7, y2: 7 };
         assert_eq!(
             bishop_moves(&board, &bounds, &Pos::of("F6")),
-            [
-                GameMove::default_of('♝', "F6", "G7"),
-                GameMove::default_of('♝', "F6", "H8"),
-                GameMove::default_of('♝', "F6", "G5"),
-                GameMove::default_of('♝', "F6", "H4"),
-                GameMove::default_of('♝', "F6", "E5"),
-                GameMove::default_of('♝', "F6", "D4"),
-                GameMove::default_of('♝', "F6", "E7"),
-                GameMove::default_of('♝', "F6", "D8"),
-            ]
+            HashMap::from([
+                (Pos::of("G7"), PieceMoveType::Default),
+                (Pos::of("H8"), PieceMoveType::Default),
+                (Pos::of("G5"), PieceMoveType::Default),
+                (Pos::of("H4"), PieceMoveType::Default),
+                (Pos::of("E5"), PieceMoveType::Default),
+                (Pos::of("D4"), PieceMoveType::Default),
+                (Pos::of("E7"), PieceMoveType::Default),
+                (Pos::of("D8"), PieceMoveType::Default),
+            ])
         );
     }
 
@@ -124,15 +114,15 @@ mod tests {
         let board = HashMap::from([game_piece_of("H8", '♝')]);
         assert_eq!(
             bishop_moves(&board, &mode.bounds, &Pos::of("H8")),
-            [
-                GameMove::default_of('♝', "H8", "G7"),
-                GameMove::default_of('♝', "H8", "F6"),
-                GameMove::default_of('♝', "H8", "E5"),
-                GameMove::default_of('♝', "H8", "D4"),
-                GameMove::default_of('♝', "H8", "C3"),
-                GameMove::default_of('♝', "H8", "B2"),
-                GameMove::default_of('♝', "H8", "A1"),
-            ]
+            HashMap::from([
+                (Pos::of("G7"), PieceMoveType::Default),
+                (Pos::of("F6"), PieceMoveType::Default),
+                (Pos::of("E5"), PieceMoveType::Default),
+                (Pos::of("D4"), PieceMoveType::Default),
+                (Pos::of("C3"), PieceMoveType::Default),
+                (Pos::of("B2"), PieceMoveType::Default),
+                (Pos::of("A1"), PieceMoveType::Default),
+            ])
         );
     }
 
@@ -142,15 +132,15 @@ mod tests {
         let board = HashMap::from([game_piece_of("H1", '♝')]);
         assert_eq!(
             bishop_moves(&board, &mode.bounds, &Pos::of("H1")),
-            [
-                GameMove::default_of('♝', "H1", "G2"),
-                GameMove::default_of('♝', "H1", "F3"),
-                GameMove::default_of('♝', "H1", "E4"),
-                GameMove::default_of('♝', "H1", "D5"),
-                GameMove::default_of('♝', "H1", "C6"),
-                GameMove::default_of('♝', "H1", "B7"),
-                GameMove::default_of('♝', "H1", "A8"),
-            ]
+            HashMap::from([
+                (Pos::of("G2"), PieceMoveType::Default),
+                (Pos::of("F3"), PieceMoveType::Default),
+                (Pos::of("E4"), PieceMoveType::Default),
+                (Pos::of("D5"), PieceMoveType::Default),
+                (Pos::of("C6"), PieceMoveType::Default),
+                (Pos::of("B7"), PieceMoveType::Default),
+                (Pos::of("A8"), PieceMoveType::Default),
+            ])
         );
     }
 
@@ -160,15 +150,15 @@ mod tests {
         let board = HashMap::from([game_piece_of("A1", '♝')]);
         assert_eq!(
             bishop_moves(&board, &mode.bounds, &Pos::of("A1")),
-            [
-                GameMove::default_of('♝', "A1", "B2"),
-                GameMove::default_of('♝', "A1", "C3"),
-                GameMove::default_of('♝', "A1", "D4"),
-                GameMove::default_of('♝', "A1", "E5"),
-                GameMove::default_of('♝', "A1", "F6"),
-                GameMove::default_of('♝', "A1", "G7"),
-                GameMove::default_of('♝', "A1", "H8"),
-            ]
+            HashMap::from([
+                (Pos::of("B2"), PieceMoveType::Default),
+                (Pos::of("C3"), PieceMoveType::Default),
+                (Pos::of("D4"), PieceMoveType::Default),
+                (Pos::of("E5"), PieceMoveType::Default),
+                (Pos::of("F6"), PieceMoveType::Default),
+                (Pos::of("G7"), PieceMoveType::Default),
+                (Pos::of("H8"), PieceMoveType::Default),
+            ])
         );
     }
 
@@ -178,15 +168,15 @@ mod tests {
         let board = HashMap::from([game_piece_of("A8", '♝')]);
         assert_eq!(
             bishop_moves(&board, &mode.bounds, &Pos::of("A8")),
-            [
-                GameMove::default_of('♝', "A8", "B7"),
-                GameMove::default_of('♝', "A8", "C6"),
-                GameMove::default_of('♝', "A8", "D5"),
-                GameMove::default_of('♝', "A8", "E4"),
-                GameMove::default_of('♝', "A8", "F3"),
-                GameMove::default_of('♝', "A8", "G2"),
-                GameMove::default_of('♝', "A8", "H1"),
-            ]
+            HashMap::from([
+                (Pos::of("B7"), PieceMoveType::Default),
+                (Pos::of("C6"), PieceMoveType::Default),
+                (Pos::of("D5"), PieceMoveType::Default),
+                (Pos::of("E4"), PieceMoveType::Default),
+                (Pos::of("F3"), PieceMoveType::Default),
+                (Pos::of("G2"), PieceMoveType::Default),
+                (Pos::of("H1"), PieceMoveType::Default),
+            ])
         );
     }
 
@@ -208,15 +198,14 @@ mod tests {
         );
         assert_eq!(
             bishop_moves(&board, &mode.bounds, &Pos::of("C5")),
-            [
-                GameMove::capture_of('♗', "C5", "D6"),
-                GameMove::default_of('♗', "C5", "D4"),
-                GameMove::menace_of('♗', "C5", "E3"),
-                GameMove::default_of('♗', "C5", "B4"),
-                GameMove::capture_of('♗', "C5", "A3"),
-                GameMove::default_of('♗', "C5", "B6"),
-                GameMove::default_of('♗', "C5", "A7"),
-            ]
+            HashMap::from([
+                (Pos::of("D6"), PieceMoveType::Default),
+                (Pos::of("D4"), PieceMoveType::Default),
+                (Pos::of("B4"), PieceMoveType::Default),
+                (Pos::of("A3"), PieceMoveType::Default),
+                (Pos::of("B6"), PieceMoveType::Default),
+                (Pos::of("A7"), PieceMoveType::Default),
+            ])
         );
     }
 
@@ -238,15 +227,14 @@ mod tests {
         );
         assert_eq!(
             bishop_moves(&board, &mode.bounds, &Pos::of("C5")),
-            [
-                GameMove::capture_of('♝', "C5", "D6"),
-                GameMove::default_of('♝', "C5", "D4"),
-                GameMove::menace_of('♝', "C5", "E3"),
-                GameMove::default_of('♝', "C5", "B4"),
-                GameMove::capture_of('♝', "C5", "A3"),
-                GameMove::default_of('♝', "C5", "B6"),
-                GameMove::default_of('♝', "C5", "A7"),
-            ]
+            HashMap::from([
+                (Pos::of("D6"), PieceMoveType::Default),
+                (Pos::of("D4"), PieceMoveType::Default),
+                (Pos::of("B4"), PieceMoveType::Default),
+                (Pos::of("A3"), PieceMoveType::Default),
+                (Pos::of("B6"), PieceMoveType::Default),
+                (Pos::of("A7"), PieceMoveType::Default),
+            ])
         );
     }
 }

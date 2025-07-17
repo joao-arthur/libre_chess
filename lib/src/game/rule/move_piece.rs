@@ -3,7 +3,7 @@ use crate::{
         board::GameBoard,
         capture::GameCapture,
         game::{GameBounds, GameHistory, GamePlayers},
-        mov::{GameMove, GameMoveType},
+        mov::{GameMove, GameMoveType, PieceMoveType},
         rule::{legal_moves::legal_moves_of_player, turn::evaluate_turn},
         selection::Selection,
     },
@@ -26,20 +26,9 @@ pub fn move_piece(
         let selected_player = players.get_mut(&selected_piece.color)?;
         if selected_player.color == turn {
             let selected_piece_moves = selected_player.moves.get(&from).cloned()?;
-            let game_move = selected_piece_moves.iter().find(|game_move| {
-                (game_move.typ == GameMoveType::Default
-                    || game_move.typ == GameMoveType::Capture
-                    || game_move.typ == GameMoveType::EnPassant
-                    || game_move.typ == GameMoveType::LongCastling
-                    || game_move.typ == GameMoveType::ShortCastling
-                    || game_move.typ == GameMoveType::PromotionToQueen
-                    || game_move.typ == GameMoveType::PromotionToKnight
-                    || game_move.typ == GameMoveType::PromotionToRook
-                    || game_move.typ == GameMoveType::PromotionToBishop)
-                    && &game_move.mov.to == to
-            })?;
-            match game_move.typ {
-                GameMoveType::Default | GameMoveType::Capture => {
+            let game_move = selected_piece_moves.get(to)?;
+            match game_move {
+                &PieceMoveType::Default => {
                     let piece = board.remove(&from)?;
                     let maybe_captured_piece = board.insert(to.clone(), piece);
                     if let Some(captured_piece) = maybe_captured_piece {
@@ -60,7 +49,7 @@ pub fn move_piece(
                         });
                     }
                 }
-                GameMoveType::EnPassant => {
+                &PieceMoveType::EnPassant => {
                     let pawn = board.remove(&from)?;
                     board.insert(to.clone(), pawn);
                     let capture_pos = Pos { col: to.col, row: from.row };
@@ -77,7 +66,7 @@ pub fn move_piece(
                         }
                     }
                 }
-                GameMoveType::ShortCastling => {
+                &PieceMoveType::ShortCastling => {
                     let king = board.remove(&from)?;
                     let new_king_pos = Pos { row: from.row, col: 6 };
                     board.insert(new_king_pos, king);
@@ -89,7 +78,7 @@ pub fn move_piece(
                         typ: GameMoveType::ShortCastling,
                     });
                 }
-                GameMoveType::LongCastling => {
+                &PieceMoveType::LongCastling => {
                     let king = board.remove(&from)?;
                     let new_king_pos = Pos { row: from.row, col: 2 };
                     board.insert(new_king_pos, king);
@@ -101,23 +90,22 @@ pub fn move_piece(
                         typ: GameMoveType::LongCastling,
                     });
                 }
-                GameMoveType::PromotionToQueen => {
+                &PieceMoveType::PromotionToQueen => {
                     // board.insert(game_move.mov.to.clone(), promotion.piece);
                     // edit the pawn mov
                 }
-                GameMoveType::PromotionToKnight => {
+                &PieceMoveType::PromotionToKnight => {
                     // board.insert(game_move.mov.to.clone(), promotion.piece);
                     // edit the pawn mov
                 }
-                GameMoveType::PromotionToRook => {
+                &PieceMoveType::PromotionToRook => {
                     // board.insert(game_move.mov.to.clone(), promotion.piece);
                     // edit the pawn mov
                 }
-                GameMoveType::PromotionToBishop => {
+                &PieceMoveType::PromotionToBishop => {
                     // board.insert(game_move.mov.to.clone(), promotion.piece);
                     // edit the pawn mov
                 }
-                GameMoveType::Menace => {}
             }
             let new_moves = legal_moves_of_player(board, bounds, history, &players.clone(), &turn);
             players.get_mut(&turn).unwrap().moves = new_moves;
@@ -133,8 +121,12 @@ mod tests {
     use crate::{
         color::Color,
         game::{
-            board::board_of_str, capture::GameCapture, mode::standard_chess, mov::GameMove,
-            player::GamePlayer, selection::Selection,
+            board::board_of_str,
+            capture::GameCapture,
+            mode::standard_chess,
+            mov::{GameMove, PieceMoveType},
+            player::GamePlayer,
+            selection::Selection,
         },
         piece::Piece,
         pos::Pos,
@@ -171,22 +163,20 @@ mod tests {
                     moves: HashMap::from([
                         (
                             Pos::of("E8"),
-                            vec![
-                                GameMove::default_of('♚', "E8", "F8"),
-                                GameMove::default_of('♚', "E8", "F7"),
-                                GameMove::default_of('♚', "E8", "E7"),
-                                GameMove::default_of('♚', "E8", "D7"),
-                                GameMove::default_of('♚', "E8", "D8"),
-                            ],
+                            HashMap::from([
+                                (Pos::of("F8"), PieceMoveType::Default),
+                                (Pos::of("F7"), PieceMoveType::Default),
+                                (Pos::of("E7"), PieceMoveType::Default),
+                                (Pos::of("D7"), PieceMoveType::Default),
+                                (Pos::of("D8"), PieceMoveType::Default),
+                            ]),
                         ),
                         (
                             Pos::of("A7"),
-                            vec![
-                                GameMove::default_of('♟', "A7", "A6"),
-                                GameMove::default_of('♟', "A7", "A5"),
-                                GameMove::menace_of('♟', "A7", "D6"),
-                                GameMove::menace_of('♟', "A7", "F6"),
-                            ],
+                            HashMap::from([
+                                (Pos::of("A6"), PieceMoveType::Default),
+                                (Pos::of("A5"), PieceMoveType::Default),
+                            ]),
                         ),
                     ]),
                 },
@@ -199,21 +189,20 @@ mod tests {
                     moves: HashMap::from([
                         (
                             Pos::of("A2"),
-                            vec![
-                                GameMove::default_of('♙', "A2", "A3"),
-                                GameMove::default_of('♙', "A2", "A4"),
-                                GameMove::menace_of('♙', "A2", "B3"),
-                            ],
+                            HashMap::from([
+                                (Pos::of("A3"), PieceMoveType::Default),
+                                (Pos::of("A4"), PieceMoveType::Default),
+                            ]),
                         ),
                         (
                             Pos::of("E1"),
-                            vec![
-                                GameMove::default_of('♔', "E1", "F2"),
-                                GameMove::default_of('♔', "E1", "F1"),
-                                GameMove::default_of('♔', "E1", "D1"),
-                                GameMove::default_of('♔', "E1", "D2"),
-                                GameMove::default_of('♔', "E1", "E2"),
-                            ],
+                            HashMap::from([
+                                (Pos::of("F2"), PieceMoveType::Default),
+                                (Pos::of("F1"), PieceMoveType::Default),
+                                (Pos::of("D1"), PieceMoveType::Default),
+                                (Pos::of("D2"), PieceMoveType::Default),
+                                (Pos::of("E2"), PieceMoveType::Default),
+                            ]),
                         ),
                     ]),
                 },
@@ -252,22 +241,20 @@ mod tests {
                     moves: HashMap::from([
                         (
                             Pos::of("E8"),
-                            vec![
-                                GameMove::default_of('♚', "E8", "F8"),
-                                GameMove::default_of('♚', "E8", "F7"),
-                                GameMove::default_of('♚', "E8", "E7"),
-                                GameMove::default_of('♚', "E8", "D7"),
-                                GameMove::default_of('♚', "E8", "D8"),
-                            ],
+                            HashMap::from([
+                                (Pos::of("F8"), PieceMoveType::Default),
+                                (Pos::of("F7"), PieceMoveType::Default),
+                                (Pos::of("E7"), PieceMoveType::Default),
+                                (Pos::of("D7"), PieceMoveType::Default),
+                                (Pos::of("D8"), PieceMoveType::Default),
+                            ]),
                         ),
                         (
                             Pos::of("A7"),
-                            vec![
-                                GameMove::default_of('♟', "A7", "A6"),
-                                GameMove::default_of('♟', "A7", "A5"),
-                                GameMove::menace_of('♟', "A7", "D6"),
-                                GameMove::menace_of('♟', "A7", "F6"),
-                            ],
+                            HashMap::from([
+                                (Pos::of("A6"), PieceMoveType::Default),
+                                (Pos::of("A5"), PieceMoveType::Default),
+                            ]),
                         ),
                     ]),
                 },
@@ -278,22 +265,16 @@ mod tests {
                     color: Color::White,
                     captures: Vec::new(),
                     moves: HashMap::from([
-                        (
-                            Pos::of("A4"),
-                            vec![
-                                GameMove::default_of('♙', "A4", "A5"),
-                                GameMove::menace_of('♙', "A4", "B5"),
-                            ],
-                        ),
+                        (Pos::of("A4"), HashMap::from([(Pos::of("A5"), PieceMoveType::Default)])),
                         (
                             Pos::of("E1"),
-                            vec![
-                                GameMove::default_of('♔', "E1", "F2"),
-                                GameMove::default_of('♔', "E1", "F1"),
-                                GameMove::default_of('♔', "E1", "D1"),
-                                GameMove::default_of('♔', "E1", "D2"),
-                                GameMove::default_of('♔', "E1", "E2"),
-                            ],
+                            HashMap::from([
+                                (Pos::of("F2"), PieceMoveType::Default),
+                                (Pos::of("F1"), PieceMoveType::Default),
+                                (Pos::of("D1"), PieceMoveType::Default),
+                                (Pos::of("D2"), PieceMoveType::Default),
+                                (Pos::of("E2"), PieceMoveType::Default),
+                            ]),
                         ),
                     ]),
                 },
@@ -334,21 +315,20 @@ mod tests {
                     moves: HashMap::from([
                         (
                             Pos::of("E8"),
-                            vec![
-                                GameMove::default_of('♚', "E8", "F8"),
-                                GameMove::default_of('♚', "E8", "F7"),
-                                GameMove::default_of('♚', "E8", "E7"),
-                                GameMove::default_of('♚', "E8", "D7"),
-                                GameMove::default_of('♚', "E8", "D8"),
-                            ],
+                            HashMap::from([
+                                (Pos::of("F8"), PieceMoveType::Default),
+                                (Pos::of("F7"), PieceMoveType::Default),
+                                (Pos::of("E7"), PieceMoveType::Default),
+                                (Pos::of("D7"), PieceMoveType::Default),
+                                (Pos::of("D8"), PieceMoveType::Default),
+                            ]),
                         ),
                         (
                             Pos::of("D6"),
-                            vec![
-                                GameMove::default_of('♟', "D6", "D5"),
-                                GameMove::menace_of('♟', "D6", "C5"),
-                                GameMove::capture_of('♟', "D6", "E5"),
-                            ],
+                            HashMap::from([
+                                (Pos::of("D5"), PieceMoveType::Default),
+                                (Pos::of("E5"), PieceMoveType::Default),
+                            ]),
                         ),
                     ]),
                 },
@@ -361,21 +341,20 @@ mod tests {
                     moves: HashMap::from([
                         (
                             Pos::of("E5"),
-                            vec![
-                                GameMove::default_of('♙', "E5", "E6"),
-                                GameMove::capture_of('♙', "E5", "D6"),
-                                GameMove::menace_of('♙', "E5", "F6"),
-                            ],
+                            HashMap::from([
+                                (Pos::of("E6"), PieceMoveType::Default),
+                                (Pos::of("D6"), PieceMoveType::Default),
+                            ]),
                         ),
                         (
                             Pos::of("E1"),
-                            vec![
-                                GameMove::default_of('♔', "E1", "F2"),
-                                GameMove::default_of('♔', "E1", "F1"),
-                                GameMove::default_of('♔', "E1", "D1"),
-                                GameMove::default_of('♔', "E1", "D2"),
-                                GameMove::default_of('♔', "E1", "E2"),
-                            ],
+                            HashMap::from([
+                                (Pos::of("F2"), PieceMoveType::Default),
+                                (Pos::of("F1"), PieceMoveType::Default),
+                                (Pos::of("D1"), PieceMoveType::Default),
+                                (Pos::of("D2"), PieceMoveType::Default),
+                                (Pos::of("E2"), PieceMoveType::Default),
+                            ]),
                         ),
                     ]),
                 },
@@ -413,13 +392,13 @@ mod tests {
                     captures: Vec::new(),
                     moves: HashMap::from([(
                         Pos::of("E8"),
-                        vec![
-                            GameMove::default_of('♚', "E8", "F8"),
-                            GameMove::default_of('♚', "E8", "F7"),
-                            GameMove::default_of('♚', "E8", "E7"),
-                            GameMove::default_of('♚', "E8", "D7"),
-                            GameMove::default_of('♚', "E8", "D8"),
-                        ],
+                        HashMap::from([
+                            (Pos::of("F8"), PieceMoveType::Default),
+                            (Pos::of("F7"), PieceMoveType::Default),
+                            (Pos::of("E7"), PieceMoveType::Default),
+                            (Pos::of("D7"), PieceMoveType::Default),
+                            (Pos::of("D8"), PieceMoveType::Default),
+                        ]),
                     )]),
                 },
             ),
@@ -429,23 +408,16 @@ mod tests {
                     color: Color::White,
                     captures: vec![GameCapture { at: 0, piece: Piece::of('♟') }],
                     moves: HashMap::from([
-                        (
-                            Pos::of("D6"),
-                            vec![
-                                GameMove::default_of('♙', "D6", "D7"),
-                                GameMove::menace_of('♙', "D6", "C7"),
-                                GameMove::menace_of('♙', "D6", "E7"),
-                            ],
-                        ),
+                        (Pos::of("D6"), HashMap::from([(Pos::of("D7"), PieceMoveType::Default)])),
                         (
                             Pos::of("E1"),
-                            vec![
-                                GameMove::default_of('♔', "E1", "F2"),
-                                GameMove::default_of('♔', "E1", "F1"),
-                                GameMove::default_of('♔', "E1", "D1"),
-                                GameMove::default_of('♔', "E1", "D2"),
-                                GameMove::default_of('♔', "E1", "E2"),
-                            ],
+                            HashMap::from([
+                                (Pos::of("F2"), PieceMoveType::Default),
+                                (Pos::of("F1"), PieceMoveType::Default),
+                                (Pos::of("D1"), PieceMoveType::Default),
+                                (Pos::of("D2"), PieceMoveType::Default),
+                                (Pos::of("E2"), PieceMoveType::Default),
+                            ]),
                         ),
                     ]),
                 },
@@ -486,22 +458,15 @@ mod tests {
                     moves: HashMap::from([
                         (
                             Pos::of("E8"),
-                            vec![
-                                GameMove::default_of('♚', "E8", "F8"),
-                                GameMove::default_of('♚', "E8", "F7"),
-                                GameMove::default_of('♚', "E8", "E7"),
-                                GameMove::default_of('♚', "E8", "D7"),
-                                GameMove::default_of('♚', "E8", "D8"),
-                            ],
+                            HashMap::from([
+                                (Pos::of("F8"), PieceMoveType::Default),
+                                (Pos::of("F7"), PieceMoveType::Default),
+                                (Pos::of("E7"), PieceMoveType::Default),
+                                (Pos::of("D7"), PieceMoveType::Default),
+                                (Pos::of("D8"), PieceMoveType::Default),
+                            ]),
                         ),
-                        (
-                            Pos::of("D5"),
-                            vec![
-                                GameMove::default_of('♟', "D5", "D5"),
-                                GameMove::menace_of('♟', "D5", "C5"),
-                                GameMove::menace_of('♟', "D5", "E5"),
-                            ],
-                        ),
+                        (Pos::of("D5"), HashMap::from([(Pos::of("D5"), PieceMoveType::Default)])),
                     ]),
                 },
             ),
@@ -513,22 +478,20 @@ mod tests {
                     moves: HashMap::from([
                         (
                             Pos::of("E5"),
-                            vec![
-                                GameMove::default_of('♙', "E5", "E6"),
-                                GameMove::menace_of('♙', "E5", "D6"),
-                                GameMove::menace_of('♙', "E5", "F6"),
-                                GameMove::en_passant_of('♙', "E5", "D6"),
-                            ],
+                            HashMap::from([
+                                (Pos::of("E6"), PieceMoveType::Default),
+                                (Pos::of("D6"), PieceMoveType::EnPassant),
+                            ]),
                         ),
                         (
                             Pos::of("E1"),
-                            vec![
-                                GameMove::default_of('♔', "E1", "F2"),
-                                GameMove::default_of('♔', "E1", "F1"),
-                                GameMove::default_of('♔', "E1", "D1"),
-                                GameMove::default_of('♔', "E1", "D2"),
-                                GameMove::default_of('♔', "E1", "E2"),
-                            ],
+                            HashMap::from([
+                                (Pos::of("F2"), PieceMoveType::Default),
+                                (Pos::of("F1"), PieceMoveType::Default),
+                                (Pos::of("D1"), PieceMoveType::Default),
+                                (Pos::of("D2"), PieceMoveType::Default),
+                                (Pos::of("E2"), PieceMoveType::Default),
+                            ]),
                         ),
                     ]),
                 },
@@ -566,13 +529,13 @@ mod tests {
                     captures: Vec::new(),
                     moves: HashMap::from([(
                         Pos::of("E8"),
-                        vec![
-                            GameMove::default_of('♚', "E8", "F8"),
-                            GameMove::default_of('♚', "E8", "F7"),
-                            GameMove::default_of('♚', "E8", "E7"),
-                            GameMove::default_of('♚', "E8", "D7"),
-                            GameMove::default_of('♚', "E8", "D8"),
-                        ],
+                        HashMap::from([
+                            (Pos::of("F8"), PieceMoveType::Default),
+                            (Pos::of("F7"), PieceMoveType::Default),
+                            (Pos::of("E7"), PieceMoveType::Default),
+                            (Pos::of("D7"), PieceMoveType::Default),
+                            (Pos::of("D8"), PieceMoveType::Default),
+                        ]),
                     )]),
                 },
             ),
@@ -582,23 +545,16 @@ mod tests {
                     color: Color::White,
                     captures: vec![GameCapture { at: 0, piece: Piece::of('♟') }],
                     moves: HashMap::from([
-                        (
-                            Pos::of("D6"),
-                            vec![
-                                GameMove::default_of('♙', "D6", "D7"),
-                                GameMove::menace_of('♙', "D6", "C7"),
-                                GameMove::menace_of('♙', "D6", "E7"),
-                            ],
-                        ),
+                        (Pos::of("D6"), HashMap::from([(Pos::of("D7"), PieceMoveType::Default)])),
                         (
                             Pos::of("E1"),
-                            vec![
-                                GameMove::default_of('♔', "E1", "F2"),
-                                GameMove::default_of('♔', "E1", "F1"),
-                                GameMove::default_of('♔', "E1", "D1"),
-                                GameMove::default_of('♔', "E1", "D2"),
-                                GameMove::default_of('♔', "E1", "E2"),
-                            ],
+                            HashMap::from([
+                                (Pos::of("F2"), PieceMoveType::Default),
+                                (Pos::of("F1"), PieceMoveType::Default),
+                                (Pos::of("D1"), PieceMoveType::Default),
+                                (Pos::of("D2"), PieceMoveType::Default),
+                                (Pos::of("E2"), PieceMoveType::Default),
+                            ]),
                         ),
                     ]),
                 },
@@ -638,13 +594,13 @@ mod tests {
                     captures: Vec::new(),
                     moves: HashMap::from([(
                         Pos::of("E8"),
-                        vec![
-                            GameMove::default_of('♚', "E8", "F8"),
-                            GameMove::default_of('♚', "E8", "F7"),
-                            GameMove::default_of('♚', "E8", "E7"),
-                            GameMove::default_of('♚', "E8", "D7"),
-                            GameMove::default_of('♚', "E8", "D8"),
-                        ],
+                        HashMap::from([
+                            (Pos::of("F8"), PieceMoveType::Default),
+                            (Pos::of("F7"), PieceMoveType::Default),
+                            (Pos::of("E7"), PieceMoveType::Default),
+                            (Pos::of("D7"), PieceMoveType::Default),
+                            (Pos::of("D8"), PieceMoveType::Default),
+                        ]),
                     )]),
                 },
             ),
@@ -656,40 +612,34 @@ mod tests {
                     moves: HashMap::from([
                         (
                             Pos::of("F2"),
-                            vec![
-                                GameMove::default_of('♙', "F2", "F3"),
-                                GameMove::default_of('♙', "F2", "F4"),
-                                GameMove::menace_of('♙', "F2", "E3"),
-                                GameMove::menace_of('♙', "F2", "G3"),
-                            ],
+                            HashMap::from([
+                                (Pos::of("F3"), PieceMoveType::Default),
+                                (Pos::of("F4"), PieceMoveType::Default),
+                            ]),
                         ),
                         (
                             Pos::of("H2"),
-                            vec![
-                                GameMove::default_of('♙', "H2", "H3"),
-                                GameMove::default_of('♙', "H2", "H4"),
-                                GameMove::menace_of('♙', "H2", "G3"),
-                            ],
+                            HashMap::from([
+                                (Pos::of("H3"), PieceMoveType::Default),
+                                (Pos::of("H4"), PieceMoveType::Default),
+                            ]),
                         ),
                         (
                             Pos::of("E1"),
-                            vec![
-                                GameMove::menace_of('♔', "E1", "F2"),
-                                GameMove::default_of('♔', "E1", "F1"),
-                                GameMove::default_of('♔', "E1", "D1"),
-                                GameMove::default_of('♔', "E1", "D2"),
-                                GameMove::default_of('♔', "E1", "E2"),
-                                GameMove::short_castling_of('♔', "E1", "H1"),
-                            ],
+                            HashMap::from([
+                                (Pos::of("F1"), PieceMoveType::Default),
+                                (Pos::of("D1"), PieceMoveType::Default),
+                                (Pos::of("D2"), PieceMoveType::Default),
+                                (Pos::of("E2"), PieceMoveType::Default),
+                                (Pos::of("H1"), PieceMoveType::ShortCastling),
+                            ]),
                         ),
                         (
                             Pos::of("H1"),
-                            vec![
-                                GameMove::default_of('♖', "H1", "G1"),
-                                GameMove::default_of('♖', "H1", "F1"),
-                                GameMove::menace_of('♖', "H1", "E1"),
-                                GameMove::menace_of('♖', "H1", "E2"),
-                            ],
+                            HashMap::from([
+                                (Pos::of("G1"), PieceMoveType::Default),
+                                (Pos::of("F1"), PieceMoveType::Default),
+                            ]),
                         ),
                     ]),
                 },
@@ -727,13 +677,13 @@ mod tests {
                     captures: Vec::new(),
                     moves: HashMap::from([(
                         Pos::of("E8"),
-                        vec![
-                            GameMove::default_of('♚', "E8", "F8"),
-                            GameMove::default_of('♚', "E8", "F7"),
-                            GameMove::default_of('♚', "E8", "E7"),
-                            GameMove::default_of('♚', "E8", "D7"),
-                            GameMove::default_of('♚', "E8", "D8"),
-                        ],
+                        HashMap::from([
+                            (Pos::of("F8"), PieceMoveType::Default),
+                            (Pos::of("F7"), PieceMoveType::Default),
+                            (Pos::of("E7"), PieceMoveType::Default),
+                            (Pos::of("D7"), PieceMoveType::Default),
+                            (Pos::of("D8"), PieceMoveType::Default),
+                        ]),
                     )]),
                 },
             ),
@@ -745,42 +695,34 @@ mod tests {
                     moves: HashMap::from([
                         (
                             Pos::of("F2"),
-                            vec![
-                                GameMove::default_of('♙', "F2", "F3"),
-                                GameMove::default_of('♙', "F2", "F4"),
-                                GameMove::menace_of('♙', "F2", "E3"),
-                                GameMove::menace_of('♙', "F2", "G3"),
-                            ],
+                            HashMap::from([
+                                (Pos::of("F3"), PieceMoveType::Default),
+                                (Pos::of("F4"), PieceMoveType::Default),
+                            ]),
                         ),
                         (
                             Pos::of("H2"),
-                            vec![
-                                GameMove::default_of('♙', "H2", "H3"),
-                                GameMove::default_of('♙', "H2", "H4"),
-                                GameMove::menace_of('♙', "H2", "G3"),
-                            ],
+                            HashMap::from([
+                                (Pos::of("H3"), PieceMoveType::Default),
+                                (Pos::of("H4"), PieceMoveType::Default),
+                            ]),
                         ),
                         (
                             Pos::of("G1"),
-                            vec![
-                                GameMove::menace_of('♔', "G1", "H2"),
-                                GameMove::default_of('♔', "G1", "H1"),
-                                GameMove::menace_of('♔', "G1", "F1"),
-                                GameMove::menace_of('♔', "G1", "F2"),
-                                GameMove::default_of('♔', "G1", "G2"),
-                            ],
+                            HashMap::from([
+                                (Pos::of("H1"), PieceMoveType::Default),
+                                (Pos::of("G2"), PieceMoveType::Default),
+                            ]),
                         ),
                         (
                             Pos::of("F1"),
-                            vec![
-                                GameMove::menace_of('♖', "F1", "G1"),
-                                GameMove::default_of('♖', "F1", "E1"),
-                                GameMove::default_of('♖', "F1", "D1"),
-                                GameMove::default_of('♖', "F1", "C1"),
-                                GameMove::default_of('♖', "F1", "B1"),
-                                GameMove::default_of('♖', "F1", "A1"),
-                                GameMove::menace_of('♖', "F1", "F2"),
-                            ],
+                            HashMap::from([
+                                (Pos::of("E1"), PieceMoveType::Default),
+                                (Pos::of("D1"), PieceMoveType::Default),
+                                (Pos::of("C1"), PieceMoveType::Default),
+                                (Pos::of("B1"), PieceMoveType::Default),
+                                (Pos::of("A1"), PieceMoveType::Default),
+                            ]),
                         ),
                     ]),
                 },
@@ -820,13 +762,13 @@ mod tests {
                     captures: Vec::new(),
                     moves: HashMap::from([(
                         Pos::of("E8"),
-                        vec![
-                            GameMove::default_of('♚', "E8", "F8"),
-                            GameMove::default_of('♚', "E8", "F7"),
-                            GameMove::default_of('♚', "E8", "E7"),
-                            GameMove::default_of('♚', "E8", "D7"),
-                            GameMove::default_of('♚', "E8", "D8"),
-                        ],
+                        HashMap::from([
+                            (Pos::of("F8"), PieceMoveType::Default),
+                            (Pos::of("F7"), PieceMoveType::Default),
+                            (Pos::of("E7"), PieceMoveType::Default),
+                            (Pos::of("D7"), PieceMoveType::Default),
+                            (Pos::of("D8"), PieceMoveType::Default),
+                        ]),
                     )]),
                 },
             ),
@@ -838,41 +780,35 @@ mod tests {
                     moves: HashMap::from([
                         (
                             Pos::of("A2"),
-                            vec![
-                                GameMove::default_of('♙', "A2", "A3"),
-                                GameMove::default_of('♙', "A2", "A4"),
-                                GameMove::menace_of('♙', "A2", "B3"),
-                            ],
+                            HashMap::from([
+                                (Pos::of("A3"), PieceMoveType::Default),
+                                (Pos::of("A4"), PieceMoveType::Default),
+                            ]),
                         ),
                         (
                             Pos::of("D2"),
-                            vec![
-                                GameMove::default_of('♙', "D2", "D3"),
-                                GameMove::default_of('♙', "D2", "D4"),
-                                GameMove::menace_of('♙', "D2", "C3"),
-                                GameMove::menace_of('♙', "D2", "E3"),
-                            ],
+                            HashMap::from([
+                                (Pos::of("D3"), PieceMoveType::Default),
+                                (Pos::of("D4"), PieceMoveType::Default),
+                            ]),
                         ),
                         (
                             Pos::of("A1"),
-                            vec![
-                                GameMove::default_of('♖', "A1", "B1"),
-                                GameMove::default_of('♖', "A1", "C1"),
-                                GameMove::default_of('♖', "A1", "D1"),
-                                GameMove::menace_of('♖', "A1", "E1"),
-                                GameMove::menace_of('♖', "A1", "A2"),
-                            ],
+                            HashMap::from([
+                                (Pos::of("B1"), PieceMoveType::Default),
+                                (Pos::of("C1"), PieceMoveType::Default),
+                                (Pos::of("D1"), PieceMoveType::Default),
+                            ]),
                         ),
                         (
                             Pos::of("E1"),
-                            vec![
-                                GameMove::default_of('♔', "E1", "F2"),
-                                GameMove::default_of('♔', "E1", "F1"),
-                                GameMove::default_of('♔', "E1", "D1"),
-                                GameMove::menace_of('♔', "E1", "D2"),
-                                GameMove::default_of('♔', "E1", "E2"),
-                                GameMove::long_castling_of('♔', "E1", "A1"),
-                            ],
+                            HashMap::from([
+                                (Pos::of("F2"), PieceMoveType::Default),
+                                (Pos::of("F1"), PieceMoveType::Default),
+                                (Pos::of("D1"), PieceMoveType::Default),
+                                (Pos::of("E2"), PieceMoveType::Default),
+                                (Pos::of("A1"), PieceMoveType::LongCastling),
+                            ]),
                         ),
                     ]),
                 },
@@ -910,13 +846,13 @@ mod tests {
                     captures: Vec::new(),
                     moves: HashMap::from([(
                         Pos::of("E8"),
-                        vec![
-                            GameMove::default_of('♚', "E8", "F8"),
-                            GameMove::default_of('♚', "E8", "F7"),
-                            GameMove::default_of('♚', "E8", "E7"),
-                            GameMove::default_of('♚', "E8", "D7"),
-                            GameMove::default_of('♚', "E8", "D8"),
-                        ],
+                        HashMap::from([
+                            (Pos::of("F8"), PieceMoveType::Default),
+                            (Pos::of("F7"), PieceMoveType::Default),
+                            (Pos::of("E7"), PieceMoveType::Default),
+                            (Pos::of("D7"), PieceMoveType::Default),
+                            (Pos::of("D8"), PieceMoveType::Default),
+                        ]),
                     )]),
                 },
             ),
@@ -928,41 +864,34 @@ mod tests {
                     moves: HashMap::from([
                         (
                             Pos::of("A2"),
-                            vec![
-                                GameMove::default_of('♙', "A2", "A3"),
-                                GameMove::default_of('♙', "A2", "A4"),
-                                GameMove::menace_of('♙', "A2", "B3"),
-                            ],
+                            HashMap::from([
+                                (Pos::of("A3"), PieceMoveType::Default),
+                                (Pos::of("A4"), PieceMoveType::Default),
+                            ]),
                         ),
                         (
                             Pos::of("D2"),
-                            vec![
-                                GameMove::default_of('♙', "D2", "D3"),
-                                GameMove::default_of('♙', "D2", "D4"),
-                                GameMove::menace_of('♙', "D2", "C3"),
-                                GameMove::menace_of('♙', "D2", "E3"),
-                            ],
+                            HashMap::from([
+                                (Pos::of("D3"), PieceMoveType::Default),
+                                (Pos::of("D4"), PieceMoveType::Default),
+                            ]),
                         ),
                         (
                             Pos::of("C1"),
-                            vec![
-                                GameMove::menace_of('♔', "C1", "D2"),
-                                GameMove::menace_of('♔', "C1", "D1"),
-                                GameMove::default_of('♔', "C1", "B1"),
-                                GameMove::default_of('♔', "C1", "B2"),
-                                GameMove::default_of('♔', "C1", "C2"),
-                            ],
+                            HashMap::from([
+                                (Pos::of("B1"), PieceMoveType::Default),
+                                (Pos::of("B2"), PieceMoveType::Default),
+                                (Pos::of("C2"), PieceMoveType::Default),
+                            ]),
                         ),
                         (
                             Pos::of("D1"),
-                            vec![
-                                GameMove::default_of('♖', "D1", "E1"),
-                                GameMove::default_of('♖', "D1", "F1"),
-                                GameMove::default_of('♖', "D1", "G1"),
-                                GameMove::default_of('♖', "D1", "H1"),
-                                GameMove::menace_of('♖', "D1", "C1"),
-                                GameMove::menace_of('♖', "D1", "D2"),
-                            ],
+                            HashMap::from([
+                                (Pos::of("E1"), PieceMoveType::Default),
+                                (Pos::of("F1"), PieceMoveType::Default),
+                                (Pos::of("G1"), PieceMoveType::Default),
+                                (Pos::of("H1"), PieceMoveType::Default),
+                            ]),
                         ),
                     ]),
                 },

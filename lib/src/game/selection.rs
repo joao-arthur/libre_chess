@@ -4,7 +4,6 @@ use crate::{
     game::{
         board::GameBoard,
         game::{GameHistory, GamePlayers},
-        mov::GameMoveType,
         rule::turn::evaluate_turn,
     },
     pos::Pos,
@@ -28,18 +27,7 @@ pub fn toggle_selection(
         if let Some(selected_piece) = board.get(selected_pos) {
             if let Some(player) = players.get(&selected_piece.color) {
                 if let Some(selected_piece_moves) = player.moves.get(selected_pos) {
-                    if selected_piece_moves
-                        .iter()
-                        .find(|game_move| match game_move.typ {
-                            GameMoveType::Default
-                            | GameMoveType::EnPassant
-                            | GameMoveType::Capture
-                            | GameMoveType::ShortCastling
-                            | GameMoveType::LongCastling => game_move.mov.to == pos,
-                            _ => false,
-                        })
-                        .is_some()
-                    {
+                    if selected_piece_moves.iter().find(|(to, _)| to == &&pos).is_some() {
                         selection.selected_squares.clear();
                         selection.selected_pos = None;
                         return;
@@ -60,20 +48,9 @@ pub fn toggle_selection(
         if turn == piece.color {
             if let Some(player) = players.get(&turn) {
                 if let Some(moves) = player.moves.get(&pos) {
-                    // if moves.is_empty() {} -> blocked king
+                    // if moves.is_empty() {} -> blocked piece
 
-                    if moves.iter().any(|game_move| match game_move.typ {
-                        GameMoveType::Default => true,
-                        GameMoveType::Capture => true,
-                        GameMoveType::Menace => false,
-                        GameMoveType::EnPassant => true,
-                        GameMoveType::LongCastling => true,
-                        GameMoveType::ShortCastling => true,
-                        GameMoveType::PromotionToQueen => true,
-                        GameMoveType::PromotionToRook => true,
-                        GameMoveType::PromotionToBishop => true,
-                        GameMoveType::PromotionToKnight => true,
-                    }) {
+                    if 1 == 1 {
                         // Player selected another piece of himself
                         selection.selected_squares.clear();
                         selection.selected_pos = Some(pos.clone());
@@ -109,9 +86,13 @@ mod tests {
     use crate::{
         color::Color,
         game::{
-            board::board_of_str, game::GamePlayers, mode::standard_chess, mov::GameMove,
+            board::board_of_str,
+            game::GamePlayers,
+            mode::standard_chess,
+            mov::{GameMove, PieceMoveType},
             player::GamePlayer,
         },
+        piece::Piece,
         pos::Pos,
     };
 
@@ -167,12 +148,10 @@ mod tests {
                     captures: Vec::new(),
                     moves: HashMap::from([(
                         Pos::of("B2"),
-                        vec![
-                            GameMove::default_of('♙', "B2", "B3"),
-                            GameMove::default_of('♙', "B2", "B4"),
-                            GameMove::menace_of('♙', "B2", "A3"),
-                            GameMove::menace_of('♙', "B2", "C3"),
-                        ],
+                        HashMap::from([
+                            (Pos::of("B3"), PieceMoveType::Default),
+                            (Pos::of("B4"), PieceMoveType::Default),
+                        ]),
                     )]),
                 },
             ),
@@ -234,12 +213,10 @@ mod tests {
                     captures: Vec::new(),
                     moves: HashMap::from([(
                         pos.clone(),
-                        vec![
-                            GameMove::default_of('♙', "C2", "C3"),
-                            GameMove::default_of('♙', "C2", "C4"),
-                            GameMove::menace_of('♙', "C2", "B3"),
-                            GameMove::menace_of('♙', "C2", "D3"),
-                        ],
+                        HashMap::from([
+                            (Pos::of("C3"), PieceMoveType::Default),
+                            (Pos::of("C4"), PieceMoveType::Default),
+                        ]),
                     )]),
                 },
             ),
@@ -293,12 +270,12 @@ mod tests {
                     captures: Vec::new(),
                     moves: HashMap::from([(
                         Pos::of("D5"),
-                        vec![
-                            GameMove::default_of('♖', "D5", "E5"),
-                            GameMove::default_of('♖', "D5", "D4"),
-                            GameMove::default_of('♖', "D5", "C5"),
-                            GameMove::default_of('♖', "D5", "D6"),
-                        ],
+                        HashMap::from([
+                            (Pos::of("E5"), PieceMoveType::Default),
+                            (Pos::of("D4"), PieceMoveType::Default),
+                            (Pos::of("C5"), PieceMoveType::Default),
+                            (Pos::of("D6"), PieceMoveType::Default),
+                        ]),
                     )]),
                 },
             ),
@@ -335,11 +312,10 @@ mod tests {
                     captures: Vec::new(),
                     moves: HashMap::from([(
                         Pos::of("A5"),
-                        vec![
-                            GameMove::default_of('♙', "A5", "A6"),
-                            GameMove::en_passant_of('♙', "A5", "B6"),
-                            GameMove::menace_of('♙', "A5", "B6"),
-                        ],
+                        HashMap::from([
+                            (Pos::of("A6"), PieceMoveType::Default),
+                            (Pos::of("B6"), PieceMoveType::EnPassant),
+                        ]),
                     )]),
                 },
             ),
@@ -376,15 +352,15 @@ mod tests {
                     captures: Vec::new(),
                     moves: HashMap::from([(
                         Pos::of("E1"),
-                        vec![
-                            GameMove::short_castling_of('♔', "E1", "A1"),
-                            GameMove::long_castling_of('♔', "E1", "H1"),
-                            GameMove::default_of('♔', "E1", "F2"),
-                            GameMove::default_of('♔', "E1", "F1"),
-                            GameMove::default_of('♔', "E1", "D1"),
-                            GameMove::default_of('♔', "E1", "D2"),
-                            GameMove::default_of('♔', "E1", "E2"),
-                        ],
+                        HashMap::from([
+                            (Pos::of("A1"), PieceMoveType::ShortCastling),
+                            (Pos::of("H1"), PieceMoveType::LongCastling),
+                            (Pos::of("F2"), PieceMoveType::Default),
+                            (Pos::of("F1"), PieceMoveType::Default),
+                            (Pos::of("D1"), PieceMoveType::Default),
+                            (Pos::of("D2"), PieceMoveType::Default),
+                            (Pos::of("E2"), PieceMoveType::Default),
+                        ]),
                     )]),
                 },
             ),
@@ -421,12 +397,10 @@ mod tests {
                     captures: Vec::new(),
                     moves: HashMap::from([(
                         Pos::of("E2"),
-                        vec![
-                            GameMove::default_of('♙', "E2", "E3"),
-                            GameMove::default_of('♙', "E2", "E4"),
-                            GameMove::menace_of('♙', "E2", "D3"),
-                            GameMove::menace_of('♙', "E2", "F3"),
-                        ],
+                        HashMap::from([
+                            (Pos::of("E3"), PieceMoveType::Default),
+                            (Pos::of("E4"), PieceMoveType::Default),
+                        ]),
                     )]),
                 },
             ),

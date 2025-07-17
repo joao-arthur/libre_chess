@@ -1,15 +1,16 @@
+use std::collections::HashMap;
+
 use crate::{
-    game::{
-        board::GameBoard,
-        game::GameBounds,
-        mov::{GameMove, GameMoveType},
-    },
-    mov::Mov,
+    game::{board::GameBoard, game::GameBounds, mov::PieceMoveType},
     pos::Pos,
 };
 
-pub fn rook_moves(board: &GameBoard, bounds: &GameBounds, pos: &Pos) -> Vec<GameMove> {
-    let mut result: Vec<GameMove> = Vec::new();
+pub fn rook_moves(
+    board: &GameBoard,
+    bounds: &GameBounds,
+    pos: &Pos,
+) -> HashMap<Pos, PieceMoveType> {
+    let mut result = HashMap::new();
     if let Some(piece) = board.get(pos) {
         let modifiers: [[i8; 2]; 4] = [[0, 1], [-1, 0], [0, -1], [1, 0]];
         for modifier in modifiers {
@@ -27,23 +28,12 @@ pub fn rook_moves(board: &GameBoard, bounds: &GameBounds, pos: &Pos) -> Vec<Game
                         break;
                     }
                     if let Some(curr_piece) = board.get(&curr_pos) {
-                        if curr_piece.color == piece.color {
-                            result.push(GameMove {
-                                mov: Mov { piece: *piece, from: pos.clone(), to: curr_pos },
-                                typ: GameMoveType::Menace,
-                            });
-                        } else {
-                            result.push(GameMove {
-                                mov: Mov { piece: *piece, from: pos.clone(), to: curr_pos },
-                                typ: GameMoveType::Capture,
-                            });
+                        if curr_piece.color != piece.color {
+                            result.insert(curr_pos, PieceMoveType::Default);
                         }
                         break;
                     } else {
-                        result.push(GameMove {
-                            mov: Mov { piece: *piece, from: pos.clone(), to: curr_pos },
-                            typ: GameMoveType::Default,
-                        });
+                        result.insert(curr_pos, PieceMoveType::Default);
                     }
                 } else {
                     break;
@@ -63,7 +53,7 @@ mod tests {
             board::{board_empty, board_of_str},
             game::GameBounds,
             mode::standard_chess,
-            mov::GameMove,
+            mov::PieceMoveType,
             piece::game_piece_of,
         },
         pos::Pos,
@@ -74,7 +64,7 @@ mod tests {
     #[test]
     fn rook_moves_empty_board() {
         let mode = standard_chess();
-        assert_eq!(rook_moves(&board_empty(), &mode.bounds, &Pos::of("A1")), []);
+        assert_eq!(rook_moves(&board_empty(), &mode.bounds, &Pos::of("A1")), HashMap::new());
     }
 
     #[test]
@@ -83,22 +73,22 @@ mod tests {
         let board = HashMap::from([game_piece_of("D4", '♜')]);
         assert_eq!(
             rook_moves(&board, &mode.bounds, &Pos::of("D4")),
-            [
-                GameMove::default_of('♜', "D4", "E4"),
-                GameMove::default_of('♜', "D4", "F4"),
-                GameMove::default_of('♜', "D4", "G4"),
-                GameMove::default_of('♜', "D4", "H4"),
-                GameMove::default_of('♜', "D4", "D3"),
-                GameMove::default_of('♜', "D4", "D2"),
-                GameMove::default_of('♜', "D4", "D1"),
-                GameMove::default_of('♜', "D4", "C4"),
-                GameMove::default_of('♜', "D4", "B4"),
-                GameMove::default_of('♜', "D4", "A4"),
-                GameMove::default_of('♜', "D4", "D5"),
-                GameMove::default_of('♜', "D4", "D6"),
-                GameMove::default_of('♜', "D4", "D7"),
-                GameMove::default_of('♜', "D4", "D8"),
-            ]
+            HashMap::from([
+                (Pos::of("E4"), PieceMoveType::Default),
+                (Pos::of("F4"), PieceMoveType::Default),
+                (Pos::of("G4"), PieceMoveType::Default),
+                (Pos::of("H4"), PieceMoveType::Default),
+                (Pos::of("D3"), PieceMoveType::Default),
+                (Pos::of("D2"), PieceMoveType::Default),
+                (Pos::of("D1"), PieceMoveType::Default),
+                (Pos::of("C4"), PieceMoveType::Default),
+                (Pos::of("B4"), PieceMoveType::Default),
+                (Pos::of("A4"), PieceMoveType::Default),
+                (Pos::of("D5"), PieceMoveType::Default),
+                (Pos::of("D6"), PieceMoveType::Default),
+                (Pos::of("D7"), PieceMoveType::Default),
+                (Pos::of("D8"), PieceMoveType::Default),
+            ])
         );
     }
 
@@ -108,16 +98,16 @@ mod tests {
         let bounds = GameBounds { x1: 3, y1: 3, x2: 7, y2: 7 };
         assert_eq!(
             rook_moves(&board, &bounds, &Pos::of("F6")),
-            [
-                GameMove::default_of('♜', "F6", "G6"),
-                GameMove::default_of('♜', "F6", "H6"),
-                GameMove::default_of('♜', "F6", "F5"),
-                GameMove::default_of('♜', "F6", "F4"),
-                GameMove::default_of('♜', "F6", "E6"),
-                GameMove::default_of('♜', "F6", "D6"),
-                GameMove::default_of('♜', "F6", "F7"),
-                GameMove::default_of('♜', "F6", "F8")
-            ]
+            HashMap::from([
+                (Pos::of("G6"), PieceMoveType::Default),
+                (Pos::of("H6"), PieceMoveType::Default),
+                (Pos::of("F5"), PieceMoveType::Default),
+                (Pos::of("F4"), PieceMoveType::Default),
+                (Pos::of("E6"), PieceMoveType::Default),
+                (Pos::of("D6"), PieceMoveType::Default),
+                (Pos::of("F7"), PieceMoveType::Default),
+                (Pos::of("F8"), PieceMoveType::Default)
+            ])
         );
     }
 
@@ -127,22 +117,22 @@ mod tests {
         let board = HashMap::from([game_piece_of("H8", '♜')]);
         assert_eq!(
             rook_moves(&board, &mode.bounds, &Pos::of("H8")),
-            [
-                GameMove::default_of('♜', "H8", "H7"),
-                GameMove::default_of('♜', "H8", "H6"),
-                GameMove::default_of('♜', "H8", "H5"),
-                GameMove::default_of('♜', "H8", "H4"),
-                GameMove::default_of('♜', "H8", "H3"),
-                GameMove::default_of('♜', "H8", "H2"),
-                GameMove::default_of('♜', "H8", "H1"),
-                GameMove::default_of('♜', "H8", "G8"),
-                GameMove::default_of('♜', "H8", "F8"),
-                GameMove::default_of('♜', "H8", "E8"),
-                GameMove::default_of('♜', "H8", "D8"),
-                GameMove::default_of('♜', "H8", "C8"),
-                GameMove::default_of('♜', "H8", "B8"),
-                GameMove::default_of('♜', "H8", "A8"),
-            ]
+            HashMap::from([
+                (Pos::of("H7"), PieceMoveType::Default),
+                (Pos::of("H6"), PieceMoveType::Default),
+                (Pos::of("H5"), PieceMoveType::Default),
+                (Pos::of("H4"), PieceMoveType::Default),
+                (Pos::of("H3"), PieceMoveType::Default),
+                (Pos::of("H2"), PieceMoveType::Default),
+                (Pos::of("H1"), PieceMoveType::Default),
+                (Pos::of("G8"), PieceMoveType::Default),
+                (Pos::of("F8"), PieceMoveType::Default),
+                (Pos::of("E8"), PieceMoveType::Default),
+                (Pos::of("D8"), PieceMoveType::Default),
+                (Pos::of("C8"), PieceMoveType::Default),
+                (Pos::of("B8"), PieceMoveType::Default),
+                (Pos::of("A8"), PieceMoveType::Default),
+            ])
         );
     }
 
@@ -152,22 +142,22 @@ mod tests {
         let board = HashMap::from([game_piece_of("H1", '♜')]);
         assert_eq!(
             rook_moves(&board, &mode.bounds, &Pos::of("H1")),
-            [
-                GameMove::default_of('♜', "H1", "G1"),
-                GameMove::default_of('♜', "H1", "F1"),
-                GameMove::default_of('♜', "H1", "E1"),
-                GameMove::default_of('♜', "H1", "D1"),
-                GameMove::default_of('♜', "H1", "C1"),
-                GameMove::default_of('♜', "H1", "B1"),
-                GameMove::default_of('♜', "H1", "A1"),
-                GameMove::default_of('♜', "H1", "H2"),
-                GameMove::default_of('♜', "H1", "H3"),
-                GameMove::default_of('♜', "H1", "H4"),
-                GameMove::default_of('♜', "H1", "H5"),
-                GameMove::default_of('♜', "H1", "H6"),
-                GameMove::default_of('♜', "H1", "H7"),
-                GameMove::default_of('♜', "H1", "H8")
-            ]
+            HashMap::from([
+                (Pos::of("G1"), PieceMoveType::Default),
+                (Pos::of("F1"), PieceMoveType::Default),
+                (Pos::of("E1"), PieceMoveType::Default),
+                (Pos::of("D1"), PieceMoveType::Default),
+                (Pos::of("C1"), PieceMoveType::Default),
+                (Pos::of("B1"), PieceMoveType::Default),
+                (Pos::of("A1"), PieceMoveType::Default),
+                (Pos::of("H2"), PieceMoveType::Default),
+                (Pos::of("H3"), PieceMoveType::Default),
+                (Pos::of("H4"), PieceMoveType::Default),
+                (Pos::of("H5"), PieceMoveType::Default),
+                (Pos::of("H6"), PieceMoveType::Default),
+                (Pos::of("H7"), PieceMoveType::Default),
+                (Pos::of("H8"), PieceMoveType::Default)
+            ])
         );
     }
 
@@ -177,22 +167,22 @@ mod tests {
         let board = HashMap::from([game_piece_of("A1", '♜')]);
         assert_eq!(
             rook_moves(&board, &mode.bounds, &Pos::of("A1")),
-            [
-                GameMove::default_of('♜', "A1", "B1"),
-                GameMove::default_of('♜', "A1", "C1"),
-                GameMove::default_of('♜', "A1", "D1"),
-                GameMove::default_of('♜', "A1", "E1"),
-                GameMove::default_of('♜', "A1", "F1"),
-                GameMove::default_of('♜', "A1", "G1"),
-                GameMove::default_of('♜', "A1", "H1"),
-                GameMove::default_of('♜', "A1", "A2"),
-                GameMove::default_of('♜', "A1", "A3"),
-                GameMove::default_of('♜', "A1", "A4"),
-                GameMove::default_of('♜', "A1", "A5"),
-                GameMove::default_of('♜', "A1", "A6"),
-                GameMove::default_of('♜', "A1", "A7"),
-                GameMove::default_of('♜', "A1", "A8"),
-            ]
+            HashMap::from([
+                (Pos::of("B1"), PieceMoveType::Default),
+                (Pos::of("C1"), PieceMoveType::Default),
+                (Pos::of("D1"), PieceMoveType::Default),
+                (Pos::of("E1"), PieceMoveType::Default),
+                (Pos::of("F1"), PieceMoveType::Default),
+                (Pos::of("G1"), PieceMoveType::Default),
+                (Pos::of("H1"), PieceMoveType::Default),
+                (Pos::of("A2"), PieceMoveType::Default),
+                (Pos::of("A3"), PieceMoveType::Default),
+                (Pos::of("A4"), PieceMoveType::Default),
+                (Pos::of("A5"), PieceMoveType::Default),
+                (Pos::of("A6"), PieceMoveType::Default),
+                (Pos::of("A7"), PieceMoveType::Default),
+                (Pos::of("A8"), PieceMoveType::Default),
+            ])
         );
     }
 
@@ -202,22 +192,22 @@ mod tests {
         let board = HashMap::from([game_piece_of("A8", '♜')]);
         assert_eq!(
             rook_moves(&board, &mode.bounds, &Pos::of("A8")),
-            [
-                GameMove::default_of('♜', "A8", "B8"),
-                GameMove::default_of('♜', "A8", "C8"),
-                GameMove::default_of('♜', "A8", "D8"),
-                GameMove::default_of('♜', "A8", "E8"),
-                GameMove::default_of('♜', "A8", "F8"),
-                GameMove::default_of('♜', "A8", "G8"),
-                GameMove::default_of('♜', "A8", "H8"),
-                GameMove::default_of('♜', "A8", "A7"),
-                GameMove::default_of('♜', "A8", "A6"),
-                GameMove::default_of('♜', "A8", "A5"),
-                GameMove::default_of('♜', "A8", "A4"),
-                GameMove::default_of('♜', "A8", "A3"),
-                GameMove::default_of('♜', "A8", "A2"),
-                GameMove::default_of('♜', "A8", "A1"),
-            ]
+            HashMap::from([
+                (Pos::of("B8"), PieceMoveType::Default),
+                (Pos::of("C8"), PieceMoveType::Default),
+                (Pos::of("D8"), PieceMoveType::Default),
+                (Pos::of("E8"), PieceMoveType::Default),
+                (Pos::of("F8"), PieceMoveType::Default),
+                (Pos::of("G8"), PieceMoveType::Default),
+                (Pos::of("H8"), PieceMoveType::Default),
+                (Pos::of("A7"), PieceMoveType::Default),
+                (Pos::of("A6"), PieceMoveType::Default),
+                (Pos::of("A5"), PieceMoveType::Default),
+                (Pos::of("A4"), PieceMoveType::Default),
+                (Pos::of("A3"), PieceMoveType::Default),
+                (Pos::of("A2"), PieceMoveType::Default),
+                (Pos::of("A1"), PieceMoveType::Default),
+            ])
         );
     }
 
@@ -239,20 +229,19 @@ mod tests {
         );
         assert_eq!(
             rook_moves(&board, &mode.bounds, &Pos::of("D4")),
-            [
-                GameMove::default_of('♖', "D4", "E4"),
-                GameMove::default_of('♖', "D4", "F4"),
-                GameMove::menace_of('♖', "D4", "G4"),
-                GameMove::default_of('♖', "D4", "D3"),
-                GameMove::default_of('♖', "D4", "D2"),
-                GameMove::capture_of('♖', "D4", "D1"),
-                GameMove::default_of('♖', "D4", "C4"),
-                GameMove::default_of('♖', "D4", "B4"),
-                GameMove::default_of('♖', "D4", "A4"),
-                GameMove::default_of('♖', "D4", "D5"),
-                GameMove::default_of('♖', "D4", "D6"),
-                GameMove::capture_of('♖', "D4", "D7"),
-            ]
+            HashMap::from([
+                (Pos::of("E4"), PieceMoveType::Default),
+                (Pos::of("F4"), PieceMoveType::Default),
+                (Pos::of("D3"), PieceMoveType::Default),
+                (Pos::of("D2"), PieceMoveType::Default),
+                (Pos::of("D1"), PieceMoveType::Default),
+                (Pos::of("C4"), PieceMoveType::Default),
+                (Pos::of("B4"), PieceMoveType::Default),
+                (Pos::of("A4"), PieceMoveType::Default),
+                (Pos::of("D5"), PieceMoveType::Default),
+                (Pos::of("D6"), PieceMoveType::Default),
+                (Pos::of("D7"), PieceMoveType::Default),
+            ])
         );
     }
 
@@ -274,20 +263,19 @@ mod tests {
         );
         assert_eq!(
             rook_moves(&board, &mode.bounds, &Pos::of("D4")),
-            [
-                GameMove::default_of('♜', "D4", "E4"),
-                GameMove::default_of('♜', "D4", "F4"),
-                GameMove::menace_of('♜', "D4", "G4"),
-                GameMove::default_of('♜', "D4", "D3"),
-                GameMove::default_of('♜', "D4", "D2"),
-                GameMove::capture_of('♜', "D4", "D1"),
-                GameMove::default_of('♜', "D4", "C4"),
-                GameMove::default_of('♜', "D4", "B4"),
-                GameMove::default_of('♜', "D4", "A4"),
-                GameMove::default_of('♜', "D4", "D5"),
-                GameMove::default_of('♜', "D4", "D6"),
-                GameMove::capture_of('♜', "D4", "D7")
-            ]
+            HashMap::from([
+                (Pos::of("E4"), PieceMoveType::Default),
+                (Pos::of("F4"), PieceMoveType::Default),
+                (Pos::of("D3"), PieceMoveType::Default),
+                (Pos::of("D2"), PieceMoveType::Default),
+                (Pos::of("D1"), PieceMoveType::Default),
+                (Pos::of("C4"), PieceMoveType::Default),
+                (Pos::of("B4"), PieceMoveType::Default),
+                (Pos::of("A4"), PieceMoveType::Default),
+                (Pos::of("D5"), PieceMoveType::Default),
+                (Pos::of("D6"), PieceMoveType::Default),
+                (Pos::of("D7"), PieceMoveType::Default)
+            ])
         );
     }
 }

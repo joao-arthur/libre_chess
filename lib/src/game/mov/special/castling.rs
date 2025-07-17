@@ -1,10 +1,11 @@
+use std::collections::HashMap;
+
 use crate::{
     game::{
         board::GameBoard,
         game::{GameHistory, GamePlayers},
-        mov::{GameMove, GameMoveType},
+        mov::PieceMoveType,
     },
-    mov::Mov,
     piece::PieceType,
     pos::Pos,
 };
@@ -14,13 +15,13 @@ pub fn castling_moves(
     history: &GameHistory,
     players: &GamePlayers,
     king_pos: &Pos,
-) -> Vec<GameMove> {
-    let mut result: Vec<GameMove> = Vec::new();
-    if let Some(short) = short_castling(board, history, players, king_pos) {
-        result.push(short);
+) -> HashMap<Pos, PieceMoveType> {
+    let mut result = HashMap::new();
+    if let Some(rook_pos) = short_castling(board, history, players, king_pos) {
+        result.insert(rook_pos, PieceMoveType::ShortCastling);
     }
-    if let Some(long) = long_castling(board, history, players, king_pos) {
-        result.push(long);
+    if let Some(rook_pos) = long_castling(board, history, players, king_pos) {
+        result.insert(rook_pos, PieceMoveType::LongCastling);
     }
     result
 }
@@ -30,11 +31,12 @@ fn short_castling(
     history: &GameHistory,
     players: &GamePlayers,
     king_pos: &Pos,
-) -> Option<GameMove> {
+) -> Option<Pos> {
     let king = board.get(king_pos)?;
-    let (rook_pos, _) = board.iter().find(|(pos, piece)| {
+    let (rook_pos, rook) = board.iter().find(|(pos, piece)| {
         piece.color == king.color && piece.typ == PieceType::Rook && pos.col > king_pos.col
     })?;
+    // FIX
     let maybe_moved = history
         .iter()
         .find(|game_move| &game_move.mov.from == king_pos || &game_move.mov.from == rook_pos);
@@ -42,7 +44,7 @@ fn short_castling(
         return None;
     }
     for col in (king_pos.col + 1)..rook_pos.col {
-        if board.get(&Pos { row: king_pos.row, col }).is_some() {
+        if board.contains_key(&Pos { row: king_pos.row, col }) {
             return None;
         }
     }
@@ -51,23 +53,14 @@ fn short_castling(
             if color != &king.color {
                 let player_moves_it = player.moves.iter();
                 for (_, player_moves) in player_moves_it {
-                    for game_move in player_moves {
-                        if (game_move.typ == GameMoveType::Default
-                            || game_move.typ == GameMoveType::Menace
-                            || game_move.typ == GameMoveType::Capture)
-                            && game_move.mov.to.col == col
-                        {
-                            return None;
-                        }
+                    if player_moves.contains_key(&Pos { row: king_pos.row, col }) {
+                        return None;
                     }
                 }
             }
         }
     }
-    Some(GameMove {
-        mov: Mov { from: king_pos.clone(), to: rook_pos.clone(), piece: *king },
-        typ: GameMoveType::ShortCastling,
-    })
+    Some(rook_pos.clone())
 }
 
 fn long_castling(
@@ -75,7 +68,7 @@ fn long_castling(
     history: &GameHistory,
     players: &GamePlayers,
     king_pos: &Pos,
-) -> Option<GameMove> {
+) -> Option<Pos> {
     let king = board.get(king_pos)?;
     let (rook_pos, _) = board.iter().find(|(pos, piece)| {
         piece.color == king.color && piece.typ == PieceType::Rook && pos.col < king_pos.col
@@ -96,23 +89,14 @@ fn long_castling(
             if color != &king.color {
                 let player_moves_it = player.moves.iter();
                 for (_, player_moves) in player_moves_it {
-                    for game_move in player_moves {
-                        if (game_move.typ == GameMoveType::Default
-                            || game_move.typ == GameMoveType::Menace
-                            || game_move.typ == GameMoveType::Capture)
-                            && game_move.mov.to.col == col
-                        {
-                            return None;
-                        }
+                    if player_moves.get(&Pos { row: king_pos.row, col }).is_some() {
+                        return None;
                     }
                 }
             }
         }
     }
-    Some(GameMove {
-        mov: Mov { from: king_pos.clone(), to: rook_pos.clone(), piece: *king },
-        typ: GameMoveType::LongCastling,
-    })
+    Some(rook_pos.clone())
 }
 
 #[cfg(test)]
@@ -121,7 +105,12 @@ mod tests {
 
     use crate::{
         color::Color,
-        game::{board::board_of_str, mode::standard_chess, mov::GameMove, player::GamePlayer},
+        game::{
+            board::board_of_str,
+            mode::standard_chess,
+            mov::{GameMove, PieceMoveType},
+            player::GamePlayer,
+        },
         pos::Pos,
     };
 
@@ -151,7 +140,7 @@ mod tests {
         let pos = Pos::of("E1");
         assert_eq!(
             castling_moves(&board, &history, &players, &pos),
-            [GameMove::short_castling_of('♔', "E1", "H1")]
+            HashMap::from([(Pos::of("H1"), PieceMoveType::ShortCastling)])
         );
     }
 
@@ -179,7 +168,7 @@ mod tests {
         let pos = Pos::of("E1");
         assert_eq!(
             castling_moves(&board, &history, &players, &pos),
-            [GameMove::long_castling_of('♔', "E1", "A1")]
+            HashMap::from([(Pos::of("A1"), PieceMoveType::LongCastling)])
         );
     }
 
@@ -207,10 +196,10 @@ mod tests {
         let pos = Pos::of("E1");
         assert_eq!(
             castling_moves(&board, &history, &players, &pos),
-            [
-                GameMove::short_castling_of('♔', "E1", "H1"),
-                GameMove::long_castling_of('♔', "E1", "A1"),
-            ]
+            HashMap::from([
+                (Pos::of("H1"), PieceMoveType::ShortCastling),
+                (Pos::of("A1"), PieceMoveType::LongCastling),
+            ])
         );
     }
 
@@ -236,7 +225,7 @@ mod tests {
             (Color::White, GamePlayer::from(Color::White)),
         ]);
         let pos = Pos::of("E1");
-        assert_eq!(castling_moves(&board, &history, &players, &pos), []);
+        assert_eq!(castling_moves(&board, &history, &players, &pos), HashMap::new());
     }
 
     #[test]
@@ -274,7 +263,7 @@ mod tests {
             (Color::White, GamePlayer::from(Color::White)),
         ]);
         let pos = Pos::of("E1");
-        assert_eq!(castling_moves(&board, &history, &players, &pos), []);
+        assert_eq!(castling_moves(&board, &history, &players, &pos), HashMap::new());
     }
 
     #[test]
@@ -304,7 +293,7 @@ mod tests {
             (Color::White, GamePlayer::from(Color::White)),
         ]);
         let pos = Pos::of("E1");
-        assert_eq!(castling_moves(&board, &history, &players, &pos), []);
+        assert_eq!(castling_moves(&board, &history, &players, &pos), HashMap::new());
     }
 }
 /*

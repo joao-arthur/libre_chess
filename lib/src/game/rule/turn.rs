@@ -17,7 +17,7 @@ mod tests {
         assert_eq!(
             evaluate_turn(&vec![
                 GameMove::default_of('♙', "D2", "D4"),
-                GameMove::default_of('♟', "A7", "A5")
+                GameMove::default_of('♟', "A7", "A5"),
             ]),
             Color::White
         );
