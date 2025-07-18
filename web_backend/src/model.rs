@@ -1,9 +1,9 @@
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 
-use web_sys::CanvasRenderingContext2d;
+use web_sys::{CanvasRenderingContext2d, HtmlImageElement};
 
 use libre_chess_lib::game::{
-    mode::standard_chess, rule::init::game_of_mode, selection::Selection, game::Game,
+    game::Game, mode::standard_chess, rule::init::game_of_mode, selection::Selection,
 };
 
 use crate::{
@@ -21,12 +21,29 @@ pub struct Settings {
     pub board_color_id: String,
 }
 
+#[derive(Debug, PartialEq, Clone)]
+pub struct BoardSetFinal {
+    pub bb: HtmlImageElement,
+    pub bk: HtmlImageElement,
+    pub bn: HtmlImageElement,
+    pub bp: HtmlImageElement,
+    pub bq: HtmlImageElement,
+    pub br: HtmlImageElement,
+    pub wb: HtmlImageElement,
+    pub wk: HtmlImageElement,
+    pub wn: HtmlImageElement,
+    pub wp: HtmlImageElement,
+    pub wq: HtmlImageElement,
+    pub wr: HtmlImageElement,
+}
+
 #[derive(Debug, PartialEq)]
 pub struct Model {
     pub game: Game,
     pub settings: Settings,
     pub context: Option<CanvasRenderingContext2d>,
     pub selection: Selection,
+    pub board_set: HashMap<String, HtmlImageElement>,
 }
 
 impl Default for Model {
@@ -41,10 +58,8 @@ impl Default for Model {
                 board_color_id: "purple".into(),
             },
             context: None,
-            selection: Selection {
-                selected_squares: HashSet::new(),
-                selected_pos: None,
-            },
+            selection: Selection { selected_squares: HashSet::new(), selected_pos: None },
+            board_set: HashMap::new(),
         }
     }
 }

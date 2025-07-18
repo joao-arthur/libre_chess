@@ -6,9 +6,20 @@ use web_sys::{
 };
 
 use libre_chess_lib::{
-    color::Color, game::{
-        game::Game, mode::standard_chess, mov::GameMove, rule::{legal_moves::legal_moves_of_player, move_piece::move_piece, turn::evaluate_turn}, selection::{toggle_selection, Selection}
-    }, mov::Mov, piece::PieceType, pos::Pos
+    color::Color,
+    game::{
+        game::Game,
+        mode::standard_chess,
+        mov::GameMove,
+        rule::{
+            check::is_in_check, legal_moves::legal_moves_of_player, move_piece::move_piece,
+            turn::evaluate_turn,
+        },
+        selection::{toggle_selection, Selection},
+    },
+    mov::Mov,
+    piece::PieceType,
+    pos::Pos,
 };
 
 use crate::{
@@ -53,7 +64,36 @@ pub fn app_init(context: CanvasRenderingContext2d) {
     MODEL.with(|i| {
         let mut model = i.borrow_mut();
         model.context = Some(context);
-        model.game.board = standard_chess().initial_board;
+        let strs = [
+            ("bb", model.settings.board_set.bb),
+            ("bk", model.settings.board_set.bk),
+            ("bn", model.settings.board_set.bn),
+            ("bp", model.settings.board_set.bp),
+            ("bq", model.settings.board_set.bq),
+            ("br", model.settings.board_set.br),
+            ("wb", model.settings.board_set.wb),
+            ("wk", model.settings.board_set.wk),
+            ("wn", model.settings.board_set.wn),
+            ("wp", model.settings.board_set.wp),
+            ("wq", model.settings.board_set.wq),
+            ("wr", model.settings.board_set.wr),
+        ];
+        for (name, str_img) in strs {
+            let maybe_blob = Blob::new_with_str_sequence_and_options(
+                &js_sys::Array::of1(&JsValue::from_str(str_img)),
+                BlobPropertyBag::new().type_("image/svg+xml"),
+            );
+            if let Ok(blob) = maybe_blob {
+                let maybe_url = Url::create_object_url_with_blob(&blob);
+                if let Ok(url) = maybe_url {
+                    let maybe_image_element = HtmlImageElement::new();
+                    if let Ok(image_element) = maybe_image_element {
+                        image_element.set_src(&url);
+                        model.board_set.insert(name.into(), image_element);
+                    }
+                }
+            }
+        }
     });
     app_add_on_change_listener({
         move |prop| {
@@ -88,11 +128,42 @@ pub fn app_set_board_set(board_set: &str) {
             let mut m = i.borrow_mut();
             m.settings.board_set = preset;
             m.settings.board_set_id = board_set.into();
+            let strs = [
+                ("bb", m.settings.board_set.bb),
+                ("bk", m.settings.board_set.bk),
+                ("bn", m.settings.board_set.bn),
+                ("bp", m.settings.board_set.bp),
+                ("bq", m.settings.board_set.bq),
+                ("br", m.settings.board_set.br),
+                ("wb", m.settings.board_set.wb),
+                ("wk", m.settings.board_set.wk),
+                ("wn", m.settings.board_set.wn),
+                ("wp", m.settings.board_set.wp),
+                ("wq", m.settings.board_set.wq),
+                ("wr", m.settings.board_set.wr),
+            ];
+            for (name, str_img) in strs {
+                let maybe_blob = Blob::new_with_str_sequence_and_options(
+                    &js_sys::Array::of1(&JsValue::from_str(str_img)),
+                    BlobPropertyBag::new().type_("image/svg+xml"),
+                );
+                if let Ok(blob) = maybe_blob {
+                    let maybe_url = Url::create_object_url_with_blob(&blob);
+                    if let Ok(url) = maybe_url {
+                        let maybe_image_element = HtmlImageElement::new();
+                        if let Ok(image_element) = maybe_image_element {
+                            image_element.set_src(&url);
+                            m.board_set.insert(name.into(), image_element);
+                        }
+                    }
+                }
+            }
         });
         on_change(Prop::BoardSet);
     }
 }
 
+// when iniciating the app, must cache the piece image, so it does not flicker
 pub fn app_render() {
     MODEL.with(|i| {
         let m = i.borrow();
@@ -101,6 +172,9 @@ pub fn app_render() {
         let settings = &m.settings;
         let selection = &m.selection;
         let context = &m.context;
+        let board_set = &m.board_set;
+        let turn = evaluate_turn(&m.game.history);
+        let in_check = is_in_check(&m.game.board, &m.game.players, &m.game.history);
         if let Some(context) = context {
             let dimmm = settings.render_settings.dim as f64;
             let cell_size = dimmm / 8.0;
@@ -125,51 +199,65 @@ pub fn app_render() {
             let values_to_render = get_values_to_render(board, &settings.render_settings);
             let window = window().unwrap();
             for v in values_to_render {
-                let piece_str = match v.piece.color {
+                let piece_str_name = match v.piece.color {
                     Color::White => match v.piece.typ {
-                        PieceType::Rook => &settings.board_set.wr,
-                        PieceType::Knight => &settings.board_set.wn,
-                        PieceType::Bishop => &settings.board_set.wb,
-                        PieceType::Queen => &settings.board_set.wq,
-                        PieceType::King => &settings.board_set.wk,
-                        PieceType::Pawn => &settings.board_set.wp,
+                        PieceType::Rook => "wr",
+                        PieceType::Knight => "wn",
+                        PieceType::Bishop => "wb",
+                        PieceType::Queen => "wq",
+                        PieceType::King => "wk",
+                        PieceType::Pawn => "wp",
                     },
                     Color::Black => match v.piece.typ {
-                        PieceType::Rook => &settings.board_set.br,
-                        PieceType::Knight => &settings.board_set.bn,
-                        PieceType::Bishop => &settings.board_set.bb,
-                        PieceType::Queen => &settings.board_set.bq,
-                        PieceType::King => &settings.board_set.bk,
-                        PieceType::Pawn => &settings.board_set.bp,
+                        PieceType::Rook => "br",
+                        PieceType::Knight => "bn",
+                        PieceType::Bishop => "bb",
+                        PieceType::Queen => "bq",
+                        PieceType::King => "bk",
+                        PieceType::Pawn => "bp",
                     },
                 };
-                let blob = Blob::new_with_str_sequence_and_options(
-                    &js_sys::Array::of1(&JsValue::from_str(piece_str)),
-                    BlobPropertyBag::new().type_("image/svg+xml"),
-                )
-                .unwrap();
-                let url = Url::create_object_url_with_blob(&blob).unwrap();
-                let img = Rc::new(HtmlImageElement::new().unwrap());
-                img.set_src(&url);
-                let img_clone = Rc::clone(&img);
-                let closure = Closure::wrap(Box::new({
-                    let canvas_ctx = context.clone();
-                    let url = url.clone();
-                    move || {
-                        canvas_ctx
-                            .draw_image_with_html_image_element_and_dw_and_dh(
-                                &img_clone,
-                                v.rect.x1,
-                                v.rect.y1,
-                                v.rect.x2 - v.rect.x1,
-                                v.rect.y2 - v.rect.y1,
-                            )
-                            .unwrap();
-                        // Url::revoke_object_url(&url).unwrap();
-                    }
-                }) as Box<dyn FnMut()>);
-                img.set_onload(Some(closure.as_ref().unchecked_ref()));
-                closure.forget();
+                if in_check && v.piece.typ == PieceType::King && v.piece.color == turn {
+                    let grid_horizontal =
+                        context.create_linear_gradient(v.rect.x1, v.rect.y1, v.rect.x2, v.rect.y1);
+                    grid_horizontal.add_color_stop(0.0, "#D20103");
+                    grid_horizontal.add_color_stop(0.1, "transparent");
+                    grid_horizontal.add_color_stop(0.9, "transparent");
+                    grid_horizontal.add_color_stop(1.0, "#D20103");
+
+                    let grid_vertical =
+                        context.create_linear_gradient(v.rect.x1, v.rect.y1, v.rect.x1, v.rect.y2);
+                    grid_vertical.add_color_stop(0.0, "#D20103");
+                    grid_vertical.add_color_stop(0.1, "transparent");
+                    grid_vertical.add_color_stop(0.9, "transparent");
+                    grid_vertical.add_color_stop(1.0, "#D20103");
+
+                    context.set_fill_style(&grid_horizontal.into());
+                    context.fill_rect(
+                        v.rect.x1,
+                        v.rect.y1,
+                        v.rect.x2 - v.rect.x1,
+                        v.rect.y2 - v.rect.y1,
+                    );
+                    context.set_fill_style(&grid_vertical.into());
+                    context.fill_rect(
+                        v.rect.x1,
+                        v.rect.y1,
+                        v.rect.x2 - v.rect.x1,
+                        v.rect.y2 - v.rect.y1,
+                    );
+                }
+                if let Some(html_el) = board_set.get(&piece_str_name.to_string()) {
+                    context
+                        .draw_image_with_html_image_element_and_dw_and_dh(
+                            &html_el,
+                            v.rect.x1,
+                            v.rect.y1,
+                            v.rect.x2 - v.rect.x1,
+                            v.rect.y2 - v.rect.y1,
+                        )
+                        .unwrap()
+                }
             }
             if selection.selected_squares.len() > 0 {
                 context.set_fill_style(&"#f0ec0088".into());
@@ -222,20 +310,19 @@ pub fn app_click(row: u16, col: u16) {
         let cell_row = (8 - ((((row as f64) / cell_size).floor() as u8) as i16)) as u8 - 1;
         let cell_col = ((col as f64) / cell_size).floor() as u8;
         let pos = Pos { row: cell_row, col: cell_col };
-
         move_piece(board, history, players, &bounds, selection, &pos);
         toggle_selection(selection, board, players, history, pos);
-
         let mut tempmoves = HashMap::new();
-
         let players_temp = players.clone();
         for color in players_temp.keys() {
-            tempmoves.insert(color, legal_moves_of_player(board, &bounds, history, &players_temp, &color));
+            tempmoves.insert(
+                color,
+                legal_moves_of_player(board, &bounds, history, &players_temp, &color),
+            );
         }
         for (color, moves) in tempmoves {
             players.get_mut(&color).unwrap().moves = moves;
         }
-
     });
     on_change(Prop::BoardSet);
 }

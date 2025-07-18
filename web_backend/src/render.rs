@@ -1,4 +1,4 @@
-use libre_chess_lib::{pos::Pos, game::board::GameBoard, piece::Piece};
+use libre_chess_lib::{game::board::GameBoard, piece::Piece, pos::Pos};
 
 #[derive(Debug, PartialEq)]
 pub struct RectF64 {
