@@ -1,5 +1,5 @@
 use core::f64;
-use std::{cell::RefCell, collections::HashMap, rc::Rc};
+use std::{cell::RefCell, collections::HashMap};
 use wasm_bindgen::{prelude::Closure, JsCast, JsValue};
 use web_sys::{
     js_sys, window, Blob, BlobPropertyBag, CanvasRenderingContext2d, HtmlImageElement, Url,
@@ -9,15 +9,12 @@ use libre_chess_lib::{
     color::Color,
     game::{
         game::Game,
-        mode::standard_chess,
-        mov::GameMove,
         rule::{
             check::is_in_check, legal_moves::legal_moves_of_player, move_piece::move_piece,
             turn::evaluate_turn,
         },
-        selection::{toggle_selection, Selection},
+        selection::toggle_selection,
     },
-    mov::Mov,
     piece::PieceType,
     pos::Pos,
 };
@@ -89,6 +86,13 @@ pub fn app_init(context: CanvasRenderingContext2d) {
                     let maybe_image_element = HtmlImageElement::new();
                     if let Ok(image_element) = maybe_image_element {
                         image_element.set_src(&url);
+                        let closure = Closure::wrap(Box::new({
+                            move || {
+                                app_render();
+                            }
+                        }) as Box<dyn FnMut()>);
+                        image_element.set_onload(Some(closure.as_ref().unchecked_ref()));
+                        closure.forget();
                         model.board_set.insert(name.into(), image_element);
                     }
                 }
@@ -100,7 +104,6 @@ pub fn app_init(context: CanvasRenderingContext2d) {
             app_render();
         }
     });
-    app_render();
 }
 
 pub fn app_set_dim(dim: u16) {
@@ -153,6 +156,14 @@ pub fn app_set_board_set(board_set: &str) {
                         let maybe_image_element = HtmlImageElement::new();
                         if let Ok(image_element) = maybe_image_element {
                             image_element.set_src(&url);
+                            let closure = Closure::wrap(Box::new({
+                                move || {
+                                    app_render();
+                                }
+                            })
+                                as Box<dyn FnMut()>);
+                            image_element.set_onload(Some(closure.as_ref().unchecked_ref()));
+                            closure.forget();
                             m.board_set.insert(name.into(), image_element);
                         }
                     }
@@ -250,7 +261,7 @@ pub fn app_render() {
                 if let Some(html_el) = board_set.get(&piece_str_name.to_string()) {
                     context
                         .draw_image_with_html_image_element_and_dw_and_dh(
-                            &html_el,
+                            html_el,
                             v.rect.x1,
                             v.rect.y1,
                             v.rect.x2 - v.rect.x1,
@@ -259,7 +270,7 @@ pub fn app_render() {
                         .unwrap()
                 }
             }
-            if selection.selected_squares.len() > 0 {
+            if !selection.selected_squares.is_empty() {
                 context.set_fill_style(&"#f0ec0088".into());
                 selection.selected_squares.iter().for_each(|pos| {
                     context.fill_rect(
@@ -273,10 +284,10 @@ pub fn app_render() {
                 })
             }
             if let Some(from) = &selection.selected_pos {
-                if let Some(selected_piece) = board.get(&from) {
+                if let Some(selected_piece) = board.get(from) {
                     if let Some(player) = players.get(&selected_piece.color) {
-                        if let Some(piece_moves) = player.moves.get(&from) {
-                            for (to, _) in piece_moves {
+                        if let Some(piece_moves) = player.moves.get(from) {
+                            for to in piece_moves.keys() {
                                 context.set_fill_style(&"#09056b88".into());
                                 context.begin_path();
                                 let _ = context.arc(
@@ -317,11 +328,11 @@ pub fn app_click(row: u16, col: u16) {
         for color in players_temp.keys() {
             tempmoves.insert(
                 color,
-                legal_moves_of_player(board, &bounds, history, &players_temp, &color),
+                legal_moves_of_player(board, &bounds, history, &players_temp, color),
             );
         }
         for (color, moves) in tempmoves {
-            players.get_mut(&color).unwrap().moves = moves;
+            players.get_mut(color).unwrap().moves = moves;
         }
     });
     on_change(Prop::BoardSet);

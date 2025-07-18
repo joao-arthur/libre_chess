@@ -26,7 +26,7 @@ pub fn get_values_to_render(board: &GameBoard, settings: &RenderSettings) -> Vec
         for col in 0..8 {
             if let Some(piece) = board.get(&Pos { row, col }) {
                 values_to_render.push(ValueToRender {
-                    piece: piece.clone(),
+                    piece: *piece,
                     rect: RectF64 {
                         x1: (col as f64) * cell_size,
                         y1: (settings.dim as f64) - (row as f64) * cell_size - cell_size,
