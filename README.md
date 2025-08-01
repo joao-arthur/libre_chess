@@ -16,34 +16,12 @@ A _Web Assembly_ application that works as a bridge between _lib_ and _web_front
 
 A minimal user application, responsible for render the canvas and init the _Web Assembly_, using **NextJS**.
 
-## TODO
 
-## Movements
+## Roadmap
 
-- [x] Rook
-- [x] Knight
-- [x] Bishop
-- [x] Queen
-- [x] King
-    - [ ] Can't put king under check
-    - [ ] Castling
-- [x] Pawn
-    - [ ] Promotion
-    - [ ] En passant
-
-## Special conditions
-
-- [ ] Check
-- [ ] Check mate
-
-## Game end
-
-- [ ] Resign
-- [ ] Draw
-    - [ ] 50 moves rule
-    - [ ] 3 repetions
-- [ ] Stalemate
-- [ ] Dead position
+- [ ] All rules of chess
+- [ ] Game working from begin to end 
+- [ ] Better UI
 
 ## Run it
 

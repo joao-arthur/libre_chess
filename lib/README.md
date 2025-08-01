@@ -1,23 +1,27 @@
 ## TODO
 
-- [ ] Special moves
-    - [-] En passant
-    - [ ] Check
-    - [-] Castling
-    - [ ] Promotion
+### Movements
 
-- [ ] Game result
-    - [ ] Stalemate
-    - [ ] Checkmate
-    - [ ] Draw
-    - [ ] Resign
+- [ ] Pawn promotion
 
-- [ ] Stalemate by no capture
-- [ ] Stalemate by repetition
+### Special conditions
 
-- [ ] Game modes
-    - [ ] 960 chess
-    - [ ] Alice Chess
+- [ ] Check
+
+### Game end
+
+- [ ] Check mate
+- [ ] Resign
+- [ ] Draw
+    - [ ] 50 moves rule
+    - [ ] 3 repetions
+- [ ] Stalemate
+- [ ] Dead position
+
+### Modes
+
+- [ ] 960 chess
+- [ ] Alice Chess
 
 ## Fix
 
