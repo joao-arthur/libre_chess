@@ -1,3 +1,5 @@
+use manfredo::cartesian::rect::rect_u8::{len_x, len_y};
+
 use std::{collections::HashMap, fmt};
 
 use crate::{game::game::GameBounds, piece::Piece, pos::Pos};
@@ -39,21 +41,19 @@ pub fn board_try_of_str<const N: usize>(
     if rows.join("").find(|c| c != ' ' && Piece::try_of(c).is_none()).is_some() {
         return Err(GameBoardErr::InvalidCharacter(InvalidCharacterErr));
     }
-    let delta_x = usize::from(bounds.x2 - bounds.x1) + 1;
-    let delta_y: usize = usize::from(bounds.y2 - bounds.y1) + 1;
-    if rows.len() != delta_y {
+    if rows.len() != usize::from(len_y(bounds)) {
         return Err(GameBoardErr::InvalidLength(InvalidLengthErr));
     }
     for row in rows {
-        if row.chars().count() != delta_x {
+        if row.chars().count() != usize::from(len_x(bounds)) {
             return Err(GameBoardErr::InvalidLength(InvalidLengthErr));
         }
     }
     let mut board = HashMap::new();
-    for row in bounds.y1..=bounds.y2 {
-        for col in bounds.x1..=bounds.x2 {
-            let row_index = bounds.y2 - row;
-            let col_index = col - bounds.x1;
+    for row in bounds.min.y..=bounds.max.y {
+        for col in bounds.min.x..=bounds.max.x {
+            let row_index = bounds.max.y - row;
+            let col_index = col - bounds.min.x;
             let str_row = rows[row_index as usize];
             let str_col = str_row.chars().nth(col_index.into()).unwrap();
             if let Some(piece) = Piece::try_of(str_col) {
@@ -70,10 +70,10 @@ pub fn board_of_str<const N: usize>(bounds: &GameBounds, rows: [&str; N]) -> Gam
 
 pub fn board_to_string(bounds: &GameBounds, board: &GameBoard) -> String {
     let mut res = "".to_string();
-    let mut row = bounds.y2 + 1;
-    while row > bounds.y1 {
+    let mut row = bounds.max.y + 1;
+    while row > bounds.min.y {
         row -= 1;
-        for col in bounds.x1..=bounds.x2 {
+        for col in bounds.min.x..=bounds.max.x {
             match board.get(&Pos { row, col }) {
                 Some(p) => res.push_str(&p.to_string()),
                 None => res.push(' '),
@@ -170,7 +170,7 @@ mod tests {
     fn board_try_of_str_custom_bounds() {
         assert_eq!(
             board_try_of_str(
-                &GameBounds { x1: 10, y1: 10, x2: 13, y2: 13 },
+                &GameBounds::of(10, 10, 13, 13),
                 [
                     " ♛♚ ", //
                     "    ", //
@@ -339,7 +339,7 @@ mod tests {
 
     #[test]
     fn test_board_to_string_custom_bounds() {
-        let bounds = GameBounds { x1: 10, y1: 10, x2: 13, y2: 13 };
+        let bounds = GameBounds::of(10, 10, 13, 13);
         assert_eq!(
             board_to_string(
                 &bounds,

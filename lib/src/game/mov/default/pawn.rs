@@ -40,10 +40,10 @@ pub fn pawn_moves(
         }
         for curr_pos in capture_base {
             if let Some(curr_pos) = curr_pos {
-                if curr_pos.col < bounds.x1
-                    || curr_pos.col > bounds.x2
-                    || curr_pos.row < bounds.y1
-                    || curr_pos.row > bounds.y2
+                if curr_pos.col < bounds.min.x
+                    || curr_pos.col > bounds.max.x
+                    || curr_pos.row < bounds.min.y
+                    || curr_pos.row > bounds.max.y
                 {
                     continue;
                 }

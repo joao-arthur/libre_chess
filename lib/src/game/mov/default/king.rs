@@ -24,10 +24,10 @@ pub fn king_moves(
         ];
         for curr_pos in base {
             if let Some(curr_pos) = curr_pos {
-                if curr_pos.col < bounds.x1
-                    || curr_pos.col > bounds.x2
-                    || curr_pos.row < bounds.y1
-                    || curr_pos.row > bounds.y2
+                if curr_pos.col < bounds.min.x
+                    || curr_pos.col > bounds.max.x
+                    || curr_pos.row < bounds.min.y
+                    || curr_pos.row > bounds.max.y
                 {
                     continue;
                 }
@@ -150,7 +150,7 @@ mod tests {
     #[test]
     fn king_moves_small_bounds_top_right_edge() {
         let board = [(Pos::of("H8"), Piece::of('♚'))].into();
-        let bounds = GameBounds { x1: 3, y1: 3, x2: 7, y2: 7 };
+        let bounds = GameBounds::of(3, 3, 7, 7);
         assert_eq!(
             king_moves(&board, &bounds, &Pos::of("H8")),
             [
@@ -165,7 +165,7 @@ mod tests {
     #[test]
     fn king_moves_small_bounds_bottom_right_edge() {
         let board = [(Pos::of("H4"), Piece::of('♚'))].into();
-        let bounds = GameBounds { x1: 3, y1: 3, x2: 7, y2: 7 };
+        let bounds = GameBounds::of(3, 3, 7, 7);
         assert_eq!(
             king_moves(&board, &bounds, &Pos::of("H4")),
             [
@@ -180,7 +180,7 @@ mod tests {
     #[test]
     fn king_moves_small_bounds_bottom_left_edge() {
         let board = [(Pos::of("D4"), Piece::of('♚'))].into();
-        let bounds = GameBounds { x1: 3, y1: 3, x2: 7, y2: 7 };
+        let bounds = GameBounds::of(3, 3, 7, 7);
         assert_eq!(
             king_moves(&board, &bounds, &Pos::of("D4")),
             [
@@ -195,7 +195,7 @@ mod tests {
     #[test]
     fn king_moves_small_bounds_top_left_edge() {
         let board = [(Pos::of("D8"), Piece::of('♚'))].into();
-        let bounds = GameBounds { x1: 3, y1: 3, x2: 7, y2: 7 };
+        let bounds = GameBounds::of(3, 3, 7, 7);
         assert_eq!(
             king_moves(&board, &bounds, &Pos::of("D8")),
             [

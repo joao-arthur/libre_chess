@@ -1,9 +1,10 @@
 use std::collections::HashMap;
 
+use manfredo::cartesian::rect::rect_u8::RectU8;
+
 use crate::{
     color::Color,
     game::{board::GameBoard, mov::GameMove, player::GamePlayer},
-    geometry::poligon::rect::RectU8,
 };
 
 pub type GameBounds = RectU8;

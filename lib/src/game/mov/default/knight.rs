@@ -24,10 +24,10 @@ pub fn knight_moves(
         ];
         for curr_pos in base {
             if let Some(curr_pos) = curr_pos {
-                if curr_pos.col < bounds.x1
-                    || curr_pos.col > bounds.x2
-                    || curr_pos.row < bounds.y1
-                    || curr_pos.row > bounds.y2
+                if curr_pos.col < bounds.min.x
+                    || curr_pos.col > bounds.max.x
+                    || curr_pos.row < bounds.min.y
+                    || curr_pos.row > bounds.max.y
                 {
                     continue;
                 }
@@ -134,7 +134,7 @@ mod tests {
     #[test]
     fn knight_moves_small_bounds_top_right_edge() {
         let board = [(Pos::of("G7"), Piece::of('♞'))].into();
-        let bounds = GameBounds { x1: 3, y1: 3, x2: 7, y2: 7 };
+        let bounds = GameBounds::of(3, 3, 7, 7);
         assert_eq!(
             knight_moves(&board, &bounds, &Pos::of("G7")),
             [
@@ -150,7 +150,7 @@ mod tests {
     #[test]
     fn knight_moves_small_bounds_bottom_right_edge() {
         let board = [(Pos::of("G5"), Piece::of('♞'))].into();
-        let bounds = GameBounds { x1: 3, y1: 3, x2: 7, y2: 7 };
+        let bounds = GameBounds::of(3, 3, 7, 7);
         assert_eq!(
             knight_moves(&board, &bounds, &Pos::of("G5")),
             [
@@ -166,7 +166,7 @@ mod tests {
     #[test]
     fn knight_moves_small_bounds_bottom_left_edge() {
         let board = [(Pos::of("E5"), Piece::of('♞'))].into();
-        let bounds = GameBounds { x1: 3, y1: 3, x2: 7, y2: 7 };
+        let bounds = GameBounds::of(3, 3, 7, 7);
         assert_eq!(
             knight_moves(&board, &bounds, &Pos::of("E5")),
             [
@@ -182,7 +182,7 @@ mod tests {
     #[test]
     fn knight_moves_small_bounds_top_left_edge() {
         let board = [(Pos::of("E7"), Piece::of('♞'))].into();
-        let bounds = GameBounds { x1: 3, y1: 3, x2: 7, y2: 7 };
+        let bounds = GameBounds::of(3, 3, 7, 7);
         assert_eq!(
             knight_moves(&board, &bounds, &Pos::of("E7")),
             [

@@ -140,7 +140,7 @@ mod tests {
                     (Pos::of("H1"), Piece::of('♖')),
                 ]
                 .into(),
-                bounds: GameBounds { x1: 0, y1: 0, x2: 7, y2: 7 },
+                bounds: GameBounds::of(0, 0, 7, 7),
                 players: [
                     (
                         Color::Black,
@@ -400,7 +400,7 @@ mod tests {
     //                    "   ♜    ",
     //                ]
     //            ),
-    //            bounds: GameBounds { x1: 0, y1: 0, x2: 7, y2: 7 },
+    //            bounds: GameBounds::of(0, 0, 7, 7),
     //            players: [
     //                (
     //                    Color::Black,

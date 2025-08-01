@@ -213,7 +213,7 @@ mod tests {
     #[test]
     fn queen_moves_small_bounds() {
         let board = [(Pos::of("F6"), Piece::of('♛'))].into();
-        let bounds = GameBounds { x1: 3, y1: 3, x2: 7, y2: 7 };
+        let bounds = GameBounds::of(3, 3, 7, 7);
         assert_eq!(
             queen_moves(&board, &bounds, &Pos::of("F6")),
             [

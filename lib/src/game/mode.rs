@@ -12,7 +12,7 @@ pub struct GameMode {
 
 pub fn standard_chess() -> GameMode {
     GameMode {
-        bounds: GameBounds { x1: 0, y1: 0, x2: 7, y2: 7 },
+        bounds: GameBounds::of(0, 0, 7, 7),
         initial_board: [
             (Pos::of("A8"), Piece::of('♜')),
             (Pos::of("B8"), Piece::of('♞')),
@@ -93,7 +93,7 @@ mod tests {
         assert_eq!(
             mode,
             GameMode {
-                bounds: GameBounds { x1: 0, y1: 0, x2: 7, y2: 7 },
+                bounds: GameBounds::of(0, 0, 7, 7),
                 initial_board: board_of_str(
                     &mode.bounds,
                     [

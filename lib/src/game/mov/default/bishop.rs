@@ -20,10 +20,10 @@ pub fn bishop_moves(
                 rel_row += modifier[0];
                 rel_col += modifier[1];
                 if let Some(curr_pos) = pos.try_rel_idx(rel_row, rel_col) {
-                    if curr_pos.col < bounds.x1
-                        || curr_pos.col > bounds.x2
-                        || curr_pos.row < bounds.y1
-                        || curr_pos.row > bounds.y2
+                    if curr_pos.col < bounds.min.x
+                        || curr_pos.col > bounds.max.x
+                        || curr_pos.row < bounds.min.y
+                        || curr_pos.row > bounds.max.y
                     {
                         break;
                     }
@@ -93,7 +93,7 @@ mod tests {
     #[test]
     fn bishop_moves_small_bounds() {
         let board = [(Pos::of("F6"), Piece::of('♝'))].into();
-        let bounds = GameBounds { x1: 3, y1: 3, x2: 7, y2: 7 };
+        let bounds = GameBounds::of(3, 3, 7, 7);
         assert_eq!(
             bishop_moves(&board, &bounds, &Pos::of("F6")),
             [
