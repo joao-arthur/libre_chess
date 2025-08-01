@@ -312,7 +312,7 @@ pub fn app_render() {
 
 pub fn app_click(row: u16, col: u16) {
     let dim = MODEL.with(|m| m.borrow().settings.render_settings.dim as f64);
-    let bounds = MODEL.with(|m| m.borrow().game.bounds);
+    let bounds = MODEL.with(|m| m.borrow().game.bounds.clone());
 
     MODEL.with(|i| {
         let mut m = i.borrow_mut();

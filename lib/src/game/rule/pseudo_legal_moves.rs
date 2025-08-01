@@ -49,7 +49,6 @@ mod tests {
             game::empty_players,
             mode::standard_chess,
             mov::{GameMove, PieceMoveType},
-            player::GamePlayer,
         },
         pos::Pos,
     };

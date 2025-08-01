@@ -87,7 +87,7 @@ mod tests {
         color::Color,
         game::{
             board::board_of_str,
-            game::{GamePlayers, empty_players},
+            game::empty_players,
             mode::standard_chess,
             mov::PieceMoveType,
             player::GamePlayer,
