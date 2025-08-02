@@ -1,4 +1,4 @@
-use manfredo::cartesian::rect::rect_u8::{len_x, len_y};
+use manfredo::matrix::rect::rect_u8::{len_col, len_row};
 
 use crate::{
     game::{
@@ -162,20 +162,22 @@ pub fn try_game_move_vec_from_str<const N: usize>(
     {
         return Err(GameBoardErr::InvalidCharacter(InvalidCharacterErr));
     }
-    if rows.len() != usize::from(len_y(bounds)) {
+    if rows.len() != usize::from(len_row(bounds)) {
         return Err(GameBoardErr::InvalidLength(InvalidLengthErr));
     }
     for row in rows {
-        if row.chars().count() != usize::from(len_x(bounds)) {
+        if row.chars().count() != usize::from(len_col(bounds)) {
             return Err(GameBoardErr::InvalidLength(InvalidLengthErr));
         }
     }
     let mut piece: Option<Piece> = None;
     let mut from: Option<Pos> = None;
-    for row in bounds.min.y..=bounds.max.y {
-        for col in bounds.min.x..=bounds.max.x {
-            let row_index = bounds.max.y - row;
-            let col_index = col - bounds.min.x;
+    let it_row = bounds.iter_row();
+    for row in it_row {
+        let it_col = bounds.iter_col();
+        for col in it_col {
+            let row_index = bounds.max.row - row;
+            let col_index = col - bounds.min.col;
             let str_row = rows[row_index as usize];
             let str_col = str_row.chars().nth(col_index.into()).unwrap();
             if let Some(p) = Piece::try_of(str_col) {
@@ -188,10 +190,12 @@ pub fn try_game_move_vec_from_str<const N: usize>(
     let piece = piece.ok_or(GameBoardErr::InvalidCharacter(InvalidCharacterErr))?;
     let from = from.ok_or(GameBoardErr::InvalidCharacter(InvalidCharacterErr))?;
     let mut res = Vec::new();
-    for row in bounds.min.y..=bounds.max.y {
-        for col in bounds.min.x..=bounds.max.x {
-            let row_index = bounds.max.y - row;
-            let col_index = col - bounds.min.x;
+    let it_row = bounds.iter_row();
+    for row in it_row {
+        let it_col = bounds.iter_col();
+        for col in it_col {
+            let row_index = bounds.max.row - row;
+            let col_index = col - bounds.min.col;
             let str_row = rows[row_index as usize];
             let str_col = str_row.chars().nth(col_index.into()).unwrap();
             let to = Pos { row, col };
@@ -221,10 +225,11 @@ pub fn try_game_move_vec_from_str<const N: usize>(
 
 pub fn game_move_vec_to_string(bounds: &GameBounds, moves: &Vec<GameMove>) -> String {
     let mut res = "".to_string();
-    let mut row = bounds.max.y + 1;
-    while row > bounds.min.y {
+    let mut row = bounds.max.row + 1;
+    while row > bounds.min.row {
         row -= 1;
-        for col in bounds.min.x..=bounds.max.x {
+        let it_col = bounds.iter_col();
+        for col in it_col {
             let pos = Pos { row, col };
             let maybe_mov = moves.iter().find(|game_move| game_move.mov.to == pos);
             if let Some(mov) = maybe_mov {

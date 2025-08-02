@@ -1,5 +1,7 @@
 use std::collections::HashMap;
 
+use manfredo::matrix::rect::rect_u8::contains;
+
 use crate::{
     game::{board::GameBoard, game::GameBounds, mov::PieceMoveType},
     pos::Pos,
@@ -20,10 +22,10 @@ pub fn bishop_moves(
                 rel_row += modifier[0];
                 rel_col += modifier[1];
                 if let Some(curr_pos) = pos.try_rel_idx(rel_row, rel_col) {
-                    if curr_pos.col < bounds.min.x
-                        || curr_pos.col > bounds.max.x
-                        || curr_pos.row < bounds.min.y
-                        || curr_pos.row > bounds.max.y
+                    if curr_pos.col < bounds.min.col
+                        || curr_pos.col > bounds.max.col
+                        || curr_pos.row < bounds.min.row
+                        || curr_pos.row > bounds.max.row
                     {
                         break;
                     }

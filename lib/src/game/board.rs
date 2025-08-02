@@ -1,4 +1,4 @@
-use manfredo::cartesian::rect::rect_u8::{len_x, len_y};
+use manfredo::matrix::rect::rect_u8::{len_row, len_col};
 
 use std::{collections::HashMap, fmt};
 
@@ -41,19 +41,21 @@ pub fn board_try_of_str<const N: usize>(
     if rows.join("").find(|c| c != ' ' && Piece::try_of(c).is_none()).is_some() {
         return Err(GameBoardErr::InvalidCharacter(InvalidCharacterErr));
     }
-    if rows.len() != usize::from(len_y(bounds)) {
+    if rows.len() != usize::from(len_row(bounds)) {
         return Err(GameBoardErr::InvalidLength(InvalidLengthErr));
     }
     for row in rows {
-        if row.chars().count() != usize::from(len_x(bounds)) {
+        if row.chars().count() != usize::from(len_col(bounds)) {
             return Err(GameBoardErr::InvalidLength(InvalidLengthErr));
         }
     }
     let mut board = HashMap::new();
-    for row in bounds.min.y..=bounds.max.y {
-        for col in bounds.min.x..=bounds.max.x {
-            let row_index = bounds.max.y - row;
-            let col_index = col - bounds.min.x;
+    let it_row = bounds.iter_row();
+    for row in it_row {
+        let it_col = bounds.iter_col();
+        for col in it_col {
+            let row_index = bounds.max.row - row;
+            let col_index = col - bounds.min.col;
             let str_row = rows[row_index as usize];
             let str_col = str_row.chars().nth(col_index.into()).unwrap();
             if let Some(piece) = Piece::try_of(str_col) {
@@ -70,10 +72,11 @@ pub fn board_of_str<const N: usize>(bounds: &GameBounds, rows: [&str; N]) -> Gam
 
 pub fn board_to_string(bounds: &GameBounds, board: &GameBoard) -> String {
     let mut res = "".to_string();
-    let mut row = bounds.max.y + 1;
-    while row > bounds.min.y {
+    let mut row = bounds.max.row + 1;
+    while row > bounds.min.row {
         row -= 1;
-        for col in bounds.min.x..=bounds.max.x {
+        let it_col = bounds.iter_col();
+        for col in it_col {
             match board.get(&Pos { row, col }) {
                 Some(p) => res.push_str(&p.to_string()),
                 None => res.push(' '),

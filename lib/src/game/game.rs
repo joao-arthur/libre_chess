@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use manfredo::cartesian::rect::rect_u8::RectU8;
+use manfredo::matrix::rect::rect_u8::RectU8;
 
 use crate::{
     color::Color,

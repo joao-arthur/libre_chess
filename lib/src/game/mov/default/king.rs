@@ -24,10 +24,10 @@ pub fn king_moves(
         ];
         for curr_pos in base {
             if let Some(curr_pos) = curr_pos {
-                if curr_pos.col < bounds.min.x
-                    || curr_pos.col > bounds.max.x
-                    || curr_pos.row < bounds.min.y
-                    || curr_pos.row > bounds.max.y
+                if curr_pos.col < bounds.min.col
+                    || curr_pos.col > bounds.max.col
+                    || curr_pos.row < bounds.min.row
+                    || curr_pos.row > bounds.max.row
                 {
                     continue;
                 }
