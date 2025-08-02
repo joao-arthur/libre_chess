@@ -1,4 +1,4 @@
-use manfredo::matrix::rect::rect_u8::{len_row, len_col};
+use manfredo::matrix::rect::rect_u8::{len_col, len_row};
 
 use std::{collections::HashMap, fmt};
 
@@ -50,10 +50,8 @@ pub fn board_try_of_str<const N: usize>(
         }
     }
     let mut board = HashMap::new();
-    let it_row = bounds.iter_row();
-    for row in it_row {
-        let it_col = bounds.iter_col();
-        for col in it_col {
+    for row in bounds.iter_row() {
+        for col in bounds.iter_col() {
             let row_index = bounds.max.row - row;
             let col_index = col - bounds.min.col;
             let str_row = rows[row_index as usize];
@@ -75,8 +73,7 @@ pub fn board_to_string(bounds: &GameBounds, board: &GameBoard) -> String {
     let mut row = bounds.max.row + 1;
     while row > bounds.min.row {
         row -= 1;
-        let it_col = bounds.iter_col();
-        for col in it_col {
+        for col in bounds.iter_col() {
             match board.get(&Pos { row, col }) {
                 Some(p) => res.push_str(&p.to_string()),
                 None => res.push(' '),

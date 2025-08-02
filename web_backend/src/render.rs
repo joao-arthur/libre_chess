@@ -22,8 +22,8 @@ pub struct ValueToRender {
 pub fn get_values_to_render(board: &GameBoard, settings: &RenderSettings) -> Vec<ValueToRender> {
     let mut values_to_render: Vec<ValueToRender> = Vec::new();
     let cell_size = settings.dim as f64 / 8.0;
-    for row in 0..8 {
-        for col in 0..8 {
+    for row in board.bounds.iter_row() {
+        for col in board.bounds.iter_col() {
             if let Some(piece) = board.get(&Pos { row, col }) {
                 values_to_render.push(ValueToRender {
                     piece: *piece,

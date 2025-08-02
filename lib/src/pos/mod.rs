@@ -39,11 +39,10 @@ impl Pos {
     }
 
     pub fn try_of(s: &str) -> Option<Self> {
-        let chars = s.chars();
         let mut pos_col = String::new();
         let mut pos_row = String::new();
 
-        for c in chars {
+        for c in s.chars() {
             if c.is_ascii_uppercase() {
                 pos_col.push(c);
             }

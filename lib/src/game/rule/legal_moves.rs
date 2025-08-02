@@ -58,8 +58,7 @@ pub fn legal_moves_of_player(
     //    let king_moves = pseudo_legal_moves.get_mut(&king_pos)?;
     //    for (curr_color, curr_player) in players {
     //        if curr_color != color {
-    //            let piece_moves_it = curr_player.moves.iter();
-    //            for (_, curr_piece_moves) in piece_moves_it {
+    //            for (_, curr_piece_moves) in curr_player.moves.iter() {
     //                for menace_game_move in curr_piece_moves {
     //                    if menace_game_move.typ == GameMoveType::Default
     //                        || menace_game_move.typ == GameMoveType::Capture

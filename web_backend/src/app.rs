@@ -190,9 +190,9 @@ pub fn app_render() {
             let dimmm = settings.render_settings.dim as f64;
             let cell_size = dimmm / 8.0;
             let mut acc = 0;
-            for row in 0..8 {
+            for row in bounds.iter_row() {
                 acc += 1;
-                for col in 0..8 {
+                for col in bounds.iter_col() {
                     if acc % 2 == 0 {
                         context.set_fill_style(&settings.board_color.dark.into());
                     } else {

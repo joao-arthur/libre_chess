@@ -50,8 +50,7 @@ fn short_castling(
     for col in king_pos.col..=6 {
         for (color, player) in players {
             if color != &king.color {
-                let player_moves_it = player.moves.iter();
-                for (_, player_moves) in player_moves_it {
+                for (_, player_moves) in player.moves.iter() {
                     if player_moves.contains_key(&Pos { row: king_pos.row, col }) {
                         return None;
                     }
@@ -86,8 +85,7 @@ fn long_castling(
     for col in 2..=king_pos.col {
         for (color, player) in players {
             if color != &king.color {
-                let player_moves_it = player.moves.iter();
-                for (_, player_moves) in player_moves_it {
+                for (_, player_moves) in player.moves.iter() {
                     if player_moves.contains_key(&Pos { row: king_pos.row, col }) {
                         return None;
                     }

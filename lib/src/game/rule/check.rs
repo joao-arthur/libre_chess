@@ -14,8 +14,7 @@ pub fn is_in_check(board: &GameBoard, players: &GamePlayers, history: &GameHisto
     if let Some((king_pos, _)) = maybe_king {
         for player in players.values() {
             if player.color != turn {
-                let moves_it = player.moves.iter();
-                for (_, moves) in moves_it {
+                for (_, moves) in player.moves.iter() {
                     if moves.contains_key(king_pos) {
                         return true;
                     }

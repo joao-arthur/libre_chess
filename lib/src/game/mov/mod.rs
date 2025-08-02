@@ -172,10 +172,8 @@ pub fn try_game_move_vec_from_str<const N: usize>(
     }
     let mut piece: Option<Piece> = None;
     let mut from: Option<Pos> = None;
-    let it_row = bounds.iter_row();
-    for row in it_row {
-        let it_col = bounds.iter_col();
-        for col in it_col {
+    for row in bounds.iter_row() {
+        for col in bounds.iter_col() {
             let row_index = bounds.max.row - row;
             let col_index = col - bounds.min.col;
             let str_row = rows[row_index as usize];
@@ -190,10 +188,8 @@ pub fn try_game_move_vec_from_str<const N: usize>(
     let piece = piece.ok_or(GameBoardErr::InvalidCharacter(InvalidCharacterErr))?;
     let from = from.ok_or(GameBoardErr::InvalidCharacter(InvalidCharacterErr))?;
     let mut res = Vec::new();
-    let it_row = bounds.iter_row();
-    for row in it_row {
-        let it_col = bounds.iter_col();
-        for col in it_col {
+    for row in bounds.iter_row() {
+        for col in bounds.iter_col() {
             let row_index = bounds.max.row - row;
             let col_index = col - bounds.min.col;
             let str_row = rows[row_index as usize];

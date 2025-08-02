@@ -61,8 +61,7 @@ pub fn game_of_mode_and_history(mode: GameMode, base_history: GameHistory) -> Ga
     let bounds = mode.bounds.clone();
     let mut game = game_of_mode(mode);
 
-    let history_it = base_history.iter();
-    for game_move in history_it {
+    for game_move in base_history.iter() {
         move_piece(
             &mut game.board,
             &mut game.history,
