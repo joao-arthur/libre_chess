@@ -179,6 +179,7 @@ pub fn app_render() {
     MODEL.with(|i| {
         let m = i.borrow();
         let board = &m.game.board;
+        let bounds = &m.game.bounds;
         let players = &m.game.players;
         let settings = &m.settings;
         let selection = &m.selection;
@@ -207,7 +208,7 @@ pub fn app_render() {
                     );
                 }
             }
-            let values_to_render = get_values_to_render(board, &settings.render_settings);
+            let values_to_render = get_values_to_render(board, &bounds, &settings.render_settings);
             let window = window().unwrap();
             for v in values_to_render {
                 let piece_str_name = match v.piece.color {

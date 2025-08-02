@@ -1,4 +1,4 @@
-use libre_chess_lib::{game::board::GameBoard, piece::Piece, pos::Pos};
+use libre_chess_lib::{game::{board::GameBoard, game::GameBounds}, piece::Piece, pos::Pos};
 
 #[derive(Debug, PartialEq)]
 pub struct RectF64 {
@@ -19,11 +19,11 @@ pub struct ValueToRender {
     pub rect: RectF64,
 }
 
-pub fn get_values_to_render(board: &GameBoard, settings: &RenderSettings) -> Vec<ValueToRender> {
+pub fn get_values_to_render(board: &GameBoard, bounds: &GameBounds, settings: &RenderSettings) -> Vec<ValueToRender> {
     let mut values_to_render: Vec<ValueToRender> = Vec::new();
     let cell_size = settings.dim as f64 / 8.0;
-    for row in board.bounds.iter_row() {
-        for col in board.bounds.iter_col() {
+    for row in bounds.iter_row() {
+        for col in bounds.iter_col() {
             if let Some(piece) = board.get(&Pos { row, col }) {
                 values_to_render.push(ValueToRender {
                     piece: *piece,
@@ -53,10 +53,10 @@ mod tests {
 
     #[test]
     fn test_get_values_to_render() {
-        let board = standard_chess().initial_board;
+        let mode = standard_chess();
         let settings = RenderSettings { dim: 987 };
         assert_eq!(
-            get_values_to_render(&board, &settings),
+            get_values_to_render(&mode.initial_board, &mode.bounds, &settings),
             [
                 ValueToRender { piece: Piece::of('♜'), rect: RectF64 { x1: 0.0, y1: 0.0, x2: 123.375, y2: 123.375 } },
                 ValueToRender { piece: Piece::of('♞'), rect: RectF64 { x1: 123.375, y1: 0.0, x2: 246.75, y2: 123.375 } },
