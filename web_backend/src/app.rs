@@ -230,15 +230,23 @@ pub fn app_render() {
                     },
                 };
                 if in_check && v.piece.typ == PieceType::King && v.piece.color == turn {
-                    let grid_horizontal =
-                        context.create_linear_gradient(v.rect.x1, v.rect.y1, v.rect.x2, v.rect.y1);
+                    let grid_horizontal = context.create_linear_gradient(
+                        v.rect.min.x,
+                        v.rect.min.y,
+                        v.rect.max.x,
+                        v.rect.min.y,
+                    );
                     grid_horizontal.add_color_stop(0.0, "#D20103");
                     grid_horizontal.add_color_stop(0.1, "transparent");
                     grid_horizontal.add_color_stop(0.9, "transparent");
                     grid_horizontal.add_color_stop(1.0, "#D20103");
 
-                    let grid_vertical =
-                        context.create_linear_gradient(v.rect.x1, v.rect.y1, v.rect.x1, v.rect.y2);
+                    let grid_vertical = context.create_linear_gradient(
+                        v.rect.min.x,
+                        v.rect.min.y,
+                        v.rect.min.x,
+                        v.rect.max.y,
+                    );
                     grid_vertical.add_color_stop(0.0, "#D20103");
                     grid_vertical.add_color_stop(0.1, "transparent");
                     grid_vertical.add_color_stop(0.9, "transparent");
@@ -246,27 +254,27 @@ pub fn app_render() {
 
                     context.set_fill_style(&grid_horizontal.into());
                     context.fill_rect(
-                        v.rect.x1,
-                        v.rect.y1,
-                        v.rect.x2 - v.rect.x1,
-                        v.rect.y2 - v.rect.y1,
+                        v.rect.min.x,
+                        v.rect.min.y,
+                        v.rect.max.x - v.rect.min.x,
+                        v.rect.max.y - v.rect.min.y,
                     );
                     context.set_fill_style(&grid_vertical.into());
                     context.fill_rect(
-                        v.rect.x1,
-                        v.rect.y1,
-                        v.rect.x2 - v.rect.x1,
-                        v.rect.y2 - v.rect.y1,
+                        v.rect.min.x,
+                        v.rect.min.y,
+                        v.rect.max.x - v.rect.min.x,
+                        v.rect.max.y - v.rect.min.y,
                     );
                 }
                 if let Some(html_el) = board_set.get(&piece_str_name.to_string()) {
                     context
                         .draw_image_with_html_image_element_and_dw_and_dh(
                             html_el,
-                            v.rect.x1,
-                            v.rect.y1,
-                            v.rect.x2 - v.rect.x1,
-                            v.rect.y2 - v.rect.y1,
+                            v.rect.min.x,
+                            v.rect.min.y,
+                            v.rect.max.x - v.rect.min.x,
+                            v.rect.max.y - v.rect.min.y,
                         )
                         .unwrap()
                 }

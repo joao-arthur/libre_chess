@@ -36,6 +36,7 @@ name = "libre_chess_web_backend"
 version = "1.0.0"
 dependencies = [
  "libre_chess_lib",
+ "manfredo",
  "serde",
  "serde-wasm-bindgen",
  "wasm-bindgen",
