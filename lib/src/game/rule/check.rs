@@ -36,7 +36,7 @@ mod tests {
             mov::{GameMove, PieceMoveType},
             player::GamePlayer,
         },
-        pos::Pos,
+        pos::pos_of,
     };
 
     use super::is_in_check;
@@ -67,20 +67,20 @@ mod tests {
                     captures: Vec::new(),
                     moves: [
                         (
-                            Pos::of("E8"),
+                            pos_of("E8"),
                             [
-                                (Pos::of("F8"), PieceMoveType::Default),
-                                (Pos::of("F7"), PieceMoveType::Default),
-                                (Pos::of("D7"), PieceMoveType::Default),
-                                (Pos::of("D8"), PieceMoveType::Default),
+                                (pos_of("F8"), PieceMoveType::Default),
+                                (pos_of("F7"), PieceMoveType::Default),
+                                (pos_of("D7"), PieceMoveType::Default),
+                                (pos_of("D8"), PieceMoveType::Default),
                             ]
                             .into(),
                         ),
                         (
-                            Pos::of("E6"),
+                            pos_of("E6"),
                             [
-                                (Pos::of("E6"), PieceMoveType::Default),
-                                (Pos::of("E5"), PieceMoveType::Default),
+                                (pos_of("E6"), PieceMoveType::Default),
+                                (pos_of("E5"), PieceMoveType::Default),
                             ]
                             .into(),
                         ),
@@ -95,20 +95,20 @@ mod tests {
                     captures: Vec::new(),
                     moves: [
                         (
-                            Pos::of("E1"),
+                            pos_of("E1"),
                             [
-                                (Pos::of("F2"), PieceMoveType::Default),
-                                (Pos::of("F1"), PieceMoveType::Default),
-                                (Pos::of("D1"), PieceMoveType::Default),
-                                (Pos::of("D2"), PieceMoveType::Default),
+                                (pos_of("F2"), PieceMoveType::Default),
+                                (pos_of("F1"), PieceMoveType::Default),
+                                (pos_of("D1"), PieceMoveType::Default),
+                                (pos_of("D2"), PieceMoveType::Default),
                             ]
                             .into(),
                         ),
                         (
-                            Pos::of("E2"),
+                            pos_of("E2"),
                             [
-                                (Pos::of("E3"), PieceMoveType::Default),
-                                (Pos::of("E4"), PieceMoveType::Default),
+                                (pos_of("E3"), PieceMoveType::Default),
+                                (pos_of("E4"), PieceMoveType::Default),
                             ]
                             .into(),
                         ),
@@ -147,20 +147,20 @@ mod tests {
                     captures: Vec::new(),
                     moves: [
                         (
-                            Pos::of("E8"),
+                            pos_of("E8"),
                             [
-                                (Pos::of("F8"), PieceMoveType::Default),
-                                (Pos::of("F7"), PieceMoveType::Default),
-                                (Pos::of("D7"), PieceMoveType::Default),
-                                (Pos::of("D8"), PieceMoveType::Default),
+                                (pos_of("F8"), PieceMoveType::Default),
+                                (pos_of("F7"), PieceMoveType::Default),
+                                (pos_of("D7"), PieceMoveType::Default),
+                                (pos_of("D8"), PieceMoveType::Default),
                             ]
                             .into(),
                         ),
                         (
-                            Pos::of("E6"),
+                            pos_of("E6"),
                             [
-                                (Pos::of("E6"), PieceMoveType::Default),
-                                (Pos::of("E5"), PieceMoveType::Default),
+                                (pos_of("E6"), PieceMoveType::Default),
+                                (pos_of("E5"), PieceMoveType::Default),
                             ]
                             .into(),
                         ),
@@ -175,21 +175,21 @@ mod tests {
                     captures: Vec::new(),
                     moves: [
                         (
-                            Pos::of("D7"),
+                            pos_of("D7"),
                             [
-                                (Pos::of("D8"), PieceMoveType::Default),
-                                (Pos::of("E8"), PieceMoveType::Default),
+                                (pos_of("D8"), PieceMoveType::Default),
+                                (pos_of("E8"), PieceMoveType::Default),
                             ]
                             .into(),
                         ),
                         (
-                            Pos::of("E1"),
+                            pos_of("E1"),
                             [
-                                (Pos::of("F2"), PieceMoveType::Default),
-                                (Pos::of("F1"), PieceMoveType::Default),
-                                (Pos::of("D1"), PieceMoveType::Default),
-                                (Pos::of("D2"), PieceMoveType::Default),
-                                (Pos::of("E2"), PieceMoveType::Default),
+                                (pos_of("F2"), PieceMoveType::Default),
+                                (pos_of("F1"), PieceMoveType::Default),
+                                (pos_of("D1"), PieceMoveType::Default),
+                                (pos_of("D2"), PieceMoveType::Default),
+                                (pos_of("E2"), PieceMoveType::Default),
                             ]
                             .into(),
                         ),

@@ -44,7 +44,7 @@ mod tests {
     use crate::{
         game::{board::board_empty, mode::standard_chess, mov::PieceMoveType},
         piece::Piece,
-        pos::Pos,
+        pos::pos_of,
     };
 
     use super::default_moves;
@@ -52,30 +52,30 @@ mod tests {
     #[test]
     fn default_moves_empty_board() {
         let mode = standard_chess();
-        assert_eq!(default_moves(&board_empty(), &mode.bounds, &Pos::of("A1")), HashMap::new());
+        assert_eq!(default_moves(&board_empty(), &mode.bounds, &pos_of("A1")), HashMap::new());
     }
 
     #[test]
     fn default_moves_rook() {
         let mode = standard_chess();
-        let board = [(Pos::of("D4"), Piece::of('♜'))].into();
+        let board = [(pos_of("D4"), Piece::of('♜'))].into();
         assert_eq!(
-            default_moves(&board, &mode.bounds, &Pos::of("D4")),
+            default_moves(&board, &mode.bounds, &pos_of("D4")),
             [
-                (Pos::of("E4"), PieceMoveType::Default),
-                (Pos::of("F4"), PieceMoveType::Default),
-                (Pos::of("G4"), PieceMoveType::Default),
-                (Pos::of("H4"), PieceMoveType::Default),
-                (Pos::of("D3"), PieceMoveType::Default),
-                (Pos::of("D2"), PieceMoveType::Default),
-                (Pos::of("D1"), PieceMoveType::Default),
-                (Pos::of("C4"), PieceMoveType::Default),
-                (Pos::of("B4"), PieceMoveType::Default),
-                (Pos::of("A4"), PieceMoveType::Default),
-                (Pos::of("D5"), PieceMoveType::Default),
-                (Pos::of("D6"), PieceMoveType::Default),
-                (Pos::of("D7"), PieceMoveType::Default),
-                (Pos::of("D8"), PieceMoveType::Default),
+                (pos_of("E4"), PieceMoveType::Default),
+                (pos_of("F4"), PieceMoveType::Default),
+                (pos_of("G4"), PieceMoveType::Default),
+                (pos_of("H4"), PieceMoveType::Default),
+                (pos_of("D3"), PieceMoveType::Default),
+                (pos_of("D2"), PieceMoveType::Default),
+                (pos_of("D1"), PieceMoveType::Default),
+                (pos_of("C4"), PieceMoveType::Default),
+                (pos_of("B4"), PieceMoveType::Default),
+                (pos_of("A4"), PieceMoveType::Default),
+                (pos_of("D5"), PieceMoveType::Default),
+                (pos_of("D6"), PieceMoveType::Default),
+                (pos_of("D7"), PieceMoveType::Default),
+                (pos_of("D8"), PieceMoveType::Default),
             ]
             .into()
         );
@@ -84,18 +84,18 @@ mod tests {
     #[test]
     fn default_moves_knight() {
         let mode = standard_chess();
-        let board = [(Pos::of("D4"), Piece::of('♞'))].into();
+        let board = [(pos_of("D4"), Piece::of('♞'))].into();
         assert_eq!(
-            default_moves(&board, &mode.bounds, &Pos::of("D4")),
+            default_moves(&board, &mode.bounds, &pos_of("D4")),
             [
-                (Pos::of("E6"), PieceMoveType::Default),
-                (Pos::of("F5"), PieceMoveType::Default),
-                (Pos::of("F3"), PieceMoveType::Default),
-                (Pos::of("E2"), PieceMoveType::Default),
-                (Pos::of("C2"), PieceMoveType::Default),
-                (Pos::of("B3"), PieceMoveType::Default),
-                (Pos::of("B5"), PieceMoveType::Default),
-                (Pos::of("C6"), PieceMoveType::Default),
+                (pos_of("E6"), PieceMoveType::Default),
+                (pos_of("F5"), PieceMoveType::Default),
+                (pos_of("F3"), PieceMoveType::Default),
+                (pos_of("E2"), PieceMoveType::Default),
+                (pos_of("C2"), PieceMoveType::Default),
+                (pos_of("B3"), PieceMoveType::Default),
+                (pos_of("B5"), PieceMoveType::Default),
+                (pos_of("C6"), PieceMoveType::Default),
             ]
             .into()
         );
@@ -104,21 +104,21 @@ mod tests {
     #[test]
     fn default_moves_bishop() {
         let mode = standard_chess();
-        let board = [(Pos::of("C5"), Piece::of('♝'))].into();
+        let board = [(pos_of("C5"), Piece::of('♝'))].into();
         assert_eq!(
-            default_moves(&board, &mode.bounds, &Pos::of("C5")),
+            default_moves(&board, &mode.bounds, &pos_of("C5")),
             [
-                (Pos::of("D6"), PieceMoveType::Default),
-                (Pos::of("E7"), PieceMoveType::Default),
-                (Pos::of("F8"), PieceMoveType::Default),
-                (Pos::of("D4"), PieceMoveType::Default),
-                (Pos::of("E3"), PieceMoveType::Default),
-                (Pos::of("F2"), PieceMoveType::Default),
-                (Pos::of("G1"), PieceMoveType::Default),
-                (Pos::of("B4"), PieceMoveType::Default),
-                (Pos::of("A3"), PieceMoveType::Default),
-                (Pos::of("B6"), PieceMoveType::Default),
-                (Pos::of("A7"), PieceMoveType::Default),
+                (pos_of("D6"), PieceMoveType::Default),
+                (pos_of("E7"), PieceMoveType::Default),
+                (pos_of("F8"), PieceMoveType::Default),
+                (pos_of("D4"), PieceMoveType::Default),
+                (pos_of("E3"), PieceMoveType::Default),
+                (pos_of("F2"), PieceMoveType::Default),
+                (pos_of("G1"), PieceMoveType::Default),
+                (pos_of("B4"), PieceMoveType::Default),
+                (pos_of("A3"), PieceMoveType::Default),
+                (pos_of("B6"), PieceMoveType::Default),
+                (pos_of("A7"), PieceMoveType::Default),
             ]
             .into()
         );
@@ -127,35 +127,35 @@ mod tests {
     #[test]
     fn default_moves_queen() {
         let mode = standard_chess();
-        let board = [(Pos::of("C5"), Piece::of('♛'))].into();
+        let board = [(pos_of("C5"), Piece::of('♛'))].into();
         assert_eq!(
-            default_moves(&board, &mode.bounds, &Pos::of("C5")),
+            default_moves(&board, &mode.bounds, &pos_of("C5")),
             [
-                (Pos::of("D6"), PieceMoveType::Default),
-                (Pos::of("E7"), PieceMoveType::Default),
-                (Pos::of("F8"), PieceMoveType::Default),
-                (Pos::of("D4"), PieceMoveType::Default),
-                (Pos::of("E3"), PieceMoveType::Default),
-                (Pos::of("F2"), PieceMoveType::Default),
-                (Pos::of("G1"), PieceMoveType::Default),
-                (Pos::of("B4"), PieceMoveType::Default),
-                (Pos::of("A3"), PieceMoveType::Default),
-                (Pos::of("B6"), PieceMoveType::Default),
-                (Pos::of("A7"), PieceMoveType::Default),
-                (Pos::of("D5"), PieceMoveType::Default),
-                (Pos::of("E5"), PieceMoveType::Default),
-                (Pos::of("F5"), PieceMoveType::Default),
-                (Pos::of("G5"), PieceMoveType::Default),
-                (Pos::of("H5"), PieceMoveType::Default),
-                (Pos::of("C4"), PieceMoveType::Default),
-                (Pos::of("C3"), PieceMoveType::Default),
-                (Pos::of("C2"), PieceMoveType::Default),
-                (Pos::of("C1"), PieceMoveType::Default),
-                (Pos::of("B5"), PieceMoveType::Default),
-                (Pos::of("A5"), PieceMoveType::Default),
-                (Pos::of("C6"), PieceMoveType::Default),
-                (Pos::of("C7"), PieceMoveType::Default),
-                (Pos::of("C8"), PieceMoveType::Default),
+                (pos_of("D6"), PieceMoveType::Default),
+                (pos_of("E7"), PieceMoveType::Default),
+                (pos_of("F8"), PieceMoveType::Default),
+                (pos_of("D4"), PieceMoveType::Default),
+                (pos_of("E3"), PieceMoveType::Default),
+                (pos_of("F2"), PieceMoveType::Default),
+                (pos_of("G1"), PieceMoveType::Default),
+                (pos_of("B4"), PieceMoveType::Default),
+                (pos_of("A3"), PieceMoveType::Default),
+                (pos_of("B6"), PieceMoveType::Default),
+                (pos_of("A7"), PieceMoveType::Default),
+                (pos_of("D5"), PieceMoveType::Default),
+                (pos_of("E5"), PieceMoveType::Default),
+                (pos_of("F5"), PieceMoveType::Default),
+                (pos_of("G5"), PieceMoveType::Default),
+                (pos_of("H5"), PieceMoveType::Default),
+                (pos_of("C4"), PieceMoveType::Default),
+                (pos_of("C3"), PieceMoveType::Default),
+                (pos_of("C2"), PieceMoveType::Default),
+                (pos_of("C1"), PieceMoveType::Default),
+                (pos_of("B5"), PieceMoveType::Default),
+                (pos_of("A5"), PieceMoveType::Default),
+                (pos_of("C6"), PieceMoveType::Default),
+                (pos_of("C7"), PieceMoveType::Default),
+                (pos_of("C8"), PieceMoveType::Default),
             ]
             .into()
         );
@@ -164,18 +164,18 @@ mod tests {
     #[test]
     fn default_moves_king() {
         let mode = standard_chess();
-        let board = [(Pos::of("D4"), Piece::of('♚'))].into();
+        let board = [(pos_of("D4"), Piece::of('♚'))].into();
         assert_eq!(
-            default_moves(&board, &mode.bounds, &Pos::of("D4")),
+            default_moves(&board, &mode.bounds, &pos_of("D4")),
             [
-                (Pos::of("E5"), PieceMoveType::Default),
-                (Pos::of("E4"), PieceMoveType::Default),
-                (Pos::of("E3"), PieceMoveType::Default),
-                (Pos::of("D3"), PieceMoveType::Default),
-                (Pos::of("C3"), PieceMoveType::Default),
-                (Pos::of("C4"), PieceMoveType::Default),
-                (Pos::of("C5"), PieceMoveType::Default),
-                (Pos::of("D5"), PieceMoveType::Default),
+                (pos_of("E5"), PieceMoveType::Default),
+                (pos_of("E4"), PieceMoveType::Default),
+                (pos_of("E3"), PieceMoveType::Default),
+                (pos_of("D3"), PieceMoveType::Default),
+                (pos_of("C3"), PieceMoveType::Default),
+                (pos_of("C4"), PieceMoveType::Default),
+                (pos_of("C5"), PieceMoveType::Default),
+                (pos_of("D5"), PieceMoveType::Default),
             ]
             .into()
         );
@@ -184,10 +184,10 @@ mod tests {
     #[test]
     fn default_moves_pawn() {
         let mode = standard_chess();
-        let board = [(Pos::of("C5"), Piece::of('♙'))].into();
+        let board = [(pos_of("C5"), Piece::of('♙'))].into();
         assert_eq!(
-            default_moves(&board, &mode.bounds, &Pos::of("C5")),
-            [(Pos::of("C6"), PieceMoveType::Default)].into()
+            default_moves(&board, &mode.bounds, &pos_of("C5")),
+            [(pos_of("C6"), PieceMoveType::Default)].into()
         );
     }
 }

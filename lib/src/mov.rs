@@ -1,4 +1,4 @@
-use crate::{piece::Piece, pos::Pos};
+use crate::{piece::Piece, pos::{pos_try_of, Pos}};
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct Mov {
@@ -10,8 +10,8 @@ pub struct Mov {
 impl Mov {
     pub fn try_of(piece: char, from: &str, to: &str) -> Option<Self> {
         let piece = Piece::try_of(piece)?;
-        let from = Pos::try_of(from)?;
-        let to = Pos::try_of(to)?;
+        let from = pos_try_of(from)?;
+        let to = pos_try_of(to)?;
         Some(Mov { piece, from, to })
     }
 
@@ -22,7 +22,7 @@ impl Mov {
 
 #[cfg(test)]
 mod tests {
-    use crate::{piece::Piece, pos::Pos};
+    use crate::{piece::Piece, pos::pos_of};
 
     use super::Mov;
 
@@ -30,7 +30,7 @@ mod tests {
     fn try_from_str() {
         assert_eq!(
             Mov::try_of('♟', "D2", "D4"),
-            Some(Mov { piece: Piece::of('♟'), from: Pos::of("D2"), to: Pos::of("D4") })
+            Some(Mov { piece: Piece::of('♟'), from: pos_of("D2"), to: pos_of("D4") })
         );
     }
 
@@ -55,7 +55,7 @@ mod tests {
     fn of_str() {
         assert_eq!(
             Mov::of('♟', "D2", "D4"),
-            Mov { piece: Piece::of('♟'), from: Pos::of("D2"), to: Pos::of("D4") }
+            Mov { piece: Piece::of('♟'), from: pos_of("D2"), to: pos_of("D4") }
         );
     }
 }

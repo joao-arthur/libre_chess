@@ -1,8 +1,10 @@
 use std::collections::HashMap;
 
+use manfredo::matrix::rect::rect_u8::contains;
+ 
 use crate::{
     game::{board::GameBoard, game::GameBounds, mov::PieceMoveType},
-    pos::Pos,
+    pos::{pos_try_rel_idx, Pos},
 };
 
 pub fn king_moves(
@@ -13,22 +15,18 @@ pub fn king_moves(
     let mut result = HashMap::new();
     if let Some(piece) = board.get(pos) {
         let base = [
-            pos.try_rel_idx(1, 1),
-            pos.try_rel_idx(0, 1),
-            pos.try_rel_idx(-1, 1),
-            pos.try_rel_idx(-1, 0),
-            pos.try_rel_idx(-1, -1),
-            pos.try_rel_idx(0, -1),
-            pos.try_rel_idx(1, -1),
-            pos.try_rel_idx(1, 0),
+            pos_try_rel_idx(pos, 1, 1),
+            pos_try_rel_idx(pos, 0, 1),
+            pos_try_rel_idx(pos, -1, 1),
+            pos_try_rel_idx(pos, -1, 0),
+            pos_try_rel_idx(pos, -1, -1),
+            pos_try_rel_idx(pos, 0, -1),
+            pos_try_rel_idx(pos, 1, -1),
+            pos_try_rel_idx(pos, 1, 0),
         ];
         for curr_pos in base {
             if let Some(curr_pos) = curr_pos {
-                if curr_pos.col < bounds.min.col
-                    || curr_pos.col > bounds.max.col
-                    || curr_pos.row < bounds.min.row
-                    || curr_pos.row > bounds.max.row
-                {
+                if !contains(bounds, &curr_pos) {
                     continue;
                 }
                 if let Some(curr_piece) = board.get(&curr_pos) {
@@ -56,7 +54,7 @@ mod tests {
             mov::PieceMoveType,
         },
         piece::Piece,
-        pos::Pos,
+        pos::pos_of,
     };
 
     use super::king_moves;
@@ -64,24 +62,24 @@ mod tests {
     #[test]
     fn king_moves_empty_board() {
         let mode = standard_chess();
-        assert_eq!(king_moves(&board_empty(), &mode.bounds, &Pos::of("A1")), HashMap::new());
+        assert_eq!(king_moves(&board_empty(), &mode.bounds, &pos_of("A1")), HashMap::new());
     }
 
     #[test]
     fn king_moves_lonely_piece() {
         let mode = standard_chess();
-        let board = [(Pos::of("D4"), Piece::of('♚'))].into();
+        let board = [(pos_of("D4"), Piece::of('♚'))].into();
         assert_eq!(
-            king_moves(&board, &mode.bounds, &Pos::of("D4")),
+            king_moves(&board, &mode.bounds, &pos_of("D4")),
             [
-                (Pos::of("E5"), PieceMoveType::Default),
-                (Pos::of("E4"), PieceMoveType::Default),
-                (Pos::of("E3"), PieceMoveType::Default),
-                (Pos::of("D3"), PieceMoveType::Default),
-                (Pos::of("C3"), PieceMoveType::Default),
-                (Pos::of("C4"), PieceMoveType::Default),
-                (Pos::of("C5"), PieceMoveType::Default),
-                (Pos::of("D5"), PieceMoveType::Default),
+                (pos_of("E5"), PieceMoveType::Default),
+                (pos_of("E4"), PieceMoveType::Default),
+                (pos_of("E3"), PieceMoveType::Default),
+                (pos_of("D3"), PieceMoveType::Default),
+                (pos_of("C3"), PieceMoveType::Default),
+                (pos_of("C4"), PieceMoveType::Default),
+                (pos_of("C5"), PieceMoveType::Default),
+                (pos_of("D5"), PieceMoveType::Default),
             ]
             .into()
         );
@@ -90,13 +88,13 @@ mod tests {
     #[test]
     fn king_moves_top_right_edge() {
         let mode = standard_chess();
-        let board = [(Pos::of("H8"), Piece::of('♚'))].into();
+        let board = [(pos_of("H8"), Piece::of('♚'))].into();
         assert_eq!(
-            king_moves(&board, &mode.bounds, &Pos::of("H8")),
+            king_moves(&board, &mode.bounds, &pos_of("H8")),
             [
-                (Pos::of("H7"), PieceMoveType::Default),
-                (Pos::of("G7"), PieceMoveType::Default),
-                (Pos::of("G8"), PieceMoveType::Default),
+                (pos_of("H7"), PieceMoveType::Default),
+                (pos_of("G7"), PieceMoveType::Default),
+                (pos_of("G8"), PieceMoveType::Default),
             ]
             .into()
         );
@@ -105,13 +103,13 @@ mod tests {
     #[test]
     fn king_moves_bottom_right_edge() {
         let mode = standard_chess();
-        let board = [(Pos::of("H1"), Piece::of('♚'))].into();
+        let board = [(pos_of("H1"), Piece::of('♚'))].into();
         assert_eq!(
-            king_moves(&board, &mode.bounds, &Pos::of("H1")),
+            king_moves(&board, &mode.bounds, &pos_of("H1")),
             [
-                (Pos::of("G1"), PieceMoveType::Default),
-                (Pos::of("G2"), PieceMoveType::Default),
-                (Pos::of("H2"), PieceMoveType::Default),
+                (pos_of("G1"), PieceMoveType::Default),
+                (pos_of("G2"), PieceMoveType::Default),
+                (pos_of("H2"), PieceMoveType::Default),
             ]
             .into()
         );
@@ -120,13 +118,13 @@ mod tests {
     #[test]
     fn king_moves_bottom_left_edge() {
         let mode = standard_chess();
-        let board = [(Pos::of("A1"), Piece::of('♚'))].into();
+        let board = [(pos_of("A1"), Piece::of('♚'))].into();
         assert_eq!(
-            king_moves(&board, &mode.bounds, &Pos::of("A1")),
+            king_moves(&board, &mode.bounds, &pos_of("A1")),
             [
-                (Pos::of("B2"), PieceMoveType::Default),
-                (Pos::of("B1"), PieceMoveType::Default),
-                (Pos::of("A2"), PieceMoveType::Default),
+                (pos_of("B2"), PieceMoveType::Default),
+                (pos_of("B1"), PieceMoveType::Default),
+                (pos_of("A2"), PieceMoveType::Default),
             ]
             .into()
         );
@@ -135,13 +133,13 @@ mod tests {
     #[test]
     fn king_moves_top_left_edge() {
         let mode = standard_chess();
-        let board = [(Pos::of("A8"), Piece::of('♚'))].into();
+        let board = [(pos_of("A8"), Piece::of('♚'))].into();
         assert_eq!(
-            king_moves(&board, &mode.bounds, &Pos::of("A8")),
+            king_moves(&board, &mode.bounds, &pos_of("A8")),
             [
-                (Pos::of("B8"), PieceMoveType::Default),
-                (Pos::of("B7"), PieceMoveType::Default),
-                (Pos::of("A7"), PieceMoveType::Default),
+                (pos_of("B8"), PieceMoveType::Default),
+                (pos_of("B7"), PieceMoveType::Default),
+                (pos_of("A7"), PieceMoveType::Default),
             ]
             .into()
         );
@@ -149,14 +147,14 @@ mod tests {
 
     #[test]
     fn king_moves_small_bounds_top_right_edge() {
-        let board = [(Pos::of("H8"), Piece::of('♚'))].into();
+        let board = [(pos_of("H8"), Piece::of('♚'))].into();
         let bounds = GameBounds::of(3, 3, 7, 7);
         assert_eq!(
-            king_moves(&board, &bounds, &Pos::of("H8")),
+            king_moves(&board, &bounds, &pos_of("H8")),
             [
-                (Pos::of("H7"), PieceMoveType::Default),
-                (Pos::of("G7"), PieceMoveType::Default),
-                (Pos::of("G8"), PieceMoveType::Default),
+                (pos_of("H7"), PieceMoveType::Default),
+                (pos_of("G7"), PieceMoveType::Default),
+                (pos_of("G8"), PieceMoveType::Default),
             ]
             .into()
         );
@@ -164,14 +162,14 @@ mod tests {
 
     #[test]
     fn king_moves_small_bounds_bottom_right_edge() {
-        let board = [(Pos::of("H4"), Piece::of('♚'))].into();
+        let board = [(pos_of("H4"), Piece::of('♚'))].into();
         let bounds = GameBounds::of(3, 3, 7, 7);
         assert_eq!(
-            king_moves(&board, &bounds, &Pos::of("H4")),
+            king_moves(&board, &bounds, &pos_of("H4")),
             [
-                (Pos::of("G4"), PieceMoveType::Default),
-                (Pos::of("G5"), PieceMoveType::Default),
-                (Pos::of("H5"), PieceMoveType::Default),
+                (pos_of("G4"), PieceMoveType::Default),
+                (pos_of("G5"), PieceMoveType::Default),
+                (pos_of("H5"), PieceMoveType::Default),
             ]
             .into()
         );
@@ -179,14 +177,14 @@ mod tests {
 
     #[test]
     fn king_moves_small_bounds_bottom_left_edge() {
-        let board = [(Pos::of("D4"), Piece::of('♚'))].into();
+        let board = [(pos_of("D4"), Piece::of('♚'))].into();
         let bounds = GameBounds::of(3, 3, 7, 7);
         assert_eq!(
-            king_moves(&board, &bounds, &Pos::of("D4")),
+            king_moves(&board, &bounds, &pos_of("D4")),
             [
-                (Pos::of("E5"), PieceMoveType::Default),
-                (Pos::of("E4"), PieceMoveType::Default),
-                (Pos::of("D5"), PieceMoveType::Default),
+                (pos_of("E5"), PieceMoveType::Default),
+                (pos_of("E4"), PieceMoveType::Default),
+                (pos_of("D5"), PieceMoveType::Default),
             ]
             .into()
         );
@@ -194,14 +192,14 @@ mod tests {
 
     #[test]
     fn king_moves_small_bounds_top_left_edge() {
-        let board = [(Pos::of("D8"), Piece::of('♚'))].into();
+        let board = [(pos_of("D8"), Piece::of('♚'))].into();
         let bounds = GameBounds::of(3, 3, 7, 7);
         assert_eq!(
-            king_moves(&board, &bounds, &Pos::of("D8")),
+            king_moves(&board, &bounds, &pos_of("D8")),
             [
-                (Pos::of("E8"), PieceMoveType::Default),
-                (Pos::of("E7"), PieceMoveType::Default),
-                (Pos::of("D7"), PieceMoveType::Default),
+                (pos_of("E8"), PieceMoveType::Default),
+                (pos_of("E7"), PieceMoveType::Default),
+                (pos_of("D7"), PieceMoveType::Default),
             ]
             .into()
         );
@@ -224,15 +222,15 @@ mod tests {
             ],
         );
         assert_eq!(
-            king_moves(&board, &mode.bounds, &Pos::of("D4")),
+            king_moves(&board, &mode.bounds, &pos_of("D4")),
             [
-                (Pos::of("E5"), PieceMoveType::Default),
-                (Pos::of("E4"), PieceMoveType::Default),
-                (Pos::of("E3"), PieceMoveType::Default),
-                (Pos::of("C3"), PieceMoveType::Default),
-                (Pos::of("C4"), PieceMoveType::Default),
-                (Pos::of("C5"), PieceMoveType::Default),
-                (Pos::of("D5"), PieceMoveType::Default),
+                (pos_of("E5"), PieceMoveType::Default),
+                (pos_of("E4"), PieceMoveType::Default),
+                (pos_of("E3"), PieceMoveType::Default),
+                (pos_of("C3"), PieceMoveType::Default),
+                (pos_of("C4"), PieceMoveType::Default),
+                (pos_of("C5"), PieceMoveType::Default),
+                (pos_of("D5"), PieceMoveType::Default),
             ]
             .into()
         );
@@ -255,15 +253,15 @@ mod tests {
             ],
         );
         assert_eq!(
-            king_moves(&board, &mode.bounds, &Pos::of("D4")),
+            king_moves(&board, &mode.bounds, &pos_of("D4")),
             [
-                (Pos::of("E5"), PieceMoveType::Default),
-                (Pos::of("E4"), PieceMoveType::Default),
-                (Pos::of("E3"), PieceMoveType::Default),
-                (Pos::of("C3"), PieceMoveType::Default),
-                (Pos::of("C4"), PieceMoveType::Default),
-                (Pos::of("C5"), PieceMoveType::Default),
-                (Pos::of("D5"), PieceMoveType::Default),
+                (pos_of("E5"), PieceMoveType::Default),
+                (pos_of("E4"), PieceMoveType::Default),
+                (pos_of("E3"), PieceMoveType::Default),
+                (pos_of("C3"), PieceMoveType::Default),
+                (pos_of("C4"), PieceMoveType::Default),
+                (pos_of("C5"), PieceMoveType::Default),
+                (pos_of("D5"), PieceMoveType::Default),
             ]
             .into()
         );

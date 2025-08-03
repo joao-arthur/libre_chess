@@ -43,7 +43,7 @@ fn short_castling(
         return None;
     }
     for col in (king_pos.col + 1)..rook_pos.col {
-        if board.contains_key(&Pos { row: king_pos.row, col }) {
+        if board.contains_key(&Pos::of(king_pos.row, col)) {
             return None;
         }
     }
@@ -51,7 +51,7 @@ fn short_castling(
         for (color, player) in players {
             if color != &king.color {
                 for (_, player_moves) in player.moves.iter() {
-                    if player_moves.contains_key(&Pos { row: king_pos.row, col }) {
+                    if player_moves.contains_key(&Pos::of(king_pos.row, col)) {
                         return None;
                     }
                 }
@@ -78,7 +78,7 @@ fn long_castling(
         return None;
     }
     for col in (rook_pos.col + 1)..king_pos.col {
-        if board.contains_key(&Pos { row: king_pos.row, col }) {
+        if board.contains_key(&Pos::of(king_pos.row, col)) {
             return None;
         }
     }
@@ -86,7 +86,7 @@ fn long_castling(
         for (color, player) in players {
             if color != &king.color {
                 for (_, player_moves) in player.moves.iter() {
-                    if player_moves.contains_key(&Pos { row: king_pos.row, col }) {
+                    if player_moves.contains_key(&Pos::of(king_pos.row, col)) {
                         return None;
                     }
                 }
@@ -109,7 +109,7 @@ mod tests {
             mov::{GameMove, PieceMoveType},
             player::GamePlayer,
         },
-        pos::Pos,
+        pos::pos_of,
     };
 
     use super::castling_moves;
@@ -132,10 +132,10 @@ mod tests {
             ],
         );
         let players = empty_players();
-        let pos = Pos::of("E1");
+        let pos = pos_of("E1");
         assert_eq!(
             castling_moves(&board, &history, &players, &pos),
-            [(Pos::of("H1"), PieceMoveType::ShortCastling)].into()
+            [(pos_of("H1"), PieceMoveType::ShortCastling)].into()
         );
     }
 
@@ -157,10 +157,10 @@ mod tests {
             ],
         );
         let players = empty_players();
-        let pos = Pos::of("E1");
+        let pos = pos_of("E1");
         assert_eq!(
             castling_moves(&board, &history, &players, &pos),
-            [(Pos::of("A1"), PieceMoveType::LongCastling)].into()
+            [(pos_of("A1"), PieceMoveType::LongCastling)].into()
         );
     }
 
@@ -182,12 +182,12 @@ mod tests {
             ],
         );
         let players = empty_players();
-        let pos = Pos::of("E1");
+        let pos = pos_of("E1");
         assert_eq!(
             castling_moves(&board, &history, &players, &pos),
             [
-                (Pos::of("H1"), PieceMoveType::ShortCastling),
-                (Pos::of("A1"), PieceMoveType::LongCastling),
+                (pos_of("H1"), PieceMoveType::ShortCastling),
+                (pos_of("A1"), PieceMoveType::LongCastling),
             ]
             .into()
         );
@@ -211,7 +211,7 @@ mod tests {
             ],
         );
         let players = empty_players();
-        let pos = Pos::of("E1");
+        let pos = pos_of("E1");
         assert_eq!(castling_moves(&board, &history, &players, &pos), HashMap::new());
     }
 
@@ -246,7 +246,7 @@ mod tests {
             ],
         );
         let players = empty_players();
-        let pos = Pos::of("E1");
+        let pos = pos_of("E1");
         assert_eq!(castling_moves(&board, &history, &players, &pos), HashMap::new());
     }
 
@@ -273,7 +273,7 @@ mod tests {
             ],
         );
         let players = empty_players();
-        let pos = Pos::of("E1");
+        let pos = pos_of("E1");
         assert_eq!(castling_moves(&board, &history, &players, &pos), HashMap::new());
     }
 }

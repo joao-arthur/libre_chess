@@ -180,7 +180,7 @@ pub fn try_game_move_vec_from_str<const N: usize>(
             let str_col = str_row.chars().nth(col_index.into()).unwrap();
             if let Some(p) = Piece::try_of(str_col) {
                 piece = Some(p);
-                from = Some(Pos { row, col });
+                from = Some(Pos::of(row, col));
                 break;
             }
         }
@@ -194,7 +194,7 @@ pub fn try_game_move_vec_from_str<const N: usize>(
             let col_index = col - bounds.min.col;
             let str_row = rows[row_index as usize];
             let str_col = str_row.chars().nth(col_index.into()).unwrap();
-            let to = Pos { row, col };
+            let to = Pos::of(row, col);
             match str_col {
                 '○' => res.push(GameMove {
                     mov: Mov { piece, from: from.clone(), to },
@@ -226,7 +226,7 @@ pub fn game_move_vec_to_string(bounds: &GameBounds, moves: &Vec<GameMove>) -> St
         row -= 1;
         let it_col = bounds.iter_col();
         for col in it_col {
-            let pos = Pos { row, col };
+            let pos = Pos::of(row, col);
             let maybe_mov = moves.iter().find(|game_move| game_move.mov.to == pos);
             if let Some(mov) = maybe_mov {
                 match mov.typ {

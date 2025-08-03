@@ -57,7 +57,7 @@ pub fn board_try_of_str<const N: usize>(
             let str_row = rows[row_index as usize];
             let str_col = str_row.chars().nth(col_index.into()).unwrap();
             if let Some(piece) = Piece::try_of(str_col) {
-                board.insert(Pos { row, col }, piece);
+                board.insert(Pos::of(row, col), piece);
             }
         }
     }
@@ -74,7 +74,7 @@ pub fn board_to_string(bounds: &GameBounds, board: &GameBoard) -> String {
     while row > bounds.min.row {
         row -= 1;
         for col in bounds.iter_col() {
-            match board.get(&Pos { row, col }) {
+            match board.get(&Pos::of(row, col)) {
                 Some(p) => res.push_str(&p.to_string()),
                 None => res.push(' '),
             }
@@ -90,7 +90,7 @@ mod tests {
     use crate::{
         game::{game::GameBounds, mode::standard_chess},
         piece::Piece,
-        pos::Pos,
+        pos::pos_of,
     };
 
     use super::{
@@ -129,38 +129,38 @@ mod tests {
                 ]
             ),
             Ok([
-                (Pos::of("A8"), Piece::of('♜')),
-                (Pos::of("B8"), Piece::of('♞')),
-                (Pos::of("C8"), Piece::of('♝')),
-                (Pos::of("D8"), Piece::of('♛')),
-                (Pos::of("E8"), Piece::of('♚')),
-                (Pos::of("F8"), Piece::of('♝')),
-                (Pos::of("G8"), Piece::of('♞')),
-                (Pos::of("H8"), Piece::of('♜')),
-                (Pos::of("A7"), Piece::of('♟')),
-                (Pos::of("B7"), Piece::of('♟')),
-                (Pos::of("C7"), Piece::of('♟')),
-                (Pos::of("D7"), Piece::of('♟')),
-                (Pos::of("E7"), Piece::of('♟')),
-                (Pos::of("F7"), Piece::of('♟')),
-                (Pos::of("G7"), Piece::of('♟')),
-                (Pos::of("H7"), Piece::of('♟')),
-                (Pos::of("A2"), Piece::of('♙')),
-                (Pos::of("B2"), Piece::of('♙')),
-                (Pos::of("C2"), Piece::of('♙')),
-                (Pos::of("D2"), Piece::of('♙')),
-                (Pos::of("E2"), Piece::of('♙')),
-                (Pos::of("F2"), Piece::of('♙')),
-                (Pos::of("G2"), Piece::of('♙')),
-                (Pos::of("H2"), Piece::of('♙')),
-                (Pos::of("A1"), Piece::of('♖')),
-                (Pos::of("B1"), Piece::of('♘')),
-                (Pos::of("C1"), Piece::of('♗')),
-                (Pos::of("D1"), Piece::of('♕')),
-                (Pos::of("E1"), Piece::of('♔')),
-                (Pos::of("F1"), Piece::of('♗')),
-                (Pos::of("G1"), Piece::of('♘')),
-                (Pos::of("H1"), Piece::of('♖')),
+                (pos_of("A8"), Piece::of('♜')),
+                (pos_of("B8"), Piece::of('♞')),
+                (pos_of("C8"), Piece::of('♝')),
+                (pos_of("D8"), Piece::of('♛')),
+                (pos_of("E8"), Piece::of('♚')),
+                (pos_of("F8"), Piece::of('♝')),
+                (pos_of("G8"), Piece::of('♞')),
+                (pos_of("H8"), Piece::of('♜')),
+                (pos_of("A7"), Piece::of('♟')),
+                (pos_of("B7"), Piece::of('♟')),
+                (pos_of("C7"), Piece::of('♟')),
+                (pos_of("D7"), Piece::of('♟')),
+                (pos_of("E7"), Piece::of('♟')),
+                (pos_of("F7"), Piece::of('♟')),
+                (pos_of("G7"), Piece::of('♟')),
+                (pos_of("H7"), Piece::of('♟')),
+                (pos_of("A2"), Piece::of('♙')),
+                (pos_of("B2"), Piece::of('♙')),
+                (pos_of("C2"), Piece::of('♙')),
+                (pos_of("D2"), Piece::of('♙')),
+                (pos_of("E2"), Piece::of('♙')),
+                (pos_of("F2"), Piece::of('♙')),
+                (pos_of("G2"), Piece::of('♙')),
+                (pos_of("H2"), Piece::of('♙')),
+                (pos_of("A1"), Piece::of('♖')),
+                (pos_of("B1"), Piece::of('♘')),
+                (pos_of("C1"), Piece::of('♗')),
+                (pos_of("D1"), Piece::of('♕')),
+                (pos_of("E1"), Piece::of('♔')),
+                (pos_of("F1"), Piece::of('♗')),
+                (pos_of("G1"), Piece::of('♘')),
+                (pos_of("H1"), Piece::of('♖')),
             ]
             .into())
         );
@@ -179,10 +179,10 @@ mod tests {
                 ]
             ),
             Ok([
-                (Pos::of("L14"), Piece::of('♛')),
-                (Pos::of("M14"), Piece::of('♚')),
-                (Pos::of("L11"), Piece::of('♕')),
-                (Pos::of("M11"), Piece::of('♔')),
+                (pos_of("L14"), Piece::of('♛')),
+                (pos_of("M14"), Piece::of('♚')),
+                (pos_of("L11"), Piece::of('♕')),
+                (pos_of("M11"), Piece::of('♔')),
             ]
             .into())
         );
@@ -268,38 +268,38 @@ mod tests {
                 ]
             ),
             [
-                (Pos::of("A8"), Piece::of('♜')),
-                (Pos::of("B8"), Piece::of('♞')),
-                (Pos::of("C8"), Piece::of('♝')),
-                (Pos::of("D8"), Piece::of('♛')),
-                (Pos::of("E8"), Piece::of('♚')),
-                (Pos::of("F8"), Piece::of('♝')),
-                (Pos::of("G8"), Piece::of('♞')),
-                (Pos::of("H8"), Piece::of('♜')),
-                (Pos::of("A7"), Piece::of('♟')),
-                (Pos::of("B7"), Piece::of('♟')),
-                (Pos::of("C7"), Piece::of('♟')),
-                (Pos::of("D7"), Piece::of('♟')),
-                (Pos::of("E7"), Piece::of('♟')),
-                (Pos::of("F7"), Piece::of('♟')),
-                (Pos::of("G7"), Piece::of('♟')),
-                (Pos::of("H7"), Piece::of('♟')),
-                (Pos::of("A2"), Piece::of('♙')),
-                (Pos::of("B2"), Piece::of('♙')),
-                (Pos::of("C2"), Piece::of('♙')),
-                (Pos::of("D2"), Piece::of('♙')),
-                (Pos::of("E2"), Piece::of('♙')),
-                (Pos::of("F2"), Piece::of('♙')),
-                (Pos::of("G2"), Piece::of('♙')),
-                (Pos::of("H2"), Piece::of('♙')),
-                (Pos::of("A1"), Piece::of('♖')),
-                (Pos::of("B1"), Piece::of('♘')),
-                (Pos::of("C1"), Piece::of('♗')),
-                (Pos::of("D1"), Piece::of('♕')),
-                (Pos::of("E1"), Piece::of('♔')),
-                (Pos::of("F1"), Piece::of('♗')),
-                (Pos::of("G1"), Piece::of('♘')),
-                (Pos::of("H1"), Piece::of('♖')),
+                (pos_of("A8"), Piece::of('♜')),
+                (pos_of("B8"), Piece::of('♞')),
+                (pos_of("C8"), Piece::of('♝')),
+                (pos_of("D8"), Piece::of('♛')),
+                (pos_of("E8"), Piece::of('♚')),
+                (pos_of("F8"), Piece::of('♝')),
+                (pos_of("G8"), Piece::of('♞')),
+                (pos_of("H8"), Piece::of('♜')),
+                (pos_of("A7"), Piece::of('♟')),
+                (pos_of("B7"), Piece::of('♟')),
+                (pos_of("C7"), Piece::of('♟')),
+                (pos_of("D7"), Piece::of('♟')),
+                (pos_of("E7"), Piece::of('♟')),
+                (pos_of("F7"), Piece::of('♟')),
+                (pos_of("G7"), Piece::of('♟')),
+                (pos_of("H7"), Piece::of('♟')),
+                (pos_of("A2"), Piece::of('♙')),
+                (pos_of("B2"), Piece::of('♙')),
+                (pos_of("C2"), Piece::of('♙')),
+                (pos_of("D2"), Piece::of('♙')),
+                (pos_of("E2"), Piece::of('♙')),
+                (pos_of("F2"), Piece::of('♙')),
+                (pos_of("G2"), Piece::of('♙')),
+                (pos_of("H2"), Piece::of('♙')),
+                (pos_of("A1"), Piece::of('♖')),
+                (pos_of("B1"), Piece::of('♘')),
+                (pos_of("C1"), Piece::of('♗')),
+                (pos_of("D1"), Piece::of('♕')),
+                (pos_of("E1"), Piece::of('♔')),
+                (pos_of("F1"), Piece::of('♗')),
+                (pos_of("G1"), Piece::of('♘')),
+                (pos_of("H1"), Piece::of('♖')),
             ]
             .into()
         );

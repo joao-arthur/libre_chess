@@ -93,7 +93,7 @@ mod tests {
             player::GamePlayer,
         },
         piece::Piece,
-        pos::Pos,
+        pos::pos_of,
     };
 
     use super::{game_of_mode, game_of_mode_and_history};
@@ -105,38 +105,38 @@ mod tests {
             game,
             Game {
                 board: [
-                    (Pos::of("A8"), Piece::of('♜')),
-                    (Pos::of("B8"), Piece::of('♞')),
-                    (Pos::of("C8"), Piece::of('♝')),
-                    (Pos::of("D8"), Piece::of('♛')),
-                    (Pos::of("E8"), Piece::of('♚')),
-                    (Pos::of("F8"), Piece::of('♝')),
-                    (Pos::of("G8"), Piece::of('♞')),
-                    (Pos::of("H8"), Piece::of('♜')),
-                    (Pos::of("A7"), Piece::of('♟')),
-                    (Pos::of("B7"), Piece::of('♟')),
-                    (Pos::of("C7"), Piece::of('♟')),
-                    (Pos::of("D7"), Piece::of('♟')),
-                    (Pos::of("E7"), Piece::of('♟')),
-                    (Pos::of("F7"), Piece::of('♟')),
-                    (Pos::of("G7"), Piece::of('♟')),
-                    (Pos::of("H7"), Piece::of('♟')),
-                    (Pos::of("A2"), Piece::of('♙')),
-                    (Pos::of("B2"), Piece::of('♙')),
-                    (Pos::of("C2"), Piece::of('♙')),
-                    (Pos::of("D2"), Piece::of('♙')),
-                    (Pos::of("E2"), Piece::of('♙')),
-                    (Pos::of("F2"), Piece::of('♙')),
-                    (Pos::of("G2"), Piece::of('♙')),
-                    (Pos::of("H2"), Piece::of('♙')),
-                    (Pos::of("A1"), Piece::of('♖')),
-                    (Pos::of("B1"), Piece::of('♘')),
-                    (Pos::of("C1"), Piece::of('♗')),
-                    (Pos::of("D1"), Piece::of('♕')),
-                    (Pos::of("E1"), Piece::of('♔')),
-                    (Pos::of("F1"), Piece::of('♗')),
-                    (Pos::of("G1"), Piece::of('♘')),
-                    (Pos::of("H1"), Piece::of('♖')),
+                    (pos_of("A8"), Piece::of('♜')),
+                    (pos_of("B8"), Piece::of('♞')),
+                    (pos_of("C8"), Piece::of('♝')),
+                    (pos_of("D8"), Piece::of('♛')),
+                    (pos_of("E8"), Piece::of('♚')),
+                    (pos_of("F8"), Piece::of('♝')),
+                    (pos_of("G8"), Piece::of('♞')),
+                    (pos_of("H8"), Piece::of('♜')),
+                    (pos_of("A7"), Piece::of('♟')),
+                    (pos_of("B7"), Piece::of('♟')),
+                    (pos_of("C7"), Piece::of('♟')),
+                    (pos_of("D7"), Piece::of('♟')),
+                    (pos_of("E7"), Piece::of('♟')),
+                    (pos_of("F7"), Piece::of('♟')),
+                    (pos_of("G7"), Piece::of('♟')),
+                    (pos_of("H7"), Piece::of('♟')),
+                    (pos_of("A2"), Piece::of('♙')),
+                    (pos_of("B2"), Piece::of('♙')),
+                    (pos_of("C2"), Piece::of('♙')),
+                    (pos_of("D2"), Piece::of('♙')),
+                    (pos_of("E2"), Piece::of('♙')),
+                    (pos_of("F2"), Piece::of('♙')),
+                    (pos_of("G2"), Piece::of('♙')),
+                    (pos_of("H2"), Piece::of('♙')),
+                    (pos_of("A1"), Piece::of('♖')),
+                    (pos_of("B1"), Piece::of('♘')),
+                    (pos_of("C1"), Piece::of('♗')),
+                    (pos_of("D1"), Piece::of('♕')),
+                    (pos_of("E1"), Piece::of('♔')),
+                    (pos_of("F1"), Piece::of('♗')),
+                    (pos_of("G1"), Piece::of('♘')),
+                    (pos_of("H1"), Piece::of('♖')),
                 ]
                 .into(),
                 bounds: GameBounds::of(0, 0, 7, 7),
@@ -148,82 +148,82 @@ mod tests {
                             captures: Vec::new(),
                             moves: [
                                 (
-                                    Pos::of("B8"),
+                                    pos_of("B8"),
                                     [
-                                        (Pos::of("A6"), PieceMoveType::Default),
-                                        (Pos::of("C6"), PieceMoveType::Default)
+                                        (pos_of("A6"), PieceMoveType::Default),
+                                        (pos_of("C6"), PieceMoveType::Default)
                                     ]
                                     .into()
                                 ),
                                 (
-                                    Pos::of("G8"),
+                                    pos_of("G8"),
                                     [
-                                        (Pos::of("F6"), PieceMoveType::Default),
-                                        (Pos::of("H6"), PieceMoveType::Default)
+                                        (pos_of("F6"), PieceMoveType::Default),
+                                        (pos_of("H6"), PieceMoveType::Default)
                                     ]
                                     .into()
                                 ),
                                 (
-                                    Pos::of("A7"),
+                                    pos_of("A7"),
                                     [
-                                        (Pos::of("A6"), PieceMoveType::Default),
-                                        (Pos::of("A5"), PieceMoveType::Default)
+                                        (pos_of("A6"), PieceMoveType::Default),
+                                        (pos_of("A5"), PieceMoveType::Default)
                                     ]
                                     .into()
                                 ),
                                 (
-                                    Pos::of("B7"),
+                                    pos_of("B7"),
                                     [
-                                        (Pos::of("B6"), PieceMoveType::Default),
-                                        (Pos::of("B5"), PieceMoveType::Default)
+                                        (pos_of("B6"), PieceMoveType::Default),
+                                        (pos_of("B5"), PieceMoveType::Default)
                                     ]
                                     .into()
                                 ),
                                 (
-                                    Pos::of("C7"),
+                                    pos_of("C7"),
                                     [
-                                        (Pos::of("C6"), PieceMoveType::Default),
-                                        (Pos::of("C5"), PieceMoveType::Default)
+                                        (pos_of("C6"), PieceMoveType::Default),
+                                        (pos_of("C5"), PieceMoveType::Default)
                                     ]
                                     .into()
                                 ),
                                 (
-                                    Pos::of("D7"),
+                                    pos_of("D7"),
                                     [
-                                        (Pos::of("D6"), PieceMoveType::Default),
-                                        (Pos::of("D5"), PieceMoveType::Default)
+                                        (pos_of("D6"), PieceMoveType::Default),
+                                        (pos_of("D5"), PieceMoveType::Default)
                                     ]
                                     .into()
                                 ),
                                 (
-                                    Pos::of("E7"),
+                                    pos_of("E7"),
                                     [
-                                        (Pos::of("E6"), PieceMoveType::Default),
-                                        (Pos::of("E5"), PieceMoveType::Default)
+                                        (pos_of("E6"), PieceMoveType::Default),
+                                        (pos_of("E5"), PieceMoveType::Default)
                                     ]
                                     .into()
                                 ),
                                 (
-                                    Pos::of("F7"),
+                                    pos_of("F7"),
                                     [
-                                        (Pos::of("F6"), PieceMoveType::Default),
-                                        (Pos::of("F5"), PieceMoveType::Default)
+                                        (pos_of("F6"), PieceMoveType::Default),
+                                        (pos_of("F5"), PieceMoveType::Default)
                                     ]
                                     .into()
                                 ),
                                 (
-                                    Pos::of("G7"),
+                                    pos_of("G7"),
                                     [
-                                        (Pos::of("G6"), PieceMoveType::Default),
-                                        (Pos::of("G5"), PieceMoveType::Default)
+                                        (pos_of("G6"), PieceMoveType::Default),
+                                        (pos_of("G5"), PieceMoveType::Default)
                                     ]
                                     .into()
                                 ),
                                 (
-                                    Pos::of("H7"),
+                                    pos_of("H7"),
                                     [
-                                        (Pos::of("H6"), PieceMoveType::Default),
-                                        (Pos::of("H5"), PieceMoveType::Default)
+                                        (pos_of("H6"), PieceMoveType::Default),
+                                        (pos_of("H5"), PieceMoveType::Default)
                                     ]
                                     .into()
                                 ),
@@ -238,82 +238,82 @@ mod tests {
                             captures: Vec::new(),
                             moves: [
                                 (
-                                    Pos::of("B1"),
+                                    pos_of("B1"),
                                     [
-                                        (Pos::of("A3"), PieceMoveType::Default),
-                                        (Pos::of("C3"), PieceMoveType::Default)
+                                        (pos_of("A3"), PieceMoveType::Default),
+                                        (pos_of("C3"), PieceMoveType::Default)
                                     ]
                                     .into()
                                 ),
                                 (
-                                    Pos::of("G1"),
+                                    pos_of("G1"),
                                     [
-                                        (Pos::of("F3"), PieceMoveType::Default),
-                                        (Pos::of("H3"), PieceMoveType::Default)
+                                        (pos_of("F3"), PieceMoveType::Default),
+                                        (pos_of("H3"), PieceMoveType::Default)
                                     ]
                                     .into()
                                 ),
                                 (
-                                    Pos::of("A2"),
+                                    pos_of("A2"),
                                     [
-                                        (Pos::of("A3"), PieceMoveType::Default),
-                                        (Pos::of("A4"), PieceMoveType::Default)
+                                        (pos_of("A3"), PieceMoveType::Default),
+                                        (pos_of("A4"), PieceMoveType::Default)
                                     ]
                                     .into()
                                 ),
                                 (
-                                    Pos::of("B2"),
+                                    pos_of("B2"),
                                     [
-                                        (Pos::of("B3"), PieceMoveType::Default),
-                                        (Pos::of("B4"), PieceMoveType::Default)
+                                        (pos_of("B3"), PieceMoveType::Default),
+                                        (pos_of("B4"), PieceMoveType::Default)
                                     ]
                                     .into()
                                 ),
                                 (
-                                    Pos::of("C2"),
+                                    pos_of("C2"),
                                     [
-                                        (Pos::of("C3"), PieceMoveType::Default),
-                                        (Pos::of("C4"), PieceMoveType::Default)
+                                        (pos_of("C3"), PieceMoveType::Default),
+                                        (pos_of("C4"), PieceMoveType::Default)
                                     ]
                                     .into()
                                 ),
                                 (
-                                    Pos::of("D2"),
+                                    pos_of("D2"),
                                     [
-                                        (Pos::of("D3"), PieceMoveType::Default),
-                                        (Pos::of("D4"), PieceMoveType::Default)
+                                        (pos_of("D3"), PieceMoveType::Default),
+                                        (pos_of("D4"), PieceMoveType::Default)
                                     ]
                                     .into()
                                 ),
                                 (
-                                    Pos::of("E2"),
+                                    pos_of("E2"),
                                     [
-                                        (Pos::of("E3"), PieceMoveType::Default),
-                                        (Pos::of("E4"), PieceMoveType::Default)
+                                        (pos_of("E3"), PieceMoveType::Default),
+                                        (pos_of("E4"), PieceMoveType::Default)
                                     ]
                                     .into()
                                 ),
                                 (
-                                    Pos::of("F2"),
+                                    pos_of("F2"),
                                     [
-                                        (Pos::of("F3"), PieceMoveType::Default),
-                                        (Pos::of("F4"), PieceMoveType::Default)
+                                        (pos_of("F3"), PieceMoveType::Default),
+                                        (pos_of("F4"), PieceMoveType::Default)
                                     ]
                                     .into()
                                 ),
                                 (
-                                    Pos::of("G2"),
+                                    pos_of("G2"),
                                     [
-                                        (Pos::of("G3"), PieceMoveType::Default),
-                                        (Pos::of("G4"), PieceMoveType::Default)
+                                        (pos_of("G3"), PieceMoveType::Default),
+                                        (pos_of("G4"), PieceMoveType::Default)
                                     ]
                                     .into()
                                 ),
                                 (
-                                    Pos::of("H2"),
+                                    pos_of("H2"),
                                     [
-                                        (Pos::of("H3"), PieceMoveType::Default),
-                                        (Pos::of("H4"), PieceMoveType::Default)
+                                        (pos_of("H3"), PieceMoveType::Default),
+                                        (pos_of("H4"), PieceMoveType::Default)
                                     ]
                                     .into()
                                 ),
@@ -431,34 +431,34 @@ mod tests {
     //                        captures: Vec::new(),
     //                        moves: [
     //                            (
-    //                                Pos::of("E2"),
+    //                                pos_of("E2"),
     //                                [
-    //                                    (Pos::of("F3"), PieceMoveType::Default),
-    //                                    (Pos::of("F2"), PieceMoveType::Default),
-    //                                    (Pos::of("D1"), PieceMoveType::Default),
-    //                                    (Pos::of("E3"), PieceMoveType::Default),
+    //                                    (pos_of("F3"), PieceMoveType::Default),
+    //                                    (pos_of("F2"), PieceMoveType::Default),
+    //                                    (pos_of("D1"), PieceMoveType::Default),
+    //                                    (pos_of("E3"), PieceMoveType::Default),
     //                                ]
     //                                .into()
     //                            ),
     //                            (
-    //                                Pos::of("D8"),
+    //                                pos_of("D8"),
     //                                [
-    //                                    (Pos::of("E8"), PieceMoveType::Default),
-    //                                    (Pos::of("F8"), PieceMoveType::Default),
-    //                                    (Pos::of("G8"), PieceMoveType::Default),
-    //                                    (Pos::of("H8"), PieceMoveType::Default),
+    //                                    (pos_of("E8"), PieceMoveType::Default),
+    //                                    (pos_of("F8"), PieceMoveType::Default),
+    //                                    (pos_of("G8"), PieceMoveType::Default),
+    //                                    (pos_of("H8"), PieceMoveType::Default),
     //                                    //
-    //                                    (Pos::of("D7"), PieceMoveType::Default),
-    //                                    (Pos::of("D6"), PieceMoveType::Default),
-    //                                    (Pos::of("D5"), PieceMoveType::Default),
-    //                                    (Pos::of("D4"), PieceMoveType::Default),
-    //                                    (Pos::of("D3"), PieceMoveType::Default),
-    //                                    (Pos::of("D2"), PieceMoveType::Default),
-    //                                    (Pos::of("D1"), PieceMoveType::Default),
+    //                                    (pos_of("D7"), PieceMoveType::Default),
+    //                                    (pos_of("D6"), PieceMoveType::Default),
+    //                                    (pos_of("D5"), PieceMoveType::Default),
+    //                                    (pos_of("D4"), PieceMoveType::Default),
+    //                                    (pos_of("D3"), PieceMoveType::Default),
+    //                                    (pos_of("D2"), PieceMoveType::Default),
+    //                                    (pos_of("D1"), PieceMoveType::Default),
     //                                    //
-    //                                    (Pos::of("C8"), PieceMoveType::Default),
-    //                                    (Pos::of("B8"), PieceMoveType::Default),
-    //                                    (Pos::of("A8"), PieceMoveType::Default),
+    //                                    (pos_of("C8"), PieceMoveType::Default),
+    //                                    (pos_of("B8"), PieceMoveType::Default),
+    //                                    (pos_of("A8"), PieceMoveType::Default),
     //                                ]
     //                                .into()
     //                            ),

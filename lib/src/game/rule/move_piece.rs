@@ -52,7 +52,7 @@ pub fn move_piece(
                 PieceMoveType::EnPassant => {
                     let pawn = board.remove(&from)?;
                     board.insert(to.clone(), pawn);
-                    let capture_pos = Pos { col: to.col, row: from.row };
+                    let capture_pos = Pos::of(from.row, to.col);
                     let captured_piece = board.remove(&capture_pos)?;
                     selected_player
                         .captures
@@ -67,10 +67,10 @@ pub fn move_piece(
                 }
                 PieceMoveType::ShortCastling => {
                     let king = board.remove(&from)?;
-                    let new_king_pos = Pos { row: from.row, col: 6 };
+                    let new_king_pos = Pos::of(from.row, 6);
                     board.insert(new_king_pos, king);
                     let rook = board.remove(to)?;
-                    let new_rook_pos = Pos { row: from.row, col: 5 };
+                    let new_rook_pos = Pos::of(from.row, 5);
                     board.insert(new_rook_pos, rook);
                     history.push(GameMove {
                         mov: Mov { from: from.clone(), to: to.clone(), piece: king },
@@ -79,10 +79,10 @@ pub fn move_piece(
                 }
                 PieceMoveType::LongCastling => {
                     let king = board.remove(&from)?;
-                    let new_king_pos = Pos { row: from.row, col: 2 };
+                    let new_king_pos = Pos::of(from.row, 2);
                     board.insert(new_king_pos, king);
                     let rook = board.remove(to)?;
-                    let new_rook_pos = Pos { row: from.row, col: 3 };
+                    let new_rook_pos = Pos::of(from.row, 3);
                     board.insert(new_rook_pos, rook);
                     history.push(GameMove {
                         mov: Mov { from: from.clone(), to: to.clone(), piece: king },
@@ -128,7 +128,7 @@ mod tests {
             selection::Selection,
         },
         piece::Piece,
-        pos::Pos,
+        pos::pos_of,
     };
 
     use super::move_piece;
@@ -137,7 +137,7 @@ mod tests {
     fn move_piece_default_move() {
         let mode = standard_chess();
         let selection =
-            Selection { selected_pos: Some(Pos::of("A2")), selected_squares: HashSet::new() };
+            Selection { selected_pos: Some(pos_of("A2")), selected_squares: HashSet::new() };
 
         let mut board = board_of_str(
             &mode.bounds,
@@ -161,21 +161,21 @@ mod tests {
                     captures: Vec::new(),
                     moves: [
                         (
-                            Pos::of("E8"),
+                            pos_of("E8"),
                             [
-                                (Pos::of("F8"), PieceMoveType::Default),
-                                (Pos::of("F7"), PieceMoveType::Default),
-                                (Pos::of("E7"), PieceMoveType::Default),
-                                (Pos::of("D7"), PieceMoveType::Default),
-                                (Pos::of("D8"), PieceMoveType::Default),
+                                (pos_of("F8"), PieceMoveType::Default),
+                                (pos_of("F7"), PieceMoveType::Default),
+                                (pos_of("E7"), PieceMoveType::Default),
+                                (pos_of("D7"), PieceMoveType::Default),
+                                (pos_of("D8"), PieceMoveType::Default),
                             ]
                             .into(),
                         ),
                         (
-                            Pos::of("A7"),
+                            pos_of("A7"),
                             [
-                                (Pos::of("A6"), PieceMoveType::Default),
-                                (Pos::of("A5"), PieceMoveType::Default),
+                                (pos_of("A6"), PieceMoveType::Default),
+                                (pos_of("A5"), PieceMoveType::Default),
                             ]
                             .into(),
                         ),
@@ -190,21 +190,21 @@ mod tests {
                     captures: Vec::new(),
                     moves: [
                         (
-                            Pos::of("A2"),
+                            pos_of("A2"),
                             [
-                                (Pos::of("A3"), PieceMoveType::Default),
-                                (Pos::of("A4"), PieceMoveType::Default),
+                                (pos_of("A3"), PieceMoveType::Default),
+                                (pos_of("A4"), PieceMoveType::Default),
                             ]
                             .into(),
                         ),
                         (
-                            Pos::of("E1"),
+                            pos_of("E1"),
                             [
-                                (Pos::of("F2"), PieceMoveType::Default),
-                                (Pos::of("F1"), PieceMoveType::Default),
-                                (Pos::of("D1"), PieceMoveType::Default),
-                                (Pos::of("D2"), PieceMoveType::Default),
-                                (Pos::of("E2"), PieceMoveType::Default),
+                                (pos_of("F2"), PieceMoveType::Default),
+                                (pos_of("F1"), PieceMoveType::Default),
+                                (pos_of("D1"), PieceMoveType::Default),
+                                (pos_of("D2"), PieceMoveType::Default),
+                                (pos_of("E2"), PieceMoveType::Default),
                             ]
                             .into(),
                         ),
@@ -221,7 +221,7 @@ mod tests {
             &mut players,
             &mode.bounds,
             &selection,
-            &Pos::of("A4"),
+            &pos_of("A4"),
         );
 
         let board_after = board_of_str(
@@ -246,21 +246,21 @@ mod tests {
                     captures: Vec::new(),
                     moves: [
                         (
-                            Pos::of("E8"),
+                            pos_of("E8"),
                             [
-                                (Pos::of("F8"), PieceMoveType::Default),
-                                (Pos::of("F7"), PieceMoveType::Default),
-                                (Pos::of("E7"), PieceMoveType::Default),
-                                (Pos::of("D7"), PieceMoveType::Default),
-                                (Pos::of("D8"), PieceMoveType::Default),
+                                (pos_of("F8"), PieceMoveType::Default),
+                                (pos_of("F7"), PieceMoveType::Default),
+                                (pos_of("E7"), PieceMoveType::Default),
+                                (pos_of("D7"), PieceMoveType::Default),
+                                (pos_of("D8"), PieceMoveType::Default),
                             ]
                             .into(),
                         ),
                         (
-                            Pos::of("A7"),
+                            pos_of("A7"),
                             [
-                                (Pos::of("A6"), PieceMoveType::Default),
-                                (Pos::of("A5"), PieceMoveType::Default),
+                                (pos_of("A6"), PieceMoveType::Default),
+                                (pos_of("A5"), PieceMoveType::Default),
                             ]
                             .into(),
                         ),
@@ -274,15 +274,15 @@ mod tests {
                     color: Color::White,
                     captures: Vec::new(),
                     moves: [
-                        (Pos::of("A4"), [(Pos::of("A5"), PieceMoveType::Default)].into()),
+                        (pos_of("A4"), [(pos_of("A5"), PieceMoveType::Default)].into()),
                         (
-                            Pos::of("E1"),
+                            pos_of("E1"),
                             [
-                                (Pos::of("F2"), PieceMoveType::Default),
-                                (Pos::of("F1"), PieceMoveType::Default),
-                                (Pos::of("D1"), PieceMoveType::Default),
-                                (Pos::of("D2"), PieceMoveType::Default),
-                                (Pos::of("E2"), PieceMoveType::Default),
+                                (pos_of("F2"), PieceMoveType::Default),
+                                (pos_of("F1"), PieceMoveType::Default),
+                                (pos_of("D1"), PieceMoveType::Default),
+                                (pos_of("D2"), PieceMoveType::Default),
+                                (pos_of("E2"), PieceMoveType::Default),
                             ]
                             .into(),
                         ),
@@ -302,7 +302,7 @@ mod tests {
     fn move_piece_capture_move() {
         let mode = standard_chess();
         let selection =
-            Selection { selected_pos: Some(Pos::of("E5")), selected_squares: HashSet::new() };
+            Selection { selected_pos: Some(pos_of("E5")), selected_squares: HashSet::new() };
 
         let mut board = board_of_str(
             &mode.bounds,
@@ -326,21 +326,21 @@ mod tests {
                     captures: Vec::new(),
                     moves: [
                         (
-                            Pos::of("E8"),
+                            pos_of("E8"),
                             [
-                                (Pos::of("F8"), PieceMoveType::Default),
-                                (Pos::of("F7"), PieceMoveType::Default),
-                                (Pos::of("E7"), PieceMoveType::Default),
-                                (Pos::of("D7"), PieceMoveType::Default),
-                                (Pos::of("D8"), PieceMoveType::Default),
+                                (pos_of("F8"), PieceMoveType::Default),
+                                (pos_of("F7"), PieceMoveType::Default),
+                                (pos_of("E7"), PieceMoveType::Default),
+                                (pos_of("D7"), PieceMoveType::Default),
+                                (pos_of("D8"), PieceMoveType::Default),
                             ]
                             .into(),
                         ),
                         (
-                            Pos::of("D6"),
+                            pos_of("D6"),
                             [
-                                (Pos::of("D5"), PieceMoveType::Default),
-                                (Pos::of("E5"), PieceMoveType::Default),
+                                (pos_of("D5"), PieceMoveType::Default),
+                                (pos_of("E5"), PieceMoveType::Default),
                             ]
                             .into(),
                         ),
@@ -355,21 +355,21 @@ mod tests {
                     captures: Vec::new(),
                     moves: [
                         (
-                            Pos::of("E5"),
+                            pos_of("E5"),
                             [
-                                (Pos::of("E6"), PieceMoveType::Default),
-                                (Pos::of("D6"), PieceMoveType::Default),
+                                (pos_of("E6"), PieceMoveType::Default),
+                                (pos_of("D6"), PieceMoveType::Default),
                             ]
                             .into(),
                         ),
                         (
-                            Pos::of("E1"),
+                            pos_of("E1"),
                             [
-                                (Pos::of("F2"), PieceMoveType::Default),
-                                (Pos::of("F1"), PieceMoveType::Default),
-                                (Pos::of("D1"), PieceMoveType::Default),
-                                (Pos::of("D2"), PieceMoveType::Default),
-                                (Pos::of("E2"), PieceMoveType::Default),
+                                (pos_of("F2"), PieceMoveType::Default),
+                                (pos_of("F1"), PieceMoveType::Default),
+                                (pos_of("D1"), PieceMoveType::Default),
+                                (pos_of("D2"), PieceMoveType::Default),
+                                (pos_of("E2"), PieceMoveType::Default),
                             ]
                             .into(),
                         ),
@@ -386,7 +386,7 @@ mod tests {
             &mut players,
             &mode.bounds,
             &selection,
-            &Pos::of("D6"),
+            &pos_of("D6"),
         );
 
         let board_after = board_of_str(
@@ -410,13 +410,13 @@ mod tests {
                     color: Color::Black,
                     captures: Vec::new(),
                     moves: [(
-                        Pos::of("E8"),
+                        pos_of("E8"),
                         [
-                            (Pos::of("F8"), PieceMoveType::Default),
-                            (Pos::of("F7"), PieceMoveType::Default),
-                            (Pos::of("E7"), PieceMoveType::Default),
-                            (Pos::of("D7"), PieceMoveType::Default),
-                            (Pos::of("D8"), PieceMoveType::Default),
+                            (pos_of("F8"), PieceMoveType::Default),
+                            (pos_of("F7"), PieceMoveType::Default),
+                            (pos_of("E7"), PieceMoveType::Default),
+                            (pos_of("D7"), PieceMoveType::Default),
+                            (pos_of("D8"), PieceMoveType::Default),
                         ]
                         .into(),
                     )]
@@ -429,15 +429,15 @@ mod tests {
                     color: Color::White,
                     captures: vec![GameCapture { at: 0, piece: Piece::of('♟') }],
                     moves: [
-                        (Pos::of("D6"), [(Pos::of("D7"), PieceMoveType::Default)].into()),
+                        (pos_of("D6"), [(pos_of("D7"), PieceMoveType::Default)].into()),
                         (
-                            Pos::of("E1"),
+                            pos_of("E1"),
                             [
-                                (Pos::of("F2"), PieceMoveType::Default),
-                                (Pos::of("F1"), PieceMoveType::Default),
-                                (Pos::of("D1"), PieceMoveType::Default),
-                                (Pos::of("D2"), PieceMoveType::Default),
-                                (Pos::of("E2"), PieceMoveType::Default),
+                                (pos_of("F2"), PieceMoveType::Default),
+                                (pos_of("F1"), PieceMoveType::Default),
+                                (pos_of("D1"), PieceMoveType::Default),
+                                (pos_of("D2"), PieceMoveType::Default),
+                                (pos_of("E2"), PieceMoveType::Default),
                             ]
                             .into(),
                         ),
@@ -457,7 +457,7 @@ mod tests {
     fn move_piece_capture_en_passant_move() {
         let mode = standard_chess();
         let selection =
-            Selection { selected_pos: Some(Pos::of("E5")), selected_squares: HashSet::new() };
+            Selection { selected_pos: Some(pos_of("E5")), selected_squares: HashSet::new() };
 
         let mut board = board_of_str(
             &mode.bounds,
@@ -481,17 +481,17 @@ mod tests {
                     captures: Vec::new(),
                     moves: [
                         (
-                            Pos::of("E8"),
+                            pos_of("E8"),
                             [
-                                (Pos::of("F8"), PieceMoveType::Default),
-                                (Pos::of("F7"), PieceMoveType::Default),
-                                (Pos::of("E7"), PieceMoveType::Default),
-                                (Pos::of("D7"), PieceMoveType::Default),
-                                (Pos::of("D8"), PieceMoveType::Default),
+                                (pos_of("F8"), PieceMoveType::Default),
+                                (pos_of("F7"), PieceMoveType::Default),
+                                (pos_of("E7"), PieceMoveType::Default),
+                                (pos_of("D7"), PieceMoveType::Default),
+                                (pos_of("D8"), PieceMoveType::Default),
                             ]
                             .into(),
                         ),
-                        (Pos::of("D5"), [(Pos::of("D5"), PieceMoveType::Default)].into()),
+                        (pos_of("D5"), [(pos_of("D5"), PieceMoveType::Default)].into()),
                     ]
                     .into(),
                 },
@@ -503,21 +503,21 @@ mod tests {
                     captures: Vec::new(),
                     moves: [
                         (
-                            Pos::of("E5"),
+                            pos_of("E5"),
                             [
-                                (Pos::of("E6"), PieceMoveType::Default),
-                                (Pos::of("D6"), PieceMoveType::EnPassant),
+                                (pos_of("E6"), PieceMoveType::Default),
+                                (pos_of("D6"), PieceMoveType::EnPassant),
                             ]
                             .into(),
                         ),
                         (
-                            Pos::of("E1"),
+                            pos_of("E1"),
                             [
-                                (Pos::of("F2"), PieceMoveType::Default),
-                                (Pos::of("F1"), PieceMoveType::Default),
-                                (Pos::of("D1"), PieceMoveType::Default),
-                                (Pos::of("D2"), PieceMoveType::Default),
-                                (Pos::of("E2"), PieceMoveType::Default),
+                                (pos_of("F2"), PieceMoveType::Default),
+                                (pos_of("F1"), PieceMoveType::Default),
+                                (pos_of("D1"), PieceMoveType::Default),
+                                (pos_of("D2"), PieceMoveType::Default),
+                                (pos_of("E2"), PieceMoveType::Default),
                             ]
                             .into(),
                         ),
@@ -534,7 +534,7 @@ mod tests {
             &mut players,
             &mode.bounds,
             &selection,
-            &Pos::of("D6"),
+            &pos_of("D6"),
         );
 
         let board_after = board_of_str(
@@ -558,13 +558,13 @@ mod tests {
                     color: Color::Black,
                     captures: Vec::new(),
                     moves: [(
-                        Pos::of("E8"),
+                        pos_of("E8"),
                         [
-                            (Pos::of("F8"), PieceMoveType::Default),
-                            (Pos::of("F7"), PieceMoveType::Default),
-                            (Pos::of("E7"), PieceMoveType::Default),
-                            (Pos::of("D7"), PieceMoveType::Default),
-                            (Pos::of("D8"), PieceMoveType::Default),
+                            (pos_of("F8"), PieceMoveType::Default),
+                            (pos_of("F7"), PieceMoveType::Default),
+                            (pos_of("E7"), PieceMoveType::Default),
+                            (pos_of("D7"), PieceMoveType::Default),
+                            (pos_of("D8"), PieceMoveType::Default),
                         ]
                         .into(),
                     )]
@@ -577,15 +577,15 @@ mod tests {
                     color: Color::White,
                     captures: vec![GameCapture { at: 0, piece: Piece::of('♟') }],
                     moves: [
-                        (Pos::of("D6"), [(Pos::of("D7"), PieceMoveType::Default)].into()),
+                        (pos_of("D6"), [(pos_of("D7"), PieceMoveType::Default)].into()),
                         (
-                            Pos::of("E1"),
+                            pos_of("E1"),
                             [
-                                (Pos::of("F2"), PieceMoveType::Default),
-                                (Pos::of("F1"), PieceMoveType::Default),
-                                (Pos::of("D1"), PieceMoveType::Default),
-                                (Pos::of("D2"), PieceMoveType::Default),
-                                (Pos::of("E2"), PieceMoveType::Default),
+                                (pos_of("F2"), PieceMoveType::Default),
+                                (pos_of("F1"), PieceMoveType::Default),
+                                (pos_of("D1"), PieceMoveType::Default),
+                                (pos_of("D2"), PieceMoveType::Default),
+                                (pos_of("E2"), PieceMoveType::Default),
                             ]
                             .into(),
                         ),
@@ -605,7 +605,7 @@ mod tests {
     fn move_piece_capture_short_castling_move() {
         let mode = standard_chess();
         let selection =
-            Selection { selected_pos: Some(Pos::of("E1")), selected_squares: HashSet::new() };
+            Selection { selected_pos: Some(pos_of("E1")), selected_squares: HashSet::new() };
 
         let mut board = board_of_str(
             &mode.bounds,
@@ -628,13 +628,13 @@ mod tests {
                     color: Color::Black,
                     captures: Vec::new(),
                     moves: [(
-                        Pos::of("E8"),
+                        pos_of("E8"),
                         [
-                            (Pos::of("F8"), PieceMoveType::Default),
-                            (Pos::of("F7"), PieceMoveType::Default),
-                            (Pos::of("E7"), PieceMoveType::Default),
-                            (Pos::of("D7"), PieceMoveType::Default),
-                            (Pos::of("D8"), PieceMoveType::Default),
+                            (pos_of("F8"), PieceMoveType::Default),
+                            (pos_of("F7"), PieceMoveType::Default),
+                            (pos_of("E7"), PieceMoveType::Default),
+                            (pos_of("D7"), PieceMoveType::Default),
+                            (pos_of("D8"), PieceMoveType::Default),
                         ]
                         .into(),
                     )]
@@ -648,37 +648,37 @@ mod tests {
                     captures: Vec::new(),
                     moves: [
                         (
-                            Pos::of("F2"),
+                            pos_of("F2"),
                             [
-                                (Pos::of("F3"), PieceMoveType::Default),
-                                (Pos::of("F4"), PieceMoveType::Default),
+                                (pos_of("F3"), PieceMoveType::Default),
+                                (pos_of("F4"), PieceMoveType::Default),
                             ]
                             .into(),
                         ),
                         (
-                            Pos::of("H2"),
+                            pos_of("H2"),
                             [
-                                (Pos::of("H3"), PieceMoveType::Default),
-                                (Pos::of("H4"), PieceMoveType::Default),
+                                (pos_of("H3"), PieceMoveType::Default),
+                                (pos_of("H4"), PieceMoveType::Default),
                             ]
                             .into(),
                         ),
                         (
-                            Pos::of("E1"),
+                            pos_of("E1"),
                             [
-                                (Pos::of("F1"), PieceMoveType::Default),
-                                (Pos::of("D1"), PieceMoveType::Default),
-                                (Pos::of("D2"), PieceMoveType::Default),
-                                (Pos::of("E2"), PieceMoveType::Default),
-                                (Pos::of("H1"), PieceMoveType::ShortCastling),
+                                (pos_of("F1"), PieceMoveType::Default),
+                                (pos_of("D1"), PieceMoveType::Default),
+                                (pos_of("D2"), PieceMoveType::Default),
+                                (pos_of("E2"), PieceMoveType::Default),
+                                (pos_of("H1"), PieceMoveType::ShortCastling),
                             ]
                             .into(),
                         ),
                         (
-                            Pos::of("H1"),
+                            pos_of("H1"),
                             [
-                                (Pos::of("G1"), PieceMoveType::Default),
-                                (Pos::of("F1"), PieceMoveType::Default),
+                                (pos_of("G1"), PieceMoveType::Default),
+                                (pos_of("F1"), PieceMoveType::Default),
                             ]
                             .into(),
                         ),
@@ -695,7 +695,7 @@ mod tests {
             &mut players,
             &mode.bounds,
             &selection,
-            &Pos::of("H1"),
+            &pos_of("H1"),
         );
 
         let board_after = board_of_str(
@@ -719,13 +719,13 @@ mod tests {
                     color: Color::Black,
                     captures: Vec::new(),
                     moves: [(
-                        Pos::of("E8"),
+                        pos_of("E8"),
                         [
-                            (Pos::of("F8"), PieceMoveType::Default),
-                            (Pos::of("F7"), PieceMoveType::Default),
-                            (Pos::of("E7"), PieceMoveType::Default),
-                            (Pos::of("D7"), PieceMoveType::Default),
-                            (Pos::of("D8"), PieceMoveType::Default),
+                            (pos_of("F8"), PieceMoveType::Default),
+                            (pos_of("F7"), PieceMoveType::Default),
+                            (pos_of("E7"), PieceMoveType::Default),
+                            (pos_of("D7"), PieceMoveType::Default),
+                            (pos_of("D8"), PieceMoveType::Default),
                         ]
                         .into(),
                     )]
@@ -739,37 +739,37 @@ mod tests {
                     captures: Vec::new(),
                     moves: [
                         (
-                            Pos::of("F2"),
+                            pos_of("F2"),
                             [
-                                (Pos::of("F3"), PieceMoveType::Default),
-                                (Pos::of("F4"), PieceMoveType::Default),
+                                (pos_of("F3"), PieceMoveType::Default),
+                                (pos_of("F4"), PieceMoveType::Default),
                             ]
                             .into(),
                         ),
                         (
-                            Pos::of("H2"),
+                            pos_of("H2"),
                             [
-                                (Pos::of("H3"), PieceMoveType::Default),
-                                (Pos::of("H4"), PieceMoveType::Default),
+                                (pos_of("H3"), PieceMoveType::Default),
+                                (pos_of("H4"), PieceMoveType::Default),
                             ]
                             .into(),
                         ),
                         (
-                            Pos::of("G1"),
+                            pos_of("G1"),
                             [
-                                (Pos::of("H1"), PieceMoveType::Default),
-                                (Pos::of("G2"), PieceMoveType::Default),
+                                (pos_of("H1"), PieceMoveType::Default),
+                                (pos_of("G2"), PieceMoveType::Default),
                             ]
                             .into(),
                         ),
                         (
-                            Pos::of("F1"),
+                            pos_of("F1"),
                             [
-                                (Pos::of("E1"), PieceMoveType::Default),
-                                (Pos::of("D1"), PieceMoveType::Default),
-                                (Pos::of("C1"), PieceMoveType::Default),
-                                (Pos::of("B1"), PieceMoveType::Default),
-                                (Pos::of("A1"), PieceMoveType::Default),
+                                (pos_of("E1"), PieceMoveType::Default),
+                                (pos_of("D1"), PieceMoveType::Default),
+                                (pos_of("C1"), PieceMoveType::Default),
+                                (pos_of("B1"), PieceMoveType::Default),
+                                (pos_of("A1"), PieceMoveType::Default),
                             ]
                             .into(),
                         ),
@@ -789,7 +789,7 @@ mod tests {
     fn move_piece_capture_long_castling_move() {
         let mode = standard_chess();
         let selection =
-            Selection { selected_pos: Some(Pos::of("E1")), selected_squares: HashSet::new() };
+            Selection { selected_pos: Some(pos_of("E1")), selected_squares: HashSet::new() };
 
         let mut board = board_of_str(
             &mode.bounds,
@@ -812,13 +812,13 @@ mod tests {
                     color: Color::Black,
                     captures: Vec::new(),
                     moves: [(
-                        Pos::of("E8"),
+                        pos_of("E8"),
                         [
-                            (Pos::of("F8"), PieceMoveType::Default),
-                            (Pos::of("F7"), PieceMoveType::Default),
-                            (Pos::of("E7"), PieceMoveType::Default),
-                            (Pos::of("D7"), PieceMoveType::Default),
-                            (Pos::of("D8"), PieceMoveType::Default),
+                            (pos_of("F8"), PieceMoveType::Default),
+                            (pos_of("F7"), PieceMoveType::Default),
+                            (pos_of("E7"), PieceMoveType::Default),
+                            (pos_of("D7"), PieceMoveType::Default),
+                            (pos_of("D8"), PieceMoveType::Default),
                         ]
                         .into(),
                     )]
@@ -832,38 +832,38 @@ mod tests {
                     captures: Vec::new(),
                     moves: [
                         (
-                            Pos::of("A2"),
+                            pos_of("A2"),
                             [
-                                (Pos::of("A3"), PieceMoveType::Default),
-                                (Pos::of("A4"), PieceMoveType::Default),
+                                (pos_of("A3"), PieceMoveType::Default),
+                                (pos_of("A4"), PieceMoveType::Default),
                             ]
                             .into(),
                         ),
                         (
-                            Pos::of("D2"),
+                            pos_of("D2"),
                             [
-                                (Pos::of("D3"), PieceMoveType::Default),
-                                (Pos::of("D4"), PieceMoveType::Default),
+                                (pos_of("D3"), PieceMoveType::Default),
+                                (pos_of("D4"), PieceMoveType::Default),
                             ]
                             .into(),
                         ),
                         (
-                            Pos::of("A1"),
+                            pos_of("A1"),
                             [
-                                (Pos::of("B1"), PieceMoveType::Default),
-                                (Pos::of("C1"), PieceMoveType::Default),
-                                (Pos::of("D1"), PieceMoveType::Default),
+                                (pos_of("B1"), PieceMoveType::Default),
+                                (pos_of("C1"), PieceMoveType::Default),
+                                (pos_of("D1"), PieceMoveType::Default),
                             ]
                             .into(),
                         ),
                         (
-                            Pos::of("E1"),
+                            pos_of("E1"),
                             [
-                                (Pos::of("F2"), PieceMoveType::Default),
-                                (Pos::of("F1"), PieceMoveType::Default),
-                                (Pos::of("D1"), PieceMoveType::Default),
-                                (Pos::of("E2"), PieceMoveType::Default),
-                                (Pos::of("A1"), PieceMoveType::LongCastling),
+                                (pos_of("F2"), PieceMoveType::Default),
+                                (pos_of("F1"), PieceMoveType::Default),
+                                (pos_of("D1"), PieceMoveType::Default),
+                                (pos_of("E2"), PieceMoveType::Default),
+                                (pos_of("A1"), PieceMoveType::LongCastling),
                             ]
                             .into(),
                         ),
@@ -880,7 +880,7 @@ mod tests {
             &mut players,
             &mode.bounds,
             &selection,
-            &Pos::of("A1"),
+            &pos_of("A1"),
         );
 
         let board_after = board_of_str(
@@ -904,13 +904,13 @@ mod tests {
                     color: Color::Black,
                     captures: Vec::new(),
                     moves: [(
-                        Pos::of("E8"),
+                        pos_of("E8"),
                         [
-                            (Pos::of("F8"), PieceMoveType::Default),
-                            (Pos::of("F7"), PieceMoveType::Default),
-                            (Pos::of("E7"), PieceMoveType::Default),
-                            (Pos::of("D7"), PieceMoveType::Default),
-                            (Pos::of("D8"), PieceMoveType::Default),
+                            (pos_of("F8"), PieceMoveType::Default),
+                            (pos_of("F7"), PieceMoveType::Default),
+                            (pos_of("E7"), PieceMoveType::Default),
+                            (pos_of("D7"), PieceMoveType::Default),
+                            (pos_of("D8"), PieceMoveType::Default),
                         ]
                         .into(),
                     )]
@@ -924,37 +924,37 @@ mod tests {
                     captures: Vec::new(),
                     moves: [
                         (
-                            Pos::of("A2"),
+                            pos_of("A2"),
                             [
-                                (Pos::of("A3"), PieceMoveType::Default),
-                                (Pos::of("A4"), PieceMoveType::Default),
+                                (pos_of("A3"), PieceMoveType::Default),
+                                (pos_of("A4"), PieceMoveType::Default),
                             ]
                             .into(),
                         ),
                         (
-                            Pos::of("D2"),
+                            pos_of("D2"),
                             [
-                                (Pos::of("D3"), PieceMoveType::Default),
-                                (Pos::of("D4"), PieceMoveType::Default),
+                                (pos_of("D3"), PieceMoveType::Default),
+                                (pos_of("D4"), PieceMoveType::Default),
                             ]
                             .into(),
                         ),
                         (
-                            Pos::of("C1"),
+                            pos_of("C1"),
                             [
-                                (Pos::of("B1"), PieceMoveType::Default),
-                                (Pos::of("B2"), PieceMoveType::Default),
-                                (Pos::of("C2"), PieceMoveType::Default),
+                                (pos_of("B1"), PieceMoveType::Default),
+                                (pos_of("B2"), PieceMoveType::Default),
+                                (pos_of("C2"), PieceMoveType::Default),
                             ]
                             .into(),
                         ),
                         (
-                            Pos::of("D1"),
+                            pos_of("D1"),
                             [
-                                (Pos::of("E1"), PieceMoveType::Default),
-                                (Pos::of("F1"), PieceMoveType::Default),
-                                (Pos::of("G1"), PieceMoveType::Default),
-                                (Pos::of("H1"), PieceMoveType::Default),
+                                (pos_of("E1"), PieceMoveType::Default),
+                                (pos_of("F1"), PieceMoveType::Default),
+                                (pos_of("G1"), PieceMoveType::Default),
+                                (pos_of("H1"), PieceMoveType::Default),
                             ]
                             .into(),
                         ),
