@@ -12,4 +12,4 @@ dependencies = [
 [[package]]
 name = "manfredo"
 version = "1.0.0"
-source = "git+https://github.com/joao-arthur/manfredo?rev=195e152159c8b74343f548fbbdd51a5e3fae6b0a#195e152159c8b74343f548fbbdd51a5e3fae6b0a"
+source = "git+https://github.com/joao-arthur/manfredo?rev=5ed86b7f064541307c0a5bc1a6a28e43783b9fb1#5ed86b7f064541307c0a5bc1a6a28e43783b9fb1"
