@@ -8,4 +8,4 @@ license = "AGPL-3.0"
 crate-type = ["lib"]
 
 [dependencies]
-manfredo = { git = "https://github.com/joao-arthur/manfredo", rev = "5ed86b7f064541307c0a5bc1a6a28e43783b9fb1" }
+manfredo = { git = "https://github.com/joao-arthur/manfredo", rev = "e9b5c5e132369bfc37dc58ac2bb8e55fcec112e1" }
