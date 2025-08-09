@@ -215,14 +215,7 @@ mod tests {
         ]
         .into();
 
-        move_piece(
-            &mut board,
-            &mut history,
-            &mut players,
-            &mode.bounds,
-            &selection,
-            &pos_of("A4"),
-        );
+        move_piece(&mut board, &mut history, &mut players, &mode.bounds, &selection, &pos_of("A4"));
 
         let board_after = board_of_str(
             &mode.bounds,
@@ -380,14 +373,7 @@ mod tests {
         ]
         .into();
 
-        move_piece(
-            &mut board,
-            &mut history,
-            &mut players,
-            &mode.bounds,
-            &selection,
-            &pos_of("D6"),
-        );
+        move_piece(&mut board, &mut history, &mut players, &mode.bounds, &selection, &pos_of("D6"));
 
         let board_after = board_of_str(
             &mode.bounds,
@@ -528,14 +514,7 @@ mod tests {
         ]
         .into();
 
-        move_piece(
-            &mut board,
-            &mut history,
-            &mut players,
-            &mode.bounds,
-            &selection,
-            &pos_of("D6"),
-        );
+        move_piece(&mut board, &mut history, &mut players, &mode.bounds, &selection, &pos_of("D6"));
 
         let board_after = board_of_str(
             &mode.bounds,
@@ -689,14 +668,7 @@ mod tests {
         ]
         .into();
 
-        move_piece(
-            &mut board,
-            &mut history,
-            &mut players,
-            &mode.bounds,
-            &selection,
-            &pos_of("H1"),
-        );
+        move_piece(&mut board, &mut history, &mut players, &mode.bounds, &selection, &pos_of("H1"));
 
         let board_after = board_of_str(
             &mode.bounds,
@@ -874,14 +846,7 @@ mod tests {
         ]
         .into();
 
-        move_piece(
-            &mut board,
-            &mut history,
-            &mut players,
-            &mode.bounds,
-            &selection,
-            &pos_of("A1"),
-        );
+        move_piece(&mut board, &mut history, &mut players, &mode.bounds, &selection, &pos_of("A1"));
 
         let board_after = board_of_str(
             &mode.bounds,

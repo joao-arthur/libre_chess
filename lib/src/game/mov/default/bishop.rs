@@ -1,10 +1,12 @@
 use std::collections::HashMap;
 
-use manfredo::matrix::rect::rect_u8::contains;
+use manfredo::matrix::{
+    point::point_i8::PointI8, point::point_u8::checked_translated, rect::rect_u8::contains,
+};
 
 use crate::{
     game::{board::GameBoard, game::GameBounds, mov::PieceMoveType},
-    pos::{pos_try_rel_idx, Pos},
+    pos::Pos,
 };
 
 pub fn bishop_moves(
@@ -21,7 +23,7 @@ pub fn bishop_moves(
             loop {
                 rel_row += modifier[0];
                 rel_col += modifier[1];
-                if let Some(curr_pos) = pos_try_rel_idx(pos, rel_row, rel_col) {
+                if let Some(curr_pos) = checked_translated(pos, &PointI8::of(rel_row, rel_col)) {
                     if !contains(bounds, &curr_pos) {
                         break;
                     }

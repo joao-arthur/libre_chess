@@ -1,10 +1,12 @@
 use std::collections::HashMap;
 
-use manfredo::matrix::rect::rect_u8::contains;
- 
+use manfredo::matrix::{
+    point::point_i8::PointI8, point::point_u8::checked_translated, rect::rect_u8::contains,
+};
+
 use crate::{
     game::{board::GameBoard, game::GameBounds, mov::PieceMoveType},
-    pos::{pos_try_rel_idx, Pos},
+    pos::Pos,
 };
 
 pub fn knight_moves(
@@ -15,14 +17,14 @@ pub fn knight_moves(
     let mut result = HashMap::new();
     if let Some(piece) = board.get(pos) {
         let base = [
-            pos_try_rel_idx(pos, 2, 1),
-            pos_try_rel_idx(pos, 1, 2),
-            pos_try_rel_idx(pos, -1, 2),
-            pos_try_rel_idx(pos, -2, 1),
-            pos_try_rel_idx(pos, -2, -1),
-            pos_try_rel_idx(pos, -1, -2),
-            pos_try_rel_idx(pos, 1, -2),
-            pos_try_rel_idx(pos, 2, -1),
+            checked_translated(pos, &PointI8::of(2, 1)),
+            checked_translated(pos, &PointI8::of(1, 2)),
+            checked_translated(pos, &PointI8::of(-1, 2)),
+            checked_translated(pos, &PointI8::of(-2, 1)),
+            checked_translated(pos, &PointI8::of(-2, -1)),
+            checked_translated(pos, &PointI8::of(-1, -2)),
+            checked_translated(pos, &PointI8::of(1, -2)),
+            checked_translated(pos, &PointI8::of(2, -1)),
         ];
         for curr_pos in base {
             if let Some(curr_pos) = curr_pos {
@@ -91,8 +93,7 @@ mod tests {
         let board = [(pos_of("H8"), Piece::of('♞'))].into();
         assert_eq!(
             knight_moves(&board, &mode.bounds, &pos_of("H8")),
-            [(pos_of("G6"), PieceMoveType::Default), (pos_of("F7"), PieceMoveType::Default)]
-                .into()
+            [(pos_of("G6"), PieceMoveType::Default), (pos_of("F7"), PieceMoveType::Default)].into()
         );
     }
 
@@ -102,8 +103,7 @@ mod tests {
         let board = [(pos_of("H1"), Piece::of('♞'))].into();
         assert_eq!(
             knight_moves(&board, &mode.bounds, &pos_of("H1")),
-            [(pos_of("F2"), PieceMoveType::Default), (pos_of("G3"), PieceMoveType::Default)]
-                .into()
+            [(pos_of("F2"), PieceMoveType::Default), (pos_of("G3"), PieceMoveType::Default)].into()
         );
     }
 
@@ -113,8 +113,7 @@ mod tests {
         let board = [(pos_of("A1"), Piece::of('♞'))].into();
         assert_eq!(
             knight_moves(&board, &mode.bounds, &pos_of("A1")),
-            [(pos_of("B3"), PieceMoveType::Default), (pos_of("C2"), PieceMoveType::Default)]
-                .into()
+            [(pos_of("B3"), PieceMoveType::Default), (pos_of("C2"), PieceMoveType::Default)].into()
         );
     }
 
@@ -124,8 +123,7 @@ mod tests {
         let board = [(pos_of("A8"), Piece::of('♞'))].into();
         assert_eq!(
             knight_moves(&board, &mode.bounds, &pos_of("A8")),
-            [(pos_of("C7"), PieceMoveType::Default), (pos_of("B6"), PieceMoveType::Default)]
-                .into()
+            [(pos_of("C7"), PieceMoveType::Default), (pos_of("B6"), PieceMoveType::Default)].into()
         );
     }
 

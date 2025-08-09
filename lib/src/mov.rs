@@ -1,4 +1,7 @@
-use crate::{piece::Piece, pos::{pos_try_of, Pos}};
+use crate::{
+    piece::Piece,
+    pos::{Pos, pos_try_of},
+};
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct Mov {

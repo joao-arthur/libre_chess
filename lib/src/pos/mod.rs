@@ -10,29 +10,6 @@ mod row;
 
 pub type Pos = PointU8;
 
-pub fn pos_try_rel_idx(pos: &Pos, row: i8, col: i8) -> Option<Pos> {
-    if row < 0 && row.unsigned_abs() > pos.row {
-        return None;
-    }
-    if col < 0 && col.unsigned_abs() > pos.col {
-        return None;
-    }
-    if row > 0 && (row as u8) > u8::MAX - pos.row {
-        return None;
-    }
-    if col > 0 && (col as u8) > u8::MAX - pos.col {
-        return None;
-    }
-    Some(Pos {
-        row: ((pos.row as i16) + row as i16) as u8,
-        col: ((pos.col as i16) + col as i16) as u8,
-    })
-}
-
-pub fn pos_rel_idx(pos: &Pos, row: i8, col: i8) -> Pos {
-    pos_try_rel_idx(pos, row, col).unwrap()
-}
-
 pub fn pos_try_of(s: &str) -> Option<Pos> {
     let mut pos_col = String::new();
     let mut pos_row = String::new();
@@ -51,103 +28,13 @@ pub fn pos_of(s: &str) -> Pos {
     pos_try_of(s).unwrap()
 }
 
-fn pos_to_string(pos: &Pos) -> String {
+pub fn pos_to_string(pos: &Pos) -> String {
     col_to_string(pos.col) + &row_to_string(pos.row)
 }
 
 #[cfg(test)]
 mod tests {
-    use super::{
-        Pos,
-        pos_try_rel_idx,
-        pos_rel_idx,
-        pos_try_of,
-        pos_of,
-        pos_to_string
-    };
-
-    #[test]
-    fn try_rel_idx_negative() {
-        let pos = Pos::of(255, 255);
-        assert_eq!(pos_try_rel_idx(&pos, 0, 0), Some(Pos::of(255, 255)));
-        assert_eq!(pos_try_rel_idx(&pos, -1, -1), Some(Pos::of(254, 254)));
-        assert_eq!(pos_try_rel_idx(&pos, -2, -2), Some(Pos::of(253, 253)));
-        assert_eq!(pos_try_rel_idx(&pos, -3, -3), Some(Pos::of(252, 252)));
-        assert_eq!(pos_try_rel_idx(&pos, -4, -4), Some(Pos::of(251, 251)));
-        assert_eq!(pos_try_rel_idx(&pos, -5, -5), Some(Pos::of(250, 250)));
-        assert_eq!(pos_try_rel_idx(&pos, -6, -6), Some(Pos::of(249, 249)));
-        assert_eq!(pos_try_rel_idx(&pos, -7, -7), Some(Pos::of(248, 248)));
-    }
-
-    #[test]
-    fn try_rel_idx_positive_limit_row() {
-        let pos = Pos::of(253, 253);
-        assert_eq!(pos_try_rel_idx(&pos, 0, 0), Some(Pos::of(253, 253)));
-        assert_eq!(pos_try_rel_idx(&pos, 1, 0), Some(Pos::of(254, 253)));
-        assert_eq!(pos_try_rel_idx(&pos, 2, 0), Some(Pos::of(255, 253)));
-        assert_eq!(pos_try_rel_idx(&pos, 3, 0), None);
-        assert_eq!(pos_try_rel_idx(&pos, 4, 0), None);
-        assert_eq!(pos_try_rel_idx(&pos, 5, 0), None);
-    }
-
-    #[test]
-    fn try_rel_idx_positive_limit_col() {
-        let pos = Pos::of(253, 253);
-        assert_eq!(pos_try_rel_idx(&pos, 0, 0), Some(Pos::of(253, 253)));
-        assert_eq!(pos_try_rel_idx(&pos, 0, 1), Some(Pos::of(253, 254)));
-        assert_eq!(pos_try_rel_idx(&pos, 0, 2), Some(Pos::of(253, 255)));
-        assert_eq!(pos_try_rel_idx(&pos, 0, 3), None);
-        assert_eq!(pos_try_rel_idx(&pos, 0, 4), None);
-        assert_eq!(pos_try_rel_idx(&pos, 0, 5), None);
-    }
-
-    #[test]
-    fn try_rel_idx_negative_limit_row() {
-        let pos = Pos::of(2, 2);
-        assert_eq!(pos_try_rel_idx(&pos, 0, 0), Some(Pos::of(2, 2)));
-        assert_eq!(pos_try_rel_idx(&pos, -1, 0), Some(Pos::of(1, 2)));
-        assert_eq!(pos_try_rel_idx(&pos, -2, 0), Some(Pos::of(0, 2)));
-        assert_eq!(pos_try_rel_idx(&pos, -3, 0), None);
-        assert_eq!(pos_try_rel_idx(&pos, -4, 0), None);
-        assert_eq!(pos_try_rel_idx(&pos, -5, 0), None);
-    }
-
-    #[test]
-    fn try_rel_idx_negative_limit_col() {
-        let pos = Pos::of(2, 2);
-        assert_eq!(pos_try_rel_idx(&pos, 0, 0), Some(Pos::of(2, 2)));
-        assert_eq!(pos_try_rel_idx(&pos, 0, -1), Some(Pos::of(2, 1)));
-        assert_eq!(pos_try_rel_idx(&pos, 0, -2), Some(Pos::of(2, 0)));
-        assert_eq!(pos_try_rel_idx(&pos, 0, -3), None);
-        assert_eq!(pos_try_rel_idx(&pos, 0, -4), None);
-        assert_eq!(pos_try_rel_idx(&pos, 0, -5), None);
-    }
-
-    #[test]
-    fn rel_idx_0() {
-        let pos = Pos::of(0, 0);
-        assert_eq!(pos_rel_idx(&pos, 0, 0), Pos::of(0, 0));
-        assert_eq!(pos_rel_idx(&pos, 1, 1), Pos::of(1, 1));
-        assert_eq!(pos_rel_idx(&pos, 2, 2), Pos::of(2, 2));
-        assert_eq!(pos_rel_idx(&pos, 3, 3), Pos::of(3, 3));
-        assert_eq!(pos_rel_idx(&pos, 4, 4), Pos::of(4, 4));
-        assert_eq!(pos_rel_idx(&pos, 5, 5), Pos::of(5, 5));
-        assert_eq!(pos_rel_idx(&pos, 6, 6), Pos::of(6, 6));
-        assert_eq!(pos_rel_idx(&pos, 7, 7), Pos::of(7, 7));
-    }
-
-    #[test]
-    fn rel_idx_255() {
-        let pos = Pos::of(255, 255);
-        assert_eq!(pos_rel_idx(&pos, 0, 0), Pos::of(255, 255));
-        assert_eq!(pos_rel_idx(&pos, -1, -1), Pos::of(254, 254));
-        assert_eq!(pos_rel_idx(&pos, -2, -2), Pos::of(253, 253));
-        assert_eq!(pos_rel_idx(&pos, -3, -3), Pos::of(252, 252));
-        assert_eq!(pos_rel_idx(&pos, -4, -4), Pos::of(251, 251));
-        assert_eq!(pos_rel_idx(&pos, -5, -5), Pos::of(250, 250));
-        assert_eq!(pos_rel_idx(&pos, -6, -6), Pos::of(249, 249));
-        assert_eq!(pos_rel_idx(&pos, -7, -7), Pos::of(248, 248));
-    }
+    use super::{Pos, pos_of, pos_to_string, pos_try_of};
 
     #[test]
     fn try_of_row() {

@@ -1,10 +1,13 @@
 use std::collections::HashMap;
 
-use manfredo::matrix::rect::rect_u8::contains;
- 
+use manfredo::matrix::{
+    point::{point_i8::PointI8, point_u8::checked_translated},
+    rect::rect_u8::contains,
+};
+
 use crate::{
     game::{board::GameBoard, game::GameBounds, mov::PieceMoveType},
-    pos::{pos_try_rel_idx, Pos},
+    pos::Pos,
 };
 
 pub fn king_moves(
@@ -15,14 +18,14 @@ pub fn king_moves(
     let mut result = HashMap::new();
     if let Some(piece) = board.get(pos) {
         let base = [
-            pos_try_rel_idx(pos, 1, 1),
-            pos_try_rel_idx(pos, 0, 1),
-            pos_try_rel_idx(pos, -1, 1),
-            pos_try_rel_idx(pos, -1, 0),
-            pos_try_rel_idx(pos, -1, -1),
-            pos_try_rel_idx(pos, 0, -1),
-            pos_try_rel_idx(pos, 1, -1),
-            pos_try_rel_idx(pos, 1, 0),
+            checked_translated(pos, &PointI8::of(1, 1)),
+            checked_translated(pos, &PointI8::of(0, 1)),
+            checked_translated(pos, &PointI8::of(-1, 1)),
+            checked_translated(pos, &PointI8::of(-1, 0)),
+            checked_translated(pos, &PointI8::of(-1, -1)),
+            checked_translated(pos, &PointI8::of(0, -1)),
+            checked_translated(pos, &PointI8::of(1, -1)),
+            checked_translated(pos, &PointI8::of(1, 0)),
         ];
         for curr_pos in base {
             if let Some(curr_pos) = curr_pos {

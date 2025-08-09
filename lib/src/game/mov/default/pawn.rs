@@ -1,11 +1,13 @@
 use std::collections::HashMap;
 
-use manfredo::matrix::rect::rect_u8::contains;
- 
+use manfredo::matrix::{
+    point::point_i8::PointI8, point::point_u8::checked_translated, rect::rect_u8::contains,
+};
+
 use crate::{
     color::Color,
     game::{board::GameBoard, game::GameBounds, mov::PieceMoveType},
-    pos::{pos_rel_idx, pos_try_rel_idx, Pos},
+    pos::Pos,
 };
 
 pub fn pawn_moves(
@@ -18,22 +20,34 @@ pub fn pawn_moves(
         let move_base = match &piece.color {
             Color::White => {
                 if pos.row == 1 {
-                    vec![pos_rel_idx(pos, 1, 0), pos_rel_idx(pos, 2, 0)]
+                    vec![
+                        checked_translated(pos, &PointI8::of(1, 0)).unwrap(),
+                        checked_translated(pos, &PointI8::of(2, 0)).unwrap(),
+                    ]
                 } else {
-                    vec![pos_rel_idx(pos, 1, 0)]
+                    vec![checked_translated(pos, &PointI8::of(1, 0)).unwrap()]
                 }
             }
             Color::Black => {
                 if pos.row == 6 {
-                    vec![pos_rel_idx(pos, -1, 0), pos_rel_idx(pos, -2, 0)]
+                    vec![
+                        checked_translated(pos, &PointI8::of(-1, 0)).unwrap(),
+                        checked_translated(pos, &PointI8::of(-2, 0)).unwrap(),
+                    ]
                 } else {
-                    vec![pos_rel_idx(pos, -1, 0)]
+                    vec![checked_translated(pos, &PointI8::of(-1, 0)).unwrap()]
                 }
             }
         };
         let capture_base = match &piece.color {
-            Color::White => [pos_try_rel_idx(pos, 1, -1), pos_try_rel_idx(pos, 1, 1)],
-            Color::Black => [pos_try_rel_idx(pos, -1, -1), pos_try_rel_idx(pos, -1, 1)],
+            Color::White => [
+                checked_translated(pos, &PointI8::of(1, -1)),
+                checked_translated(pos, &PointI8::of(1, 1)),
+            ],
+            Color::Black => [
+                checked_translated(pos, &PointI8::of(-1, -1)),
+                checked_translated(pos, &PointI8::of(-1, 1)),
+            ],
         };
         for curr_pos in move_base {
             if board.get(&curr_pos).is_none() {
@@ -104,8 +118,7 @@ mod tests {
         let board = [(pos_of("A2"), Piece::of('♙'))].into();
         assert_eq!(
             pawn_moves(&board, &mode.bounds, &pos_of("A2")),
-            [(pos_of("A3"), PieceMoveType::Default), (pos_of("A4"), PieceMoveType::Default)]
-                .into()
+            [(pos_of("A3"), PieceMoveType::Default), (pos_of("A4"), PieceMoveType::Default)].into()
         );
     }
 
@@ -115,8 +128,7 @@ mod tests {
         let board = [(pos_of("H7"), Piece::of('♟'))].into();
         assert_eq!(
             pawn_moves(&board, &mode.bounds, &pos_of("H7")),
-            [(pos_of("H6"), PieceMoveType::Default), (pos_of("H5"), PieceMoveType::Default)]
-                .into()
+            [(pos_of("H6"), PieceMoveType::Default), (pos_of("H5"), PieceMoveType::Default)].into()
         );
     }
 
@@ -192,8 +204,7 @@ mod tests {
         );
         assert_eq!(
             pawn_moves(&board, &mode.bounds, &pos_of("C5")),
-            [(pos_of("C6"), PieceMoveType::Default), (pos_of("B6"), PieceMoveType::Default)]
-                .into()
+            [(pos_of("C6"), PieceMoveType::Default), (pos_of("B6"), PieceMoveType::Default)].into()
         );
     }
 
@@ -215,8 +226,7 @@ mod tests {
         );
         assert_eq!(
             pawn_moves(&board, &mode.bounds, &pos_of("C5")),
-            [(pos_of("C4"), PieceMoveType::Default), (pos_of("D4"), PieceMoveType::Default)]
-                .into()
+            [(pos_of("C4"), PieceMoveType::Default), (pos_of("D4"), PieceMoveType::Default)].into()
         );
     }
 }

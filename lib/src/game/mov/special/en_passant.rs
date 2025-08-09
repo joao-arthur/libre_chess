@@ -1,10 +1,12 @@
 use std::collections::HashMap;
 
+use manfredo::matrix::{point::point_i8::PointI8, point::point_u8::checked_translated};
+
 use crate::{
     color::Color,
     game::{board::GameBoard, game::GameHistory, mov::PieceMoveType},
     piece::PieceType,
-    pos::{pos_try_rel_idx, Pos},
+    pos::Pos,
 };
 
 pub fn en_passant_moves(
@@ -31,16 +33,16 @@ fn white_pawn_en_passant(history: &GameHistory, pos: &Pos) -> HashMap<Pos, Piece
                 && game_move.mov.from.row == 6
                 && game_move.mov.to.row == 4
             {
-                if Some(game_move.mov.to.clone()) == pos_try_rel_idx(pos, 0, -1) {
-                    if let Some(capture_pos) = pos_try_rel_idx(pos, 1, -1) {
+                if Some(game_move.mov.to.clone()) == checked_translated(pos, &PointI8::of(0, -1)) {
+                    if let Some(capture_pos) = checked_translated(pos, &PointI8::of(1, -1)) {
                         result.insert(
                             Pos::of(pos.row + 1, capture_pos.col),
                             PieceMoveType::EnPassant,
                         );
                     }
                 }
-                if Some(game_move.mov.to.clone()) == pos_try_rel_idx(pos, 0, 1) {
-                    if let Some(capture_pos) = pos_try_rel_idx(pos, 1, 1) {
+                if Some(game_move.mov.to.clone()) == checked_translated(pos, &PointI8::of(0, 1)) {
+                    if let Some(capture_pos) = checked_translated(pos, &PointI8::of(1, 1)) {
                         result.insert(
                             Pos::of(pos.row + 1, capture_pos.col),
                             PieceMoveType::EnPassant,
@@ -62,16 +64,16 @@ fn black_pawn_en_passant(history: &GameHistory, pos: &Pos) -> HashMap<Pos, Piece
                 && game_move.mov.from.row == 1
                 && game_move.mov.to.row == 3
             {
-                if Some(game_move.mov.to.clone()) == pos_try_rel_idx(pos, 0, -1) {
-                    if let Some(capture_pos) = pos_try_rel_idx(pos, -1, -1) {
+                if Some(game_move.mov.to.clone()) == checked_translated(pos, &PointI8::of(0, -1)) {
+                    if let Some(capture_pos) = checked_translated(pos, &PointI8::of(-1, -1)) {
                         result.insert(
                             Pos::of(pos.row - 1, capture_pos.col),
                             PieceMoveType::EnPassant,
                         );
                     }
                 }
-                if Some(game_move.mov.to.clone()) == pos_try_rel_idx(pos, 0, 1) {
-                    if let Some(capture_pos) = pos_try_rel_idx(pos, -1, 1) {
+                if Some(game_move.mov.to.clone()) == checked_translated(pos, &PointI8::of(0, 1)) {
+                    if let Some(capture_pos) = checked_translated(pos, &PointI8::of(-1, 1)) {
                         result.insert(
                             Pos::of(pos.row - 1, capture_pos.col),
                             PieceMoveType::EnPassant,
