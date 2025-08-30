@@ -8,10 +8,10 @@ license = "AGPL-3.0"
 crate-type = ["cdylib"]
 
 [dependencies]
-wasm-bindgen = "0.2.94"
-serde = { version = "1.0.210", features = ["derive"] }
+wasm-bindgen = "0.2.100"
+serde = { version = "1.0.219", features = ["derive"] }
 serde-wasm-bindgen = "0.6.5"
-web-sys = { version = "0.3.71", features = [
+web-sys = { version = "0.3.77", features = [
     'CanvasRenderingContext2d',
     'Document',
     'Element',
