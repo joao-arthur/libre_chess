@@ -1,8 +1,8 @@
 use core::f64;
 use std::{cell::RefCell, collections::HashMap};
-use wasm_bindgen::{prelude::Closure, JsCast, JsValue};
+use wasm_bindgen::{JsCast, JsValue, prelude::Closure};
 use web_sys::{
-    js_sys, window, Blob, BlobPropertyBag, CanvasRenderingContext2d, HtmlImageElement, Url,
+    Blob, BlobPropertyBag, CanvasRenderingContext2d, HtmlImageElement, Url, js_sys, window,
 };
 
 use libre_chess_lib::{

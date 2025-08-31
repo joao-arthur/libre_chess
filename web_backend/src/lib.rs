@@ -6,10 +6,10 @@ use board_color::get_board_color_presets;
 use board_set::get_board_set_presets;
 use serde::Serialize;
 use wasm_bindgen::{
-    prelude::{wasm_bindgen, Closure},
     JsCast, JsValue,
+    prelude::{Closure, wasm_bindgen},
 };
-use web_sys::{js_sys::Function, CanvasRenderingContext2d, HtmlCanvasElement, MouseEvent};
+use web_sys::{CanvasRenderingContext2d, HtmlCanvasElement, MouseEvent, js_sys::Function};
 
 mod app;
 mod app_info;

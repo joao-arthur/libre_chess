@@ -7,8 +7,8 @@ use libre_chess_lib::game::{
 };
 
 use crate::{
-    board_color::{board_color_purple, BoardColor},
-    board_set::{board_set_normal_1, BoardSet},
+    board_color::{BoardColor, board_color_purple},
+    board_set::{BoardSet, board_set_normal_1},
     render::RenderSettings,
 };
 
